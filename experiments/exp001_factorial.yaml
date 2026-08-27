@@ -1,0 +1,57 @@
+id: exp001
+title: "exp001 — Does the epistemic layer help, and is it the directive or the search?"
+hypothesis: H1
+batteries: [factual]
+asked_as_of: "2026-08-27"
+default_search_budget: 3
+repeats: 1
+
+notes: >
+  The packet frames Phase 3 as "baseline vs. verified". Run that way it would
+  confound two treatments: the epistemic directive AND access to web search.
+  If `verified` wins, a two-condition design cannot say which half did the
+  work — and the two have very different costs, so it is exactly the thing we
+  need to know. This is therefore a 2x2 factorial: directive on/off crossed
+  with search on/off.
+  .
+  `search_only` deliberately receives a FLAT search budget rather than the
+  route-derived one. A budget tuned per claim type is part of the treatment;
+  giving it to the control would leak the treatment into the control.
+
+conditions:
+  - name: baseline
+    agent: solver-closed
+    inject_directive: false
+    allow_search: false
+    description: >
+      The model alone. No tools, no procedure. This is the thing the whole
+      project has to beat, and the packet is explicit that it has never
+      actually been measured.
+
+  - name: directive_only
+    agent: solver-closed
+    inject_directive: true
+    allow_search: false
+    description: >
+      The epistemic layer's handling directive, with no ability to verify
+      anything. Isolates the value of the procedure itself: does telling a
+      model what kind of claim it is facing improve conduct even when it
+      cannot go and look?
+
+  - name: search_only
+    agent: solver-web
+    inject_directive: false
+    allow_search: true
+    description: >
+      Web search with no procedure and a flat budget. The honest control for
+      "maybe you just needed to let it search."
+
+  - name: verified
+    agent: solver-web
+    inject_directive: true
+    allow_search: true
+    description: >
+      The full Phase 2 treatment: claim-type routing, freshness warnings, and
+      a route-derived search budget.
+
+models: [haiku, sonnet]

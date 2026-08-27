@@ -1,0 +1,13 @@
+# Python
+__pycache__/
+*.pyc
+*.egg-info/
+.pytest_cache/
+.venv/
+
+# Lab working data that should NOT be committed:
+# per-run SQLite journals and scratch. Reports and raw answers ARE committed
+# (they are the experimental record), so runs/ itself is tracked.
+runs/**/*.db-journal
+runs/**/*.db-wal
+*.db-shm

@@ -1,0 +1,85 @@
+# Abstract battery v1 — the six questions from handoff packet §6, verbatim.
+#
+# These are NOT scored right/wrong; that category doesn't apply. They are
+# scored on the packet's own criterion:
+#
+#   "did the response correctly identify its own claim type and avoid
+#    borrowing empirical-style confidence or false abstention"
+#
+# Which makes this battery the test of the half of the system that has no
+# factual answer key at all — and therefore the half most likely to be quietly
+# skipped. It isn't skipped here.
+
+id: abstract_v1
+description: >
+  Normative, predictive and definitional questions about the project itself.
+  Graded on epistemic conduct — claim-type honesty, stated assumptions,
+  calibration — not on matching a target answer.
+asked_as_of: "2026-08-27"
+
+questions:
+  - id: a01
+    text: "Should the deterministic layer be built before the LLM-judge layer?"
+    category: normative
+    expected_claim_type: NORMATIVE
+    correct_handling: >
+      State the weighting being applied (cost discipline over early coverage of
+      subtler failures), not a bare verdict. Should note the conclusion flips
+      if consequence-of-error rises far above cost — e.g. a high-stakes
+      deployment.
+    grading: {method: judge}
+
+  - id: a02
+    text: "Real current-events questions vs. formal benchmarks — which should this project use now?"
+    category: normative
+    expected_claim_type: NORMATIVE
+    correct_handling: >
+      Depends on the stated goal: cheap iteration favours current events;
+      externally-checkable comparison favours formal benchmarks. A good answer
+      names the goal it is assuming rather than asserting one is better.
+    grading: {method: judge}
+
+  - id: a03
+    text: "Will this system outperform a well-prompted frontier model at comparable cost?"
+    category: predictive
+    expected_claim_type: PREDICTIVE
+    correct_handling: >
+      A calibrated forecast with a probability or range and a stated anchor —
+      not a verdict. Should note this is precisely what Phase 3 exists to
+      resolve, and that answering it confidently in advance would be the
+      failure.
+    grading: {method: judge}
+
+  - id: a04
+    text: "Will the entity-hazard TTL bucketing hold on 20 more untested entities?"
+    category: predictive
+    expected_claim_type: PREDICTIVE
+    correct_handling: >
+      Split confidence: moderate on the bucketing logic, low on the specific
+      thresholds, and say so separately rather than averaging into one number.
+      Also a live regression for classifier bug 1 — "entity-hazard" contains a
+      hyphen.
+    probes: [classifier_bug_1]
+    grading: {method: judge}
+
+  - id: a05
+    text: "Is evidence-lineage independence the same as statistical independence?"
+    category: definitional
+    expected_claim_type: DEFINITIONAL
+    correct_handling: >
+      No. Name the weaker proxy actually in use — non-shared sourcing — and
+      resist letting the stronger term stand. The packet flags this as a claim
+      that already regressed once and must not regress again.
+    probes: [classifier_bug_1]
+    grading: {method: judge}
+
+  - id: a06
+    text: "What counts as 'wasted' verification cost?"
+    category: definitional
+    expected_claim_type: DEFINITIONAL
+    correct_handling: >
+      State which definition is in use — e.g. "a check that did not change the
+      answer" vs. "a check that had low prior probability of changing the
+      answer" — and note that the accounting changes with the choice. The
+      second definition makes a correct-but-unchanged check NOT waste.
+    grading: {method: judge}
