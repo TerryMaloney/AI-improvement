@@ -19,7 +19,11 @@ from epistemic.registry import EntityRegistry, seed_registry
 from lab.battery import SCORABLE_STATUSES, load_answers
 
 
-def refresh_queue(as_of: date | None = None, registry: EntityRegistry | None = None) -> dict:
+def refresh_queue(
+    as_of: date | None = None,
+    registry: EntityRegistry | None = None,
+    answers: dict | None = None,
+) -> dict:
     as_of = as_of or date.today()
     registry = registry if registry is not None else seed_registry()
 
@@ -36,7 +40,7 @@ def refresh_queue(as_of: date | None = None, registry: EntityRegistry | None = N
         for rec, reason in registry.needing_reverification(as_of)
     ]
 
-    key = load_answers().get("answers", {})
+    key = (answers if answers is not None else load_answers()).get("answers", {})
     unverified = [
         {
             "question_id": qid,

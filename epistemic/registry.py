@@ -292,12 +292,16 @@ class EntityRegistry:
 
 
 def seed_registry() -> EntityRegistry:
-    """The four entities carried over from the design session (packet §5).
+    """The seed entities, all re-verified 2026-08-27.
 
-    Every value here is stated as of ~2026-08-27 and NONE of it was re-verified
-    when the packet was written. Per the project's own rule, treat all of it as
-    needing a fresh check before it is relied on as ground truth. The lab does
-    that in `lab.refresh` rather than trusting these strings.
+    Packet §5 carried four values forward from the design session and noted
+    that none had been re-checked. They have now been, and all four held. The
+    check was still worth running: "it turned out to be right" is a result, not
+    a reason to have skipped it, and the fifth entity added here (Berkshire) is
+    the one that had in fact changed.
+
+    Re-verify before relying on any of this. `python -m lab refresh` says what
+    is past its TTL.
     """
     return EntityRegistry(
         {
@@ -308,8 +312,19 @@ def seed_registry() -> EntityRegistry:
                     description="OpenAI Chief Revenue Officer",
                     bucket=Bucket.VOLATILE,
                     value="Dali Rajic",
-                    last_verified=date(2026, 8, 13),
-                    provenance="handoff packet §5 — design-session value, not re-verified",
+                    last_verified=date(2026, 8, 27),
+                    # FIRST REAL CALIBRATION DATA for the VOLATILE threshold
+                    # (packet §2.3, ledger H2). Rajic succeeded Denise Dresser,
+                    # who held the seat about nine months; the prior transition
+                    # is what made the packet call this seat volatile.
+                    # Note what this suggests: observed turnover here is ~270
+                    # days against a 30-day TTL, i.e. the eyeballed threshold
+                    # is roughly 9x more conservative than this entity needs.
+                    # One entity is not a calibration — but it is the first
+                    # datum that was ever measured rather than guessed.
+                    observed_intervals_days=[270],
+                    provenance="verified 2026-08-27 against openai.com plus Axios/TechCrunch/"
+                    "Bloomberg/Fortune coverage dated 2026-08-13",
                     notes="Seat changed twice in under two years. The 'AI stacking' failure "
                     "was confirmed in the wild on this exact story.",
                 ),
@@ -318,8 +333,8 @@ def seed_registry() -> EntityRegistry:
                     description="United Kingdom Prime Minister",
                     bucket=Bucket.VOLATILE,
                     value="Andy Burnham",
-                    last_verified=date(2026, 7, 20),
-                    provenance="handoff packet §5 — design-session value, not re-verified",
+                    last_verified=date(2026, 8, 27),
+                    provenance="verified 2026-08-27 against CNN/ABC/CFR; took office 2026-07-20",
                     notes="7 PMs in 10 years. Also the source of the independence-check "
                     "false-positive risk (many outlets, one underlying source).",
                 ),
@@ -328,10 +343,12 @@ def seed_registry() -> EntityRegistry:
                     description="United States Federal Reserve Chair",
                     bucket=Bucket.SCHEDULED,
                     value="Kevin Warsh",
-                    last_verified=date(2026, 8, 1),
+                    last_verified=date(2026, 8, 27),
                     term_end=date(2030, 5, 21),
-                    provenance="handoff packet §5 — design-session value, not re-verified",
-                    notes="Fixed term. Lowest-priority re-check of the four, but not zero: "
+                    provenance="verified 2026-08-27 against federalreserve.gov: oath taken "
+                    "2026-05-22, four-year term ending 2030-05-21",
+                    notes="Fixed term, and the term end is now a primary-source fact rather "
+                    "than an inference. Lowest-priority re-check of the five, but not zero: "
                     "see SCHEDULED_OFF_CYCLE_BACKSTOP_DAYS.",
                 ),
                 EntityRecord(
@@ -339,12 +356,27 @@ def seed_registry() -> EntityRegistry:
                     description="NATO Secretary General",
                     bucket=Bucket.SCHEDULED,
                     value="Mark Rutte",
-                    last_verified=date(2026, 8, 1),
+                    last_verified=date(2026, 8, 27),
                     term_end=date(2028, 10, 1),
-                    provenance="handoff packet §5 — design-session value, term end inferred "
-                    "from a 4-year term starting Oct 2024; INFERRED, not verified",
+                    provenance="verified 2026-08-27 against nato.int: took office 2024-10-01. "
+                    "Term end remains INFERRED from the four-year initial period — the post is "
+                    "extendable by mutual consent, so there is no fixed constitutional end date",
                     notes="Packet calls this 'scheduled-hybrid': 4yr renewable. The renewal "
-                    "option is exactly the case a pure SCHEDULED reading gets wrong.",
+                    "option is exactly the case a pure SCHEDULED reading gets wrong, which is "
+                    "why the term_end here is honestly labelled an inference.",
+                ),
+                EntityRecord(
+                    key="berkshire_ceo",
+                    description="Berkshire Hathaway Chief Executive Officer",
+                    bucket=Bucket.STABLE,
+                    value="Greg Abel",
+                    last_verified=date(2026, 8, 27),
+                    provenance="verified 2026-08-27 against CNBC/Forbes and Berkshire's 2026 "
+                    "reporting: Abel became CEO effective 2026-01-01",
+                    notes="The STABLE bucket's justification in one record: the same answer "
+                    "from 1965 to 2025, then a change. A bucket that treated long tenure as "
+                    "permanence would have been wrong here for the first time in sixty years, "
+                    "which is precisely when being wrong is most expensive.",
                 ),
             ]
         }

@@ -65,6 +65,27 @@ SCRIPT = {
 
 
 @pytest.fixture
+def stale_f01(monkeypatch):
+    """Force f01's ground truth to `stale` for the duration of a test.
+
+    f01's real entry is currently `verified`, and it should stay that way — but
+    the refusal-to-score-unverified-truth behaviour still needs testing, and a
+    test that only works while some fact happens to be stale would silently
+    stop testing anything the moment someone did the right thing and verified
+    it. So the state under test is injected rather than borrowed.
+    """
+    import lab.grading as grading_mod
+    from lab.battery import load_answers as real_load
+
+    def patched(*args, **kwargs):
+        data = real_load(*args, **kwargs)
+        data["answers"]["f01"] = dict(data["answers"]["f01"], status="stale")
+        return data
+
+    monkeypatch.setattr(grading_mod, "load_answers", patched)
+
+
+@pytest.fixture
 def run(tmp_path, monkeypatch):
     """Prepare exptest into a temp runs/ directory."""
     import lab.trials as trials_mod
@@ -182,7 +203,7 @@ class TestIngestAndAudit:
 
 class TestGrading:
     @pytest.fixture
-    def graded(self, run):
+    def graded(self, run, stale_f01):
         _, run_dir, _ = run
         write_answers(run_dir)
         ingest(run_dir)
@@ -272,7 +293,7 @@ class TestGrading:
 
 class TestJudgmentIngestAndReport:
     @pytest.fixture
-    def complete(self, run):
+    def complete(self, run, stale_f01):
         _, run_dir, _ = run
         write_answers(run_dir)
         ingest(run_dir)
@@ -322,10 +343,31 @@ class TestJudgmentIngestAndReport:
 
 
 class TestRefreshGate:
-    def test_refresh_reports_the_stale_packet_facts(self):
+    def test_unscorable_entries_are_reported_as_blocking(self):
+        from lab.refresh import refresh_queue, render
+
+        synthetic = {"answers": {
+            "q1": {"status": "verified"},
+            "q2": {"status": "stale", "verified_as_of": "2026-01-01", "notes": "needs a check"},
+            "q3": {"status": "unverified"},
+            "q4": {"status": "rubric_only"},
+        }}
+        q = refresh_queue(as_of=date(2026, 8, 27), answers=synthetic)
+        blocked = {a["question_id"] for a in q["answers_not_scorable"]}
+        assert blocked == {"q2", "q3"}
+        assert q["blocking"] is True
+        assert "needs a check" in render(q)
+
+    def test_live_answer_key_is_fully_verified(self):
+        """The packet's four carried-over facts were re-verified on 2026-08-27
+        and the rest of the key was established alongside them, so nothing
+        should currently be blocking. If this fails, a fact went stale or a
+        question was added without ground truth — both are real signals, and
+        the fix is `python -m lab refresh`, not editing this assertion."""
         from lab.refresh import refresh_queue
 
         q = refresh_queue(as_of=date(2026, 8, 27))
-        blocked = {a["question_id"] for a in q["answers_not_scorable"]}
-        assert {"f01", "f02", "f03", "f04"} <= blocked
-        assert q["blocking"] is True
+        assert q["answers_not_scorable"] == [], (
+            "answer key has unscorable entries: "
+            f"{[a['question_id'] for a in q['answers_not_scorable']]}"
+        )

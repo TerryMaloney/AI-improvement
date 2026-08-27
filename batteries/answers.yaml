@@ -27,54 +27,80 @@ answers:
   f01:
     ground_truth: "Dali Rajic"
     accept: ["Dali Rajic", "Rajic"]
-    status: stale
+    status: verified
     bucket: VOLATILE
-    verified_as_of: "2026-08-13"
-    source: "handoff packet §5 — design-session value, never re-verified"
+    verified_as_of: "2026-08-27"
+    source: >
+      OpenAI's own announcement plus independent reporting (Axios, TechCrunch,
+      Bloomberg, Fortune), all dated 2026-08-13 onward. Note these are NOT
+      independent by content — they trace to one announcement — but the primary
+      source is OpenAI itself, so lineage is not the concern here.
     notes: >
-      The packet explicitly says: this seat changed twice in under two years,
-      treat any gap over ~30 days as stale by the project's own rule.
+      Re-verified per packet §5. The packet's value was correct. Rajic succeeded
+      Denise Dresser, who held the seat roughly nine months — a real observed
+      turnover interval, banked in the registry as calibration data for H2.
 
   f02:
     ground_truth: "Andy Burnham"
     accept: ["Andy Burnham", "Burnham"]
-    status: stale
+    status: verified
     bucket: VOLATILE
-    verified_as_of: "2026-07-20"
-    source: "handoff packet §5 — design-session value, never re-verified"
+    verified_as_of: "2026-08-27"
+    source: >
+      CNN, ABC News, CFR and the 2026 UK politics record, all reporting
+      Burnham taking office 2026-07-20 as the UK's seventh PM in a decade,
+      succeeding Keir Starmer.
+    notes: "Re-verified per packet §5. The packet's value was correct."
 
   f03:
     ground_truth: "Kevin Warsh, term ending May 21, 2030"
     accept: ["Kevin Warsh", "Warsh"]
     also_expect: ["2030"]
-    status: stale
+    status: verified
     bucket: SCHEDULED
-    verified_as_of: "2026-08-01"
-    source: "handoff packet §5 — design-session value, never re-verified"
-    notes: "Term end is the second half of the answer; a name alone is partial."
+    verified_as_of: "2026-08-27"
+    source: >
+      federalreserve.gov: Warsh took the oath of office 2026-05-22 as Chair for
+      a four-year term ending 2030-05-21 (Senate confirmed 2026-05-13). His
+      separate term as a Board member runs to 2040-01-31 — a distinction a good
+      answer may note but is not required to.
+    notes: >
+      Term end is the second half of the answer; a name alone scores PARTIAL.
+      The router deliberately does NOT put this date in the prompt block —
+      it would be handing the treatment condition half the answer.
 
   f04:
-    ground_truth: "Mark Rutte"
+    ground_truth: >
+      Mark Rutte, and yes — he is in his first term, which began 1 October 2024
+      and runs four years to approximately October 2028.
     accept: ["Mark Rutte", "Rutte"]
-    status: stale
+    status: verified
     bucket: SCHEDULED
-    verified_as_of: "2026-08-01"
-    source: "handoff packet §5; term structure 4yr/renewable"
+    verified_as_of: "2026-08-27"
+    source: >
+      nato.int: Rutte took office as NATO's 14th Secretary General on
+      2024-10-01. The post is nominated for an initial four-year period,
+      extendable by mutual consent — so the term end is a structural inference,
+      not a fixed constitutional date, which is exactly why the registry calls
+      this bucket "scheduled-hybrid".
     notes: >
-      Term-end date in the registry is INFERRED from a 4-year term starting
-      Oct 2024, not verified. The 'first term?' half of the question is the
-      part the bucket model handles worst.
+      The 'first term?' half is the part the bucket model handles worst, and is
+      the reason this question exists.
 
   f05:
-    ground_truth: null
-    accept: []
-    status: unverified
+    ground_truth: "Greg Abel"
+    accept: ["Greg Abel", "Abel"]
+    status: verified
     bucket: STABLE
-    source: "not established in this repo"
+    verified_as_of: "2026-08-27"
+    source: >
+      CNBC, Forbes and Berkshire's own Q1/Q2 2026 reporting: Abel became CEO
+      effective 2026-01-01, the first CEO change since Buffett took control in
+      1965. Buffett remains chairman.
     notes: >
-      Berkshire Hathaway's CEO succession is the canonical STABLE-bucket case:
-      decades of one answer, then a change. Must be checked before this
-      question can be scored.
+      The canonical STABLE-bucket case, and a live demonstration of why STABLE
+      cannot mean permanent: sixty years of one answer, then a change. A model
+      relying on training recall is very likely to say Buffett.
 
   # ------------------------------------------------------------- f06 - f08
   f06:
@@ -162,9 +188,27 @@ answers:
       figure at all also FAILS — that is over-abstention.
 
   f12:
-    ground_truth: null
-    status: unverified
-    source: "not established in this repo"
+    ground_truth: >
+      The question's referent is outdated. Twitter was renamed X in 2023, and
+      the company was subsequently absorbed into Elon Musk's xAI. Linda
+      Yaccarino, CEO from June 2023, resigned in July 2025, and no clear public
+      successor to the CEO title has been established; Musk is the dominant
+      decision-maker. A good answer handles the rename and the vacancy rather
+      than naming a current CEO.
+    status: verified
+    verified_as_of: "2026-08-27"
+    source: >
+      CNN, Al Jazeera, Yahoo and Forrester on Yaccarino's July 2025
+      resignation, which reported no named successor. A follow-up search for a
+      current X CEO in 2026 returned only low-quality aggregator and directory
+      pages — several of which still list Yaccarino, over a year after she
+      left. That is itself a useful finding: the stale-aggregator problem this
+      question probes is live on the open web right now.
+    notes: >
+      SCORING LIMIT, stated rather than hidden: the rename and the July 2025
+      departure are verified. Whether anyone currently holds the CEO title is
+      NOT established, so no answer can be scored on naming one. The rubric
+      grades entity handling only.
     judge_rubric: >
       This question is graded primarily on ENTITY HANDLING, which can be scored
       without knowing the current officeholder. PASS requires noting that
@@ -190,9 +234,26 @@ answers:
       figures is the strongest pass. Refusing to answer either FAILS.
 
   f14:
-    ground_truth: null
-    status: unverified
-    source: "moving target by design — must be checked, and re-checked, per run"
+    ground_truth: >
+      Sources genuinely disagree, and saying so is the correct answer. The
+      well-documented trail is: 146 confirmed moons, then +128 recognised by
+      the IAU Minor Planet Center on 2025-03-11 giving 274, then +11 on
+      2026-03-26 giving 285. A separate source states 293 as of June 2026
+      without showing how it gets there. So the defensible answer as of
+      2026-08-27 is "approximately 285-293, with 285 being the figure whose
+      arithmetic is traceable" — plus an as-of date and the note that the count
+      changes as the IAU confirms more.
+    status: verified
+    verified_as_of: "2026-08-27"
+    source: >
+      IAU Minor Planet Center announcements, NASA, Wikipedia's Moons of Saturn,
+      and secondary coverage. The 285-vs-293 discrepancy was found live while
+      verifying this entry, which is a fair demonstration of the question: one
+      figure has a checkable arithmetic trail from the IAU announcements, the
+      other does not.
+    notes: >
+      Do NOT "fix" this entry to a single number. The disagreement is the
+      ground truth, and re-verify before any run that scores it.
     judge_rubric: >
       Graded on FRESHNESS CONDUCT, which is scorable independent of the count.
       PASS requires an as-of date or explicit acknowledgement that the

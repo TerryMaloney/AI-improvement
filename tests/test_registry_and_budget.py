@@ -108,29 +108,64 @@ class TestRegistry:
         reg = seed_registry()
         assert reg.match("What is 2 + 2?") == []
 
+    def _fixture_registry(self) -> EntityRegistry:
+        """A registry built for the test rather than borrowed from the seed.
+
+        The seed's dates change every time someone re-verifies a fact, and a
+        test that breaks on a successful refresh is a test that discourages
+        refreshing.
+        """
+        return EntityRegistry(
+            {
+                "seat": EntityRecord(
+                    "seat", "Some Seat", Bucket.VOLATILE, "First Holder",
+                    last_verified=date(2026, 7, 20)
+                )
+            }
+        )
+
     def test_record_verification_banks_a_turnover_interval(self):
         """This is the mechanism that replaces the eyeballed 30-day threshold
         with a measured one."""
-        reg = seed_registry()
-        reg.record_verification("uk_pm", "Someone Else", date(2026, 9, 20))
-        rec = reg.get("uk_pm")
+        reg = self._fixture_registry()
+        reg.record_verification("seat", "Second Holder", date(2026, 9, 20))
+        rec = reg.get("seat")
         assert rec.observed_intervals_days == [62]
-        assert rec.value == "Someone Else"
+        assert rec.value == "Second Holder"
 
     def test_unchanged_value_banks_nothing(self):
-        reg = seed_registry()
-        reg.record_verification("uk_pm", "Andy Burnham", date(2026, 9, 20))
-        assert reg.get("uk_pm").observed_intervals_days == []
+        reg = self._fixture_registry()
+        reg.record_verification("seat", "First Holder", date(2026, 9, 20))
+        assert reg.get("seat").observed_intervals_days == []
 
     def test_sqlite_roundtrip(self, tmp_path):
-        reg = seed_registry()
-        reg.record_verification("uk_pm", "Someone Else", date(2026, 9, 20))
+        reg = self._fixture_registry()
+        reg.record_verification("seat", "Second Holder", date(2026, 9, 20))
         path = tmp_path / "reg.db"
         reg.save(path)
         loaded = EntityRegistry.load(path)
         assert len(loaded) == len(reg)
-        assert loaded.get("uk_pm").observed_intervals_days == [62]
+        assert loaded.get("seat").observed_intervals_days == [62]
+
+    def test_seed_roundtrips_through_sqlite(self, tmp_path):
+        reg = seed_registry()
+        path = tmp_path / "seed.db"
+        reg.save(path)
+        loaded = EntityRegistry.load(path)
+        assert len(loaded) == len(reg)
         assert loaded.get("fed_chair").term_end == date(2030, 5, 21)
+        assert loaded.get("openai_cro").observed_intervals_days == \
+            reg.get("openai_cro").observed_intervals_days
+
+    def test_first_measured_turnover_interval_is_recorded(self):
+        """The eyeballed 30-day VOLATILE threshold now has one real datum
+        beside it: the OpenAI CRO seat turned over after roughly nine months,
+        about 9x the threshold. One entity is not a calibration, but it is the
+        first number here that was measured rather than guessed (ledger H2)."""
+        rec = seed_registry().get("openai_cro")
+        assert rec.observed_intervals_days
+        assert rec.observed_intervals_days[0] > DEFAULT_VOLATILE_TTL_DAYS
+        assert rec.threshold_is_calibrated is False  # one observation is not three
 
     def test_load_missing_file_is_empty_not_an_error(self, tmp_path):
         assert len(EntityRegistry.load(tmp_path / "nope.db")) == 0
