@@ -41,6 +41,10 @@ CREATE TABLE IF NOT EXISTS answers (
     answer_text TEXT,
     claim_type_selfreport TEXT,
     searches_used INTEGER,
+    tool_calls_observed INTEGER,
+    budget_ceiling INTEGER,
+    budget_violation_observed INTEGER DEFAULT 0,
+    retrieval_failures_json TEXT,
     sources_json TEXT,
     confidence TEXT,
     abstained INTEGER DEFAULT 0,
@@ -123,13 +127,27 @@ class Store:
         self.conn.commit()
 
     def save_answer(self, trial_id: str, payload: dict, duration_s: float | None = None) -> None:
+        """R2: `tool_calls_observed` is the PRIMARY cost metric and comes from the
+        harness, not the solver. `searches_used` is retained beside it as a
+        self-report; the GAP between them is itself a measurement (does the
+        model know what it did?) and is reported, not reconciled."""
+        observed = payload.get("tool_calls_observed")
+        ceiling = payload.get("budget_ceiling")
+        violation = (
+            1 if (isinstance(observed, int) and isinstance(ceiling, int) and observed > ceiling)
+            else 0
+        )
         self.conn.execute(
-            "INSERT OR REPLACE INTO answers VALUES (?,?,?,?,?,?,?,?,?,?)",
+            "INSERT OR REPLACE INTO answers VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
             (
                 trial_id,
                 payload.get("answer"),
                 payload.get("claim_type"),
                 payload.get("searches_used"),
+                observed,
+                ceiling,
+                violation,
+                json.dumps(payload.get("retrieval_failures") or []),
                 json.dumps(payload.get("sources") or []),
                 payload.get("confidence"),
                 1 if payload.get("abstained") else 0,
@@ -173,6 +191,8 @@ class Store:
             self.conn.execute(
                 """
                 SELECT t.*, a.answer_text, a.claim_type_selfreport, a.searches_used,
+                       a.tool_calls_observed, a.budget_ceiling, a.budget_violation_observed,
+                       a.retrieval_failures_json,
                        a.sources_json, a.confidence, a.abstained, a.duration_s,
                        g.verdict, g.score, g.method AS grade_method, g.grader, g.detail_json
                 FROM trials t

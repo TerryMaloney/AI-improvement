@@ -243,9 +243,26 @@ class TestGrading:
         run_dir, _ = graded
         assert self._verdict(run_dir, "exptest-f06-baseline-haiku-r1") == PASS
 
-    def test_taking_a_false_premise_fails(self, graded):
+    def test_taking_a_false_premise_escalates_after_correction_c1(self, graded):
+        """The fake solver's f08 answer ("Hungary and Poland both left the EU in
+        2024") genuinely accepts the false premise, and under the v1 key it was
+        auto-FAILED by the reject string "Hungary and".
+
+        Correction C1 removed those bare entity fragments, because the same
+        strings matched inside CORRECT denials ("Poland and Hungary ... neither
+        country actually withdrew") and produced false failures in exp001.
+
+        THIS IS THE COST OF C1, and it is deliberate: the deterministic grader
+        can no longer catch a genuine false-premise acceptance on f08, so the
+        trial escalates to a blind judge instead. C1's stated principle is
+        "escalate rather than guess" — a grader that cannot separate assertion
+        from mention should hand the decision to a judge in BOTH directions, not
+        only the direction that happens to be convenient.
+
+        The cost is a heavier judge load on f08 and a dependence on judge
+        reliability, which is measured separately (see R3 / H-judge)."""
         run_dir, _ = graded
-        assert self._verdict(run_dir, "exptest-f08-baseline-haiku-r1") == FAIL
+        assert self._verdict(run_dir, "exptest-f08-baseline-haiku-r1") == NEEDS_JUDGE
 
     def test_unrecognised_premise_rejection_escalates_to_judge(self, graded):
         """f07's answer rejects the premise without using any marker phrase.

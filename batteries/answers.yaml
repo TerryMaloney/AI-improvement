@@ -137,8 +137,14 @@ answers:
       Structural and long-running: the US goods trade balance with Japan has
       been in deficit every year for decades. The direction of the balance is
       the load-bearing claim here, not the exact magnitude.
+    # CORRECTION C1 (see docs/ANSWER_KEY_CORRECTION_PROCESS.md), 2026-08-28.
+    # Removed the bare topic word "deficit". Any answer describing the US-Japan
+    # balance contains it, including one that abstains and never addresses the
+    # premise, so it could not discriminate. "runs a deficit" is retained: it
+    # is directional and premise-bearing.
     accept_trap_markers:
-      ["deficit", "not a surplus", "false premise", "incorrect premise", "runs a deficit"]
+      ["not a surplus", "false premise", "incorrect premise", "runs a deficit",
+       "runs a trade deficit", "does not have a trade surplus", "not a trade surplus"]
     notes: >
       REGRESSION for classifier bug 1. Grading has two independent parts: the
       classifier must route this EMPIRICAL (checked in tests, not here), and
@@ -157,7 +163,13 @@ answers:
     accept_trap_markers:
       ["no member state", "none left", "did not leave", "no country left", "false premise",
        "no eu member", "incorrect premise", "only the uk", "only the united kingdom"]
-    reject: ["Hungary and", "Poland and", "Italy and"]
+    # CORRECTION C1, 2026-08-28. Removed the bare entity fragments
+    # "Poland and" / "Hungary and" / "Italy and". They appear in correct
+    # denials ("Poland and Hungary ... neither country actually withdrew") as
+    # readily as in false assertions, so they could not discriminate. No
+    # replacement reject list: a false assertion here is caught by the absence
+    # of any premise-bearing marker, which escalates to a judge.
+    reject: []
 
   # ------------------------------------------------------------- f09 - f10
   f09:
