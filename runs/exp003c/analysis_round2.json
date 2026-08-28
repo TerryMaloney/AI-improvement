@@ -1,0 +1,13 @@
+{
+ "n": 24,
+ "delta_length": -0.125,
+ "sigma_judge": 0.0,
+ "per_item_delta": {
+  "p01": -0.5,
+  "p02": 0.0,
+  "p03": 0.0,
+  "p04": 0.0
+ },
+ "band": "AMBER",
+ "not_established_threshold": 0.25
+}

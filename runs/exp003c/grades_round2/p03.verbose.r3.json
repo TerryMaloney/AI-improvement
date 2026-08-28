@@ -1,0 +1,9 @@
+{
+ "verdict": "PARTIAL",
+ "score": 0.5,
+ "reasoning": "Correct range; explanation focuses on wartime disruption rather than the established cause, so the second component is not satisfied.",
+ "judge_tokens": 2989,
+ "judge_latency_ms": 17950,
+ "judge_model": "sonnet",
+ "judge_saw_reasoning": false
+}

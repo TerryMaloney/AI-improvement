@@ -1,0 +1,9 @@
+{
+ "verdict": "PARTIAL",
+ "score": 0.5,
+ "reasoning": "Gives the correct range but does not explain why estimates differ; only states the total is unsettled.",
+ "judge_tokens": 2866,
+ "judge_latency_ms": 2687,
+ "judge_model": "sonnet",
+ "judge_saw_reasoning": false
+}

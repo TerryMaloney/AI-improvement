@@ -1,0 +1,9 @@
+{
+ "verdict": "PARTIAL",
+ "score": 0.5,
+ "reasoning": "Correctly names Jupiter but only says 'gas giant' without specifying hydrogen and helium as its main components.",
+ "judge_tokens": 2809,
+ "judge_latency_ms": 2327,
+ "judge_model": "sonnet",
+ "judge_saw_reasoning": false
+}

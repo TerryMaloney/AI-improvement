@@ -1,0 +1,9 @@
+{
+ "verdict": "PARTIAL",
+ "score": 0.5,
+ "reasoning": "Correctly states the wall fell in 1989 but never mentions reunification. Only one of two required components.",
+ "judge_tokens": 2927,
+ "judge_latency_ms": 2256,
+ "judge_model": "sonnet",
+ "judge_saw_reasoning": false
+}

@@ -1,0 +1,9 @@
+{
+ "verdict": "PARTIAL",
+ "score": 0.5,
+ "reasoning": "Correct numeric component; explanation off-target relative to ground truth cause, so only partially meets the standard.",
+ "judge_tokens": 2989,
+ "judge_latency_ms": 9220,
+ "judge_model": "sonnet",
+ "judge_saw_reasoning": false
+}

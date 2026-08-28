@@ -1,0 +1,9 @@
+{
+ "verdict": "FAIL",
+ "score": 0.0,
+ "reasoning": "Names Jupiter and calls it a gas giant, but never states hydrogen and helium; judged to fail even the PARTIAL bar.",
+ "judge_tokens": 2914,
+ "judge_latency_ms": 2869,
+ "judge_model": "sonnet",
+ "judge_saw_reasoning": false
+}

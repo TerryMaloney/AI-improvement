@@ -1,0 +1,9 @@
+{
+ "verdict": "FAIL",
+ "score": 0.0,
+ "reasoning": "Names Jupiter but never states composition is mainly hydrogen and helium, only 'gas giant'. Judged to fall short of even PARTIAL.",
+ "judge_tokens": 2914,
+ "judge_latency_ms": 3062,
+ "judge_model": "sonnet",
+ "judge_saw_reasoning": false
+}

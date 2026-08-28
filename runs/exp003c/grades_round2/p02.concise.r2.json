@@ -1,0 +1,9 @@
+{
+ "verdict": "PARTIAL",
+ "score": 0.5,
+ "reasoning": "Correctly gives 1989 but never states Germany was reunified. One of two components.",
+ "judge_tokens": 2814,
+ "judge_latency_ms": 2318,
+ "judge_model": "sonnet",
+ "judge_saw_reasoning": false
+}

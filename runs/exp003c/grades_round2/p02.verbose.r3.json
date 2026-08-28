@@ -1,0 +1,9 @@
+{
+ "verdict": "PARTIAL",
+ "score": 0.5,
+ "reasoning": "Correctly states 1989 but never mentions reunification, only 'a turning point for the country'.",
+ "judge_tokens": 2921,
+ "judge_latency_ms": 2572,
+ "judge_model": "sonnet",
+ "judge_saw_reasoning": false
+}

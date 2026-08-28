@@ -1,0 +1,9 @@
+{
+ "verdict": "PARTIAL",
+ "score": 0.5,
+ "reasoning": "Correctly cites the 17-100 million range, but the explanation focuses on wartime disruption rather than the established cause (poor recording in India, China, Africa).",
+ "judge_tokens": 2991,
+ "judge_latency_ms": 15105,
+ "judge_model": "sonnet",
+ "judge_saw_reasoning": false
+}

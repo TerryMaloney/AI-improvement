@@ -1,0 +1,9 @@
+{
+ "verdict": "PARTIAL",
+ "score": 0.5,
+ "reasoning": "Acknowledges the unknown and explains difficulty, but never gives a quantitative anchor.",
+ "judge_tokens": 2995,
+ "judge_latency_ms": 2602,
+ "judge_model": "sonnet",
+ "judge_saw_reasoning": false
+}

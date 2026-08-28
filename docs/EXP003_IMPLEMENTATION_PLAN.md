@@ -364,3 +364,79 @@ experiment so far).
 - No modification of exp001, exp002, or their stored results.
 - No solver trial until the exp003c gate is evaluated and any bound mitigation
   is implemented and committed.
+
+---
+
+# 11. AMENDMENT — exp003c result and the design changes it binds
+
+**exp003c is complete: 96 judge dispatches, 0 solver trials. Band = AMBER.**
+Full record: `runs/exp003c/EXP003C_REPORT.md`.
+
+Measured: **Δ_length = −0.125** (verbose scores *lower*), driven entirely by one
+of four partial-band items which moved PARTIAL→FAIL on identical content;
+Δ_format = 0.000; terminology and hedge-vocabulary effects = 0.000;
+**σ_judge = 0.0000 across all 96 judgements** — the judge is deterministic on
+fixed input, so the movement is systematic, not noise.
+
+Verbosity never rescued a wrong answer (24/24 at 0.00). The dangerous direction
+is clean.
+
+## 11.1 Changes now binding on exp003a/b (step 2 of §2, complete)
+
+| # | Change | Where it applies |
+|---|---|---|
+| **C1** | **Length covariate on every judged contrast.** Answer length is reported beside every judged number, with a score-vs-length relationship per cell. | all judged tables |
+| **C2** | **The 2× rule.** Any judged contrast smaller than **0.25** score units is declared NOT ESTABLISHED by rule. | all judged contrasts |
+| **C3** | **Cell U converts to a forced categorical code.** Primary outcome is `response_mode` ∈ {assert, qualify, range, flag_conflict, reject_premise, abstain}, with anchor examples in the packet — not a continuous quality score. | §5.4 |
+| **C4** | **K=3 for judged trials** (from the round-1 `judge_noise_floor` trigger). | all judged trials |
+
+C1–C3 supersede the corresponding text in §5.4 and §6. They are not optional and
+were bound to the AMBER band before the band was known.
+
+## 11.2 An open operator decision, to be settled in exp003a's pre-registration
+
+**C4 (K=3) fired on a degenerate `0.0 >= 0.0` comparison.** It is applied because
+pre-registration is binding and more judging is the conservative direction. But
+σ_judge = 0.0000 over 96 judgements means replicates added nothing measurable,
+and K=3 triples judge cost for no evident information.
+
+Relaxing C4 to K=1-with-audit-sample is defensible **only** as an explicit,
+written decision in exp003a's pre-registration, made before exp003a runs. It may
+not be relaxed silently, and it may not be relaxed after seeing exp003a results.
+Flagged here so the choice is made deliberately rather than by drift.
+
+## 11.3 Consequence for the deterministic-first principle (D5)
+
+exp003c strengthens D5 rather than weakening it. The measured effect appears
+**only at a rubric boundary in a judged continuous score**, and is exactly zero
+everywhere the outcome is unambiguous. Cells L and R — the two primary cells —
+are graded by name and number matching with no judge in the loop, so C1–C4 do
+not touch them and the primary result cannot be a length artifact. That was the
+design bet, and the calibration vindicates it.
+
+## 11.4 Directional caveat on exp001 and exp002 — neither is rescored
+
+Verbose scored **lower**. The epistemic directive lengthens answers. If the p01
+effect generalises, the directive conditions in exp001 and exp002 were
+**deflated** by the grader rather than flattered by it, making those contrasts
+conservative rather than inflated.
+
+This rests on one item. It is a caveat on how to read two frozen experiments,
+not a correction to them. Neither is rescored; both remain frozen.
+
+## 11.5 Where the build now stands
+
+| Step | State |
+|---|---|
+| 0 plan | done |
+| 1 exp003c | **done — AMBER** |
+| 2 evaluation-design revision | **done — C1–C4 above** |
+| 3 instrument work (§7) | next |
+| 4 `diagnostic_v1` battery + per-item specs | blocked on 3 |
+| 5 screens + frozen retrieval scout | blocked on 4 |
+| 6 formal preflight (§8) | blocked on 5 |
+| 7 exp003a | blocked on 6 |
+
+**No solver trial has been run. None may run until steps 3–6 are complete.**
+Questions 4, 5 and 8 of the §8 preflight can now be answered with measured
+numbers rather than reasoning, which was the point of running exp003c first.

@@ -1,0 +1,9 @@
+{
+ "verdict": "PARTIAL",
+ "score": 0.5,
+ "reasoning": "Acknowledges the number is not known and explains why, but never provides a quantitative anchor to convey the scale of the gap.",
+ "judge_tokens": 2988,
+ "judge_latency_ms": 2588,
+ "judge_model": "sonnet",
+ "judge_saw_reasoning": false
+}

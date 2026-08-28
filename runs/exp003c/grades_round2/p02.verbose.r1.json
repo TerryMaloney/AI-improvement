@@ -1,0 +1,9 @@
+{
+ "verdict": "PARTIAL",
+ "score": 0.5,
+ "reasoning": "Correctly gives 1989 but never states Germany was reunified afterwards; only vaguely 'a turning point'.",
+ "judge_tokens": 2920,
+ "judge_latency_ms": 4569,
+ "judge_model": "sonnet",
+ "judge_saw_reasoning": false
+}
