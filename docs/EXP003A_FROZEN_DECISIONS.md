@@ -366,3 +366,66 @@ that the self-reported column cannot carry a cost conclusion, which is all the
 deprecation requires. Note also that the closed conditions read `not measured`
 for observed calls while reading `0` for self-report: exactly the `NULL`/`0`
 distinction FD-3 exists to preserve, visible on real data.
+
+---
+
+## FD-9 — Three condition texts do not exist yet, and are treatments
+
+**Bucket:** OPEN, closing before exp003a dispatches. Found during step 4 while
+writing per-condition predictions.
+
+`diagnostic_v1` names nine conditions. Six are built and frozen. Three are not,
+and each is a **treatment**, so each needs its exact text or protocol committed
+before the trials it governs — not assembled at dispatch time.
+
+| Condition | Status | What must be frozen |
+|---|---|---|
+| `A_only` | **not built** | The memo defines it as "epistemic framing alone, on a length-matched carrier" (R-2). Operationally that is the routed directive's opening framing sentence, without the procedural bullets, the freshness section or the budget line, carried on a block length-matched to the full directive by the same generator that matches the placebo. The exact carrier text is a treatment and is not yet written. |
+| `search_selfcheck` | **not built** | Two dispatches: answer, then a self-review of the solver's own answer. The review prompt is a treatment. What the reviewer sees — its own answer only, or the answer plus the retrieved snippets — changes what the condition measures and must be decided in writing, not at runtime. |
+| `search_independent` | **not built** | Three dispatches: generator, claim-blind evidence gatherer, separate verifier. "Claim-blind" is the load-bearing property and needs an operational definition: the gatherer must not be told which claim it is gathering for, or the arm collapses into `search_selfcheck` with extra steps. |
+
+### Decision
+
+All three are written and committed as part of step 7's build, **before** any
+dispatch, and their texts are appended to this register at that point. Until
+then, `diagnostic_v1`'s predictions for those conditions are predictions about
+a treatment whose wording is not fixed, and that is stated here rather than
+discovered later.
+
+Two constraints bind them now:
+
+1. **`A_only` must be length-matched by the same machinery as the placebo.**
+   If it is shorter than `directive_only`, the `A_only` vs `directive_only`
+   contrast is confounded with length — reintroducing E4 into the one contrast
+   built to exclude it.
+2. **Neither multi-dispatch arm may be described as verification.** Both are
+   snippet-level checking (FD-4). Their dispatch counts must be reported, since
+   `search_independent` costs three dispatches per trial and a cost comparison
+   that counts it as one is wrong by a factor of three.
+
+---
+
+## FD-10 — Two trap strings were removed for a defect the lab had already met
+
+**Bucket:** FREE (answer-key craft), recorded because the reasoning generalises.
+
+Step 4's answer key initially carried two `reject` strings that the existing
+`test_answer_key_integrity` C1 rule refused. Investigating rather than
+overriding it found that one was genuinely unsafe:
+
+> `"because the coriolis effect causes water to spin"` appears **verbatim inside
+> a correct denial** — "...not because the Coriolis effect causes water to spin
+> down the drain...".
+
+That is the same defect that made a correct answer about Tesla's Nobel
+nominations FAIL in exp001, and which `grade_trap_detected`'s marker-first
+ordering was rewritten to survive. A reject string a right answer can contain is
+worse than no reject string, so D02 now has none and relies on markers plus
+judge fallback. D05's was rephrased so that a denial cannot contain it
+contiguously.
+
+Separately, every cell-D trap marker was rewritten from a bare topic word
+(`photoelectric`, `madman`, `too weak`) into a relational phrase
+(`was for the photoelectric effect`, `is spoken by a madman`, `is far too
+weak`), and a bare year was removed outright. The rule was not relaxed to admit
+the markers; the markers were made to satisfy the rule.

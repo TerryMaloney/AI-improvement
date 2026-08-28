@@ -22,6 +22,13 @@
 # lab is not exempt from its own rules. Run `python -m lab refresh` to see
 # what needs checking.
 
+# Batteries authored after factual_v1 bring their own key file rather than
+# growing this one. That keeps the file exp001 and exp002 were graded against
+# unedited, which is the point — see docs/EXP003A_FROZEN_DECISIONS.md FD-3 on
+# not rewriting the material older results rest on.
+includes:
+  - answers.diagnostic_v1.yaml
+
 answers:
   # ------------------------------------------------------------- f01 - f05
   f01:

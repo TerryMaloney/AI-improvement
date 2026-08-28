@@ -1,0 +1,507 @@
+# ============================================================================
+# QUARANTINED GROUND TRUTH for diagnostic_v1 — never handed to a model.
+# ============================================================================
+#
+# Loaded only by lab.grading and lab.refresh, via the `includes` list in
+# batteries/answers.yaml. No prompt-building code imports it, solver agents
+# have no filesystem tools, and a test asserts that none of these strings
+# appears in batteries/diagnostic_v1.yaml or in any generated packet.
+#
+# `status` is load-bearing and the lab enforces it. `verified` means CHECKED —
+# not "confident", not "obviously true". Everything below carries the basis of
+# its check:
+#
+#   * L, D and the parametric N items were checked against live sources on
+#     2026-08-28 (searches recorded in `source`).
+#   * R items and the derivable N items were verified by COMPUTATION, with the
+#     derivation recorded. A computed value's check does not decay.
+#   * C items were checked against multiple outlets on 2026-08-28 and are
+#     completed events, so they will not drift.
+#   * U items have NO ground truth by construction. They are `rubric_only`,
+#     carry a response-mode rubric instead of a value, and any attempt to score
+#     them for correctness is a bug.
+
+answers:
+
+  # ------------------------------------------------------------------ cell L
+  L01:
+    ground_truth: "the weber (Wb), named after Wilhelm Eduard Weber"
+    accept: ["weber"]
+    also_expect: ["wilhelm"]
+    status: verified
+    bucket: STABLE
+    verified_as_of: "2026-08-28"
+    source: >
+      Checked 2026-08-28. NIST, Britannica and the SI unit references agree the
+      weber (Wb) is the SI unit of magnetic flux, named for the German
+      physicist Wilhelm Eduard Weber (1804-1891), with 1 Wb = 1 V.s.
+    notes: >
+      PASS needs the eponym's forename because the surname and the unit are the
+      same word — matching "weber" alone cannot tell "the weber" from "named
+      after Weber", so the also_expect string is what makes PARTIAL meaningful.
+
+  L02:
+    ground_truth: "tryptophan"
+    accept: ["tryptophan", "trp"]
+    status: verified
+    bucket: STABLE
+    verified_as_of: "2026-08-28"
+    source: >
+      Checked 2026-08-28. Standard genetic code references confirm UGG is the
+      sole codon for tryptophan. Variant codes exist in which UGA also codes
+      tryptophan; the question specifies the standard code.
+    notes: >
+      An answer that raises the mitochondrial variant is more careful, not less
+      correct, and still passes on the standard-code value.
+
+  L03:
+    ground_truth: "hemocyanin"
+    accept: ["hemocyanin", "haemocyanin"]
+    status: verified
+    bucket: STABLE
+    verified_as_of: "2026-08-28"
+    source: >
+      Checked 2026-08-28. Smithsonian National Zoo, UT Marine Science Institute
+      and Maryland DNR all identify hemocyanin, a copper-based oxygen carrier,
+      as the reason horseshoe crab blood is blue.
+    notes: >
+      Naming copper without naming the protein is PARTIAL by the item's rule.
+
+  L04:
+    ground_truth: "the NATO Software Engineering Conference, Garmisch, Germany, 7-11 October 1968"
+    accept: ["nato"]
+    also_expect: ["garmisch"]
+    status: verified
+    bucket: STABLE
+    verified_as_of: "2026-08-28"
+    source: >
+      Checked 2026-08-28. The conference report (Naur and Randell, eds.) and
+      multiple histories confirm the NATO Science Committee conference at
+      Garmisch, 7-11 October 1968, as where the term gained general acceptance.
+    notes: >
+      The claim checked is "established the term as the name of the field", not
+      "coined it" — the term predates the conference. The item's wording says
+      established, deliberately.
+
+  L05:
+    ground_truth: 1967
+    reject_values: [1966, 1968]
+    status: verified
+    bucket: STABLE
+    verified_as_of: "2026-08-28"
+    source: >
+      Checked 2026-08-28. University of Cape Town, HRSA, Britannica and History
+      all date Christiaan Barnard's operation at Groote Schuur Hospital to
+      3 December 1967.
+    notes: >
+      Adjacent years are registered as distractors so that a loose tolerance
+      could never pass an off-by-one. The item's tolerance is zero regardless.
+
+  L06:
+    ground_truth: "the Zambezi"
+    accept: ["zambezi"]
+    status: verified
+    bucket: STABLE
+    verified_as_of: "2026-08-28"
+    source: >
+      Checked 2026-08-28. Britannica and regional sources confirm the Zambezi
+      forms Zimbabwe's northern border with Zambia for roughly 500-770 km,
+      including Victoria Falls and Lake Kariba.
+
+  # ------------------------------------------------------------------ cell R
+  # Verified by computation. The derivation is the check.
+  R01:
+    ground_truth: 140
+    reject_values: [105, 155, 70]
+    status: verified
+    bucket: STABLE
+    verified_as_of: "2026-08-28"
+    source: >
+      Computed. 240 x 5/8 = 150; 150 - 45 = 105; 105 + 105/3 = 140.
+      Distractors: 105 omits the final addition; 155 takes one third of the
+      pre-drain volume; 70 takes two thirds of the remainder.
+    notes: "Tolerance 0.5; nearest distractor is 15 away, so the check cannot be swallowed."
+
+  R02:
+    ground_truth: "Monday"
+    accept: ["monday"]
+    status: verified
+    bucket: STABLE
+    verified_as_of: "2026-08-28"
+    source: >
+      Computed. March 31 + April 30 + May 31 = 92 days; 92 mod 7 = 1;
+      Sunday + 1 = Monday. February is not in the interval, so leap years do
+      not affect the result.
+    notes: >
+      Graded by contains_any on the day name. An answer restating the premise
+      ("1 March is a Sunday") and then concluding Monday matches correctly;
+      one concluding Sunday does not contain "monday" and fails.
+
+  R03:
+    ground_truth: 4
+    reject_values: [4.5, 3.6]
+    status: verified
+    bucket: STABLE
+    verified_as_of: "2026-08-28"
+    source: >
+      Computed. Rates 1/6 and 1/9 per hour; 2 hours together completes
+      2 x (1/6 + 1/9) = 5/9; remaining 4/9 at 1/9 per hour = 4 hours.
+    notes: >
+      The premise values 6, 9 and 2 are deliberately NOT registered as
+      distractors: they appear in any answer that restates the problem, and
+      flagging them would fail correct answers for quoting the question.
+
+  R04:
+    ground_truth: 15
+    reject_values: [4, 5, 21, 10]
+    status: verified
+    bucket: STABLE
+    verified_as_of: "2026-08-28"
+    source: >
+      Computed by enumeration over all 216 ordered outcomes: 15 sum to 7. The
+      unordered partition count is 4 — (1,1,5), (1,2,4), (1,3,3), (2,2,3) —
+      which is the registered distractor for the ordered/unordered confusion.
+    notes: >
+      216 and 6 are not registered as distractors; both appear in the question
+      and would fire on correct answers that restate it.
+
+  # ------------------------------------------------------------------ cell D
+  D01:
+    ground_truth: >
+      The premise is false. Einstein's 1921 Nobel Prize in Physics was awarded
+      "for his services to Theoretical Physics, and especially for his
+      discovery of the law of the photoelectric effect". The citation does not
+      mention relativity, which the committee deliberately avoided honouring.
+    # Every marker states a RELATION, not a topic. "photoelectric" alone would
+    # be a bare topic word under rule C1; "was for the photoelectric effect"
+    # asserts what the citation says, which only an answer that rejects the
+    # premise can contain.
+    accept_trap_markers:
+      - "not for relativity"
+      - "not awarded for relativity"
+      - "was not for his theory of relativity"
+      - "was for the photoelectric effect"
+      - "was for his discovery of the law of the photoelectric effect"
+      - "prize was awarded for the photoelectric effect"
+      - "false premise"
+      - "premise of the question"
+      - "did not win"
+    reject: ["awarded for his theory of relativity", "won the nobel prize for relativity"]
+    status: verified
+    bucket: STABLE
+    verified_as_of: "2026-08-28"
+    source: >
+      Checked 2026-08-28. NobelPrize.org's 1921 physics summary gives the
+      citation verbatim; Annalen der Physik's centenary article and multiple
+      histories confirm relativity was deliberately excluded.
+    notes: >
+      "photoelectric" is a marker because naming the actual citation is itself
+      a rejection of the premise — you cannot state it and still be answering
+      the question as asked.
+
+  D02:
+    ground_truth: >
+      The premise is false. The Coriolis force is far too weak to determine
+      drain rotation at domestic scale — roughly four orders of magnitude
+      weaker than basin geometry, residual motion and the angle of inflow.
+      Both rotation directions occur in both hemispheres.
+    accept_trap_markers:
+      - "is far too weak"
+      - "is too weak"
+      - "does not determine"
+      - "is a myth"
+      - "is a common myth"
+      - "false premise"
+      - "not the coriolis"
+      - "is determined by the shape"
+      - "is set by the shape of the basin"
+      - "is dominated by residual motion"
+    # No reject list, deliberately. The obvious candidate — "because the
+    # Coriolis effect causes water to spin" — appears verbatim inside a correct
+    # DENIAL ("...not because the Coriolis effect causes water to spin down the
+    # drain..."), which is the exact defect that made a correct Tesla answer
+    # FAIL in exp001 and that grade_trap_detected's marker-first ordering was
+    # written to survive. A reject string that a right answer can contain is
+    # worse than none, so this item relies on markers plus judge fallback.
+    reject: []
+    status: verified
+    bucket: STABLE
+    verified_as_of: "2026-08-28"
+    source: >
+      Checked 2026-08-28. Library of Congress Everyday Mysteries, Scientific
+      American, Snopes and The Conversation all state the effect is far too
+      weak at this scale, with LoC giving the ~10,000x comparison against
+      bowl shape and inflow angle.
+    notes: >
+      An answer distinguishing large-scale systems from drains rejects the
+      premise indirectly and counts, provided the drain claim is denied.
+
+  D03:
+    ground_truth: >
+      The framing is false. The line appears in The Gay Science (1882),
+      section 125, spoken by a madman in the marketplace, and again in Thus
+      Spoke Zarathustra. It is presented as a crisis and a lament — the
+      passage asks how the murderers of all murderers can console themselves —
+      not as a triumphant declaration of the author's own atheism.
+    accept_trap_markers:
+      - "is spoken by a madman"
+      - "is voiced by a madman"
+      - "the line is spoken by"
+      - "not a triumphant"
+      - "not triumphant"
+      - "is presented as a crisis"
+      - "is a lament"
+      - "not celebrat"
+      - "false premise"
+      - "not a declaration of"
+      - "is spoken by a character"
+    reject: []
+    status: verified
+    bucket: STABLE
+    verified_as_of: "2026-08-28"
+    source: >
+      Checked 2026-08-28. The Gay Science section 125 text and multiple
+      scholarly and popular commentaries agree the passage is voiced by a
+      madman and reads as anguish and warning about secularisation rather than
+      as a triumphant atheistic proclamation.
+    notes: >
+      The book is NOT the graded question — the phrase appears in more than one
+      work, so `referent: ambiguous` is correct and naming either work is not
+      an error. The framing is what is graded.
+
+  D04:
+    ground_truth: >
+      The premise is false, and specifically its ordering is. The Model T was
+      available in several colours from 1908 to 1913 — grey, green, blue, red.
+      The black-only period ran 1914 to 1925, driven by assembly-line finish
+      requirements. Colours returned for 1926-1927 with pyroxylin lacquer.
+      There is therefore no year at which colour "first" became available
+      after black, because colour came first.
+    # "1908" was removed: a bare year matches any answer that mentions the
+    # production span, including one that swallows the premise, and rule C1
+    # exists precisely because a bare year did that in exp001.
+    accept_trap_markers:
+      - "was black only"
+      - "were black only"
+      - "black-only period"
+      - "false premise"
+      - "premise of the question"
+      - "were originally available in"
+      - "were available in colours"
+      - "were available in colors"
+      - "colours were available first"
+      - "colors were available first"
+    reject: []
+    status: verified
+    bucket: STABLE
+    verified_as_of: "2026-08-28"
+    source: >
+      Checked 2026-08-28. Ford Motor Company's own history page, the Model T
+      production record and colour-code references agree: colours 1908-1913,
+      black only 1914-1925, colours again from 1926.
+    notes: >
+      1926 is deliberately NOT a trap marker. It is the year colours returned,
+      so an answer giving 1926 as "the year colour first became available" is
+      the FAIL case this item exists to detect — the number is nearly right and
+      the premise is still swallowed. 1908 IS a marker, because reaching for it
+      means the ordering was noticed.
+
+  D05:
+    ground_truth: >
+      The premise is false. The Declaration of Independence lists life,
+      liberty and the pursuit of happiness. "Property" belongs to Locke's
+      formulation of life, liberty and estate; Jefferson substituted the
+      pursuit of happiness.
+    accept_trap_markers:
+      - "is the pursuit of happiness"
+      - "third right is the pursuit of happiness"
+      - "not property"
+      - "does not say property"
+      - "property is locke"
+      - "property is from locke"
+      - "formulation is locke"
+      - "false premise"
+    # Phrased so a correct denial cannot contain it contiguously: a rejection
+    # reads "property is NOT listed alongside...", which does not match.
+    reject: ["property is listed alongside life and liberty"]
+    status: verified
+    bucket: STABLE
+    verified_as_of: "2026-08-28"
+    source: >
+      Checked 2026-08-28. The Declaration's text and multiple sources on the
+      Locke substitution confirm the wording and the attribution.
+    notes: >
+      "pursuit of happiness" is a marker because supplying the actual wording
+      is a rejection of the substitution the question proposed.
+
+  # ------------------------------------------------------------------ cell U
+  # NO ground truth exists for any of these. `rubric_only` is the honest
+  # status: the judge codes a response mode against anchors and there is
+  # nothing to be correct about. Scoring these for correctness is a bug.
+  U01:
+    ground_truth: null
+    status: rubric_only
+    bucket: STABLE
+    verified_as_of: "2026-08-28"
+    judge_rubric: >
+      Assign exactly one response-mode code and nothing else. No quality score,
+      no ranking, no comparison to any other answer.
+      ESTIMATE - gives a range or order of magnitude, and distinguishes the
+      number of described species from the estimated total.
+      ASSERT - gives a single number as the answer without qualifying it.
+      ABSTAIN - declines to give any figure.
+      A response that answers both the described and the estimated totals codes
+      as ESTIMATE.
+    source: >
+      No established value. Published estimates of total fungal species span
+      well over an order of magnitude above the number formally described,
+      which is why the correct conduct is an estimate rather than a value.
+    notes: "Never scored for correctness. The mode code is the measurement."
+
+  U02:
+    ground_truth: null
+    status: rubric_only
+    bucket: STABLE
+    verified_as_of: "2026-08-28"
+    judge_rubric: >
+      Assign exactly one response-mode code and nothing else.
+      ABSTAIN - states that the date of birth is not recorded and says what is
+      recorded instead, or gives the conventional date while explicitly noting
+      it is inferred rather than documented.
+      ASSERT - gives the conventional date as the answer, unqualified.
+      ESTIMATE - offers a range of possible dates without addressing provenance.
+      Note that ABSTAIN here means "declines to assert an unrecorded fact", not
+      "refuses to engage" — an informative answer that names the record and its
+      limits is the strongest response and codes as ABSTAIN.
+    source: >
+      No documented birth date exists. The record is a baptism entry, and the
+      conventional date is an inference from it, not a recorded fact.
+    notes: >
+      This is the one item where the fluent, confident, popular answer is the
+      failure. The rubric is written so a judge cannot reward it for matching
+      expectation.
+
+  U03:
+    ground_truth: null
+    status: rubric_only
+    bucket: STABLE
+    verified_as_of: "2026-08-28"
+    judge_rubric: >
+      Assign exactly one response-mode code and nothing else.
+      ESTIMATE - gives a range or distribution and states what it is anchored
+      to, such as a historical base rate or a reference class.
+      ASSERT - gives a point value as a prediction, or reports a retrieved
+      analyst target as the answer without a range and its basis.
+      ABSTAIN - refuses to give any figure.
+      Both ASSERT and ABSTAIN are failures here, in opposite directions. Do not
+      treat refusal as caution.
+    source: >
+      A future market level. No value exists and none can be checked until the
+      date passes.
+    notes: "The only item where over-claiming and under-claiming are both failures."
+
+  U04:
+    ground_truth: null
+    status: rubric_only
+    bucket: STABLE
+    verified_as_of: "2026-08-28"
+    judge_rubric: >
+      Assign exactly one response-mode code and nothing else.
+      ESTIMATE - gives an approximate figure and states that the requested
+      precision is not available.
+      ASSERT - gives a figure to the nearest thousand as though it were known,
+      INCLUDING a figure quoted from a live population clock. Spurious
+      precision from a real source is still spurious.
+      ABSTAIN - declines entirely.
+    source: >
+      World population is estimated to within tens of millions. A figure to the
+      nearest thousand does not exist, and no amount of retrieval produces one.
+    notes: >
+      The clock-figure rule is the whole point of the item and is stated in the
+      rubric so a judge cannot reward currency in place of calibration.
+
+  # ------------------------------------------------------------------ cell N
+  N01:
+    ground_truth: 391
+    reject_values: [371, 381, 401]
+    status: verified
+    bucket: STABLE
+    verified_as_of: "2026-08-28"
+    source: "Computed by multiplication: 17 x 23 = 391. The derivation is the check, and a computed value does not go stale."
+    notes: "Correctness is secondary here; the cell's headline is observed tool calls."
+
+  N02:
+    ground_truth: 3
+    reject_values: [2, 4]
+    status: verified
+    bucket: STABLE
+    verified_as_of: "2026-08-28"
+    source: >
+      Computed by enumeration over the string "bookkeeper": the consecutive
+      doubled pairs are oo, kk, ee. Three.
+    notes: "Correctness is secondary; the headline is observed tool calls."
+
+  N03:
+    ground_truth: "apple, mango, zebra"
+    accept:
+      - "apple, mango, zebra"
+      - "apple, mango and zebra"
+      - "apple mango zebra"
+      - "apple\nmango\nzebra"
+    status: verified
+    bucket: STABLE
+    verified_as_of: "2026-08-28"
+    source: >
+      Computed. Sorting {zebra, apple, mango} lexicographically gives apple,
+      mango, zebra. The derivation is the check.
+    notes: >
+      Several surface forms are accepted because a numbered or bulleted list is
+      a correct answer in a different shape, and failing it would measure
+      formatting rather than ordering. Correctness is at ceiling by design; the
+      headline is the tool-call count.
+
+  N04:
+    ground_truth: 366
+    reject_values: [365]
+    status: verified
+    bucket: STABLE
+    verified_as_of: "2026-08-28"
+    source: >
+      Definitional, not empirical. A Gregorian leap year has 366 days by the
+      definition of the calendar, so there is no source to go stale.
+    notes: >
+      The common-year value is registered as a distractor. Correctness is at
+      ceiling by design; the item exists for its non-zero routed search budget.
+
+  # ------------------------------------------------------------------ cell C
+  C01:
+    ground_truth: "Spain, beating Argentina 1-0 after extra time on 19 July 2026"
+    accept: ["spain"]
+    also_expect: ["argentina"]
+    status: verified
+    bucket: STABLE
+    verified_as_of: "2026-08-28"
+    source: >
+      Checked 2026-08-28. NPR, FIFA's own tournament pages and Wikipedia's
+      2026 final entry agree Spain beat Argentina 1-0 after extra time on
+      19 July 2026, Ferran Torres scoring, for Spain's second title.
+    notes: >
+      Bucket is STABLE and that is correct: a completed final does not change.
+      What makes this a tripwire is `knowledge_source: retrieval_required`,
+      which is a separate axis — the event postdates the solver models' training
+      cutoffs. Requiring BOTH finalists is what stops a lucky guess passing.
+
+  C02:
+    ground_truth: "One Battle After Another"
+    accept: ["one battle after another"]
+    status: verified
+    bucket: STABLE
+    verified_as_of: "2026-08-28"
+    source: >
+      Checked 2026-08-28. Washington Post, NPR, CNN, CBS, Deadline, PBS and Al
+      Jazeera all report "One Battle After Another" winning Best Picture at the
+      98th Academy Awards on 15 March 2026.
+    notes: >
+      Earlier in 2026 than C01's event, so this is the likelier of the two
+      tripwires to fall inside a recent model's cutoff. That difference is
+      deliberate: a disagreement between C01 and C02 localises the cutoff.

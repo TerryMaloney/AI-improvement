@@ -15,6 +15,7 @@ from pathlib import Path
 import yaml
 
 from lab.labels import validate as validate_labels
+from lab.spec import validate_item
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 BATTERY_DIR = REPO_ROOT / "batteries"
@@ -39,6 +40,11 @@ class Question:
     trap: bool = False
     entity_key: str | None = None
     grading: dict = field(default_factory=lambda: {"method": "judge"})
+    spec: dict | None = None
+    """The item's full pre-registered experimental specification, or None for a
+    battery authored before specifications existed. Never used to build a
+    prompt — `build_prompt` reads `text` and nothing else — and checked by test
+    to contain no answer-key string."""
     task_labels: dict[str, str] | None = None
     """The six task axes (lab/labels.py), or None for a battery authored before
     they existed. `None` means UNLABELLED, never a default label set: an item
@@ -54,6 +60,18 @@ class Question:
     def labelled(self) -> bool:
         return self.task_labels is not None
 
+    @property
+    def specified(self) -> bool:
+        return self.spec is not None
+
+    @property
+    def cell(self) -> str | None:
+        return (self.spec or {}).get("cell")
+
+    @property
+    def evidence_tier(self) -> str | None:
+        return (self.spec or {}).get("evidence_tier")
+
 
 @dataclass
 class Battery:
@@ -63,6 +81,10 @@ class Battery:
     questions: list[Question]
     path: Path | None = None
     requires_task_labels: bool = False
+    requires_item_spec: bool = False
+
+    def by_cell(self, cell: str) -> list[Question]:
+        return [q for q in self.questions if q.cell == cell]
 
     def by_id(self, qid: str) -> Question:
         for q in self.questions:
@@ -80,6 +102,7 @@ def load_battery(name_or_path: str | Path) -> Battery:
     # and are frozen as regression batteries, so requiring labels everywhere
     # would mean editing frozen material to satisfy new instrumentation.
     requires_labels = bool(raw.get("requires_task_labels", False))
+    requires_spec = bool(raw.get("requires_item_spec", False))
     questions = [
         Question(
             id=q["id"],
@@ -98,6 +121,11 @@ def load_battery(name_or_path: str | Path) -> Battery:
                 if (requires_labels or q.get("task_labels"))
                 else None
             ),
+            spec=(
+                validate_item(q, where=f"{raw['id']}/{q['id']}")
+                if (requires_spec or q.get("evidence_tier"))
+                else None
+            ),
         )
         for q in raw["questions"]
     ]
@@ -108,6 +136,7 @@ def load_battery(name_or_path: str | Path) -> Battery:
         questions=questions,
         path=path,
         requires_task_labels=requires_labels,
+        requires_item_spec=requires_spec,
     )
 
 
@@ -116,13 +145,35 @@ def load_batteries(names: list[str]) -> list[Battery]:
 
 
 def load_answers(path: str | Path = ANSWERS_PATH) -> dict:
-    """Load the quarantined answer key.
+    """Load the quarantined answer key, following its `includes` list.
 
     Callers: lab.grading and lab.refresh only. If you find yourself importing
     this into anything that builds a model-facing prompt, stop — that is the
     leak this whole design is arranged to prevent.
+
+    Included files are merged into one `answers` mapping. They exist so a new
+    battery can bring its own ground truth without editing a file that older
+    experiments were graded against: `answers.yaml` carries the factual_v1 key
+    and stays as it was, `answers.diagnostic_v1.yaml` carries the exp003a key.
+    A duplicate id across files is an error rather than a silent overwrite —
+    two answers for one question means one experiment was graded against the
+    wrong one and there would be no way to tell which.
     """
-    return yaml.safe_load(Path(path).read_text())
+    root = Path(path)
+    doc = yaml.safe_load(root.read_text()) or {}
+    merged = dict(doc.get("answers") or {})
+    for name in doc.get("includes") or []:
+        included = yaml.safe_load((root.parent / name).read_text()) or {}
+        for qid, entry in (included.get("answers") or {}).items():
+            if qid in merged:
+                raise ValueError(
+                    f"answer key {name} redefines {qid!r}, which is already defined. "
+                    f"Two answers for one question id means some experiment was graded "
+                    f"against the wrong one, and nothing in the results would show which."
+                )
+            merged[qid] = entry
+    doc["answers"] = merged
+    return doc
 
 
 def scorable(answer_entry: dict | None) -> bool:

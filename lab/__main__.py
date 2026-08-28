@@ -170,6 +170,21 @@ def cmd_placebo(args) -> None:
     print(json.dumps(match_report(block, placebo), indent=2, default=str))
 
 
+def cmd_spec(args) -> None:
+    """Render a battery's frozen specification document."""
+    from lab.battery import load_answers, load_battery
+    from lab.spec import render_specification
+
+    battery = load_battery(args.battery)
+    text = render_specification(battery, load_answers().get("answers", {}))
+    if args.write:
+        out = Path("docs") / f"{battery.id.upper()}_SPECIFICATION.md"
+        out.write_text(text + "\n")
+        print(f"wrote {out} ({len(text.splitlines())} lines)")
+    else:
+        print(text)
+
+
 def main(argv: list[str] | None = None) -> None:
     p = argparse.ArgumentParser(prog="lab", description=__doc__,
                                 formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -213,6 +228,11 @@ def main(argv: list[str] | None = None) -> None:
                     help="what was actually observed — the evidence behind the two flags")
     sp.add_argument("--as-of", default=None)
     sp.set_defaults(func=cmd_egress_probe)
+
+    sp = sub.add_parser("spec")
+    sp.add_argument("battery")
+    sp.add_argument("--write", action="store_true")
+    sp.set_defaults(func=cmd_spec)
 
     sp = sub.add_parser("placebo")
     sp.add_argument("question")

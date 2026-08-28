@@ -432,8 +432,8 @@ not a correction to them. Neither is rescored; both remain frozen.
 | 1 exp003c | **done — AMBER** |
 | 2 evaluation-design revision | **done — C1–C4 above** |
 | 3 instrument work (§7) | **done — §12** |
-| 4 `diagnostic_v1` battery + per-item specs | next |
-| 5 screens + frozen retrieval scout | blocked on 4 |
+| 4 `diagnostic_v1` battery + per-item specs | **done — §13** |
+| 5 screens + frozen retrieval scout | next |
 | 6 formal preflight (§8) | blocked on 5 |
 | 7 exp003a | blocked on 6 |
 
@@ -506,3 +506,102 @@ four new files (placebo six-axis matching, task labels, retrieval states,
 telemetry and store), taking the suite to **385 green**. All three frozen result
 databases were verified byte-identical after being opened and fully read through
 the new code path.
+
+
+---
+
+## 13. Step 4 — the diagnostic_v1 battery, as built
+
+Twenty-five items, six cells, matching §5's structure exactly: L 6, R 4, D 5,
+U 4, N 4, C 2. **Zero solver dispatches.** Every item's specification was
+committed before any, which is the only thing that makes its predictions
+predictions.
+
+Artefacts: `batteries/diagnostic_v1.yaml` (items and specifications),
+`batteries/answers.diagnostic_v1.yaml` (quarantined ground truth),
+`docs/DIAGNOSTIC_V1_SPECIFICATION.md` (the inspectable document, generated from
+the battery so the two cannot disagree), `lab/spec.py` (the model and the tier
+wall), `tests/test_diagnostic_battery.py`.
+
+### 13.1 The tier wall
+
+The operator's requirement was a hard separation between **measurement
+validity → diagnostic result → primary experimental result**, so that a
+diagnostic discovering the instrument is sensitive to some feature does not
+become evidence for the hypothesis. It is implemented as a declared tier per
+item plus `lab.spec.cite()`, which **raises** when an item is used above its
+tier:
+
+| Tier | May support | Items |
+|---|---|---|
+| `MEASUREMENT_VALIDITY` | instrument validity only | C01, C02 (and both are gates) |
+| `DIAGNOSTIC` | instrument validity, ruling an explanation in or out | all of D, U, N |
+| `PRIMARY` | all of the above, plus a mechanism effect | all of L, R |
+
+Two structural consequences follow and are enforced at load time:
+
+* **`PRIMARY` requires `outcome_type: deterministic`.** D5 said a judge may not
+  determine a primary outcome; exp003c then measured a real judge length effect
+  at rubric boundaries. So a judged item cannot reach the top tier by
+  construction, not by discipline.
+* **A judge-free item must declare `length_sensitivity: NONE`, and an item with
+  a judge anywhere in it may not.** The two fields have to agree about whether
+  a judge exists for length to act through.
+
+`deterministic_with_judge_fallback` was added as its own outcome type rather
+than rounding cell D into one of the other two: the trap grader decides most
+cases by string match and escalates the rest, so a fraction of those trials are
+judged and the length caveat applies to exactly that fraction.
+
+### 13.2 What each item locks, before dispatch
+
+All fifteen fields the operator required, plus the plan's three (§5) and the
+tier: id, conditions, cell and family, six task labels, intended mechanism,
+expected retrieval state **per condition**, gold criterion, response mode and
+anchors, outcome type, known confounds, why it is in the battery, PASS /
+PARTIAL / FAIL / NOT_ESTABLISHED rules, length sensitivity, placebo or matched
+relationship, exclusion criteria, the consequence of each named failure,
+competing explanations, per-condition predictions, and the discriminating
+observation. Validation refuses an item missing any of them — a field left
+blank now is one filled in after the results are in, and one filled in then is
+not a prediction.
+
+### 13.3 Four things the battery build found
+
+1. **`expected_retrieval_state` is checked against the committed egress probe.**
+   An item may not be specified to reach a state the environment cannot produce,
+   so FD-4 binds at authoring time rather than at analysis time. No cell-D arm
+   claims `SOURCE_ACCESS` or `VERIFICATION`; the two multi-dispatch arms are
+   named snippet-level checking in the file itself.
+
+2. **Three condition texts do not exist yet** — `A_only`, `search_selfcheck`,
+   `search_independent`. Each is a treatment, so each is now an open
+   pre-registration item due before dispatch rather than something assembled at
+   runtime (FD-9).
+
+3. **A reject string was removed for a defect the lab had already met.** D02's
+   candidate appeared verbatim inside a correct *denial* — the same shape as the
+   exp001 Tesla failure. The rule was not relaxed to admit it; the key was fixed
+   (FD-10).
+
+4. **Two of the step-4 tests were wrong, not the data.** A leak check flagged
+   L04's accept string `nato` inside the word "discrimi**nato**r", and an
+   import check flagged `trials.py`'s docstring for *describing* the rule it
+   obeys. Both were re-operationalised — word boundaries, and an AST check on
+   the import graph — and the reasoning is recorded in the tests themselves.
+
+### 13.4 What is deliberately not claimed
+
+* **That the battery is unbiased.** Its items were written by the same process
+  that wrote the mechanism. The collinearity check ensures no task axis is a
+  relabelling of `claim_type`, and every axis varies — but a battery written by
+  someone who had never seen the epistemic layer would still be a stronger test,
+  and that remains an open weakness rather than a solved one.
+* **That the screens will keep 25 items.** Cell L's L06 and cell D's D05 are
+  deliberate near-ceiling items, included so the step-5 screen is exercised on
+  real cases. If either is excluded, the §6 power statement is restated for the
+  reduced item count *before* anything is read.
+
+### 13.5 Test baseline
+
+The 130-test baseline remains unmodified and green. The suite is now **670**.
