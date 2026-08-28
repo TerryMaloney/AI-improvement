@@ -16,7 +16,7 @@ from __future__ import annotations
 import argparse
 import json
 import sys
-from datetime import date
+from datetime import date, datetime, timezone
 from pathlib import Path
 
 from lab.trials import RUNS_DIR, ExperimentConfig, prepare
@@ -125,6 +125,51 @@ def cmd_route(args) -> None:
     print(rt.prompt_block())
 
 
+def cmd_egress_probe(args) -> None:
+    """Record an egress observation made by the orchestrator.
+
+    This command does not perform the probe, and that is deliberate. The lab's
+    Python has no network tools; the probe is performed by the operator session
+    that actually holds WebSearch and WebFetch, and this writes down what it saw.
+    A `--detail` string describing the observed behaviour is required, so the
+    artefact carries evidence and not just two booleans.
+    """
+    from lab.states import EGRESS_PROBE_PATH, EgressStatus
+
+    status = EgressStatus(
+        web_search=args.search == "ok",
+        web_fetch=args.fetch == "ok",
+        probed_at=(args.as_of or datetime.now(timezone.utc).isoformat(timespec="seconds")),
+        detail=args.detail,
+    )
+    EGRESS_PROBE_PATH.parent.mkdir(parents=True, exist_ok=True)
+    payload = status.as_dict()
+    EGRESS_PROBE_PATH.write_text(json.dumps(payload, indent=2) + "\n")
+    dated = EGRESS_PROBE_PATH.parent / f"probe-{status.probed_at[:10]}.json"
+    dated.write_text(json.dumps(payload, indent=2) + "\n")
+    print(json.dumps(payload, indent=2))
+    print(f"\nwrote {EGRESS_PROBE_PATH} and {dated}")
+
+
+def cmd_placebo(args) -> None:
+    """Show the directive and its placebo side by side, with the match report."""
+    from epistemic.registry import seed_registry
+    from epistemic.router import route
+    from lab.placebo import build, match_report
+
+    rt = route(
+        args.question,
+        asked_on=date.fromisoformat(args.as_of) if args.as_of else None,
+        registry=seed_registry(),
+    )
+    block = rt.prompt_block()
+    placebo = build(block, args.question)
+    print("--- directive ---\n"); print(block)
+    print("\n--- placebo ---\n"); print(placebo)
+    print("\n--- six-axis match ---\n")
+    print(json.dumps(match_report(block, placebo), indent=2, default=str))
+
+
 def main(argv: list[str] | None = None) -> None:
     p = argparse.ArgumentParser(prog="lab", description=__doc__,
                                 formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -160,6 +205,19 @@ def main(argv: list[str] | None = None) -> None:
     sp.add_argument("question")
     sp.add_argument("--as-of", default=None)
     sp.set_defaults(func=cmd_route)
+
+    sp = sub.add_parser("egress-probe")
+    sp.add_argument("--search", choices=["ok", "blocked"], required=True)
+    sp.add_argument("--fetch", choices=["ok", "blocked"], required=True)
+    sp.add_argument("--detail", required=True,
+                    help="what was actually observed — the evidence behind the two flags")
+    sp.add_argument("--as-of", default=None)
+    sp.set_defaults(func=cmd_egress_probe)
+
+    sp = sub.add_parser("placebo")
+    sp.add_argument("question")
+    sp.add_argument("--as-of", default=None)
+    sp.set_defaults(func=cmd_placebo)
 
     args = p.parse_args(argv)
     args.func(args)

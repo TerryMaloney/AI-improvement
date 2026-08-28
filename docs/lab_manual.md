@@ -167,19 +167,33 @@ everything and scores well doing it.
 ## 5. What is measured — and what isn't
 
 **Honestly measured:** correctness against verified ground truth; premise
-rejection on traps; hedging and abstention rates; search counts; answer length;
-claim-type routing (recorded for every trial, including controls, so routing
-accuracy can be analysed independently of whether the route was injected).
+rejection on traps; hedging and abstention rates; **observed tool calls**;
+answer length; claim-type routing (recorded for every trial, including controls,
+so routing accuracy can be analysed independently of whether the route was
+injected). Since step 3, also: per-dispatch tokens, latency and timestamps where
+the harness supplies them, for judge dispatches as well as solver ones — an
+experiment whose reported cost excludes its grading is not reporting its cost.
 
 **Not measured, and no substitute pretends otherwise:**
 
-- **Token counts and dollar cost.** Without API access there is no token
-  accounting. The lab uses *cost proxies* — search count, answer length, trial
-  count — and every report labels them as such. Where the packet asks for "real
-  token counts, not eyeballed estimates", this is the honest gap: the search
-  counts are real and measured, the token costs are not available at all.
-- **Latency.** Subagent wall-clock time is dominated by scheduling, not model
-  work.
+- **Token counts and dollar cost.** Without API access there is usually no
+  token accounting. Since step 3 the store has columns for it, and they are
+  populated whenever the harness supplies a count — but where it does not, the
+  column stays `NULL`, and `NULL` is never read as zero. A report says
+  `not measured`, and a condition without observed counts is excluded from the
+  cost tables rather than entered as free. The primary cost currency remains
+  observed tool calls, which are real and counted.
+- **The per-tool split.** The harness returns an aggregate call count, not a
+  breakdown by tool. Recorded explicitly as `NOT_MEASURED` with that reason,
+  never estimated.
+- **Latency.** Recorded per dispatch since step 3, but subagent wall-clock time
+  is dominated by scheduling rather than model work, so it is a diagnostic and
+  not a cost figure.
+- **Source access and verification.** WebFetch egress is blocked in this
+  environment, so a solver can retrieve search snippets but cannot open a source
+  document. `SOURCE_ACCESS` and `VERIFICATION` are therefore unreachable, and no
+  conclusion — positive or negative — may be drawn about them from trials run
+  here. See `lab/states.py` and FD-4.
 - **Budget enforcement on solvers.** `BudgetCeiling` hard-gates the routing
   layer deterministically and is tested against a runaway EIG spiral. But a
   solver's search budget is enforced by instruction plus post-hoc audit, not by
@@ -238,13 +252,18 @@ Several of these stopped being hypothetical in the first pilot.
 4. **Battery authorship bias.** The questions were written with the layer's
    claim types in mind. A battery written by someone who had never seen the
    layer would be a stronger test, and is worth doing.
-5. **Self-reported search counts are demonstrably low.** Not hypothetical: in
+5. **Self-report is deprecated as a cost metric.** Not hypothetical: in
    `exp001pilot`, solvers reporting `searches_used: 1` had actually made 2–4
-   tool calls — the self-report appears to count *search topics*, not tool
-   invocations. Cost figures built on it are therefore underestimates by
-   roughly 2–4×. Where the orchestrator can observe the real count it is
-   recorded as `tool_calls_observed`; prefer that, and treat any self-reported
-   cost comparison as a lower bound.
+   tool calls, and across `exp002` every search-enabled condition reported
+   roughly half its observed calls (39 observed against 18 reported in
+   `search_only`). The self-report appears to count *search topics* rather than
+   tool invocations, so a gap is not by itself evidence of misreporting — but it
+   is enough to disqualify the column from carrying a cost conclusion. Since
+   step 3, cost comes from `tool_calls_observed` everywhere, the self-report is
+   stored as `searches_self_report` and reported only as a calibration datum,
+   and the gap between the two is published rather than reconciled. The prompt
+   still asks the solver for `searches_used` under that name: renaming a field
+   the model is asked to fill would change the treatment, so it is frozen (FD-2).
 6. **Ground truth drift.** Volatile facts go stale *during* a run. Every answer
    entry carries `verified_as_of` so a stale-at-grading-time result can be
    identified after the fact rather than silently absorbed.

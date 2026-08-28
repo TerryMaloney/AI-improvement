@@ -431,8 +431,8 @@ not a correction to them. Neither is rescored; both remain frozen.
 | 0 plan | done |
 | 1 exp003c | **done — AMBER** |
 | 2 evaluation-design revision | **done — C1–C4 above** |
-| 3 instrument work (§7) | next |
-| 4 `diagnostic_v1` battery + per-item specs | blocked on 3 |
+| 3 instrument work (§7) | **done — §12** |
+| 4 `diagnostic_v1` battery + per-item specs | next |
 | 5 screens + frozen retrieval scout | blocked on 4 |
 | 6 formal preflight (§8) | blocked on 5 |
 | 7 exp003a | blocked on 6 |
@@ -440,3 +440,69 @@ not a correction to them. Neither is rescored; both remain frozen.
 **No solver trial has been run. None may run until steps 3–6 are complete.**
 Questions 4, 5 and 8 of the §8 preflight can now be answered with measured
 numbers rather than reasoning, which was the point of running exp003c first.
+
+---
+
+## 12. Step 3 — instrument work, as built
+
+Built as an instrumentation task, not an experiment: **zero solver dispatches**,
+no battery changes, no condition changes. The governing rule throughout was that
+instrumentation may become more informative but must not quietly change what
+exp003a is testing, so every behaviour touching the estimand, treatment, judge or
+outcome went into `docs/EXP003A_FROZEN_DECISIONS.md` as a pre-registration
+decision instead of being silently repaired.
+
+### 12.1 What was delivered against §7
+
+| §7 item | Delivered | Where |
+|---|---|---|
+| 1 Telemetry per dispatch | tokens, latency, timestamps, role, model — for judge dispatches too | `lab/telemetry.py`, `lab/store.py` |
+| 2 Deprecate self-report | storage column renamed, cost tables switched to observed calls, self-report demoted to a reported diagnostic | `lab/store.py`, `lab/report.py`, FD-2 |
+| 3 Per-tool split NOT MEASURED | recorded with its reason, never estimated | `lab.telemetry.NOT_MEASURED` |
+| 4 Evidence ledger | per-retrieval query / returned / depth / claim-addressing / origin; short ledger is an audit flag, never a correction | `lab/states.py`, `lab/ingest.py` |
+| 5 Retrieval-state machine | four independent predicates, depth-qualified labels, licensing rule | `lab/states.py` |
+| 6 Task-label axes | six axes, vocabulary, operational tests, coherence rules, collinearity check | `lab/labels.py`, `lab/battery.py` |
+| 7 Placebo generator + tests | per-question generation, four measured axes, two declared review axes | `lab/placebo.py`, `tests/test_placebo.py` |
+| 8 Egress re-probe | run and committed before cell D planning | `runs/egress_probe/probe-2026-08-28.json`, FD-4 |
+
+### 12.2 Four things the build found that the plan had not anticipated
+
+Recorded because each changed a decision, and because "the instrument work went
+smoothly" is exactly the report that hides them.
+
+1. **Closed-book directive packets contradict themselves.** Every
+   `directive_only` packet ever generated tells the solver it has no tools and
+   then gives it a search budget. This is a defect in the *treatment* exp001 and
+   exp002 measured, so it is frozen as-is rather than fixed — FD-1.
+
+2. **`searches_used` is inside the prompt, not just the schema.** Four of its
+   nine occurrences are in solver-facing text. The deprecation therefore lands on
+   storage and reporting only; renaming the field the solver is asked to fill
+   would be a treatment change wearing a refactor's clothes — FD-2.
+
+3. **The four retrieval states are not one ladder.** Modelling them as rungs made
+   the ordinary search-only case (claim matched in a snippet, no source opened)
+   look like a sandbox breach. They are independent predicates — FD-4.
+
+4. **The self-report gap is large on real data.** Rendering exp002 under the new
+   cost code shows every search-enabled condition reporting roughly half the
+   observed tool calls. That is the evidence for the deprecation rather than an
+   argument for it — FD-8.
+
+### 12.3 Two claims the build deliberately does not make
+
+* **That the placebo is length-neutral.** The tests prove no pool variant
+  contains a numeral or a size term. They cannot prove what the placebo does to
+  *response* length, which needs solver trials. A pre-registered diagnostic with
+  a pre-committed consequence is bound instead — FD-7.
+* **That verification does or does not help.** WebFetch is blocked, so
+  `SOURCE_ACCESS` and `VERIFICATION` are unreachable and no claim about them is
+  licensed from any trial run here — FD-4.
+
+### 12.4 Test baseline
+
+The pre-existing 130 tests remain green and unmodified. Step 3 adds coverage in
+four new files (placebo six-axis matching, task labels, retrieval states,
+telemetry and store), taking the suite to **385 green**. All three frozen result
+databases were verified byte-identical after being opened and fully read through
+the new code path.

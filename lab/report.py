@@ -8,6 +8,14 @@ finding from a broad one, and only the second table tells you which you have.
 Reports always state their own denominators, including how many trials were
 ungraded and why. An accuracy figure computed over a silently-shrunk sample is
 the exact failure this project is about.
+
+**Cost is observed, never self-reported** (step 3, FD-2). Every cost figure here
+comes from `tool_calls_observed`, which the harness counts. The solver's own
+`searches_used` is retained as a diagnostic and reported beside it — judged on
+self-report exp001 had zero budget violations; judged on observed calls it had
+thirteen — but it can no longer reach a cost conclusion. A condition whose tool
+calls were never observed is excluded from the cost tables rather than entered
+as zero.
 """
 
 from __future__ import annotations
@@ -35,7 +43,13 @@ def _mean(xs: list[float]) -> float | None:
 def _cell(rows: list[dict]) -> dict:
     scored = [r for r in rows if r["verdict"] in SCORED]
     scores = [r["score"] for r in scored if r["score"] is not None]
-    searches = [r["searches"] for r in rows if isinstance(r["searches"], (int, float))]
+    # Two separate populations, deliberately not merged. `measured` is the
+    # denominator for every cost figure; rows without an observed count are
+    # absent from it rather than contributing a zero.
+    measured = [r for r in rows if isinstance(r["tool_calls"], (int, float))]
+    claimed = [r for r in rows if isinstance(r["searches_self_report"], (int, float))]
+    both = [r for r in measured if isinstance(r["searches_self_report"], (int, float))]
+    tokens = [r["total_tokens"] for r in rows if isinstance(r["total_tokens"], (int, float))]
     return {
         "n": len(rows),
         "scored": len(scored),
@@ -46,12 +60,28 @@ def _cell(rows: list[dict]) -> dict:
         "ungraded": sum(1 for r in rows if r["verdict"] == UNGRADED),
         "no_answer": sum(1 for r in rows if r["verdict"] == NO_ANSWER),
         "pending_judge": sum(1 for r in rows if r["verdict"] == NEEDS_JUDGE),
-        "mean_searches": _mean([float(s) for s in searches]),
-        "total_searches": sum(searches) if searches else 0,
+        "cost_measured": len(measured),
+        "total_tool_calls": sum(r["tool_calls"] for r in measured) if measured else None,
+        "mean_tool_calls": _mean([float(r["tool_calls"]) for r in measured]),
+        "total_selfreport": sum(r["searches_self_report"] for r in claimed) if claimed else None,
+        "selfreport_gap": (
+            sum(r["tool_calls"] - r["searches_self_report"] for r in both) if both else None
+        ),
+        "gap_denominator": len(both),
+        "total_tokens": sum(tokens) if tokens else None,
+        "tokens_measured": len(tokens),
         "hedge_rate": _mean([1.0 if r["hedged"] else 0.0 for r in rows if r["hedged"] is not None]),
         "abstain_rate": _mean([1.0 if r["abstained"] else 0.0 for r in rows]),
         "mean_chars": _mean([float(r["chars"]) for r in rows if r["chars"]]),
     }
+
+
+def _cost(cell: dict) -> str:
+    """Cost cell text. `not measured` is a distinct value from `0`."""
+    if cell["cost_measured"] == 0:
+        return "not measured"
+    suffix = "" if cell["cost_measured"] == cell["n"] else f" ({cell['cost_measured']}/{cell['n']})"
+    return f"{cell['total_tool_calls']}{suffix}"
 
 
 def collect(run_dir: Path) -> dict:
@@ -74,7 +104,16 @@ def collect(run_dir: Path) -> dict:
                 "score": r["score"],
                 "grade_method": r["grade_method"],
                 "answer": r["answer_text"] or "",
-                "searches": r["searches_used"] if r["searches_used"] is not None else conduct.get("searches_used"),
+                # Self-report. Diagnostic only — never a cost figure (FD-2).
+                "searches_self_report": (
+                    r["searches_self_report"] if r["searches_self_report"] is not None
+                    else conduct.get("searches_used")
+                ),
+                # Observed by the harness. This is the cost currency.
+                "tool_calls": r["tool_calls_observed"],
+                "total_tokens": r["total_tokens"],
+                "latency_ms": r["latency_ms"],
+                "retrieval_state": r["retrieval_state"],
                 "hedged": conduct.get("hedged"),
                 "flagged_premise": conduct.get("flagged_premise"),
                 "abstained": bool(r["abstained"]),
@@ -149,7 +188,7 @@ def render(run_dir: Path) -> str:
     # ------------------------------------------------------------- headline
     A("## Headline: condition × model")
     A("")
-    A("| Condition | Model | Accuracy | Scored/n | Pass | Partial | Fail | Searches (total) | Hedge rate | Abstain rate |")
+    A("| Condition | Model | Accuracy | Scored/n | Pass | Partial | Fail | Tool calls (observed) | Hedge rate | Abstain rate |")
     A("|---|---|---|---|---|---|---|---|---|---|")
     for c in conditions:
         for m in models:
@@ -158,49 +197,96 @@ def render(run_dir: Path) -> str:
                 continue
             A(
                 f"| {c} | {m} | **{_fmt_pct(cell['accuracy'])}** | {cell['scored']}/{cell['n']} | "
-                f"{cell['passes']} | {cell['partials']} | {cell['fails']} | {cell['total_searches']} | "
+                f"{cell['passes']} | {cell['partials']} | {cell['fails']} | {_cost(cell)} | "
                 f"{_fmt_pct(cell['hedge_rate'])} | {_fmt_pct(cell['abstain_rate'])} |"
             )
     A("")
 
     A("### Pooled across models")
     A("")
-    A("| Condition | Accuracy | Scored/n | Searches (total) | Mean answer chars | Hedge rate |")
+    A("| Condition | Accuracy | Scored/n | Tool calls (observed) | Mean answer chars | Hedge rate |")
     A("|---|---|---|---|---|---|")
     for c in conditions:
         cell = _cell(by_c[c])
         A(
             f"| {c} | **{_fmt_pct(cell['accuracy'])}** | {cell['scored']}/{cell['n']} | "
-            f"{cell['total_searches']} | {cell['mean_chars']:.0f} | {_fmt_pct(cell['hedge_rate'])} |"
+            f"{_cost(cell)} | {cell['mean_chars']:.0f} | {_fmt_pct(cell['hedge_rate'])} |"
             if cell["mean_chars"]
             else f"| {c} | **{_fmt_pct(cell['accuracy'])}** | {cell['scored']}/{cell['n']} | "
-                 f"{cell['total_searches']} | — | {_fmt_pct(cell['hedge_rate'])} |"
+                 f"{_cost(cell)} | — | {_fmt_pct(cell['hedge_rate'])} |"
         )
     A("")
 
     # -------------------------------------------------------- cost per point
     A("### Cost of a correct answer")
     A("")
-    A("Searches per additional correct answer, versus the cheapest condition. "
-      "This is the number that decides whether a procedure is worth running — "
-      "an accuracy gain bought with unbounded retrieval is not a win.")
+    A("Observed tool calls per additional correct answer, versus the cheapest "
+      "condition. This is the number that decides whether a procedure is worth "
+      "running — an accuracy gain bought with unbounded retrieval is not a win. "
+      "The count is the harness's, not the solver's: see the self-report table "
+      "below for how far apart the two are.")
     A("")
-    base_c = min(conditions, key=lambda c: _cell(by_c[c])["total_searches"])
-    base = _cell(by_c[base_c])
-    A(f"Reference condition (fewest searches): **{base_c}**")
+    priced = [c for c in conditions if _cell(by_c[c])["cost_measured"]]
+    if not priced:
+        A("_No condition has observed tool-call counts, so no cost comparison is "
+          "possible. This is reported as absent rather than as zero: a run without "
+          "telemetry has unknown cost, not free cost._")
+        A("")
+    else:
+        if len(priced) < len(conditions):
+            A(f"_Excluded for lack of observed telemetry: "
+              f"{', '.join(c for c in conditions if c not in priced)}._")
+            A("")
+        base_c = min(priced, key=lambda c: _cell(by_c[c])["total_tool_calls"])
+        base = _cell(by_c[base_c])
+        A(f"Reference condition (fewest observed tool calls): **{base_c}**")
+        A("")
+        A("| Condition | Δ accuracy vs reference | Extra tool calls | Tool calls per extra correct answer |")
+        A("|---|---|---|---|")
+        for c in priced:
+            cell = _cell(by_c[c])
+            if cell["accuracy"] is None or base["accuracy"] is None:
+                continue
+            d_acc = cell["accuracy"] - base["accuracy"]
+            d_calls = cell["total_tool_calls"] - base["total_tool_calls"]
+            extra_correct = d_acc * cell["scored"]
+            ratio = (
+                f"{d_calls / extra_correct:.1f}" if extra_correct > 0.01
+                else ("—" if d_calls == 0 else "∞ (no accuracy gain)")
+            )
+            A(f"| {c} | {d_acc * 100:+.0f} pts | {d_calls:+d} | {ratio} |")
+        A("")
+
+    # ------------------------------------------- self-report vs observed cost
+    A("### Self-report against observation")
     A("")
-    A("| Condition | Δ accuracy vs reference | Extra searches | Searches per extra correct answer |")
-    A("|---|---|---|---|")
+    A("`searches_used` is the solver's own account of what it did. It is "
+      "**deprecated as a cost metric** and appears here only as a calibration "
+      "datum: the gap is a measurement of whether the model knows what it did, "
+      "and it is reported rather than reconciled. A large gap invalidates any "
+      "conclusion that was ever drawn from the self-reported column.")
+    A("")
+    A("| Condition | Observed tool calls | Self-reported searches | Gap | Rows with both |")
+    A("|---|---|---|---|---|")
     for c in conditions:
         cell = _cell(by_c[c])
-        if cell["accuracy"] is None or base["accuracy"] is None:
-            continue
-        d_acc = cell["accuracy"] - base["accuracy"]
-        d_search = cell["total_searches"] - base["total_searches"]
-        extra_correct = d_acc * cell["scored"]
-        ratio = f"{d_search / extra_correct:.1f}" if extra_correct > 0.01 else ("—" if d_search == 0 else "∞ (no accuracy gain)")
-        A(f"| {c} | {d_acc * 100:+.0f} pts | {d_search:+d} | {ratio} |")
+        obs = "not measured" if cell["cost_measured"] == 0 else str(cell["total_tool_calls"])
+        rep = "—" if cell["total_selfreport"] is None else str(cell["total_selfreport"])
+        gap = "—" if cell["selfreport_gap"] is None else f"{cell['selfreport_gap']:+d}"
+        A(f"| {c} | {obs} | {rep} | {gap} | {cell['gap_denominator']}/{cell['n']} |")
     A("")
+
+    # ------------------------------------------------------ token accounting
+    if any(_cell(by_c[c])["tokens_measured"] for c in conditions):
+        A("### Tokens")
+        A("")
+        A("| Condition | Total tokens | Rows measured |")
+        A("|---|---|---|")
+        for c in conditions:
+            cell = _cell(by_c[c])
+            total = "not measured" if not cell["tokens_measured"] else str(cell["total_tokens"])
+            A(f"| {c} | {total} | {cell['tokens_measured']}/{cell['n']} |")
+        A("")
 
     # ---------------------------------------------------------- by category
     batteries = config.get("batteries", [])
@@ -292,8 +378,9 @@ def render(run_dir: Path) -> str:
             crows = [r for r in rows if r["question_id"] == qid and r["condition"] == c]
             for r in crows:
                 snippet = " ".join(r["answer"].split())[:280]
+                calls = r["tool_calls"]
                 A(f"- **{c}** / {r['model']} → **{r['verdict']}** "
-                  f"({r['searches'] if r['searches'] is not None else '?'} searches)")
+                  f"({calls if calls is not None else 'n/a'} observed tool calls)")
                 if snippet:
                     A(f"  > {snippet}{'…' if len(r['answer']) > 280 else ''}")
         A("")
@@ -316,7 +403,7 @@ def compare(run_dirs: list[Path]) -> str:
     A = out.append
     A("# Cross-experiment comparison")
     A("")
-    A("| Experiment | Hypothesis | Condition | Model | Accuracy | Scored/n | Searches |")
+    A("| Experiment | Hypothesis | Condition | Model | Accuracy | Scored/n | Tool calls (observed) |")
     A("|---|---|---|---|---|---|---|")
     for rd in run_dirs:
         data = collect(rd)
@@ -327,7 +414,7 @@ def compare(run_dirs: list[Path]) -> str:
         for (c, m), rs in sorted(by_cm.items()):
             cell = _cell(rs)
             A(f"| `{cfg.get('id', rd.name)}` | {cfg.get('hypothesis', '—')} | {c} | {m} | "
-              f"**{_fmt_pct(cell['accuracy'])}** | {cell['scored']}/{cell['n']} | {cell['total_searches']} |")
+              f"**{_fmt_pct(cell['accuracy'])}** | {cell['scored']}/{cell['n']} | {_cost(cell)} |")
     A("")
     A("Comparing across experiments is only valid where the batteries and "
       "grading match. Check the battery ids before reading a difference as an effect.")

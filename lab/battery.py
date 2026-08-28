@@ -14,6 +14,8 @@ from pathlib import Path
 
 import yaml
 
+from lab.labels import validate as validate_labels
+
 REPO_ROOT = Path(__file__).resolve().parent.parent
 BATTERY_DIR = REPO_ROOT / "batteries"
 ANSWERS_PATH = BATTERY_DIR / "answers.yaml"
@@ -37,10 +39,20 @@ class Question:
     trap: bool = False
     entity_key: str | None = None
     grading: dict = field(default_factory=lambda: {"method": "judge"})
+    task_labels: dict[str, str] | None = None
+    """The six task axes (lab/labels.py), or None for a battery authored before
+    they existed. `None` means UNLABELLED, never a default label set: an item
+    silently defaulted would be assigned to the wrong diagnostic cell while
+    looking deliberate. Batteries that declare `requires_task_labels: true`
+    reject unlabelled items at load."""
 
     @property
     def grading_method(self) -> str:
         return self.grading.get("method", "judge")
+
+    @property
+    def labelled(self) -> bool:
+        return self.task_labels is not None
 
 
 @dataclass
@@ -50,6 +62,7 @@ class Battery:
     asked_as_of: str
     questions: list[Question]
     path: Path | None = None
+    requires_task_labels: bool = False
 
     def by_id(self, qid: str) -> Question:
         for q in self.questions:
@@ -63,6 +76,10 @@ def load_battery(name_or_path: str | Path) -> Battery:
     if not path.exists():
         path = BATTERY_DIR / f"{name_or_path}.yaml"
     raw = yaml.safe_load(path.read_text())
+    # Opt-in rather than global: `factual` and `abstract` predate the task axes
+    # and are frozen as regression batteries, so requiring labels everywhere
+    # would mean editing frozen material to satisfy new instrumentation.
+    requires_labels = bool(raw.get("requires_task_labels", False))
     questions = [
         Question(
             id=q["id"],
@@ -76,6 +93,11 @@ def load_battery(name_or_path: str | Path) -> Battery:
             trap=bool(q.get("trap", False)),
             entity_key=q.get("entity_key"),
             grading=q.get("grading") or {"method": "judge"},
+            task_labels=(
+                validate_labels(q.get("task_labels"), where=f"{raw['id']}/{q['id']}")
+                if (requires_labels or q.get("task_labels"))
+                else None
+            ),
         )
         for q in raw["questions"]
     ]
@@ -85,6 +107,7 @@ def load_battery(name_or_path: str | Path) -> Battery:
         asked_as_of=str(raw.get("asked_as_of", "")),
         questions=questions,
         path=path,
+        requires_task_labels=requires_labels,
     )
 
 

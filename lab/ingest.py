@@ -23,7 +23,9 @@ import re
 from pathlib import Path
 
 from lab.battery import leak_probe_strings, load_answers
+from lab.states import Evidence, assess, load_egress
 from lab.store import Store
+from lab.telemetry import from_payload as telemetry_from_payload
 
 _BUDGET_RE = re.compile(r"SEARCH BUDGET: (\d+) search", re.I)
 
@@ -98,6 +100,36 @@ def audit(payload: dict, trial_row, leak_strings: list[str]) -> list[str]:
     return flags
 
 
+def _retrieval_state(payload: dict, telemetry) -> tuple[dict | None, list | None, list[str]]:
+    """Assess the retrieval state, or record honestly that it was not assessed.
+
+    Three outcomes, and the third is the one worth having:
+
+    * no evidence ledger -> nothing to assess, no state, no flag. A closed-book
+      trial has no retrieval state and should not be given one.
+    * ledger present and an egress probe committed -> assess it.
+    * ledger present and NO egress probe -> assess nothing and flag it. The
+      reachable-state set is an environment observation (FD-4); computing a state
+      against an assumed environment would produce a number that looks measured
+      and is not.
+    """
+    raw = payload.get("evidence_ledger")
+    if not raw:
+        return None, None, []
+    ledger = [Evidence.from_dict(e) if isinstance(e, dict) else e for e in raw]
+    try:
+        egress = load_egress()
+    except FileNotFoundError:
+        return (
+            None,
+            [e.as_dict() for e in ledger],
+            ["RETRIEVAL-STATE: evidence ledger present but no egress probe is committed, "
+             "so no retrieval state was assessed. Run `python -m lab egress-probe` (FD-4)."],
+        )
+    a = assess(ledger, egress, telemetry.tool_calls_observed)
+    return a.as_dict(), [e.as_dict() for e in ledger], list(a.flags)
+
+
 def ingest(run_dir: Path) -> dict:
     store = Store(run_dir / "results.db")
     leak_strings = leak_probe_strings(load_answers())
@@ -118,10 +150,20 @@ def ingest(run_dir: Path) -> dict:
         if note:
             payload.setdefault("_ingest_note", note)
         flags = audit(payload, row, leak_strings)
+        telemetry = telemetry_from_payload(payload, "solver")
+        retrieval, evidence, state_flags = _retrieval_state(payload, telemetry)
+        flags += state_flags
         if flags:
             payload["_audit_flags"] = flags
             flagged[trial_id] = flags
-        store.save_answer(trial_id, payload, payload.get("duration_s"))
+        store.save_answer(
+            trial_id,
+            payload,
+            payload.get("duration_s"),
+            telemetry=telemetry,
+            retrieval=retrieval,
+            evidence=evidence,
+        )
         loaded += 1
 
     total = len(store.trials())

@@ -1,0 +1,16 @@
+{
+  "web_search": true,
+  "web_fetch": false,
+  "probed_at": "2026-08-28T20:57:24+00:00",
+  "detail": "Re-probe run by the orchestrator session on 2026-08-28, before cell D was planned (plan step 3, item 8). WebSearch: query 'Iceland population 2026 official statistics' returned nine ranked results with titles, URLs and snippet text, including a figure (394,324 at 1 Jan 2026) readable from the snippets alone -> RETRIEVAL and snippet-depth CLAIM_EVIDENCE_MATCH are both attainable. WebFetch: three attempts on three unrelated domains (en.wikipedia.org, www.statice.is, example.com) each returned error_type EGRESS_BLOCKED, 'blocked by the network egress proxy'. Three distinct hosts rules out a per-domain block, so no source document can be opened -> SOURCE_ACCESS is unattainable, and VERIFICATION with it, since corroboration is counted only at document depth. Consequence (FD-4): no conclusion, positive or negative, may be drawn about SOURCE_ACCESS or VERIFICATION from any trial run in this environment.",
+  "reachable": [
+    "CLAIM_EVIDENCE_MATCH",
+    "NONE",
+    "RETRIEVAL"
+  ],
+  "unreachable": [
+    "SOURCE_ACCESS",
+    "VERIFICATION"
+  ],
+  "ceiling": "CLAIM_EVIDENCE_MATCH"
+}
