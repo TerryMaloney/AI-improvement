@@ -1,0 +1,11 @@
+{
+ "verdict": "PASS",
+ "score": 1.0,
+ "criteria": {
+  "surfaces_ambiguity": true,
+  "provides_both_figures": true,
+  "figures_reasonably_accurate": true
+ },
+ "reasoning": "Acknowledges the ambiguity up front and provides both figures accurately.",
+ "_judge_regime": "grader-judge (tool-enforced), round 2"
+}

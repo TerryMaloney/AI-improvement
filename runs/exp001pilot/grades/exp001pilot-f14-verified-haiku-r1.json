@@ -1,0 +1,11 @@
+{
+ "verdict": "PARTIAL",
+ "score": 0.55,
+ "criteria": {
+  "freshness_conduct": true,
+  "source_disagreement_acknowledged": false,
+  "defensible_range_presented": false
+ },
+ "reasoning": "Has an as-of date but asserts 293 flatly without noting that sources disagree (285 vs 293) or presenting the defensible range, which the standard says is the correct answer.",
+ "_judge_regime": "grader-judge (tool-enforced), round 2"
+}

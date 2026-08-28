@@ -1,0 +1,13 @@
+{
+ "answer": "The question is ambiguous and could refer to two regions:\n\n1. U.S. state of Georgia: approximately 10.7-10.8 million people (8th most populous U.S. state)\n2. Country of Georgia (Caucasus region): approximately 3.8 million people\n\nThe more common interpretation of 'Georgia' in English-language contexts is the U.S. state.",
+ "confidence": "high",
+ "abstained": false,
+ "searches_used": 1,
+ "sources": [
+  "Web search 'population of Georgia 2026' - Worldometer, World Population Review, Trading Economics, Statistics Times; both state and country figures"
+ ],
+ "notes": "Multiple WebFetch attempts to retrieve detailed source pages were blocked by the proxy.",
+ "tool_calls_observed": 4,
+ "_infrastructure_note": "WebFetch blocked for worldometers.info, worldpopulationreview.com, statisticstimes.com.",
+ "_regime": "tool_enforced_solver_agent"
+}

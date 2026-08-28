@@ -1,0 +1,12 @@
+{
+ "verdict": "PASS",
+ "score": 1.0,
+ "criteria": {
+  "entity_handling_rename": true,
+  "addresses_outdatedness": true,
+  "avoids_naming_current_ceo": true,
+  "handles_rename_and_vacancy": true
+ },
+ "reasoning": "Acknowledges the rename, states there is no current CEO as of August 2026, and avoids both naming a successor and using present tense for a departed CEO.",
+ "_judge_regime": "grader-judge (tool-enforced), round 2"
+}

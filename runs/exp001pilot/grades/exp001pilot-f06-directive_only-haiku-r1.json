@@ -1,6 +1,11 @@
 {
  "verdict": "PASS",
  "score": 1.0,
- "criteria": {"identifies_false_premise": true, "clearly_states_no_win": true, "distinguishes_nomination_from_winning": true},
- "reasoning": "Identifies the false premise at the outset and sustains it; mentions the 1912 nomination while explicitly stating he did not win."
+ "criteria": {
+  "rejects_false_premise": true,
+  "mentions_nomination_with_clarification": true,
+  "avoids_overconfidence": true
+ },
+ "reasoning": "Clearly states Tesla never won, mentions the 1912 nomination and distinguishes nomination from winning, names the actual 1912 laureate.",
+ "_judge_regime": "grader-judge (tool-enforced), round 2"
 }

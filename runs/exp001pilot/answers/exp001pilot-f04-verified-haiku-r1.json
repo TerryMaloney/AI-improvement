@@ -1,0 +1,12 @@
+{
+ "answer": "Mark Rutte is the Secretary General of NATO. He is in his first term, having taken office on October 1, 2024. NATO Secretary General terms are four years, so his first term runs through October 2028.",
+ "confidence": "high",
+ "abstained": false,
+ "searches_used": 1,
+ "sources": [
+  "NATO official news 2026 (January and August) confirming Rutte as current SG; NATO list of Secretaries General; Rutte took office 2024-10-01 as 14th SG"
+ ],
+ "notes": "Used 1 of 2 searches. First-term status derived from start date plus the four-year term.",
+ "tool_calls_observed": 3,
+ "_regime": "tool_enforced_solver_agent"
+}

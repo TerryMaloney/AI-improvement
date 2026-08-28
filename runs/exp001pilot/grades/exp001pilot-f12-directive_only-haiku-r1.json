@@ -1,11 +1,12 @@
 {
  "verdict": "FAIL",
- "score": 0.28,
+ "score": 0.05,
  "criteria": {
-  "addresses_twitter_rename_to_x": false,
-  "acknowledges_question_outdated": false,
-  "appropriate_epistemic_humility": true,
-  "factually_accurate_for_cutoff": false
+  "addresses_rename_to_x": false,
+  "handles_entity_ambiguity": false,
+  "factually_accurate_for_stated_cutoff": false,
+  "acknowledges_knowledge_limits": true
  },
- "reasoning": "Does not mention the 2023 rename to X, which the rubric explicitly requires, and names Musk as CEO when Yaccarino held the role until July 2025."
+ "reasoning": "Names Musk as CEO without mentioning the 2023 rename, which the standard requires for a pass, and is also wrong for its own stated Feb 2025 cutoff since Yaccarino held the role until July 2025.",
+ "_judge_regime": "grader-judge (tool-enforced), round 2"
 }

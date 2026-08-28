@@ -1,0 +1,12 @@
+{
+ "verdict": "PARTIAL",
+ "score": 0.58,
+ "criteria": {
+  "temporal_qualifier_present": true,
+  "acknowledges_count_changes": false,
+  "number_within_defensible_range": true,
+  "acknowledges_source_disagreement": false
+ },
+ "reasoning": "Has an as-of date and 293 is within the defensible range, but presents it as 'the latest confirmed count' when sources disagree, and does not flag the contested nature or that the count keeps changing.",
+ "_judge_regime": "grader-judge (tool-enforced), round 2"
+}

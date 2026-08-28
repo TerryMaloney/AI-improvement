@@ -4,9 +4,9 @@
  "abstained": false,
  "searches_used": 1,
  "sources": [
-  "federalreserve.gov press release 2026-05-22",
-  "federalreserve.gov press release 2026-05-15"
+  "WebSearch: Federal Reserve Board press release, Chase, Consumer Finance Monitor, CNN Business, Wikipedia - Warsh sworn in 2026-05-22, four-year term ending 2030-05-21"
  ],
- "notes": "Warsh succeeded Powell in May 2026.",
- "tool_calls_observed": 3
+ "notes": "Multiple sources agreed on appointment and term end.",
+ "tool_calls_observed": 2,
+ "_regime": "tool_enforced_solver_agent"
 }

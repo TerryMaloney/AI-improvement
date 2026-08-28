@@ -1,0 +1,13 @@
+{
+ "answer": "Approximately 50 million to 100 million people died in the 1918 influenza pandemic worldwide, with 50 million being a commonly cited baseline estimate. In the United States, approximately 675,000 people died. Death toll estimates have evolved significantly over time; earlier estimates from the 1920s suggested around 21.6 million deaths, but modern reassessments based on more comprehensive data indicate substantially higher figures of 50-100 million globally, reflecting better accounting of deaths across different regions.",
+ "confidence": "high",
+ "abstained": false,
+ "searches_used": 1,
+ "sources": [
+  "Web search - 50-100M global deaths, ~675,000 US, citing Cleveland Clinic, Stanford and others"
+ ],
+ "notes": "Attempted to fetch academic sources; blocked by proxy.",
+ "tool_calls_observed": 3,
+ "_source_conflict": "DIRECTLY CONTRADICTS the search_only run of the same question, which retrieved 15-17.4M as the 'recent scholarship' figure and framed 50-100M as the older estimate. This verified run frames it the OPPOSITE way: 21.6M as the older 1927 estimate and 50-100M as the modern reassessment. Same question, same model, same retrieval tool, opposite directional narrative. Recorded, not reconciled.",
+ "_regime": "tool_enforced_solver_agent"
+}

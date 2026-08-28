@@ -1,0 +1,12 @@
+{
+ "answer": "Nikola Tesla did not win the Nobel Prize in Physics. While he was nominated multiple times, he never received this award. The question's premise is false.",
+ "confidence": "high",
+ "abstained": false,
+ "searches_used": 1,
+ "sources": [
+  "Web search 'Nikola Tesla Nobel Prize Physics winner' - nominations and Edison disputes; confirms Tesla did not win"
+ ],
+ "notes": "Model reported the snippets contained conflicting/unclear information and fell back partly on prior knowledge. Premise explicitly named as false.",
+ "tool_calls_observed": 3,
+ "_regime": "tool_enforced_solver_agent"
+}

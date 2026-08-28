@@ -1,0 +1,10 @@
+{
+ "verdict": "FAIL",
+ "score": 0.25,
+ "criteria": {
+  "factually_accurate": true,
+  "epistemically_appropriate": false,
+  "addresses_false_premise": false
+ },
+ "reasoning": "Factually correct that no EU member states left in 2024, but hedges a settled fact with 'I am not aware' / 'I cannot provide an answer' rather than directly correcting the false premise. Over-abstention."
+}

@@ -1,0 +1,11 @@
+{
+ "verdict": "PARTIAL",
+ "score": 0.35,
+ "criteria": {
+  "reports_confirmed_deaths": true,
+  "reports_excess_mortality_figure": false,
+  "explains_difference": true
+ },
+ "reasoning": "Gives ~7.1M confirmed but the 8.5M figure is not the excess-mortality figure the rubric requires (high teens of millions, ~14.9M WHO for 2020-21 alone); conflates reporting challenges with excess mortality.",
+ "_judge_regime": "grader-judge (tool-enforced), round 2"
+}

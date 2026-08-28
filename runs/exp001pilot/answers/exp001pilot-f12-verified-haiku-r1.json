@@ -1,0 +1,12 @@
+{
+ "answer": "Twitter/X does not currently have a CEO as of August 2026. Linda Yaccarino, who was the CEO, resigned on July 9, 2025. The CEO position has been vacant since then.",
+ "confidence": "high",
+ "abstained": false,
+ "searches_used": 1,
+ "sources": [
+  "Web search 'CEO of Twitter 2026' - Yaccarino resigned 2025-07-09; as of July 2026 X had no CEO"
+ ],
+ "notes": "Additional fetches blocked by network restrictions.",
+ "tool_calls_observed": 3,
+ "_regime": "tool_enforced_solver_agent"
+}

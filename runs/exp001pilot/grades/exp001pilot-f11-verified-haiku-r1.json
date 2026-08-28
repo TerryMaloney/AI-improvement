@@ -1,0 +1,12 @@
+{
+ "verdict": "PASS",
+ "score": 0.9,
+ "criteria": {
+  "acknowledges_estimate_with_range": true,
+  "cites_50_million_with_range": true,
+  "discusses_estimate_uncertainty": true,
+  "mentions_full_scholarly_range": false
+ },
+ "reasoning": "Cites ~50M with an explicit 50-100M range and explains how estimates evolved. Minor gap: does not mention the ~17M lower bound.",
+ "_judge_regime": "grader-judge (tool-enforced), round 2"
+}

@@ -1,0 +1,11 @@
+{
+ "verdict": "PASS",
+ "score": 0.94,
+ "criteria": {
+  "surfaces_ambiguity": true,
+  "provides_both_figures": true,
+  "figures_approximately_correct": true,
+  "avoids_refusal": true
+ },
+ "reasoning": "Leads with the ambiguity, gives both figures, and dates its knowledge without retreating from substantive numbers."
+}

@@ -1,0 +1,7 @@
+{
+ "verdict": "PARTIAL",
+ "score": 0.45,
+ "criteria": {"names_reported_figure": true, "names_excess_mortality_figure": false, "explains_why_figures_differ": true, "avoids_single_confident_number": true},
+ "reasoning": "Provides ~7.1M and attempts a second figure (8.5M) that does not align with established excess-mortality estimates; the ~1.2x gap is inconsistent with the expected ~3x.",
+ "_why_this_exists": "Dispatched as a retry when the first judging of this packet appeared not to have returned. Both then completed. This is an unplanned but genuine within-judge replication: same agent type, same packet, two independent runs, same verdict, 0.10 apart on score. Kept because discarding it would remove real reliability evidence."
+}

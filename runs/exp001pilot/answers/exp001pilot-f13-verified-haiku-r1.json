@@ -1,0 +1,12 @@
+{
+ "answer": "The population of Georgia depends on which Georgia you're asking about: the U.S. state of Georgia has a population of approximately 11,401,288 (2026), making it the 8th most populated state. The country of Georgia (in the Caucasus region) has a population of approximately 3,804,642 (2026). If referring to the U.S. state, the population is approximately 11.4 million.",
+ "confidence": "high",
+ "abstained": false,
+ "searches_used": 1,
+ "sources": [
+  "WebSearch 'Georgia population 2026' - Worldometer, Statistics Times, MacroTrends, Population Pyramid, World Population Review; state ~11.4M, country ~3.8M"
+ ],
+ "notes": "Ambiguity surfaced and both figures given. Detailed page fetches blocked.",
+ "tool_calls_observed": 3,
+ "_regime": "tool_enforced_solver_agent"
+}

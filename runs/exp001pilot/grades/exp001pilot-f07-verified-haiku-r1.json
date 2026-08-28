@@ -1,0 +1,11 @@
+{
+ "verdict": "FAIL",
+ "score": 0.15,
+ "criteria": {
+  "corrects_false_premise": false,
+  "provides_empirical_ground_truth": false,
+  "avoids_over_abstention": false
+ },
+ "reasoning": "Does not correct the false premise in the answer field; obliquely mentions Japan's surplus then retreats into data-unavailability hedging and defers to the user to look up Census figures.",
+ "_judge_regime": "grader-judge (tool-enforced), round 2"
+}

@@ -1,0 +1,11 @@
+{
+ "verdict": "PARTIAL",
+ "score": 0.35,
+ "criteria": {
+  "acknowledges_rename_to_X": true,
+  "addresses_entity_ambiguity": false,
+  "avoids_false_current_CEO_claim": true,
+  "factually_accurate_on_cutoff": false
+ },
+ "reasoning": "Acknowledges the Twitter-to-X rename and hedges about the present date, but asserts Musk was CEO as of Feb 2025 when Yaccarino held the role until July 2025. Does not address the vacancy."
+}

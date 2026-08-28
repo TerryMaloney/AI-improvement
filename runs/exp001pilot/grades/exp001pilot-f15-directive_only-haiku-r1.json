@@ -1,6 +1,11 @@
 {
  "verdict": "PASS",
- "score": 0.95,
- "criteria": {"names_reported_figure": true, "names_excess_mortality_figure": true, "explains_why_they_differ": true, "avoids_overconfidence": true, "avoids_over_abstention": true},
- "reasoning": "Names both the ~7M confirmed and 15-20M excess figures, explains the methodological difference, and hedges appropriately."
+ "score": 1.0,
+ "criteria": {
+  "names_reported_figure": true,
+  "names_excess_mortality_figure": true,
+  "explains_methodological_difference": true
+ },
+ "reasoning": "Names ~7M confirmed and 15-20M excess, explains the methodological difference, aligns with ground truth.",
+ "_judge_regime": "grader-judge (tool-enforced), round 2"
 }

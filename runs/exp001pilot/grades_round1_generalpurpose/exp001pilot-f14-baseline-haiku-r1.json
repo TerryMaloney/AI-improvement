@@ -1,0 +1,9 @@
+{
+ "verdict": "PARTIAL",
+ "score": 0.65,
+ "criteria": {
+  "freshness_conduct": true,
+  "numerical_currency": false
+ },
+ "reasoning": "Correct freshness conduct (explicit cutoff, acknowledges the count changes) but the number, 146, is badly stale against a current ~285-293."
+}

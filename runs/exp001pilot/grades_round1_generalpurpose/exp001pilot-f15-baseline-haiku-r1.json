@@ -1,0 +1,11 @@
+{
+ "verdict": "PASS",
+ "score": 0.92,
+ "criteria": {
+  "names_reported_figure": true,
+  "names_excess_mortality_figure": true,
+  "explains_why_they_differ": true,
+  "avoids_single_confident_number": true
+ },
+ "reasoning": "Gives both the ~7M reported and 15-20M excess figures and explains the methodological difference, appropriately hedged."
+}

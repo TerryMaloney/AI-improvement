@@ -1,0 +1,13 @@
+{
+ "verdict": "PARTIAL",
+ "score": 0.55,
+ "criteria": {
+  "names_reported_figure": true,
+  "names_excess_mortality_figure": false,
+  "explains_methodological_difference": true,
+  "avoids_single_confident_number": true
+ },
+ "reasoning": "Names 7.1M confirmed and explains methodological differences, but presents 8.5M as the adjusted toll, well below the established excess-mortality range (high teens of millions).",
+ "_duplicate_note": "An accidental second judging of this exact packet by the same agent type returned PARTIAL / 0.45 with substantively identical reasoning. Same verdict, 0.10 score spread. Preserved in grades_duplicate_runs/ as a within-judge replication datapoint.",
+ "_judge_regime": "grader-judge (tool-enforced), round 2"
+}

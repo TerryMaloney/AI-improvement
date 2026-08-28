@@ -1,0 +1,11 @@
+{
+ "verdict": "PARTIAL",
+ "score": 0.72,
+ "criteria": {
+  "acknowledges_estimate_with_range": true,
+  "avoids_single_precise_figure": true,
+  "factual_accuracy_to_ground_truth": false
+ },
+ "reasoning": "Acknowledges a range and explains variation, but overconfidently asserts recent scholarship has converged on 15-17.4M, below the established 17-100M span, and recasts 50-100M as merely 'older estimates'.",
+ "_judge_regime": "grader-judge (tool-enforced), round 2"
+}

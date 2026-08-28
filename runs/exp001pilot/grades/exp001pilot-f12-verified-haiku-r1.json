@@ -1,0 +1,12 @@
+{
+ "verdict": "PARTIAL",
+ "score": 0.65,
+ "criteria": {
+  "acknowledges_rename": true,
+  "explains_rename_makes_question_outdated": false,
+  "correct_ceo_vacancy_handling": true,
+  "avoids_naming_current_ceo": true
+ },
+ "reasoning": "Handles the vacancy correctly and uses both names, but does not explicitly note that the 2023 rename makes the question's referent outdated, which the rubric requires for a pass.",
+ "_judge_regime": "grader-judge (tool-enforced), round 2"
+}

@@ -19,7 +19,12 @@ no longer interesting, with a reason).
 > verification directive produces more correct answers than the same model
 > answering alone, and the extra cost is justified by the gain.
 
-- **Status:** `open` — the `verified` condition has not run yet
+- **Status:** `WEAKENED` by exp001 (2026-08-28)
+- **Result:** `verified` beat `baseline` (78% vs 60%) but NOT at comparable cost
+  (0 -> 30 observed tool calls), and did NOT beat its own `search_only` control
+  (78% vs 84%; 85% vs 91% under the f08 sensitivity correction). The "at
+  comparable cost" clause fails outright. The layer's central promise — that
+  routed, budgeted verification beats naive verification — is not supported.
 - **Settled by:** `exp001`
 - **Falsified if:** the `verified` condition's accuracy is within noise of
   `baseline`, or its accuracy gain costs more searches per additional correct
@@ -37,10 +42,12 @@ no longer interesting, with a reason).
 > Telling a model what *kind* of claim it faces improves its conduct even when
 > it cannot verify anything.
 
-- **Status:** `supported` (weakly — one model, n=15, single run)
-- **First evidence:** `exp001pilot`, 2026-08-27 — **60% → 73%** on haiku, at
-  **zero additional searches**. Trap accuracy 65% → 82%; premise-flagging rate
-  25% → 50%.
+- **Status:** `NOT ESTABLISHED` after the completed exp001 (2026-08-28).
+  Downgraded from the earlier partial run's "weakly supported".
+- **Completed-run result:** **60% → 70%** on haiku at **zero tool cost**
+  (n=15, single run, no repeats). Direction consistent with the partial run's
+  +13, but the gap sits close to the **±8-point judge-noise floor** measured in
+  H-judge, so it is suggestive rather than demonstrated. Not refuted either.
 - **The single most informative trial:** `f05`, "Who is the CEO of Berkshire
   Hathaway?" — same model, same closed book, no tools either way.
   `baseline` answered **Warren Buffett**. `directive_only` answered **Greg
@@ -63,12 +70,11 @@ no longer interesting, with a reason).
 > Most of `verified`'s advantage over `baseline` is web access, not the
 > procedure.
 
-- **Status:** `supported so far, and it matters` — the deflationary hypothesis
-  is currently the strong one
-- **First evidence:** `exp001pilot`, 2026-08-27 — `search_only` scored **100%
-  on the 6 of 15 questions that completed** before a rate limit ended the
-  condition, against 60% baseline, for 6 searches (2.5 searches per additional
-  correct answer).
+- **Status:** `SUPPORTED` — and it is now the strongest finding in the project
+- **Completed-run result:** `exp001`, 2026-08-28, full 15/15 — `search_only`
+  reached **84%**, ABOVE the full treatment's 78%. Every one of the five
+  closed-book failures was a current-fact question and search fixed all of
+  them: volatile entity 0% -> 100%, scheduled entity 0% -> 100%.
 - **Where it wins, precisely:** every question the closed conditions got
   *wrong* was a current-fact question. `volatile_entity` 0% → 100%,
   `scheduled_entity` 0% → 100%. No amount of procedure recovers a fact the
@@ -143,7 +149,14 @@ no longer interesting, with a reason).
 > Defaulting to EMPIRICAL when unsure (costing an extra search) rather than
 > DETERMINISTIC (costing a skipped verification) doesn't waste much.
 
-- **Status:** `open`
+- **Status:** `WEAK EVIDENCE, ONE TRIAL` after exp001
+- **exp001 observation:** the classifier misrouted f10 (a pure word problem) as
+  EMPIRICAL with a 2-search budget. In `verified` the model overruled it —
+  "the classification suggests it's an empirical claim, but this is actually a
+  straightforward mathematical problem" — and spent 0 observed tool calls, so
+  the misroute cost nothing. One trial, one obvious misroute. Also note 14/15
+  questions routed EMPIRICAL, so the classifier barely discriminates on this
+  battery.
 - **Settled by:** measuring how many `verified`-condition searches were spent on
   questions the model would have answered correctly with no search at all
 - **Falsified if:** a large share of searches change nothing about the answer
@@ -158,14 +171,15 @@ no longer interesting, with a reason).
 > Blind judge grading is consistent enough that a several-point difference
 > between conditions is signal, not grader noise.
 
-- **Status:** `not supported` — added because the pilot produced a direct
-  counterexample
-- **Evidence:** `exp001pilot`, question `f14` (Saturn's moons). The `baseline`
-  and `directive_only` answers both gave the same stale number, 146, with the
-  same as-of qualifier. Different judges scored them **PARTIAL (0.65)** and
-  **PASS (0.90)** — a 25-point gap on materially identical content, one judge
-  penalising the stale figure and the other crediting the freshness framing the
-  rubric asked for.
+- **Status:** `NOT SUPPORTED` — now on measurement, not anecdote
+- **Evidence:** exp001 re-judged 12 (question, standard, response) triples a
+  second time, blind and independently. **Verdict agreement 8/12 = 67%**, mean
+  absolute score difference **0.133**, max **0.40**, with 3/12 differing by
+  >= 0.20. Verdicts flipped on f08-baseline, f11-baseline, f12-baseline and
+  f14-directive_only. A thirteenth accidental replication returned the same
+  verdict 0.10 apart.
+- **The number that matters:** any judge-graded condition difference under
+  roughly **8 accuracy points** at n=15 is inside grading noise.
 - **What it changes:** any per-question difference of this size in a
   judge-graded row is uninterpretable on n=1. Deterministically-graded rows
   (`contains_any`, `numeric`, `trap_detected`) are not affected. The
@@ -189,8 +203,8 @@ no longer interesting, with a reason).
 
 | Experiment | Date | Hypotheses | Result | What it changed |
 |---|---|---|---|---|
-| `exp001pilot` | 2026-08-27 | H1a, H1b, H-judge | `baseline` 60% · `directive_only` 73% (0 searches) · `search_only` 100% on 6/15 · `verified` not run | H1a → supported (weakly). H1b → supported and now the strong deflationary reading. H-judge added and immediately not supported. Three bugs found in the lab's own instrument (see below). |
-| `exp001` | — | H1, H1a, H1b, H4 | not yet run | — |
+| `exp001pilot` (partial) | 2026-08-27 | H1a, H1b, H-judge | 36/60 trials; `verified` never run | Superseded by the completed run below. Preserved, not discarded. |
+| **`exp001` (complete)** | **2026-08-28** | H1, H1a, H1b, H-judge, H5 | **60/60 trials.** baseline 60% · directive_only 70% · search_only **84%** · verified **78%** | H1 -> WEAKENED: the layer lost to its own search-only control. H1b -> SUPPORTED, now the strongest result. H1a -> downgraded to NOT ESTABLISHED (inside noise). H-judge -> NOT SUPPORTED on measured 67% agreement. Sandbox bug verified fixed behaviourally; a fourth instrument defect found (f08 reject-list artifact). Full report: `runs/exp001pilot/EXP001_FINAL_REPORT.md`; next steps: `docs/HANDOFF_after_exp001.md`. |
 
 ---
 
@@ -217,6 +231,20 @@ packet: each read as obviously correct and was wrong in practice.
 A fourth was a false alarm rather than a bug: the leak audit flagged every
 *correct* answer, because it matched against the accept-strings a right answer
 necessarily contains. Narrowed to distinctive ground-truth prose.
+
+**Found in the completed exp001 (2026-08-28):**
+
+4. **The reject-list defect was fixed for f06 and missed for f08.** Both
+   search-enabled f08 answers explicitly said no EU member state left in 2024,
+   and both were auto-failed for containing the substring "Poland and" inside
+   a clause saying Poland did *not* leave. Same defect class as bug 3, fixed in
+   one place and not audited elsewhere. **Not rescored** — exp001 was frozen —
+   but reported with a sensitivity analysis (costs each search condition 6.7
+   points; does not change the ordering).
+5. **`searches_used` is not a measure of tool use.** Self-reports undercount
+   observed tool calls by ~2x, one-directionally, in 18 of 30 search trials and
+   never over-report. By self-report 0 trials broke their budget; by observed
+   calls, 13 did.
 
 ---
 

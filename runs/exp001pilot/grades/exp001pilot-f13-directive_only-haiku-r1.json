@@ -1,11 +1,11 @@
 {
  "verdict": "PASS",
- "score": 0.94,
+ "score": 1.0,
  "criteria": {
-  "surfaces_ambiguity": true,
-  "provides_both_figures": true,
-  "figures_approximately_correct": true,
-  "avoids_refusal": true
+  "ambiguity_surfaced": true,
+  "both_figures_provided": true,
+  "appropriate_epistemic_conduct": true
  },
- "reasoning": "Leads with the ambiguity, gives both figures, and dates its knowledge without retreating from substantive numbers."
+ "reasoning": "Surfaces the ambiguity, gives both figures, and notes its cutoff without withholding a substantive answer.",
+ "_judge_regime": "grader-judge (tool-enforced), round 2"
 }

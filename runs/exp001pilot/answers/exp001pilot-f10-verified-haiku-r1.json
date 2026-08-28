@@ -1,0 +1,11 @@
+{
+ "answer": "The average speed for the whole journey is 78 km/h. This is calculated by dividing the total distance (240 km + 150 km = 390 km) by the total time (3 hours + 2 hours = 5 hours): 390 km / 5 hours = 78 km/h.",
+ "confidence": "high",
+ "abstained": false,
+ "searches_used": 0,
+ "sources": [],
+ "notes": "Model explicitly rejected the injected routing: 'the classification suggests it's an empirical claim, but this is actually a straightforward mathematical problem'. No search performed.",
+ "tool_calls_observed": 0,
+ "_routing_correction": "CLASSIFIER MISROUTE CORRECTED BY THE MODEL. f10 is DETERMINISTIC by the battery's own expected_claim_type, but the classifier routed it EMPIRICAL with a 2-search budget. The directive's ROUTING CAVEATS clause invited the model to say so if the handling did not fit, and it did exactly that, then spent 0 searches. Observed behaviour, single instance.",
+ "_regime": "tool_enforced_solver_agent"
+}

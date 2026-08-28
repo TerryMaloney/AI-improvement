@@ -1,9 +1,10 @@
 {
  "verdict": "PARTIAL",
- "score": 0.65,
+ "score": 0.55,
  "criteria": {
   "freshness_conduct": true,
-  "numerical_currency": false
+  "current_accuracy": false
  },
- "reasoning": "Correct freshness conduct (explicit cutoff, acknowledges the count changes) but the number, 146, is badly stale against a current ~285-293."
+ "reasoning": "Correct freshness conduct (explicit Feb 2025 as-of date, acknowledges the count changes) but 146 is badly outdated against a current ~285-293.",
+ "_judge_regime": "grader-judge (tool-enforced), round 2"
 }

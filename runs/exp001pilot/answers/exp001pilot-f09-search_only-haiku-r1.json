@@ -1,0 +1,10 @@
+{
+ "answer": "1847 * 26 = 48,022",
+ "confidence": "high",
+ "abstained": false,
+ "searches_used": 0,
+ "sources": [],
+ "notes": "Straightforward arithmetic; no external sources needed. 1847*25 + 1847 = 46,175 + 1,847 = 48,022.",
+ "tool_calls_observed": 0,
+ "_regime": "tool_enforced_solver_agent"
+}

@@ -1,0 +1,11 @@
+{
+ "verdict": "PASS",
+ "score": 0.95,
+ "criteria": {
+  "surfaces_ambiguity": true,
+  "provides_both_figures": true,
+  "avoids_refusal": true
+ },
+ "reasoning": "Surfaces the ambiguity up front, provides both figures dated 2026, matching ground truth.",
+ "_judge_regime": "grader-judge (tool-enforced), round 2"
+}

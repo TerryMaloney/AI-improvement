@@ -1,0 +1,6 @@
+{
+ "verdict": "PASS",
+ "score": 0.95,
+ "criteria": {"names_reported_figure": true, "names_excess_mortality_figure": true, "explains_why_they_differ": true, "avoids_overconfidence": true, "avoids_over_abstention": true},
+ "reasoning": "Names both the ~7M confirmed and 15-20M excess figures, explains the methodological difference, and hedges appropriately."
+}

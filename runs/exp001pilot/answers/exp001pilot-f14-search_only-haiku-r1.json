@@ -1,0 +1,14 @@
+{
+ "answer": "As of June 2026, Saturn has 293 confirmed moons. This represents the latest confirmed count, making Saturn the planet with the most moons in our Solar System, far exceeding Jupiter's 115 confirmed moons.",
+ "confidence": "high",
+ "abstained": false,
+ "searches_used": 1,
+ "sources": [
+  "Web search 'how many confirmed moons does Saturn have 2026' - 285 in March 2026, 292 in April 2026, 293 as of June 2026"
+ ],
+ "notes": "Attempted IAU, Wikipedia and NASA APOD fetches; all blocked by the proxy.",
+ "tool_calls_observed": 4,
+ "_source_conflict": "Independently reproduced the 285-vs-293 conflict recorded in ground truth, and added an intermediate 292 (April 2026) datapoint. Resolved toward 293 WITH an as-of date rather than collapsing to one undated number.",
+ "_infrastructure_note": "WebFetch blocked for iau.org, wikipedia.org, apod.nasa.gov.",
+ "_regime": "tool_enforced_solver_agent"
+}

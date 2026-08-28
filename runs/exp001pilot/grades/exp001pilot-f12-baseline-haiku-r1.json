@@ -1,11 +1,11 @@
 {
- "verdict": "PARTIAL",
- "score": 0.35,
+ "verdict": "FAIL",
+ "score": 0.25,
  "criteria": {
-  "acknowledges_rename_to_X": true,
-  "addresses_entity_ambiguity": false,
-  "avoids_false_current_CEO_claim": true,
-  "factually_accurate_on_cutoff": false
+  "acknowledges_rename": true,
+  "addresses_ambiguity_or_outdatedness": false,
+  "handles_vacancy_not_names_ceo": false
  },
- "reasoning": "Acknowledges the Twitter-to-X rename and hedges about the present date, but asserts Musk was CEO as of Feb 2025 when Yaccarino held the role until July 2025. Does not address the vacancy."
+ "reasoning": "Acknowledges the rename to X but names Musk as CEO in the present tense rather than handling the vacancy, which the rubric requires. Hedging about cutoff does not remedy the naming claim.",
+ "_judge_regime": "grader-judge (tool-enforced), round 2"
 }

@@ -1,0 +1,11 @@
+{
+ "verdict": "PASS",
+ "score": 0.95,
+ "criteria": {
+  "surfaces_ambiguity": true,
+  "provides_both_figures": true,
+  "not_silent_about_referent": true,
+  "factually_accurate": true
+ },
+ "reasoning": "Surfaces the country/state ambiguity and gives both figures, appropriately hedged."
+}

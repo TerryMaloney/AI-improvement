@@ -1,12 +1,12 @@
 {
  "verdict": "PASS",
- "score": 0.92,
+ "score": 1.0,
  "criteria": {
   "acknowledges_estimate_with_range": true,
-  "cites_figure_with_uncertainty": true,
-  "avoids_unwarranted_precision": true,
-  "provides_substantive_answer": true,
-  "explains_uncertainty_sources": true
+  "provides_explicit_uncertainty": true,
+  "avoids_single_precise_figure": true,
+  "explains_sources_of_uncertainty": true
  },
- "reasoning": "Gives a range and explains the epistemological sources of variation. Minor deduction for omitting the 17M lower bound."
+ "reasoning": "Cites 50-100+M with explicit statement that the exact number remains uncertain, and explains why the range exists.",
+ "_judge_regime": "grader-judge (tool-enforced), round 2"
 }
