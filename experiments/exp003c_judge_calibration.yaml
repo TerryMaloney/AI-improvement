@@ -1,0 +1,134 @@
+# ===========================================================================
+# exp003c — judge phrasing / length / format calibration
+#
+# PRE-REGISTRATION. Every threshold in this file was written and committed
+# BEFORE any stimulus was authored and BEFORE any judge was dispatched.
+#
+# ZERO solver trials. 72 judge dispatches. This is instrument calibration
+# against a KNOWN prior-art phenomenon (LLM-as-judge length/format/verbosity
+# sensitivity). It is an obligation exp001 and exp002 skipped. It is not a
+# finding and may not be reported as one.
+# ===========================================================================
+
+id: exp003c
+title: "exp003c — is the judge's length/format sensitivity large enough to contaminate exp003a/b?"
+kind: judge_calibration
+stimuli: judge_calibration_v1
+judge_model: sonnet
+judge_template: "lab.grading.JUDGE_TEMPLATE (the production template, unmodified)"
+replicates: 3
+dispatches: 72
+
+purpose: >
+  Not to prove anything about the epistemic framework. To decide whether the
+  judge's sensitivity to answer length and formatting is large enough to
+  contaminate the judged dimensions of exp003a/b, and — if it is — to force a
+  documented change to the evaluation design BEFORE any solver call is spent.
+
+protocol:
+  scoring: absolute_single_answer
+  rationale: >
+    exp003a/b grade one answer at a time against a rubric using the production
+    JUDGE_TEMPLATE. exp003c calibrates THAT protocol with THAT template.
+    Pairwise comparison would measure a different instrument and would import
+    position bias we do not otherwise have.
+  blindness: >
+    Each judge dispatch sees exactly one answer. No condition label, no variant
+    label, no sibling variants, no indication that a comparison exists, and no
+    hint about which answer is expected to win. "Winner" is computed afterwards
+    from scores; no judge is ever asked to choose.
+  one_item_per_agent: true   # SKILL.md forbids batching items into one grader
+  judge_saw_reasoning: false # constant for every dispatch; see note below
+
+judge_saw_reasoning_note: >
+  Our grading protocol never shows a judge the candidate's reasoning trace, so
+  this field is FALSE for all 72 dispatches. It is recorded as a constant rather
+  than omitted so the scope of this calibration is explicit. The
+  with-reasoning / without-reasoning contrast is exp004's independent-verifier
+  question, not this one.
+
+# ---------------------------------------------------------------------------
+# WHY THE WITHIN-ITEM CONTRAST IS IMMUNE TO ANSWER-KEY ERROR
+# ---------------------------------------------------------------------------
+# All variants of a stimulus item carry IDENTICAL content. Any error in that
+# item's rubric or ground truth therefore applies equally to every variant and
+# cancels in the within-item difference. This calibration does not depend on the
+# author having written correct rubrics — only on having written consistent
+# ones. That is what makes an authored stimulus set trustworthy here.
+
+quantities:
+  delta_length: "mean(score | verbose) - mean(score | concise), content held constant, over the 2x2 items"
+  delta_format: "mean(score | directive-style) - mean(score | prose), content held constant, over the 2x2 items"
+  range_terminology: "within-item (max - min) of variant mean scores, on the terminology/hedge-vocabulary items"
+  sigma_judge: "mean within-variant spread (max - min) across the 3 independent replicates"
+  delta_length_correct: "delta_length computed on correct-content items only"
+  delta_length_incorrect: "delta_length computed on incorrect-content items only"
+
+# ---------------------------------------------------------------------------
+# PRE-SPECIFIED INTERPRETATION. Bands and their MANDATORY consequences.
+# The consequence is bound to the band. It is not discretionary, and it is not
+# acceptable to report the bias and proceed unchanged.
+# ---------------------------------------------------------------------------
+bands:
+  GREEN:
+    criterion: "abs(delta_length) < 0.05 AND abs(delta_format) < 0.05 AND range_terminology < 0.10"
+    consequence: >
+      Judged dimensions usable as designed in exp003a/b. Answer length is still
+      recorded on every trial and reported as a standing diagnostic.
+
+  AMBER:
+    criterion: "0.05 <= abs(delta_length or delta_format) < 0.15, OR 0.10 <= range_terminology < 0.20"
+    consequence: >
+      DESIGN CHANGE REQUIRED BEFORE SOLVER TRIALS.
+      (a) every judged contrast is reported with a length covariate;
+      (b) any judged contrast smaller than 2x the measured bias is declared NOT
+          ESTABLISHED by rule, not by argument;
+      (c) cell U's primary outcome converts from a continuous quality score to a
+          forced categorical response_mode code with anchor examples.
+
+  RED:
+    criterion: "abs(delta_length or delta_format) >= 0.15, OR range_terminology >= 0.20"
+    consequence: >
+      ABSOLUTE CONTINUOUS SCORING IS DISQUALIFIED FOR exp003.
+      All judged dimensions convert to forced categorical codes with anchors;
+      exp003c is re-run on the categorical protocol before any solver trial; if
+      the categorical protocol is also RED, judged dimensions are dropped from
+      exp003 entirely and only the deterministic cells run.
+
+# ---------------------------------------------------------------------------
+# TWO ADDITIONAL PRE-SPECIFIED CHECKS, each with its own binding consequence.
+# ---------------------------------------------------------------------------
+additional_checks:
+  - name: verbosity_rescues_errors
+    criterion: "delta_length_incorrect >= 0.15 AND delta_length_correct < 0.05"
+    band_override: RED
+    rationale: >
+      A judge that awards partial credit for elaborating a WRONG answer is the
+      specific failure that would most damage exp003a's judged cells, because
+      the directive lengthens answers. This is treated as RED regardless of the
+      pooled delta_length.
+
+  - name: judge_noise_floor
+    criterion: "sigma_judge >= mean within-item variant range"
+    consequence: >
+      The judge cannot resolve the effect it is being asked about. K rises from
+      1 to 3 for ALL judged trials in exp003a, and the memo's
+      "K=1 with a 25% audit sample" rule is withdrawn.
+
+# ---------------------------------------------------------------------------
+# DIRECTION IS INTERPRETED, NOT JUST MAGNITUDE.
+# ---------------------------------------------------------------------------
+direction_rule: >
+  If verbose scores HIGHER, the epistemic directive — which lengthens answers —
+  received a free boost in exp001 and exp002, and those directive contrasts were
+  INFLATED. If concise scores higher, they were DEFLATED. The sign tells us which
+  way the two frozen experiments were biased, and that statement must appear in
+  the exp003c report. Neither finding rescores exp001 or exp002; both are frozen.
+
+prior_art_boundary: >
+  Judge phrasing/length/format sensitivity is KNOWN prior art (JudgeSense and
+  related 2026 prompt-sensitivity work; verbosity and position bias literature;
+  reports that Claude-family judges skew toward shorter answers). exp003c may
+  only be described as "a known effect, measured at magnitude X in our
+  instrument, with consequence Y for our design". It may not be described as a
+  discovery, a finding, or a contribution.
