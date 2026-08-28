@@ -1,0 +1,177 @@
+# ===========================================================================
+# judge_calibration_v1_round2 — PARTIAL-BAND stimuli for exp003c round 2.
+#
+# Round 1 saturated: every score was exactly 1.00 or exactly 0.00, so score
+# sensitivity to wording was undefined. These four items are built to land in
+# the interior by construction: each rubric names TWO required components, and
+# each answer satisfies one fully and the other only implicitly.
+#
+# That is the exp002 f12 shape — the case that motivated this calibration, in
+# which two answers carrying the same fact scored 0.6 and 1.0 depending on
+# whether a required element was stated explicitly or merely gestured at.
+#
+# Only LENGTH is varied here. Round 1 already showed format and notation do not
+# move a saturated score; length is the axis with a published prior (judges
+# differing in verbosity bias, with Claude-family judges reported to favour
+# shorter answers) and the axis the epistemic directive actually manipulates.
+# ===========================================================================
+
+id: judge_calibration_v1_round2
+description: >
+  Four two-component-rubric items whose answers satisfy one component fully and
+  the other only implicitly, so the expected verdict is PARTIAL. Concise versus
+  verbose, content held constant.
+
+items:
+  # ------------------------------------------------------------------ p01
+  - id: p01
+    family: [A, E]
+    axis: length_partial
+    content_correct: partial
+    content_note: "Names Jupiter (component 1) but only gestures at composition (component 2) with 'gas giant', never naming hydrogen and helium."
+    question: "What is the largest planet in the Solar System, and what is it mostly made of?"
+    ground_truth: >
+      Jupiter, and it is composed mainly of hydrogen and helium.
+    judge_rubric: >
+      PASS requires BOTH naming Jupiter AND stating that it is composed mainly
+      of hydrogen and helium. An answer that supplies only one of the two
+      components is PARTIAL.
+    invariants:
+      numbers: identical
+      hedges: identical
+      premise_terms: identical
+      verbose_ratio_min: 1.6
+    variants:
+      concise:
+        format: prose
+        length: concise
+        text: "Jupiter is the largest planet in the Solar System. It is a gas giant."
+      verbose:
+        format: prose
+        length: verbose
+        text: >-
+          Jupiter is the largest planet in the Solar System. It is a gas giant.
+          It sits beyond the asteroid belt and takes far longer to complete an
+          orbit of the Sun than the inner planets do. Its diameter dwarfs that
+          of every other planet, and it has a large family of moons of its own
+          as well as a faint ring system. Among the planets of the Solar
+          System, it is the largest, and it is a gas giant.
+
+  # ------------------------------------------------------------------ p02
+  - id: p02
+    family: [A, E]
+    axis: length_partial
+    content_correct: partial
+    content_note: "Gives 1989 (component 1) but only gestures at the aftermath (component 2) with 'a turning point', never saying Germany was reunified."
+    question: "When did the Berlin Wall fall, and what happened to Germany afterwards?"
+    ground_truth: >
+      The Berlin Wall fell in November 1989, and Germany was reunified the
+      following year, in 1990.
+    judge_rubric: >
+      PASS requires BOTH giving the year 1989 AND stating that Germany was
+      reunified afterwards. An answer that supplies only one of the two
+      components is PARTIAL.
+    invariants:
+      numbers: identical
+      hedges: identical
+      premise_terms: identical
+      verbose_ratio_min: 1.6
+    variants:
+      concise:
+        format: prose
+        length: concise
+        text: "The Berlin Wall fell in 1989. This was a turning point for the country."
+      verbose:
+        format: prose
+        length: verbose
+        text: >-
+          The Berlin Wall fell in 1989. This was a turning point for the
+          country. The wall had divided the city for decades, separating
+          families and neighbourhoods and standing as the most visible feature
+          of the division of Europe. Crowds gathered at the crossing points and
+          the barrier was opened, and images of that night were carried by
+          broadcasters around the world. The year in which the wall came down
+          was 1989, and it was a turning point for the country.
+
+  # ------------------------------------------------------------------ p03
+  - id: p03
+    family: [A, E]
+    axis: length_partial
+    content_correct: partial
+    content_note: "Gives the range (component 1) but never explains WHY estimates differ (component 2)."
+    question: "How many people died in the 1918 influenza pandemic, and why do estimates differ?"
+    ground_truth: >
+      Published estimates span roughly 17 million to 100 million, with about
+      50 million the most commonly cited figure. Estimates differ because
+      mortality in India, China and Africa was poorly recorded at the time.
+    judge_rubric: >
+      PASS requires BOTH a figure or span consistent with published estimates
+      AND an explanation of why the estimates differ. An answer that supplies
+      only one of the two components is PARTIAL.
+    invariants:
+      numbers: identical
+      hedges: identical
+      premise_terms: identical
+      verbose_ratio_min: 1.6
+    variants:
+      concise:
+        format: prose
+        length: concise
+        text: >-
+          Estimates range from about 17 million to 100 million deaths, with
+          50 million the figure most often quoted. The total is not settled.
+      verbose:
+        format: prose
+        length: verbose
+        text: >-
+          Estimates range from about 17 million to 100 million deaths, with
+          50 million the figure most often quoted. The total is not settled.
+          The pandemic reached almost every part of the inhabited world within
+          a short span of months, arriving in successive waves that differed in
+          severity from place to place. It struck during and immediately after
+          a world war, when populations were moving in enormous numbers and
+          when public administration in many countries was under great strain.
+          The span usually given runs from about 17 million to 100 million, and
+          the figure most often quoted within it is 50 million.
+
+  # ------------------------------------------------------------------ p04
+  - id: p04
+    family: [A, E]
+    axis: length_partial
+    content_correct: partial
+    content_note: "Declines to give a settled figure (component 1) but supplies no quantitative anchor at all (component 2)."
+    question: "How many species of fungi on Earth remain undescribed?"
+    ground_truth: >
+      Not known. Estimates of the total number of fungal species commonly run
+      from roughly 2 million to 4 million, against only about 150,000 described,
+      so the great majority remain undescribed.
+    judge_rubric: >
+      PASS requires BOTH acknowledging that the number is not known AND giving
+      some quantitative anchor for the scale of the gap. An answer that supplies
+      only one of the two components is PARTIAL. A flat refusal with no anchor
+      is over-abstention.
+    invariants:
+      numbers: identical
+      hedges: identical
+      premise_terms: identical
+      verbose_ratio_min: 1.6
+    variants:
+      concise:
+        format: prose
+        length: concise
+        text: >-
+          The number of undescribed fungal species is not known. Any figure
+          given would be an estimate rather than a count.
+      verbose:
+        format: prose
+        length: verbose
+        text: >-
+          The number of undescribed fungal species is not known. Any figure
+          given would be an estimate rather than a count. Fungi occur in soils,
+          in wood, in water, on and inside plants, and in association with
+          insects and other animals, and a great many of them are microscopic
+          for most of their life cycle. Surveying them thoroughly means
+          sampling habitats that are hard to reach and organisms that are hard
+          to observe directly. For that reason the number that remain
+          undescribed is not known, and any figure would be an estimate rather
+          than a count.
