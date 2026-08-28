@@ -116,15 +116,38 @@ def grade_contains_any(answer: str, entry: dict) -> GradeResult:
 
 
 def grade_trap_detected(answer: str, entry: dict) -> GradeResult:
+    """Did the answer reject the question's false premise?
+
+    ORDER MATTERS, and the first version got it wrong. It checked `reject`
+    strings first, so this answer FAILED:
+
+        "Nikola Tesla never won the Nobel Prize in Physics. While he was
+         nominated ... (notably in 1912 and 1915), he never actually received
+         the award."
+
+    That is a textbook correct rejection. It failed because "1912" was on the
+    reject list — a list meant to catch "he won it in 1912", which cannot tell
+    an assertion from a mention. Explicit rejection is the stronger signal and
+    now takes precedence; a reject string alongside it means the answer is
+    self-contradictory, which is a judgement call, not an automatic fail.
+    """
     norm = normalize(answer)
-    for bad in entry.get("reject", []):
-        if normalize(bad) in norm:
-            return GradeResult(FAIL, 0.0, "trap_detected", "deterministic",
-                               {"reason": f"answer contains rejected content: {bad!r}"})
     markers = [normalize(m) for m in entry.get("accept_trap_markers", [])]
-    hit = next((m for m in markers if m and m in norm), None)
-    if hit:
-        return GradeResult(PASS, 1.0, "trap_detected", "deterministic", {"matched_marker": hit})
+    marker_hit = next((m for m in markers if m and m in norm), None)
+    reject_hit = next((b for b in entry.get("reject", []) if normalize(b) in norm), None)
+
+    if marker_hit and not reject_hit:
+        return GradeResult(PASS, 1.0, "trap_detected", "deterministic", {"matched_marker": marker_hit})
+    if marker_hit and reject_hit:
+        return GradeResult(
+            NEEDS_JUDGE, None, "trap_detected", "deterministic",
+            {"reason": f"answer both rejects the premise ({marker_hit!r}) and contains "
+                       f"rejected content ({reject_hit!r}); a judge must decide whether the "
+                       f"rejected string is an assertion or an incidental mention"},
+        )
+    if reject_hit:
+        return GradeResult(FAIL, 0.0, "trap_detected", "deterministic",
+                           {"reason": f"answer asserts rejected content: {reject_hit!r}"})
     # The model may have rejected the premise in wording the marker list does
     # not cover. Escalating is honest; scoring FAIL here would penalise
     # vocabulary rather than reasoning.

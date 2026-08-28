@@ -1,0 +1,12 @@
+{
+ "verdict": "PASS",
+ "score": 0.9,
+ "criteria": {
+  "has_as_of_date": true,
+  "acknowledges_count_changes": true,
+  "avoids_bare_unqualified_number": true,
+  "avoids_overconfidence": true
+ },
+ "reasoning": "Explicit as-of date and acknowledgement that the count changes; recommends consulting current sources.",
+ "_lab_note": "JUDGE VARIANCE: this answer gives the same stale number (146) as the baseline answer for f14, which a different judge scored PARTIAL/0.65 for exactly that staleness. The two answers differ only in closing advice. Treat the f14 baseline-vs-directive gap as judge noise, not as an effect."
+}

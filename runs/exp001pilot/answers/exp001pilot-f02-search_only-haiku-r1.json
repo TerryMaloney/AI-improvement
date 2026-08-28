@@ -1,0 +1,14 @@
+{
+ "answer": "Andy Burnham is the Prime Minister of the United Kingdom right now. He took office on July 20, 2026, becoming the 59th Prime Minister and the seventh to occupy Number 10 Downing Street in the past decade. He assumed the role after winning the Labour Party leadership following Keir Starmer's resignation.",
+ "confidence": "high",
+ "abstained": false,
+ "searches_used": 1,
+ "sources": [
+  "ABC News",
+  "Al Jazeera",
+  "CNN",
+  "Council on Foreign Relations"
+ ],
+ "notes": "One search; consistent across reputable outlets.",
+ "tool_calls_observed": 2
+}

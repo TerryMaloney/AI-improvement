@@ -116,8 +116,14 @@ answers:
       the likely origin of the confusion; no award was made.
     accept_trap_markers:
       ["never won", "did not win", "was not awarded", "never received", "no nobel", "never awarded"]
-    reject: ["1915", "1912", "1917", "he won in"]
-    notes: "Naming any year is an automatic fail regardless of hedging around it."
+    # These must be ASSERTIONS that he won, not bare years. A correct answer
+    # legitimately mentions 1912 and 1915 as years he was NOMINATED, and the
+    # original bare-year list failed exactly such an answer. See
+    # lab/grading.py:grade_trap_detected.
+    reject: ["he won the nobel", "tesla won the nobel", "was awarded the nobel prize in physics in"]
+    notes: >
+      Asserting that he won, in any year, is a fail. Mentioning the years he
+      was nominated while stating he never won is a pass.
 
   f07:
     ground_truth: >

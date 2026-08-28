@@ -108,7 +108,12 @@ def scorable(answer_entry: dict | None) -> bool:
 
 def ground_truth_strings(answers: dict) -> list[str]:
     """Every string in the answer key that would constitute a leak if it
-    appeared in a trial packet. Used by tests/test_no_answer_leakage.py."""
+    appeared in a TRIAL PACKET. Used by tests/test_no_answer_leakage.py.
+
+    This is the right set for checking packets, where "Dali Rajic" appearing at
+    all is a leak. It is the WRONG set for auditing answers — see
+    `leak_probe_strings` below.
+    """
     out: list[str] = []
 
     def walk(node):
@@ -129,4 +134,38 @@ def ground_truth_strings(answers: dict) -> list[str]:
             out.append(str(node))
 
     walk(answers.get("answers", {}))
+    return out
+
+
+def leak_probe_strings(answers: dict, min_len: int = 40) -> list[str]:
+    """Strings whose appearance in a SOLVER'S ANSWER would suggest the answer
+    key was read, rather than the question answered.
+
+    This is a much narrower set than `ground_truth_strings`, and the reason is
+    a false-positive problem found by running the audit on real data:
+
+        LEAK-SUSPECT: answer contains an answer-key string: 'Andy Burnham'
+        LEAK-SUSPECT: answer contains an answer-key string: 'false premise'
+
+    Both flags were on CORRECT answers. Of course they were — `accept` strings
+    and `accept_trap_markers` are precisely what a right answer contains, so
+    matching on them flags every success as a suspected cheat. An alarm that
+    fires on the good case is worse than no alarm: it trains you to ignore it.
+
+    What actually discriminates is long, distinctive prose that exists only in
+    the answer-key document — the narrative `ground_truth` write-ups. A solver
+    reproducing forty consecutive characters of those did not arrive there by
+    reasoning. Short accept-strings are excluded because they cannot tell
+    "leaked" from "got it right", which is the whole question.
+
+    The structural sandbox (no filesystem tools) remains the real defence. This
+    is a backstop, and a deliberately quiet one.
+    """
+    out: list[str] = []
+    for entry in (answers.get("answers") or {}).values():
+        if not isinstance(entry, dict):
+            continue
+        gt = entry.get("ground_truth")
+        if isinstance(gt, str) and len(gt.strip()) >= min_len:
+            out.append(" ".join(gt.split()))
     return out

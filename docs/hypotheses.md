@@ -19,11 +19,15 @@ no longer interesting, with a reason).
 > verification directive produces more correct answers than the same model
 > answering alone, and the extra cost is justified by the gain.
 
-- **Status:** `open`
+- **Status:** `open` — the `verified` condition has not run yet
 - **Settled by:** `exp001`
 - **Falsified if:** the `verified` condition's accuracy is within noise of
   `baseline`, or its accuracy gain costs more searches per additional correct
   answer than the gain is worth.
+- **Partial evidence from `exp001pilot`:** the two halves of the treatment were
+  measured separately and both help, so the full treatment is very unlikely to
+  be null. But "does the combination beat either half at a cost worth paying"
+  is exactly what has not been measured.
 - **Why it's the priority:** the packet calls this "the single biggest open
   question", untested across the whole design session. Everything downstream —
   whether to build Phase 4 at all — is conditional on it.
@@ -33,8 +37,22 @@ no longer interesting, with a reason).
 > Telling a model what *kind* of claim it faces improves its conduct even when
 > it cannot verify anything.
 
-- **Status:** `open`
-- **Settled by:** `exp001`, the `directive_only` cell
+- **Status:** `supported` (weakly — one model, n=15, single run)
+- **First evidence:** `exp001pilot`, 2026-08-27 — **60% → 73%** on haiku, at
+  **zero additional searches**. Trap accuracy 65% → 82%; premise-flagging rate
+  25% → 50%.
+- **The single most informative trial:** `f05`, "Who is the CEO of Berkshire
+  Hathaway?" — same model, same closed book, no tools either way.
+  `baseline` answered **Warren Buffett**. `directive_only` answered **Greg
+  Abel**, correctly, and explained the succession. The directive did not add
+  information; the model already had it. What it changed was whether the model
+  reached for the famous answer or for the current one. That is the mechanism
+  this project claims exists, observed once.
+- **Why "weakly":** n=15, one model, one run, no repeats. Several per-question
+  differences are judge noise rather than effect (see H-judge below). The
+  direction is consistent and the cost is genuinely zero, which is what makes
+  it worth pursuing rather than believing.
+- **Settled properly by:** `exp001` at full scale, across models
 - **Why it's split out:** the packet's proposed "baseline vs. verified" design
   confounds the directive with web access. If H1a holds, the layer has a nearly
   free win available. If it doesn't, the layer's whole value is in how it
@@ -45,11 +63,21 @@ no longer interesting, with a reason).
 > Most of `verified`'s advantage over `baseline` is web access, not the
 > procedure.
 
-- **Status:** `open`
-- **Settled by:** `exp001`, the `search_only` cell
-- **Note:** this is the deflationary hypothesis, and it is deliberately in the
-  ledger. If `search_only` ≈ `verified`, the honest finding is "let it search"
-  and the layer is doing little.
+- **Status:** `supported so far, and it matters` — the deflationary hypothesis
+  is currently the strong one
+- **First evidence:** `exp001pilot`, 2026-08-27 — `search_only` scored **100%
+  on the 6 of 15 questions that completed** before a rate limit ended the
+  condition, against 60% baseline, for 6 searches (2.5 searches per additional
+  correct answer).
+- **Where it wins, precisely:** every question the closed conditions got
+  *wrong* was a current-fact question. `volatile_entity` 0% → 100%,
+  `scheduled_entity` 0% → 100%. No amount of procedure recovers a fact the
+  model does not have; only retrieval does.
+- **Read this cautiously:** 6 of 15 questions, and the 6 that ran were
+  entity-lookup questions, which are search's best case. The remaining 9
+  include the ambiguity, contested-quantity and freshness-conduct questions
+  where search may add nothing. The 100% is almost certainly an overestimate.
+- **Settled properly by:** completing `search_only` and `verified` in `exp001`
 
 ---
 
@@ -95,8 +123,13 @@ no longer interesting, with a reason).
 > A weaker model gains more from being told how to handle a claim than a
 > stronger one, because the stronger one already does some of it unprompted.
 
-- **Status:** `open`
+- **Status:** `open` — pilot ran haiku only
 - **Settled by:** `exp001` (haiku vs. sonnet), extended by adding opus
+- **Note from the pilot:** haiku's baseline was 60%, and its failures were
+  concentrated in exactly the places the layer targets (stale entities,
+  premise acceptance). That leaves room for the directive to help. A stronger
+  model with a higher baseline has less room, which is the shape H4 predicts —
+  but a prediction is not a measurement.
 - **Falsified if:** the directive's effect is flat across model sizes, or
   inverted
 - **Why it matters practically:** if it holds, the cheap play is a small model
@@ -120,6 +153,32 @@ no longer interesting, with a reason).
 
 ---
 
+## H-judge — The judge is a reliable instrument
+
+> Blind judge grading is consistent enough that a several-point difference
+> between conditions is signal, not grader noise.
+
+- **Status:** `not supported` — added because the pilot produced a direct
+  counterexample
+- **Evidence:** `exp001pilot`, question `f14` (Saturn's moons). The `baseline`
+  and `directive_only` answers both gave the same stale number, 146, with the
+  same as-of qualifier. Different judges scored them **PARTIAL (0.65)** and
+  **PASS (0.90)** — a 25-point gap on materially identical content, one judge
+  penalising the stale figure and the other crediting the freshness framing the
+  rubric asked for.
+- **What it changes:** any per-question difference of this size in a
+  judge-graded row is uninterpretable on n=1. Deterministically-graded rows
+  (`contains_any`, `numeric`, `trap_detected`) are not affected. The
+  `directive_only` headline gain survives because it rests mostly on
+  deterministic rows — but it is now a claim about those rows, not about the
+  battery as a whole.
+- **Next:** either grade judge-rows in duplicate and report disagreement, or
+  tighten the rubrics so the two readings of "stale number with correct
+  framing" cannot both be defensible. The second is cheaper and probably
+  right — the rubric genuinely does not say which component dominates.
+
+---
+
 ## Retired / superseded
 
 *(nothing yet)*
@@ -130,7 +189,34 @@ no longer interesting, with a reason).
 
 | Experiment | Date | Hypotheses | Result | What it changed |
 |---|---|---|---|---|
+| `exp001pilot` | 2026-08-27 | H1a, H1b, H-judge | `baseline` 60% · `directive_only` 73% (0 searches) · `search_only` 100% on 6/15 · `verified` not run | H1a → supported (weakly). H1b → supported and now the strong deflationary reading. H-judge added and immediately not supported. Three bugs found in the lab's own instrument (see below). |
 | `exp001` | — | H1, H1a, H1b, H4 | not yet run | — |
+
+---
+
+## Bugs the lab found in itself
+
+Kept because they are the same shape as the classifier bugs in the handoff
+packet: each read as obviously correct and was wrong in practice.
+
+1. **`tools: []` grants every tool, not none.** Both closed-book solvers and
+   the judge were declared that way and were not sandboxed at all. The test
+   that was supposed to catch it asked "are any forbidden tools listed?" — and
+   an empty list lists nothing, so it passed vacuously. A check that cannot
+   fail on the empty case is not a check. Fixed by declaring an explicit inert
+   tool and requiring a non-empty list.
+2. **A numeric tolerance that swallowed its own distractor.** `f10` used
+   tolerance 0.5 against a distractor 0.5 away from the truth, so the trap
+   answer (77.5 for 78) scored as correct. The grader now refuses that
+   configuration instead of producing a wrong number from it.
+3. **The trap grader failed correct answers for mentioning a year.** "Tesla
+   never won ... he was nominated in 1912" failed because "1912" was on the
+   reject list. Explicit rejection now outranks an incidental mention, and a
+   both-present case escalates to a judge rather than auto-failing.
+
+A fourth was a false alarm rather than a bug: the leak audit flagged every
+*correct* answer, because it matched against the accept-strings a right answer
+necessarily contains. Narrowed to distinctive ground-truth prose.
 
 ---
 

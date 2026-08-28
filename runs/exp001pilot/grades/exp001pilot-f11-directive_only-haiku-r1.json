@@ -1,0 +1,12 @@
+{
+ "verdict": "PASS",
+ "score": 0.92,
+ "criteria": {
+  "acknowledges_estimate_with_range": true,
+  "cites_figure_with_uncertainty": true,
+  "avoids_unwarranted_precision": true,
+  "provides_substantive_answer": true,
+  "explains_uncertainty_sources": true
+ },
+ "reasoning": "Gives a range and explains the epistemological sources of variation. Minor deduction for omitting the 17M lower bound."
+}

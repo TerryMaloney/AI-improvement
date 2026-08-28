@@ -44,18 +44,32 @@ instructional — solvers are not *asked* not to cheat, they are *unable* to.
 
 | Agent | Tools | Used for |
 |---|---|---|
-| `solver-closed` | none at all | `baseline`, `directive_only` |
+| `solver-closed` | one inert tool (`TodoWrite`) | `baseline`, `directive_only` |
 | `solver-web` | `WebSearch`, `WebFetch` | `search_only`, `verified` |
-| `grader-judge` | none at all | all judge grading |
+| `grader-judge` | one inert tool (`TodoWrite`) | all judge grading |
 
 Four layers, in order of how much they'd have to fail simultaneously:
 
 1. **Tool restriction.** Declared in each agent's frontmatter. `solver-closed`
-   has no tools; `solver-web` has web tools and no filesystem access. Neither
-   can read the answer key by any route.
+   declares only an inert tool; `solver-web` declares web tools and no
+   filesystem access. Neither can read the answer key by any route.
    `tests/test_no_answer_leakage.py` parses the frontmatter and fails if a
    filesystem tool ever appears — a frontmatter edit is exactly the kind of
    change that would silently open the hole.
+
+   > **`tools: []` does not mean "no tools".** An empty list is treated as *no
+   > filter*, and the agent is granted everything, including `Read` and `Bash`.
+   > Both closed-book solvers and the judge were originally declared that way
+   > and were not sandboxed at all. The test that should have caught it asked
+   > "are any forbidden tools listed?" — and an empty list lists nothing, so it
+   > passed. **A check that cannot fail on the empty case is not a check.**
+   > Declare an explicit inert tool and require the list to be non-empty. Worth
+   > re-reading every time you add an agent.
+
+   **Agent definitions load at session start.** An agent created mid-session is
+   unavailable to that session, which is why the first pilot ran against
+   `general-purpose` agents under prompt-level constraints instead. That is a
+   materially weaker sandbox, and the run says so on its face.
 2. **Prompt quarantine.** No packet handed to a solver contains any string from
    the answer key. Tested by generating every packet for a real experiment and
    searching all of them against every answer-key string.
@@ -203,26 +217,43 @@ is why the tool reports it rather than silently searching.
 ## 7. Threats to validity
 
 Written down because the ones you haven't named are the ones that get you.
+Several of these stopped being hypothetical in the first pilot.
 
-1. **Judge-generator correlation.** The judge is a Claude model grading Claude
-   models. Shared blind spots pass unnoticed. Partly mitigated by
+1. **Judge variance is real and measured.** In `exp001pilot`, two answers to
+   `f14` giving the *same stale number with the same qualifier* were scored
+   PARTIAL (0.65) and PASS (0.90) by different judges — a 25-point gap on
+   materially identical content. Any judge-graded per-question difference of
+   that size is uninterpretable at n=1. Deterministically-graded rows are
+   unaffected. Fix the rubric before trusting the row: `f14`'s genuinely does
+   not say whether a stale figure or correct freshness framing dominates.
+2. **Judge–generator correlation.** The judge is a Claude model grading Claude
+   models, so shared blind spots pass unnoticed. Partly mitigated by
    deterministic-first grading and by rubrics written before any answers
-   existed. Not solved. The packet's own defence — use a different model family
-   for the judge — isn't available without an API key.
-2. **Small n.** 15 factual questions, hand-written by the people who built the
+   existed. Not solved — the packet's own defence, a different model family for
+   the judge, needs API access we don't have.
+3. **Small n.** 15 factual questions, hand-written by the people who built the
    layer. They probe failures the design session already found, which makes
    them a fair test of "does the layer fix what we built it for" and a weak
    test of "does the layer help in general."
-3. **Battery authorship bias.** The questions were written with the layer's
+4. **Battery authorship bias.** The questions were written with the layer's
    claim types in mind. A battery written by someone who had never seen the
    layer would be a stronger test, and is worth doing.
-4. **Self-reported search counts.** Audited for the impossible cases
-   (closed-condition searches, over-budget) but not independently verified. A
-   solver that under-reports makes its condition look cheaper than it was.
-5. **Ground truth drift.** Volatile facts go stale *during* a run. Every answer
+5. **Self-reported search counts are demonstrably low.** Not hypothetical: in
+   `exp001pilot`, solvers reporting `searches_used: 1` had actually made 2–4
+   tool calls — the self-report appears to count *search topics*, not tool
+   invocations. Cost figures built on it are therefore underestimates by
+   roughly 2–4×. Where the orchestrator can observe the real count it is
+   recorded as `tool_calls_observed`; prefer that, and treat any self-reported
+   cost comparison as a lower bound.
+6. **Ground truth drift.** Volatile facts go stale *during* a run. Every answer
    entry carries `verified_as_of` so a stale-at-grading-time result can be
    identified after the fact rather than silently absorbed.
-6. **Goodhart on the lab.** Iterating directive wording against this battery
+7. **Incomplete runs are not missing at random.** `exp001pilot` lost its last
+   two conditions to a rate limit, and the trials that survived were the ones
+   dispatched first — which happened to be the entity-lookup questions, the
+   best case for search. The `search_only` figure is over a favourable subset
+   and almost certainly flatters it. Report the denominator, always.
+8. **Goodhart on the lab.** Iterating directive wording against this battery
    will eventually tune the directive to these 15 questions. The packet lists
    "Goodhart on the controller itself" as an untested failure; a held-out
    battery, never used for iteration, is the standard defence and does not

@@ -1,0 +1,59 @@
+id: exp001pilot
+title: "exp001-pilot — 2x2 factorial on haiku, with a prompt-enforced sandbox"
+hypothesis: H1, H1a, H1b
+batteries: [factual]
+asked_as_of: "2026-08-27"
+default_search_budget: 3
+repeats: 1
+
+notes: >
+  PILOT RUN. Same 2x2 design as exp001, one model (haiku), and one important
+  difference that the numbers must be read through.
+  .
+  SANDBOX CAVEAT: Claude Code loads .claude/agents/ at session start, and the
+  sandboxed solver agents were created during the session that ran this pilot.
+  They were therefore unavailable to it, and this run used general-purpose
+  agents with the tool constraints stated in the prompt instead. So for this
+  run the sandbox is PROMPT-ENFORCED, not TOOL-ENFORCED. The answer key was
+  physically moved out of the repository for the duration of the solver runs,
+  which does structurally block the file-read path, but a closed-condition
+  agent retained a web search tool it was instructed not to use.
+  .
+  Which way this biases: undetected searching in a closed condition would make
+  `baseline` and `directive_only` look BETTER than they are, understating any
+  advantage of `verified`. So a positive result for the treatment survives the
+  caveat; a null result is the one that cannot be trusted from this run alone.
+  Ingest audits self-reported search counts, which catches the honest cases and
+  none of the dishonest ones.
+  .
+  exp001 proper — tool-enforced sandbox, both models — runs from any session
+  started after the agent definitions were committed.
+
+conditions:
+  - name: baseline
+    agent: solver-closed
+    inject_directive: false
+    allow_search: false
+    description: "The model alone. No tools, no procedure."
+
+  - name: directive_only
+    agent: solver-closed
+    inject_directive: true
+    allow_search: false
+    description: >
+      The handling directive with no ability to verify. Isolates whether the
+      procedure alone improves conduct.
+
+  - name: search_only
+    agent: solver-web
+    inject_directive: false
+    allow_search: true
+    description: "Web search, flat budget, no procedure. The 'just let it search' control."
+
+  - name: verified
+    agent: solver-web
+    inject_directive: true
+    allow_search: true
+    description: "The full Phase 2 treatment."
+
+models: [haiku]

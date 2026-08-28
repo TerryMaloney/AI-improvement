@@ -22,15 +22,15 @@ import json
 import re
 from pathlib import Path
 
-from lab.battery import ground_truth_strings, load_answers
+from lab.battery import leak_probe_strings, load_answers
 from lab.store import Store
 
 _BUDGET_RE = re.compile(r"SEARCH BUDGET: (\d+) search", re.I)
 
-# Short or generic ground-truth strings would false-positive constantly
-# ("deficit", "78"). Only distinctive strings are worth leak-checking here; the
-# structural guarantee is that solvers have no file tools at all.
-_MIN_LEAK_LEN = 12
+# The probe set is already restricted to long distinctive ground-truth prose
+# (see lab.battery.leak_probe_strings for why matching accept-strings flagged
+# every correct answer as a cheat). This is a second floor on top of that.
+_MIN_LEAK_LEN = 40
 
 
 def _parse_answer_file(path: Path) -> tuple[dict | None, str | None]:
@@ -72,7 +72,7 @@ def audit(payload: dict, trial_row, leak_strings: list[str]) -> list[str]:
         if m and isinstance(searches, int) and searches > int(m.group(1)):
             flags.append(f"BUDGET: used {searches} searches against a stated budget of {m.group(1)}")
 
-    answer = (payload.get("answer") or "").lower()
+    answer = " ".join((payload.get("answer") or "").split()).lower()
     for s in leak_strings:
         if len(s) >= _MIN_LEAK_LEN and s.lower() in answer:
             flags.append(f"LEAK-SUSPECT: answer contains an answer-key string verbatim: {s[:60]!r}")
@@ -84,7 +84,7 @@ def audit(payload: dict, trial_row, leak_strings: list[str]) -> list[str]:
 
 def ingest(run_dir: Path) -> dict:
     store = Store(run_dir / "results.db")
-    leak_strings = ground_truth_strings(load_answers())
+    leak_strings = leak_probe_strings(load_answers())
     answers_dir = run_dir / "answers"
     answers_dir.mkdir(parents=True, exist_ok=True)
 

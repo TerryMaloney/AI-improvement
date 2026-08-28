@@ -1,0 +1,14 @@
+{
+ "answer": "Dali Rajic is currently the Chief Revenue Officer of OpenAI. He was appointed to the position in August 2026, taking over from Denise Dresser, who held the role for approximately nine months. Rajic, age 53, was previously the President and Chief Operating Officer of Wiz (an Alphabet Inc.-owned company) and is known as one of the most disciplined and successful enterprise sales leaders in tech.",
+ "confidence": "high",
+ "abstained": false,
+ "searches_used": 1,
+ "sources": [
+  "openai.com announcement",
+  "TechCrunch 2026-08-13",
+  "Fortune 2026-08-24",
+  "Fortune 2026-08-26"
+ ],
+ "notes": "Current as of August 2026.",
+ "tool_calls_observed": 2
+}

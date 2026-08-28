@@ -35,6 +35,33 @@ AGENT_DIR = REPO / ".claude" / "agents"
 # Tools that would let a solver reach the answer key on disk.
 FORBIDDEN_SOLVER_TOOLS = {"Read", "Glob", "Grep", "Bash", "Edit", "Write", "NotebookEdit", "Agent", "Task"}
 
+# Tools a no-tools agent may declare: they cannot read files, search, or run
+# code, so declaring one is equivalent to declaring none.
+INERT_TOOLS = {"TodoWrite"}
+
+# SANDBOX BUG, found by running the agents rather than by reading them:
+# `tools: []` does NOT mean "no tools" — an empty list is treated as "no
+# filter", and the agent is granted EVERYTHING, including Read and Bash. Both
+# closed-book solvers and the judge were declared that way and were therefore
+# not sandboxed at all.
+#
+# The test below passed anyway, because it asked "are any forbidden tools
+# listed?" and an empty list lists nothing. A check that cannot fail on the
+# empty case is not a check. It now requires a non-empty declaration drawn
+# only from INERT_TOOLS, which fails loudly on `tools: []`.
+#
+# This is the same shape as the classifier bugs in tests/test_classifier.py:
+# something that read as obviously correct, was wrong in practice, and was
+# only caught by running it.
+
+
+def _tool_list(tools) -> list[str]:
+    if not tools:
+        return []
+    if isinstance(tools, list):
+        return [str(t).strip() for t in tools if str(t).strip()]
+    return [t.strip() for t in str(tools).split(",") if t.strip()]
+
 
 def _frontmatter(path: Path) -> dict:
     text = path.read_text()
@@ -49,29 +76,33 @@ class TestStructuralSandbox:
 
     @pytest.mark.parametrize("agent", ["solver-closed", "solver-web", "grader-judge"])
     def test_no_solver_can_touch_the_filesystem(self, agent):
-        tools = _frontmatter(AGENT_DIR / f"{agent}.md").get("tools")
-        declared = (
-            [] if not tools
-            else tools if isinstance(tools, list)
-            else [t.strip() for t in str(tools).split(",") if t.strip()]
-        )
+        declared = _tool_list(_frontmatter(AGENT_DIR / f"{agent}.md").get("tools"))
+        assert declared, f"{agent} declares no tools, which grants all of them"
         leaked = FORBIDDEN_SOLVER_TOOLS & set(declared)
         assert not leaked, (
             f"{agent} declares {leaked}, which can read batteries/answers.yaml. "
             f"Any result produced with this agent is invalid."
         )
 
-    def test_closed_solver_has_no_tools_at_all(self):
-        assert not _frontmatter(AGENT_DIR / "solver-closed.md").get("tools")
+    @pytest.mark.parametrize("agent", ["solver-closed", "grader-judge"])
+    def test_no_tools_agents_declare_an_explicit_inert_tool(self, agent):
+        """`tools: []` grants every tool. These agents must declare a non-empty
+        list of inert tools so the filter actually applies.
 
-    def test_judge_has_no_tools_at_all(self):
-        """A judge with search would substitute its own recall for ground truth
-        and silently become the answer key."""
-        assert not _frontmatter(AGENT_DIR / "grader-judge.md").get("tools")
+        For the judge specifically: one with search would substitute its own
+        retrieval for ground truth and silently become the answer key."""
+        tools = _frontmatter(AGENT_DIR / f"{agent}.md").get("tools")
+        declared = _tool_list(tools)
+        assert declared, (
+            f"{agent} declares no tools. An empty or missing `tools:` is not a "
+            f"sandbox — it grants everything. Declare an inert tool instead."
+        )
+        assert set(declared) <= INERT_TOOLS, (
+            f"{agent} declares {set(declared) - INERT_TOOLS}, which is not inert."
+        )
 
     def test_web_solver_has_only_web_tools(self):
-        tools = _frontmatter(AGENT_DIR / "solver-web.md")["tools"]
-        declared = {t.strip() for t in str(tools).split(",")}
+        declared = set(_tool_list(_frontmatter(AGENT_DIR / "solver-web.md")["tools"]))
         assert declared == {"WebSearch", "WebFetch"}
 
 

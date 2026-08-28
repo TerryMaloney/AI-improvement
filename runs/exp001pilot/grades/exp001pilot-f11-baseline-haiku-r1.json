@@ -1,0 +1,12 @@
+{
+ "verdict": "PASS",
+ "score": 0.95,
+ "criteria": {
+  "acknowledges_estimate_not_settled": true,
+  "states_range_or_uncertainty": true,
+  "cites_50_million_figure": true,
+  "avoids_false_precision": true,
+  "provides_substantive_answer": true
+ },
+ "reasoning": "Cites a 50-100 million range, names ~50M as most commonly cited, and states uncertainty explicitly. Minor deduction for omitting the 17M lower bound."
+}
