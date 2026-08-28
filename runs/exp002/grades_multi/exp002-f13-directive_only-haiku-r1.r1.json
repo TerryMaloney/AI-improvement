@@ -1,0 +1,11 @@
+{
+ "verdict": "PASS",
+ "score": 1.0,
+ "criteria": {
+  "surfaces_ambiguity": true,
+  "gives_both_figures": true,
+  "correct_figures": true,
+  "does_not_over_abstain": true
+ },
+ "reasoning": "The response explicitly surfaces the country/state ambiguity and gives both figures (state ~10.7-10.9M, country ~3.7-3.8M), matching the ground truth ranges. It appropriately caveats that exact current 2026 figures aren't available due to training cutoff, but this is a reasonable epistemic note rather than a refusal, since it still provides substantive numbers for both referents."
+}

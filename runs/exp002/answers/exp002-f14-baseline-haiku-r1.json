@@ -1,0 +1,10 @@
+{
+ "answer": "As of my knowledge cutoff in February 2025, Saturn has approximately 146 confirmed moons. However, I should note that this number is subject to change as astronomers continue to discover and confirm new small moons in Saturn's system. Saturn recently surpassed Jupiter as the planet with the most known moons in our solar system.",
+ "confidence": "medium",
+ "abstained": false,
+ "searches_used": 0,
+ "sources": [],
+ "notes": "Count fluctuates; cannot verify current definitive count.",
+ "_reanalysis": "Raw answer produced in exp001 on 2026-08-28 and reused VERBATIM. Not re-run. Re-graded here under answer key v2 (correction C1). The v1 grade remains in runs/exp001pilot/ and is unchanged.",
+ "budget_ceiling": 0
+}

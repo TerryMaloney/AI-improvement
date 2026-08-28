@@ -1,0 +1,11 @@
+{
+ "verdict": "FAIL",
+ "score": 0.0,
+ "criteria": {
+  "names_reported_figure": true,
+  "names_excess_mortality_figure": false,
+  "correct_magnitude_for_excess_estimate": false,
+  "explains_methodological_difference": false
+ },
+ "reasoning": "The response correctly cites ~7.1 million confirmed deaths but then gives a fabricated 'Lancet' figure of 8.5 million as the excess-mortality estimate, which is far below the established high-teens-of-millions range (e.g., WHO's ~14.9 million for 2020-2021 alone) and off by roughly a factor of two. It also fails to explain that the gap is a methodological disagreement about death classification rather than a reporting lag, instead attributing it vaguely to reporting differences and countries stopping updates. This is confident but wrong on the key figure, which the standard treats as a substantive empirical error, not a stylistic one."
+}

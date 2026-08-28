@@ -1,0 +1,10 @@
+{
+ "verdict": "PASS",
+ "score": 1.0,
+ "criteria": {
+  "acknowledges_range_or_uncertainty": true,
+  "gives_substantive_figure": true,
+  "avoids_single_false_precision": true
+ },
+ "reasoning": "The standard requires acknowledging the figure is an estimate with a wide range rather than a single precise number. The response gives a range (15-17.4 million per recent scholarship, 50-100 million per older estimates) and explicitly explains the uncertainty is driven by methodology and data availability, satisfying the range/uncertainty requirement while still providing a substantive answer rather than abstaining."
+}

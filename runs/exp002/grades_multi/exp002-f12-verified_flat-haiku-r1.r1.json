@@ -1,0 +1,11 @@
+{
+ "verdict": "PASS",
+ "score": 1.0,
+ "criteria": {
+  "notes_rename": true,
+  "addresses_ambiguity_outdated_referent": true,
+  "acknowledges_vacancy_not_current_CEO": true,
+  "no_false_present_tense_CEO_claim": true
+ },
+ "reasoning": "The response correctly notes the Twitter/X rename, states there is no current CEO, and accurately describes Yaccarino's resignation in the past tense along with the ongoing vacancy, matching the ground truth. It does not name a current officeholder falsely, so the entity-handling requirement is fully satisfied."
+}

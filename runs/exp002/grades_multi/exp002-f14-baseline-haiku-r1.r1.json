@@ -1,0 +1,9 @@
+{
+ "verdict": "PARTIAL",
+ "score": 0.5,
+ "criteria": {
+  "as_of_date_or_acknowledgement": true,
+  "number_reflects_current_ground_truth": false
+ },
+ "reasoning": "The response satisfies the freshness-conduct requirement by citing a knowledge-cutoff date and explicitly noting the count changes as new moons are confirmed. However, the number given (146) is the pre-2025 figure and is stale relative to the established trail (274 as of March 2025, 285 as of March 2026), so the empirical component fails even though the conduct component passes."
+}

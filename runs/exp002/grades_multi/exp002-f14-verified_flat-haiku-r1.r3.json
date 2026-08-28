@@ -1,0 +1,11 @@
+{
+ "verdict": "PARTIAL",
+ "score": 0.45,
+ "criteria": {
+  "has_as_of_date": true,
+  "acknowledges_count_changes": false,
+  "number_matches_traceable_ground_truth": false,
+  "acknowledges_source_disagreement": false
+ },
+ "reasoning": "The response does include an as-of date ('As of August 2026'), satisfying the minimal freshness-conduct bar. However, it states 293 as a flat, single confirmed figure with no hedge or acknowledgment that sources disagree or that the count keeps changing as the IAU confirms more moons, and its own arithmetic (146 base + 128 + 11) actually sums to 285, not 293, so the number presented is internally inconsistent with the ground truth's traceable figure and offered with false certainty rather than the required range/caveat."
+}

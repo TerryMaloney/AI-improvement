@@ -1,0 +1,10 @@
+{
+ "verdict": "FAIL",
+ "score": 0.0,
+ "criteria": {
+  "names_reported_figure": true,
+  "names_excess_mortality_figure_correctly": false,
+  "explains_methodological_gap": false
+ },
+ "reasoning": "The response correctly gives the ~7 million reported figure but badly understates the excess-mortality estimate, citing only 8.5 million rather than the high-teens-of-millions range (WHO's ~14.9 million or higher), which fails the core empirical requirement of the standard. It also frames the gap as mainly an undercount/reporting-lag issue rather than a methodological disagreement about what counts as a COVID death, missing the required explanation for why the figures differ."
+}

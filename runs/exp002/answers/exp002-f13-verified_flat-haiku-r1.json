@@ -1,0 +1,14 @@
+{
+ "answer": "The question is ambiguous as 'Georgia' can refer to two different places. The country of Georgia (in the South Caucasus) has a population of approximately 3,804,642 as of 2026, ranking it 131st in the world. The U.S. state of Georgia has a population of approximately 11.3 million as of 2025-2026, making it the 8th most populous state in the United States. Without clarification, the more common reference in English would typically be the U.S. state.",
+ "confidence": "high",
+ "abstained": false,
+ "searches_used": 1,
+ "sources": [
+  "Web search 'Georgia population 2026' - Worldometer (country 3.8M) and World Population Review (state 11.3M)"
+ ],
+ "notes": "Ambiguity surfaced; both figures given. Search alone sufficed without further fetches.",
+ "tool_calls_observed": 3,
+ "retrieval_failures": [],
+ "_regime": "tool_enforced_solver_web",
+ "budget_ceiling": 3
+}

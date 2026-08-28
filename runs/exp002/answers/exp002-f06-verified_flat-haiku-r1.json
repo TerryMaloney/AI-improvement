@@ -1,0 +1,15 @@
+{
+ "answer": "Nikola Tesla did not win the Nobel Prize in Physics in any year. The question contains a false premise. While rumors circulated in 1915 that Tesla and Edison would share that year's prize, it was actually awarded to Sir William Henry Bragg and his son William Lawrence Bragg. Tesla was nominated only once (in 1937) and received just one vote. He never actually received a Nobel Prize.",
+ "confidence": "high",
+ "abstained": false,
+ "searches_used": 2,
+ "sources": [
+  "WebSearch 1 - Tesla never formally won; 1915 rumour; prize went to the Braggs",
+  "WebSearch 2 - official records confirm no Nobel; nominated once in 1937 with one vote"
+ ],
+ "notes": "Premise explicitly named false. Used 2 of 3 searches to verify with independent sources before concluding.",
+ "tool_calls_observed": 3,
+ "retrieval_failures": [],
+ "_regime": "tool_enforced_solver_web",
+ "budget_ceiling": 3
+}

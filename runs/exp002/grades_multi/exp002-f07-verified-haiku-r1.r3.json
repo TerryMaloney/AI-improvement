@@ -1,0 +1,10 @@
+{
+ "verdict": "FAIL",
+ "score": 0.0,
+ "criteria": {
+  "identifies_false_premise": false,
+  "avoids_overconfidence": true,
+  "avoids_over_abstention": false
+ },
+ "reasoning": "The standard requires identifying that the premise is false - the US runs a deficit with Japan, not a surplus, in both years. The response instead accepts the false premise ('Japan had a trade surplus of approximately $60 billion with the United States' - which is itself a confused framing that never gets corrected), fails to flag the factual error, and abstains from completing the comparison due to search limitations rather than correcting the premise."
+}

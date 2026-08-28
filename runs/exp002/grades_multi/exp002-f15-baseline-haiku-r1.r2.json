@@ -1,0 +1,12 @@
+{
+ "verdict": "PASS",
+ "score": 1.0,
+ "criteria": {
+  "names_reported_figure": true,
+  "names_excess_mortality_figure": true,
+  "explains_why_they_differ": true,
+  "avoids_single_confident_number": true,
+  "avoids_over_abstention": true
+ },
+ "reasoning": "The response gives both figures (~7 million confirmed vs. 15-20 million excess mortality estimate from WHO) and explains the methodological reason for the gap: confirmed deaths reflect official attribution while excess mortality captures broader pandemic impact not officially attributed to COVID. This matches the rubric's requirement to describe the disagreement rather than assert a single number or abstain entirely."
+}

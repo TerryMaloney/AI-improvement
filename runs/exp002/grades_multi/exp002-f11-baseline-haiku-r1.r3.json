@@ -1,0 +1,11 @@
+{
+ "verdict": "PASS",
+ "score": 1.0,
+ "criteria": {
+  "cites_range_or_uncertainty": true,
+  "acknowledges_estimate_nature": true,
+  "gives_commonly_cited_figure": true,
+  "avoids_false_precision": true
+ },
+ "reasoning": "The response states a range (50-100 million), explicitly notes uncertainty and its causes (limited vital statistics in many regions), and names 50 million as the commonly cited baseline without asserting it as a settled precise figure. This matches the rubric's requirement of citing ~50 million with a stated range and explicit uncertainty, so it passes."
+}

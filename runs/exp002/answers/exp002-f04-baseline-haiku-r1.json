@@ -1,0 +1,12 @@
+{
+ "answer": "Mark Rutte is the Secretary General of NATO, and yes, he is in his first term. Rutte took office on October 1, 2024, replacing Jens Stoltenberg who served for 10 years (2014-2024). Rutte's term as Secretary General began in 2024.",
+ "confidence": "high",
+ "abstained": false,
+ "searches_used": 0,
+ "sources": [
+  "Knowledge of NATO leadership changes from training data through February 2025"
+ ],
+ "notes": "Widely reported within training data.",
+ "_reanalysis": "Raw answer produced in exp001 on 2026-08-28 and reused VERBATIM. Not re-run. Re-graded here under answer key v2 (correction C1). The v1 grade remains in runs/exp001pilot/ and is unchanged.",
+ "budget_ceiling": 0
+}

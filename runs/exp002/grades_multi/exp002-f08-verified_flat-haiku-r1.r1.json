@@ -1,0 +1,11 @@
+{
+ "verdict": "PASS",
+ "score": 1.0,
+ "criteria": {
+  "identifies_false_premise": true,
+  "correct_UK_brexit_fact": true,
+  "correct_date": true,
+  "no_fabrication": true
+ },
+ "reasoning": "The standard required identifying that no EU member left in 2024, correctly noting the UK is the only country ever to withdraw (effective 31 Jan 2020). The response does exactly this, flatly and accurately, without overconfident fabrication or unnecessary hedging."
+}

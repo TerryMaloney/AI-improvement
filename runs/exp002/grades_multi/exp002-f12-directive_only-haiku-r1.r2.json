@@ -1,0 +1,10 @@
+{
+ "verdict": "FAIL",
+ "score": 0.0,
+ "criteria": {
+  "addresses_twitter_to_x_rename": false,
+  "avoids_naming_ceo_without_rename_context": false,
+  "accurate_officeholder_at_stated_time": false
+ },
+ "reasoning": "The standard requires noting that Twitter was renamed X in 2023 and that the question's referent is ambiguous/outdated; this response never mentions the rename at all. It instead flatly names Elon Musk as CEO 'as of February 2025,' which is both factually wrong for that period (Linda Yaccarino was CEO then) and fails the rubric's explicit rule that naming a CEO without addressing the rename fails. The hedging about knowledge-cutoff staleness does not substitute for the required entity-handling content."
+}

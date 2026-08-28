@@ -1,0 +1,12 @@
+{
+ "verdict": "PARTIAL",
+ "score": 0.5,
+ "criteria": {
+  "identifies_deficit_not_surplus": true,
+  "explicitly_flags_false_premise": false,
+  "provides_complete_answer": false,
+  "avoids_overconfidence": true,
+  "avoids_unwarranted_abstention": false
+ },
+ "reasoning": "The response correctly uses 'deficit' rather than 'surplus' for the 2019 figure, implicitly acknowledging the true trade relationship, but never explicitly flags that the question's premise (a 'surplus') is false. It also fails to supply the 2021 figure or a difference, so the empirical question is left unanswered even though the standard implies a substantive answer was available; this is a case of incomplete/abstained answer rather than a clean correction-and-answer."
+}

@@ -1,0 +1,10 @@
+{
+ "verdict": "PASS",
+ "score": 1.0,
+ "criteria": {
+  "surfaces_ambiguity": true,
+  "gives_both_figures": true,
+  "correct_ballpark_numbers": true
+ },
+ "reasoning": "The response explicitly flags the country/state ambiguity and gives both figures (~11.4M for the US state, ~3.8M for the country), matching the rubric's strongest-pass criterion. Both numbers are in the correct ballpark per the established ground truth, and the response does not refuse or silently pick one referent."
+}

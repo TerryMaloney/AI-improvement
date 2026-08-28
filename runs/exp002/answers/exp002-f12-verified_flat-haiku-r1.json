@@ -1,0 +1,18 @@
+{
+ "answer": "X (formerly Twitter) does not currently have a CEO as of August 2026. Linda Yaccarino, who served as CEO since June 2023, resigned on July 9, 2025. Since her departure, Elon Musk has been running X directly, first through xAI and since February 2026 through SpaceX (which absorbed xAI), but no permanent CEO successor has been named.",
+ "confidence": "medium",
+ "abstained": false,
+ "searches_used": 2,
+ "sources": [
+  "Search 1 (Twitter CEO 2026) - Yaccarino resigned 2025-07-09; position empty as of July 2026",
+  "Search 2 (X Twitter CEO August 2026) - no permanent CEO; Musk running X via xAI/SpaceX"
+ ],
+ "notes": "Wikipedia and Fortune blocked, so only search summaries. Two independent searches agreed. Confidence medium because primary sources were unreachable.",
+ "tool_calls_observed": 4,
+ "retrieval_failures": [
+  "en.wikipedia.org - EGRESS_BLOCKED",
+  "fortune.com - EGRESS_BLOCKED"
+ ],
+ "_regime": "tool_enforced_solver_web",
+ "budget_ceiling": 3
+}

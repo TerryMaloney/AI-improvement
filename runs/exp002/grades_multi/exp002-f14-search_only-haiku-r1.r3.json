@@ -1,0 +1,11 @@
+{
+ "verdict": "PARTIAL",
+ "score": 0.5,
+ "criteria": {
+  "as_of_date_or_temporal_qualifier": true,
+  "acknowledges_count_changes_over_time": false,
+  "number_matches_or_near_ground_truth_range": true,
+  "acknowledges_source_disagreement": false
+ },
+ "reasoning": "The response includes an as-of date ('As of June 2026') satisfying the bare freshness conduct requirement, and its figure of 293 falls within the defensible range noted in the standard. However, it states the number flatly as settled fact without any acknowledgement that the confirmed count changes as the IAU confirms more moons or that sources disagree (146->274->285->293 trail), which the standard treats as important epistemic conduct beyond just having a date."
+}

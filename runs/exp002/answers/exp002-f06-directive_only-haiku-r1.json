@@ -1,0 +1,10 @@
+{
+ "answer": "Nikola Tesla did not win the Nobel Prize in Physics. While Tesla was nominated for the Nobel Prize in Physics in 1912 (along with Thomas Edison, his famous rival), he did not receive the award. The 1912 Nobel Prize in Physics was awarded to Gustaf Dalen for his invention of automatic regulators used in conjunction with gas accumulators. Tesla's lack of a Nobel Prize, despite his significant contributions to physics and engineering, is a well-known historical fact. The question's premise-that Tesla won the Nobel Prize in Physics-is false.",
+ "confidence": "high",
+ "abstained": false,
+ "searches_used": 0,
+ "sources": [],
+ "notes": "Named the premise as false explicitly.",
+ "_reanalysis": "Raw answer produced in exp001 on 2026-08-28 and reused VERBATIM. Not re-run. Re-graded here under answer key v2 (correction C1). The v1 grade remains in runs/exp001pilot/ and is unchanged.",
+ "budget_ceiling": 0
+}

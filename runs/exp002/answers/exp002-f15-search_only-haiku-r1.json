@@ -1,0 +1,16 @@
+{
+ "answer": "The total global death toll of COVID-19 was approximately 7.1 million confirmed deaths as of mid-2026. However, accounting for excess mortality and underreporting, the true toll is estimated at over 8.5 million deaths. The difference reflects challenges in consistent global reporting, as many countries had incomplete death registration and varying testing protocols. Major health organizations, including the WHO, ceased requiring daily death reporting in August 2023.",
+ "confidence": "medium",
+ "abstained": false,
+ "searches_used": 1,
+ "sources": [
+  "Web search 'total global death toll COVID-19 2026' - ~7.1M confirmed as of mid-July 2026; excess-mortality estimate over 8.5M"
+ ],
+ "notes": "Worldometer and Our World in Data fetches blocked by the proxy.",
+ "tool_calls_observed": 3,
+ "_source_conflict": "The retrieved excess-mortality figure (>8.5M) is materially LOWER than the WHO estimate recorded in ground truth (~14.9M excess for 2020-2021 alone). Search introduced a figure that conflicts with the established authoritative estimate. Recorded, not reconciled.",
+ "_infrastructure_note": "WebFetch blocked for worldometers.info and ourworldindata.org.",
+ "_regime": "tool_enforced_solver_agent",
+ "_reanalysis": "Raw answer produced in exp001 on 2026-08-28 and reused VERBATIM. Not re-run. Re-graded here under answer key v2 (correction C1). The v1 grade remains in runs/exp001pilot/ and is unchanged.",
+ "budget_ceiling": 3
+}

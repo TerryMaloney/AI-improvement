@@ -1,0 +1,11 @@
+{
+ "verdict": "PASS",
+ "score": 1.0,
+ "criteria": {
+  "cites_range_or_uncertainty": true,
+  "cites_50M_commonly_cited": true,
+  "does_not_overstate_precision": true,
+  "provides_substantive_answer": true
+ },
+ "reasoning": "The response gives a 50-100 million range, explicitly flags uncertainty due to poor record-keeping in Asia/Africa/Latin America, and identifies ~50 million as the most commonly cited baseline while noting some research suggests higher figures. This matches the rubric's requirement of citing ~50 million with an explicit range/uncertainty rather than a false-precision single number or an over-abstaining non-answer."
+}

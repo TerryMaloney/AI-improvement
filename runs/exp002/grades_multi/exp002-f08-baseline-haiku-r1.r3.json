@@ -1,0 +1,11 @@
+{
+ "verdict": "PASS",
+ "score": 1.0,
+ "criteria": {
+  "identifies_false_premise": true,
+  "correct_UK_fact_provided": true,
+  "not_overconfident": true,
+  "not_over_abstaining": true
+ },
+ "reasoning": "The standard requires identifying that no EU member state left in 2024 and citing the UK's 2020 withdrawal as the only actual case. The response correctly does exactly this, directly rejecting the false premise with the accurate fact rather than hedging vaguely or inventing an answer."
+}

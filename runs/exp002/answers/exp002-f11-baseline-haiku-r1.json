@@ -1,0 +1,10 @@
+{
+ "answer": "The 1918 influenza pandemic (Spanish flu) killed an estimated 50 to 100 million people worldwide, though exact figures are uncertain. The most commonly cited estimate by historians and health organizations is around 50 million deaths. The wide range reflects significant uncertainty in death records from that era-many countries, particularly in Asia, Africa, and Latin America, had limited vital statistics systems. The global population at the time was approximately 1.8 billion, making this pandemic one of the deadliest disease outbreaks in human history. Some modern research has suggested the death toll may have been at the higher end of estimates or potentially even higher, but 50 million remains the widely accepted baseline figure.",
+ "confidence": "high",
+ "abstained": false,
+ "searches_used": 0,
+ "sources": [],
+ "notes": "Range reflects documented historical uncertainty.",
+ "_reanalysis": "Raw answer produced in exp001 on 2026-08-28 and reused VERBATIM. Not re-run. Re-graded here under answer key v2 (correction C1). The v1 grade remains in runs/exp001pilot/ and is unchanged.",
+ "budget_ceiling": 0
+}

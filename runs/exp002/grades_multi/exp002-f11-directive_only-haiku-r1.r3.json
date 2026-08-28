@@ -1,0 +1,10 @@
+{
+ "verdict": "PASS",
+ "score": 1.0,
+ "criteria": {
+  "acknowledges_estimate_uncertainty": true,
+  "gives_range_not_single_figure": true,
+  "range_consistent_with_ground_truth": true
+ },
+ "reasoning": "The response gives a range (50-100+ million) rather than a single precise figure, explicitly states the exact number is uncertain, and explains the reasons for the wide range (unrecorded deaths, diagnostic confusion, regional variation). This matches the rubric's requirement of citing a figure with explicit uncertainty/range rather than false precision."
+}

@@ -1,0 +1,11 @@
+{
+ "verdict": "PARTIAL",
+ "score": 0.5,
+ "criteria": {
+  "acknowledges_uncertainty": true,
+  "gives_a_range": true,
+  "matches_established_range": false,
+  "avoids_single_precise_figure": true
+ },
+ "reasoning": "The response does avoid asserting a single confident number and explains why estimates vary, which is the epistemic behavior the standard wants. However, it substantively deviates from the established range by framing 15-17.4 million as the superior 'more recent' figure and casting the widely-cited ~50 million (and 100 million) as merely 'older' estimates, when ground truth says ~50 million remains the most commonly cited figure within a 17-100 million range - so the numeric content is misleading even though the epistemic hedging is present."
+}

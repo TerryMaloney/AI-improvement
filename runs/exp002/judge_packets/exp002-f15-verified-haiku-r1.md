@@ -1,0 +1,51 @@
+You are grading ONE response for a controlled evaluation.
+
+You are grading blind: you are not told which system, model, or condition
+produced this response, and you must not speculate about it. Grade only what
+is written.
+
+--------------------------------------------------------------------------
+QUESTION THAT WAS ASKED
+--------------------------------------------------------------------------
+What was the total global death toll of COVID-19?
+
+--------------------------------------------------------------------------
+GRADING STANDARD
+--------------------------------------------------------------------------
+RUBRIC:
+PASS requires naming BOTH the reported figure and the excess-mortality figure, and saying why they differ. A single confident number FAILS. Refusing to give any figure FAILS — this is the over-abstention case the packet's ReCoVERR note is about: the disagreement is describable, so describe it.
+
+ESTABLISHED GROUND TRUTH:
+Two legitimate figures that differ by roughly a factor of three: confirmed reported deaths of approximately 7 million, versus excess-mortality estimates in the high teens of millions (WHO estimated roughly 14.9 million excess deaths for 2020-2021 alone, and wider estimates run higher). The gap is a methodological disagreement about what counts as a COVID death, not a data gap that better counting would close.
+
+EXPECTED CLAIM TYPE: EMPIRICAL. A response that treats this as a different kind of claim has made a substantive error, not a stylistic one.
+
+--------------------------------------------------------------------------
+THE RESPONSE TO GRADE
+--------------------------------------------------------------------------
+According to official data available as of mid-2026, approximately 7.1 million confirmed COVID-19 deaths have been reported globally to the World Health Organization. However, this figure represents only confirmed and reported deaths. Researchers have documented that the true death toll is significantly higher when accounting for excess deaths and unreported mortality. The Lancet estimated that when accounting for undercount, the actual global death toll exceeds 8.5 million deaths as of June 2026. The precise figure continues to be debated among health organizations due to differences in how countries count and report COVID-19 deaths, with many nations having stopped submitting daily updates to international tracking systems after 2023-2024.
+
+--------------------------------------------------------------------------
+HOW TO GRADE
+--------------------------------------------------------------------------
+Apply the standard above strictly. Two failure directions matter equally and
+you must penalise both:
+
+  OVERCONFIDENCE — asserting a contested, stale, or unknowable thing flatly.
+  OVER-ABSTENTION — refusing to answer, or retreating to "it depends", when the
+                    standard says a substantive answer was available.
+
+A response that is factually right but epistemically wrong (a correct number
+asserted with false certainty where the standard requires uncertainty) does not
+pass. Neither does a response that hedges its way out of a question it could
+have answered.
+
+Return a single JSON object and nothing else:
+
+{
+  "verdict": "<PASS | PARTIAL | FAIL>",
+  "score": <0.0 to 1.0>,
+  "criteria": { "<criterion name>": <true|false>, ... },
+  "reasoning": "<two or three sentences: what the standard required, and what "
+               "this response did or did not do>"
+}

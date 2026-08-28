@@ -20,7 +20,7 @@ This is the experimental instrument, so the details matter more than they look:
 from __future__ import annotations
 
 import json
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import date
 from pathlib import Path
 
@@ -94,15 +94,27 @@ class Condition:
     inject_directive: bool = False
     allow_search: bool = False
     description: str = ""
+    flat_budget_override: int | None = None
+    """Replace the route-derived search budget with a fixed number, while
+    keeping the directive otherwise intact.
+
+    This exists for exactly one purpose: exp001 could not separate "the
+    directive is unhelpful" from "the directive's budget policy starved the
+    condition", because `verified` received a route-derived budget (2 on most
+    questions, 0 on deterministic) while its control `search_only` received a
+    flat 3 — and `verified` then made FEWER observed tool calls, 30 against 39,
+    while scoring lower. Overriding the budget alone isolates the two."""
 
     @classmethod
     def from_dict(cls, d: dict) -> "Condition":
+        override = d.get("flat_budget_override")
         return cls(
             name=d["name"],
             agent=d["agent"],
             inject_directive=bool(d.get("inject_directive", False)),
             allow_search=bool(d.get("allow_search", False)),
             description=(d.get("description") or "").strip(),
+            flat_budget_override=int(override) if override is not None else None,
         )
 
 
@@ -168,6 +180,12 @@ def build_prompt(question: Question, condition: Condition, rt: Route, default_bu
         parts += [CLOSED_BLOCK, ""]
 
     if condition.inject_directive:
+        # A flat-budget override changes the number in the directive's budget
+        # line and NOTHING else — same claim type, same handling text, same
+        # freshness warnings, same routing caveats. That is what makes the
+        # comparison against `verified` a clean one-variable contrast.
+        if condition.flat_budget_override is not None:
+            rt = replace(rt, search_budget=condition.flat_budget_override)
         parts += [
             "--------------------------------------------------------------------------",
             "HANDLING GUIDANCE FOR THIS QUESTION",

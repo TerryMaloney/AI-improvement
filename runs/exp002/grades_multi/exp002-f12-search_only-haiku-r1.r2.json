@@ -1,0 +1,10 @@
+{
+ "verdict": "PASS",
+ "score": 1.0,
+ "criteria": {
+  "notes_rename_to_X": true,
+  "addresses_ambiguity_or_outdated_referent": true,
+  "correctly_states_vacancy_not_present_tense_wrong_CEO": true
+ },
+ "reasoning": "The response correctly identifies that X (formerly Twitter) has no current CEO, addressing the rename implicitly by referring to it as X, and accurately describes Yaccarino's resignation and the current vacancy with Musk running things directly, matching the established ground truth without falsely asserting a current officeholder."
+}

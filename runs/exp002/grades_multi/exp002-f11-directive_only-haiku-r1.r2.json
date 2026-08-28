@@ -1,0 +1,10 @@
+{
+ "verdict": "PASS",
+ "score": 1.0,
+ "criteria": {
+  "cites_range_or_uncertainty": true,
+  "acknowledges_estimate_nature": true,
+  "provides_substantive_figure": true
+ },
+ "reasoning": "The response gives a range (50-100+ million) and explicitly states the exact number is uncertain, explaining the reasons (unrecorded deaths, diagnostic confusion, regional variation), which matches the rubric's requirement for a range or explicit uncertainty rather than a single precise figure. It does not over-abstain, providing a substantive answer while correctly framing it as an estimate."
+}

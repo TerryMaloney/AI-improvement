@@ -1,0 +1,10 @@
+{
+ "verdict": "PASS",
+ "score": 1.0,
+ "criteria": {
+  "surfaces_ambiguity": true,
+  "gives_both_figures": true,
+  "answers_rather_than_refuses": true
+ },
+ "reasoning": "The response gives both figures (US state ~10.8-10.9M and country ~3.7-3.8M) and explicitly surfaces the ambiguity rather than silently picking one referent or refusing to answer. This matches the rubric's strongest-pass condition of giving both figures while still leading with a primary interpretation."
+}

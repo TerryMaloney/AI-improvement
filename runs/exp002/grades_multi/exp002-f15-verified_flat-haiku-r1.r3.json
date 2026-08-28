@@ -1,0 +1,10 @@
+{
+ "verdict": "PARTIAL",
+ "score": 0.4,
+ "criteria": {
+  "gives_reported_figure": true,
+  "gives_excess_mortality_figure": false,
+  "explains_methodological_difference": false
+ },
+ "reasoning": "The response correctly gives the confirmed reported figure (~7.1 million) and acknowledges it's an undercount, but never names the excess-mortality estimate (high teens of millions, e.g. WHO's ~14.9 million) or explains that the gap is a methodological disagreement about what counts as a COVID death rather than just incomplete reporting. This is a partial credit case: it avoids flat overconfidence but stops short of the dual-figure requirement the rubric demands."
+}

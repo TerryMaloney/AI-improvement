@@ -1,0 +1,12 @@
+{
+ "verdict": "PASS",
+ "score": 1.0,
+ "criteria": {
+  "names_reported_figure": true,
+  "names_excess_mortality_figure": true,
+  "explains_why_they_differ": true,
+  "avoids_single_confident_number": true,
+  "avoids_over_abstention": true
+ },
+ "reasoning": "The response gives both figures (~7 million confirmed vs. 15-20 million excess mortality estimate) and explains the methodological reason for the gap (confirmed reporting vs. broader excess mortality capture), matching the rubric's requirement. It does not collapse to a single confident number nor over-abstain, satisfying both failure-mode checks."
+}

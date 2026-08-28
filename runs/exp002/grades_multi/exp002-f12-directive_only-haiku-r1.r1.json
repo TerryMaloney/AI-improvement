@@ -1,0 +1,11 @@
+{
+ "verdict": "FAIL",
+ "score": 0.0,
+ "criteria": {
+  "notes_twitter_renamed_to_x": false,
+  "addresses_referent_ambiguity": false,
+  "avoids_naming_ceo_without_rename_context": false,
+  "appropriate_temporal_hedge": true
+ },
+ "reasoning": "The standard explicitly requires noting the Twitter-to-X rename and treating the question's referent as ambiguous/outdated; naming a specific person as CEO without addressing the rename is a stated FAIL condition. The response names Elon Musk as CEO and only hedges on temporal staleness of its knowledge, never mentioning the rename to X, Yaccarino's tenure, or the entity ambiguity, so it fails the core requirement despite appropriate uncertainty about currentness."
+}

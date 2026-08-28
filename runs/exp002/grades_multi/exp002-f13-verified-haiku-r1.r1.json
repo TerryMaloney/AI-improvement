@@ -1,0 +1,10 @@
+{
+ "verdict": "PASS",
+ "score": 1.0,
+ "criteria": {
+  "surfaces_ambiguity": true,
+  "gives_both_figures": true,
+  "numbers_roughly_correct": true
+ },
+ "reasoning": "The response explicitly surfaces the country/state ambiguity and provides both figures (~11.4 million for the US state, ~3.8 million for the country), matching the ground truth ranges. This is the strongest form of pass per the rubric, though the closing sentence slightly overweights the US state interpretation, it does not undermine the initial disambiguation."
+}

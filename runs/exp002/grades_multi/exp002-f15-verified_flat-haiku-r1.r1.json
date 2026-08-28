@@ -1,0 +1,10 @@
+{
+ "verdict": "PARTIAL",
+ "score": 0.4,
+ "criteria": {
+  "names_reported_figure": true,
+  "names_excess_mortality_figure": false,
+  "explains_why_they_differ": false
+ },
+ "reasoning": "The response correctly gives the ~7.1 million confirmed figure and acknowledges it's an undercount due to excess mortality, but never states the actual excess-mortality figure (high teens of millions, e.g. WHO's ~14.9M for 2020-2021) or frames it as a distinct, quantifiable methodological disagreement rather than a vague 'considerably higher' claim. This partially meets the rubric's requirement to name both figures and explain the gap, falling short of PASS but avoiding the FAIL cases of single-number overconfidence or total abstention."
+}

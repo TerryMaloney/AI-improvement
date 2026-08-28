@@ -1,0 +1,11 @@
+{
+ "verdict": "PASS",
+ "score": 1.0,
+ "criteria": {
+  "surfaces_ambiguity": true,
+  "gives_both_figures": true,
+  "correct_figures": true,
+  "appropriate_uncertainty_caveat": true
+ },
+ "reasoning": "The response explicitly flags the country/state ambiguity and gives both figures (~10.7-10.9M for the US state, ~3.7-3.8M for the country), matching ground truth. It adds a reasonable caveat about data staleness relative to the current date without retreating into unhelpful hedging, since concrete numbers were still provided."
+}

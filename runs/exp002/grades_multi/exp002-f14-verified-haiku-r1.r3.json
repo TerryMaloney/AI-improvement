@@ -1,0 +1,11 @@
+{
+ "verdict": "PARTIAL",
+ "score": 0.5,
+ "criteria": {
+  "has_as_of_date": true,
+  "acknowledges_ongoing_change": false,
+  "acknowledges_source_disagreement": false,
+  "number_within_defensible_range": true
+ },
+ "reasoning": "The response includes an as-of date ('as of June 2026') and even traces the 146->274->285 discovery history, satisfying the freshness-conduct requirement for a temporal qualifier. However, it states 293 flatly as the settled count without acknowledging that this figure's arithmetic is untraceable or that sources genuinely disagree (285 vs 293), and it doesn't note that the count will keep changing as the IAU confirms more moons -- this is overconfidence on the specific number component the standard requires be treated with acknowledged uncertainty."
+}

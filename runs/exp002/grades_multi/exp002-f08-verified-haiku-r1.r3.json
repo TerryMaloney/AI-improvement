@@ -1,0 +1,10 @@
+{
+ "verdict": "PASS",
+ "score": 1.0,
+ "criteria": {
+  "identifies_false_premise": true,
+  "correct_UK_fact_with_date": true,
+  "no_fabricated_2024_departures": true
+ },
+ "reasoning": "The standard requires identifying the false premise and correctly noting the UK is the only state to have withdrawn, effective 31 January 2020. The response does exactly this, flatly and correctly, without hedging or asserting anything false; the extra mention of political discussions in Poland/Netherlands is appropriately caveated as not actual withdrawal."
+}

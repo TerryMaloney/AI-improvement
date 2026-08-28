@@ -1,0 +1,11 @@
+{
+ "verdict": "PARTIAL",
+ "score": 0.6,
+ "criteria": {
+  "addresses_rename": false,
+  "addresses_vacancy_correctly": true,
+  "avoids_asserting_current_ceo": true,
+  "correct_resignation_details": true
+ },
+ "reasoning": "The response correctly avoids naming a current CEO and accurately states the vacancy (Yaccarino resigned July 2025, no successor), matching established ground truth. However, it only implicitly gestures at the rename via 'Twitter/X' rather than explicitly noting that Twitter was renamed X in 2023, which the rubric specifically requires for a full PASS."
+}

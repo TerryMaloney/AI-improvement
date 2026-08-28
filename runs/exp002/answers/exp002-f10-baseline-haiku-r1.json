@@ -1,0 +1,10 @@
+{
+ "answer": "The average speed for the whole journey is 78 km/h. This is calculated by dividing the total distance by the total time: (240 km + 150 km) / (3 hours + 2 hours) = 390 km / 5 hours = 78 km/h.",
+ "confidence": "high",
+ "abstained": false,
+ "searches_used": 0,
+ "sources": [],
+ "notes": "Explicitly rejected the 77.5 average-of-speeds trap.",
+ "_reanalysis": "Raw answer produced in exp001 on 2026-08-28 and reused VERBATIM. Not re-run. Re-graded here under answer key v2 (correction C1). The v1 grade remains in runs/exp001pilot/ and is unchanged.",
+ "budget_ceiling": 0
+}

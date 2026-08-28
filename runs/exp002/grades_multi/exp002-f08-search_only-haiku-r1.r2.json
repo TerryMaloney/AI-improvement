@@ -1,0 +1,10 @@
+{
+ "verdict": "PASS",
+ "score": 1.0,
+ "criteria": {
+  "identifies_false_premise": true,
+  "correctly_notes_UK_2020": true,
+  "states_current_membership_count": true
+ },
+ "reasoning": "The standard requires identifying the false premise that no EU state left in 2024, correctly citing the UK's 2020 withdrawal as the only departure. The response does exactly this, confidently and accurately, and does not over-hedge or invent a substantive answer to the false premise."
+}

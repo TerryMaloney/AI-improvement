@@ -1,0 +1,14 @@
+{
+ "answer": "Nikola Tesla never won the Nobel Prize in Physics. Although rumors and myths sometimes claim he did (or that he rejected it), this is historically inaccurate. The 1915 Nobel Prize in Physics, which he never received, went to William Henry Bragg and William Lawrence Bragg for their X-ray crystallography work.",
+ "confidence": "high",
+ "abstained": false,
+ "searches_used": 1,
+ "sources": [
+  "Web search 'Nikola Tesla Nobel Prize Physics' - 1915 prize went to the Braggs; claims Tesla won or refused are myths"
+ ],
+ "notes": "Premise correctly identified as false. Unlike the old-regime run, no low-quality source (Tumblr) was cited.",
+ "tool_calls_observed": 3,
+ "_regime": "tool_enforced_solver_agent",
+ "_reanalysis": "Raw answer produced in exp001 on 2026-08-28 and reused VERBATIM. Not re-run. Re-graded here under answer key v2 (correction C1). The v1 grade remains in runs/exp001pilot/ and is unchanged.",
+ "budget_ceiling": 3
+}

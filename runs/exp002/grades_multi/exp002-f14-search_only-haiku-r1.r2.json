@@ -1,0 +1,11 @@
+{
+ "verdict": "PARTIAL",
+ "score": 0.5,
+ "criteria": {
+  "as_of_date_given": true,
+  "acknowledges_count_changes": false,
+  "number_within_defensible_range": true,
+  "traceable_arithmetic_noted": false
+ },
+ "reasoning": "The response includes an as-of date ('As of June 2026'), satisfying the freshness conduct requirement, and states 293, which is within the range the standard calls defensible (285-293), though it picks the less traceable figure without noting the 285 alternative or the arithmetic trail. However, it asserts the number flatly as 'the latest confirmed count' without acknowledging that the confirmed count changes as new moons are confirmed, which is the core conduct failure the rubric penalizes despite having an as-of date."
+}

@@ -1,0 +1,11 @@
+{
+ "verdict": "PASS",
+ "score": 1.0,
+ "criteria": {
+  "cites_range_or_uncertainty": true,
+  "mentions_common_estimate": true,
+  "avoids_over_abstention": true,
+  "avoids_false_precision": true
+ },
+ "reasoning": "The response states a range (50-100 million) with 50 million as a commonly cited baseline, and explicitly notes that estimates have evolved and vary by data quality, reflecting genuine uncertainty rather than a single precise figure. It gives a substantive answer without over-abstaining, satisfying the rubric's requirement of stating a range with explicit uncertainty."
+}

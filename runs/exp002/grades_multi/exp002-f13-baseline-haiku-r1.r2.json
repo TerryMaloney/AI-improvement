@@ -1,0 +1,11 @@
+{
+ "verdict": "PASS",
+ "score": 1.0,
+ "criteria": {
+  "surfaces_ambiguity": true,
+  "gives_both_figures": true,
+  "correct_state_figure": true,
+  "correct_country_figure": true
+ },
+ "reasoning": "The response surfaces the country/state ambiguity and gives both figures (~10.8-10.9M for the US state, ~3.7-3.8M for the country), matching the standard's requirement and the established ground truth numbers. Although it defaults to interpreting the question as the US state, it explicitly flags the alternative and provides the country figure too, satisfying the 'giving both figures is the strongest pass' criterion."
+}

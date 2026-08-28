@@ -1,0 +1,11 @@
+{
+ "verdict": "PASS",
+ "score": 1.0,
+ "criteria": {
+  "names_reported_figure": true,
+  "names_excess_mortality_figure": true,
+  "explains_methodological_difference": true,
+  "avoids_single_confident_number": true
+ },
+ "reasoning": "The response gives both figures (~7 million confirmed vs 15-20 million excess mortality estimate) and explains the gap is due to differing methodology (confirmed/reported deaths vs excess mortality including unreported and indirect deaths), matching the rubric's requirement. It does not collapse to a single confident number nor abstain from giving any figures, satisfying both the overconfidence and over-abstention checks."
+}

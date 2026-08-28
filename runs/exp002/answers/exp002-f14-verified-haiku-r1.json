@@ -1,0 +1,16 @@
+{
+ "answer": "Saturn has 293 confirmed moons as of June 2026. This represents a dramatic increase from previous counts, with 128 new moons discovered in March 2025 and 11 additional moons confirmed in March 2026 by the International Astronomical Union's Minor Planet Center. Saturn now has more confirmed moons than any other planet in the Solar System.",
+ "confidence": "medium",
+ "abstained": false,
+ "searches_used": 1,
+ "sources": [
+  "earthsky.org snippet - 293 count, 128 new in March 2025, 11 in March 2026",
+  "spacedaily.com snippet - 'Saturn now has at least 285 confirmed moons'"
+ ],
+ "notes": "Explicitly noted variation in reported counts (285, 292, 293) by date in 2026 and attributed it to the ongoing confirmation process. NASA, Wikipedia and IAU fetches blocked by proxy.",
+ "tool_calls_observed": 4,
+ "_source_conflict": "Reproduced the 285/292/293 conflict AND named it in the answer's notes, attributing it to confirmation timing. Gave 293 with an explicit as-of date rather than an undated number. Confidence lowered to medium in response to the conflict.",
+ "_regime": "tool_enforced_solver_agent",
+ "_reanalysis": "Raw answer produced in exp001 on 2026-08-28 and reused VERBATIM. Not re-run. Re-graded here under answer key v2 (correction C1). The v1 grade remains in runs/exp001pilot/ and is unchanged.",
+ "budget_ceiling": 2
+}

@@ -1,0 +1,10 @@
+{
+ "answer": "As of my knowledge cutoff in February 2025, the WHO had officially confirmed approximately 7 million COVID-19 deaths globally. However, the WHO has acknowledged that the true death toll is substantially higher when accounting for excess mortality and unreported deaths, with estimates suggesting the actual toll could be 15-20 million or more. The precise figure depends on the methodology used (confirmed deaths versus excess mortality estimates) and continues to be refined by epidemiological research. The 7 million figure represents confirmed and reported deaths, while excess mortality studies attempt to capture the full impact including deaths indirectly caused by the pandemic and unreported cases.",
+ "confidence": "medium",
+ "abstained": false,
+ "searches_used": 0,
+ "sources": [],
+ "notes": "Named both figures and the methodological reason they differ.",
+ "_reanalysis": "Raw answer produced in exp001 on 2026-08-28 and reused VERBATIM. Not re-run. Re-graded here under answer key v2 (correction C1). The v1 grade remains in runs/exp001pilot/ and is unchanged.",
+ "budget_ceiling": 0
+}

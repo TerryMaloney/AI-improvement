@@ -1,0 +1,11 @@
+{
+ "verdict": "PARTIAL",
+ "score": 0.5,
+ "criteria": {
+  "as_of_date_given": true,
+  "acknowledges_count_changes_over_time": true,
+  "acknowledges_source_disagreement_or_range": false,
+  "correct_traceable_figure_or_range_given": false
+ },
+ "reasoning": "The response satisfies the freshness-conduct requirement by giving an explicit 'as of June 2026' qualifier and narrating the historical increases, which implicitly signals the count changes over time. However, the ground truth requires acknowledging that sources genuinely disagree (285 traceable vs 293 untraceable) and giving a range with the as-of date; the response instead flatly asserts 293 as the single correct figure with no hedge or mention of the traceability problem, which is the overconfidence failure mode on the numeric component."
+}

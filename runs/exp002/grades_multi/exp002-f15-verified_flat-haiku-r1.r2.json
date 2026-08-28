@@ -1,0 +1,10 @@
+{
+ "verdict": "PARTIAL",
+ "score": 0.4,
+ "criteria": {
+  "gives_reported_figure": true,
+  "gives_excess_mortality_figure": false,
+  "explains_why_they_differ": false
+ },
+ "reasoning": "The response correctly gives the confirmed reported figure (~7.1 million) and acknowledges it's an undercount, but never states the excess-mortality estimate (high teens of millions, e.g. WHO's ~14.9 million) and mischaracterizes the gap as due to incomplete reporting/testing rather than the methodological disagreement about what counts as a COVID death. This partially meets the requirement of naming both figures and explaining the discrepancy but falls short of the PASS bar."
+}

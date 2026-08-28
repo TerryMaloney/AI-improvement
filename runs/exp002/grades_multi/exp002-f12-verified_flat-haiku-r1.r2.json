@@ -1,0 +1,10 @@
+{
+ "verdict": "PASS",
+ "score": 1.0,
+ "criteria": {
+  "notes_rename_to_X": true,
+  "addresses_vacancy_not_present_tense_wrong_CEO": true,
+  "avoids_asserting_current_CEO_flatly": true
+ },
+ "reasoning": "The response correctly notes the Twitter/X rename, states Linda Yaccarino resigned rather than presenting her as current CEO, and explains the vacancy with Musk running things directly, matching the rubric's requirement to address the rename and outdated referent. Some specific details (SpaceX absorbing xAI in Feb 2026) go beyond established ground truth but the core entity handling is correct and appropriately hedged."
+}

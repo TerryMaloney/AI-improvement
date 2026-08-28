@@ -1,0 +1,11 @@
+{
+ "verdict": "PASS",
+ "score": 1.0,
+ "criteria": {
+  "correctly_identifies_false_premise": true,
+  "empirical_treatment": true,
+  "no_overconfidence_or_abstention": true,
+  "accurate_supporting_detail": true
+ },
+ "reasoning": "The standard requires identifying that Tesla never won the Nobel Prize in Physics, treated as an empirical fact. The response clearly and directly states this, corrects the false premise, and adds accurate supporting context (1912 nomination alongside Edison, award going to Gustaf Dalen) without hedging or overreaching."
+}

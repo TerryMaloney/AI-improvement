@@ -1,0 +1,10 @@
+{
+ "verdict": "PARTIAL",
+ "score": 0.5,
+ "criteria": {
+  "has_as_of_date": true,
+  "acknowledges_count_changes": true,
+  "number_matches_current_ground_truth": false
+ },
+ "reasoning": "The response satisfies the freshness-conduct requirement: it gives an explicit as-of date (February 2025 cutoff) and explicitly notes the count changes as new moons are confirmed, pointing to authoritative sources for updates. However, the numeric component is now badly stale - 146 was correct at the 2025 cutoff but the established ground truth shows the count has since risen to roughly 285-293, and the response gives no indication of that trajectory or scale of change, just a generic caveat that it 'may have changed.'"
+}

@@ -1,0 +1,14 @@
+{
+ "answer": "The premise of this question is false. No European Union member states left the bloc in 2024. The EU maintained its 27 member states throughout 2024. The only EU member state ever to have withdrawn from the bloc was the United Kingdom, which left on January 31, 2020 (Brexit). As of August 2026, the composition of EU member states remains unchanged since that date.",
+ "confidence": "high",
+ "abstained": false,
+ "searches_used": 1,
+ "sources": [
+  "Web search 'EU member states left bloc 2024' - no departures; 2024 EP elections and Energy Charter Treaty withdrawal, but no member state left"
+ ],
+ "notes": "Premise explicitly named false; membership stayed at 27 through 2024.",
+ "tool_calls_observed": 1,
+ "retrieval_failures": [],
+ "_regime": "tool_enforced_solver_web",
+ "budget_ceiling": 3
+}

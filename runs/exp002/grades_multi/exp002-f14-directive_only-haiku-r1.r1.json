@@ -1,0 +1,9 @@
+{
+ "verdict": "PARTIAL",
+ "score": 0.5,
+ "criteria": {
+  "as_of_date_or_acknowledgement": true,
+  "number_matches_current_ground_truth": false
+ },
+ "reasoning": "The response passes the freshness-conduct component: it gives an explicit as-of date (February 2025) and acknowledges the count changes as new moons are confirmed, which is exactly what the rubric requires. However, the number given (146) is the pre-2025 figure and is now badly stale (true count is ~285-293 as of 2026-08), so the empirical component fails since the response neither reflects the current count nor signals that a major jump (146->274->285) occurred, just a generic caveat that things may have changed."
+}

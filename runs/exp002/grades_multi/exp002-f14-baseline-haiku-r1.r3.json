@@ -1,0 +1,9 @@
+{
+ "verdict": "PARTIAL",
+ "score": 0.5,
+ "criteria": {
+  "as_of_date_or_change_acknowledgement": true,
+  "number_accuracy": false
+ },
+ "reasoning": "The response passes the freshness-conduct component by giving an explicit knowledge-cutoff date and noting the count changes as new moons are confirmed. However, the number given (146) is the stale starting point in the documented trail, not the defensible 2026 figure (~285-293), so the empirical component fails, making this a partial rather than full pass."
+}

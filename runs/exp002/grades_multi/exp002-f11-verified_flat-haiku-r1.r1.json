@@ -1,0 +1,10 @@
+{
+ "verdict": "PASS",
+ "score": 1.0,
+ "criteria": {
+  "acknowledges_estimate_with_range": true,
+  "explains_source_of_uncertainty": true,
+  "provides_substantive_figure": true
+ },
+ "reasoning": "The response gives a range (50-100 million, with broader 21-100 million range) rather than a single precise figure, and explicitly explains why the estimate is uncertain due to poor record-keeping in some regions. This meets the rubric's requirement of citing an estimate with explicit uncertainty rather than asserting a false-precision number or over-abstaining."
+}

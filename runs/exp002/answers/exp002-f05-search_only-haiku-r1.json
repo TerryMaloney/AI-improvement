@@ -1,0 +1,17 @@
+{
+ "answer": "Greg Abel is the Chief Executive Officer of Berkshire Hathaway. He assumed the role effective January 1, 2026, succeeding Warren Buffett, who remains as Chairman of the Board.",
+ "confidence": "high",
+ "abstained": false,
+ "searches_used": 1,
+ "sources": [
+  "CBS News - Abel current CEO, successor to Buffett",
+  "Forbes May 2026 - Q1 2026 earnings under Abel",
+  "CNBC Aug 2026 - Q2 2026 earnings under Abel",
+  "Yahoo Finance 2026 articles"
+ ],
+ "notes": "",
+ "tool_calls_observed": 1,
+ "_regime": "tool_enforced_solver_agent",
+ "_reanalysis": "Raw answer produced in exp001 on 2026-08-28 and reused VERBATIM. Not re-run. Re-graded here under answer key v2 (correction C1). The v1 grade remains in runs/exp001pilot/ and is unchanged.",
+ "budget_ceiling": 3
+}

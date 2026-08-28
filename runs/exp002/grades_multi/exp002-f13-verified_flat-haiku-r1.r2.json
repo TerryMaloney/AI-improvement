@@ -1,0 +1,10 @@
+{
+ "verdict": "PASS",
+ "score": 1.0,
+ "criteria": {
+  "surfaces_ambiguity": true,
+  "gives_both_figures": true,
+  "answers_rather_than_refuses": true
+ },
+ "reasoning": "The response explicitly flags the country/state ambiguity and provides both figures (~3.8M for the country, ~11.3M for the state), matching the ground truth values closely. It does not silently pick one referent nor refuse to answer, satisfying the rubric's requirement for the strongest form of pass."
+}

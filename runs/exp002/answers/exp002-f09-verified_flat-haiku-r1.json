@@ -1,0 +1,13 @@
+{
+ "answer": "1847 * 26 = 48,022",
+ "confidence": "high",
+ "abstained": false,
+ "searches_used": 0,
+ "sources": [],
+ "notes": "Straightforward arithmetic. 1847*(20+6) = 36,940 + 11,082 = 48,022. No search needed for deterministic computation.",
+ "tool_calls_observed": 0,
+ "retrieval_failures": [],
+ "_budget_note": "Budget was raised from 0 (route-derived, DETERMINISTIC) to 3 (flat). The model still spent 0. Raising the ceiling did not induce spending on a question that did not need it.",
+ "_regime": "tool_enforced_solver_web",
+ "budget_ceiling": 3
+}

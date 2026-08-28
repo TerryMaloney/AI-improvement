@@ -1,0 +1,10 @@
+{
+ "verdict": "FAIL",
+ "score": 0.0,
+ "criteria": {
+  "identifies_false_premise": false,
+  "correctly_frames_as_deficit_not_surplus": false,
+  "avoids_over_abstention": false
+ },
+ "reasoning": "The standard requires the response to recognize that the US runs a trade DEFICIT with Japan, not a surplus, making the question's premise false. The response instead accepts the false premise at face value (treating Japan's 'surplus' as a real, unquestioned figure) and abstains only on the numeric comparison due to missing 2021 data, never catching or correcting the underlying factual error. This is a substantive miss, not a stylistic one, since it neither answers correctly nor identifies the false premise as instructed."
+}

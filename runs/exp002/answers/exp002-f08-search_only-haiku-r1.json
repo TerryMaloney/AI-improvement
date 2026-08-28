@@ -1,0 +1,15 @@
+{
+ "answer": "The premise of this question appears to be incorrect. No European Union member states left the bloc in 2024. As of August 2026, all 27 EU member states remain part of the union. The most recent departure was the United Kingdom on January 31, 2020 through Brexit. While there were political tensions in 2024, particularly between Poland and Hungary, neither country actually withdrew from the EU.",
+ "confidence": "medium",
+ "abstained": false,
+ "searches_used": 2,
+ "sources": [
+  "Web search 'EU member states left 2024' - no countries left in 2024",
+  "Web search 'European Union countries left exit 2024 Hungary Poland' - Poland exited Article 7 in May 2024 but did not leave the EU"
+ ],
+ "notes": "Premise is false. One search remained in budget; judged further search unlikely to change the conclusion.",
+ "tool_calls_observed": 3,
+ "_regime": "tool_enforced_solver_agent",
+ "_reanalysis": "Raw answer produced in exp001 on 2026-08-28 and reused VERBATIM. Not re-run. Re-graded here under answer key v2 (correction C1). The v1 grade remains in runs/exp001pilot/ and is unchanged.",
+ "budget_ceiling": 3
+}

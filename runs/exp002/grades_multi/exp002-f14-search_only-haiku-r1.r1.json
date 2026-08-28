@@ -1,0 +1,11 @@
+{
+ "verdict": "PARTIAL",
+ "score": 0.5,
+ "criteria": {
+  "has_as_of_date": true,
+  "acknowledges_count_changes": false,
+  "number_within_defensible_range": true,
+  "flags_source_disagreement": false
+ },
+ "reasoning": "The response includes an as-of date ('As of June 2026'), satisfying the freshness conduct requirement, and gives 293, which is within the defensible range noted in the standard. However, it fails to acknowledge that the count changes as new moons are confirmed or that sources disagree (146->274->285->293 trail), instead presenting 293 as a settled, singular fact, which is an incomplete treatment of the epistemic conduct required."
+}

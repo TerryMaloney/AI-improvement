@@ -1,0 +1,11 @@
+{
+ "verdict": "PASS",
+ "score": 1.0,
+ "criteria": {
+  "identifies_false_premise": true,
+  "correct_UK_fact": true,
+  "correct_date": true,
+  "no_fabricated_states": true
+ },
+ "reasoning": "The response correctly identifies the false premise, states that no member states left in 2024, and correctly notes the UK's 31 January 2020 withdrawal as the only historical departure. The additional detail about political movements in Poland and Netherlands discussing withdrawal is accurate context and does not undermine the core correct, confident answer."
+}

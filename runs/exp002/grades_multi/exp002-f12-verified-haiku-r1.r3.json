@@ -1,0 +1,11 @@
+{
+ "verdict": "PARTIAL",
+ "score": 0.6,
+ "criteria": {
+  "acknowledges_rename": false,
+  "correct_vacancy_status": true,
+  "correct_last_officeholder": true,
+  "appropriate_confidence": true
+ },
+ "reasoning": "The response correctly identifies that the CEO seat has been vacant since Linda Yaccarino's July 2025 resignation, stated in the correct past tense with appropriate confidence, matching the ground truth on vacancy. However, it never explicitly notes the 2023 Twitter-to-X rename or explains why the referent is ambiguous/outdated beyond using the shorthand 'Twitter/X', which the rubric requires for a full PASS."
+}

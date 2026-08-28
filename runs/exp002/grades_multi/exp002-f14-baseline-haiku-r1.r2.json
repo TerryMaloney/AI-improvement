@@ -1,0 +1,10 @@
+{
+ "verdict": "PARTIAL",
+ "score": 0.5,
+ "criteria": {
+  "as_of_date_or_temporal_qualifier": true,
+  "acknowledges_count_changes": true,
+  "numeric_accuracy": false
+ },
+ "reasoning": "The response satisfies the freshness-conduct requirement by giving an explicit as-of date (its Feb 2025 knowledge cutoff) and acknowledging the count changes as new moons are confirmed, avoiding a bare unqualified number. However, the numeric component fails: it gives 146, which is stale by over a year and misses the two documented jumps (to 274 in March 2025 and 285 in March 2026), whereas the defensible current figure per the standard is roughly 285-293 as of mid-2026 - a substantial, not marginal, miss on the empirical component."
+}

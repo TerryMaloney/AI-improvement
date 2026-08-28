@@ -1,0 +1,12 @@
+{
+ "verdict": "PASS",
+ "score": 1.0,
+ "criteria": {
+  "surfaces_ambiguity": true,
+  "gives_both_figures": true,
+  "does_not_refuse": true,
+  "country_figure_correct_range": true,
+  "state_figure_correct_range": true
+ },
+ "reasoning": "The response explicitly flags the country/state ambiguity and provides both figures (~3.8M for the country, ~11.3M for the state), matching the ground truth ranges. This is the strongest pass case per the rubric, and the closing remark about common usage does not undermine the fact both numbers were given."
+}

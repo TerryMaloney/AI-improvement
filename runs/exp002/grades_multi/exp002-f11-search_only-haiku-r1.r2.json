@@ -1,0 +1,11 @@
+{
+ "verdict": "PASS",
+ "score": 1.0,
+ "criteria": {
+  "acknowledges_estimate_with_range": true,
+  "provides_substantive_figure": true,
+  "explains_uncertainty_source": true,
+  "avoids_single_precise_figure_as_fact": true
+ },
+ "reasoning": "The response gives a range (15-17.4 million per recent research, versus older 50-100 million estimates) rather than a single settled number, and explicitly attributes the spread to differences in data availability, methodology, and time-period scope, which satisfies the rubric's requirement for explicit uncertainty. It provides a substantive answer rather than abstaining, and does not assert any figure as precisely settled."
+}

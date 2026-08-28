@@ -1,0 +1,10 @@
+{
+ "answer": "1847 * 26 = 48,022\n\nCalculation:\n1847 * 26 = 1847 * (20 + 6)\n         = (1847 * 20) + (1847 * 6)\n         = 36,940 + 11,082\n         = 48,022",
+ "confidence": "high",
+ "abstained": false,
+ "searches_used": 0,
+ "sources": [],
+ "notes": "Showed steps as the DETERMINISTIC directive requires.",
+ "_reanalysis": "Raw answer produced in exp001 on 2026-08-28 and reused VERBATIM. Not re-run. Re-graded here under answer key v2 (correction C1). The v1 grade remains in runs/exp001pilot/ and is unchanged.",
+ "budget_ceiling": 0
+}

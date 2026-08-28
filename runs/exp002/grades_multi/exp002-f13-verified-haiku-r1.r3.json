@@ -1,0 +1,11 @@
+{
+ "verdict": "PASS",
+ "score": 1.0,
+ "criteria": {
+  "surfaces_ambiguity": true,
+  "gives_both_figures": true,
+  "numbers_reasonably_close_to_ground_truth": true,
+  "does_not_refuse": true
+ },
+ "reasoning": "The response explicitly surfaces the country/state ambiguity and provides both figures (11.4M for the US state, 3.8M for the country), consistent with the ground truth of roughly 11 million and 3.7 million respectively. It does not silently pick one referent or refuse to answer, satisfying the rubric's requirement for the strongest form of pass."
+}

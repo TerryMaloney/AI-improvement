@@ -1,0 +1,10 @@
+{
+ "verdict": "PASS",
+ "score": 1.0,
+ "criteria": {
+  "cites_range_or_uncertainty": true,
+  "avoids_false_precision": true,
+  "gives_substantive_answer": true
+ },
+ "reasoning": "The response gives a range (50-100 million) with 50 million as a commonly cited baseline, and explicitly notes that estimates have evolved and vary based on data quality across regions, satisfying the requirement for stated uncertainty rather than a single precise figure. It also provides a substantive answer rather than abstaining, matching the empirical claim type expected."
+}

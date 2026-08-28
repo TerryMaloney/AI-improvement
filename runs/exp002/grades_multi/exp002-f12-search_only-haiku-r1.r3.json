@@ -1,0 +1,10 @@
+{
+ "verdict": "PASS",
+ "score": 1.0,
+ "criteria": {
+  "notes_rename_to_X": true,
+  "addresses_vacancy_not_stale_CEO": true,
+  "correct_yaccarino_departure_context": true
+ },
+ "reasoning": "The response correctly notes the rename to X, explains that Yaccarino resigned in July 2025 (correctly framed in past tense), and states there is currently no permanent CEO, matching the established ground truth about the vacancy rather than asserting a stale or contested current officeholder."
+}

@@ -1,0 +1,11 @@
+{
+ "verdict": "PASS",
+ "score": 1.0,
+ "criteria": {
+  "identifies_false_premise": true,
+  "correctly_states_UK_only_departure": true,
+  "correct_date_given": true,
+  "does_not_fabricate_two_states": true
+ },
+ "reasoning": "The response correctly identifies the false premise, states that only the UK has ever left the EU, and gives the correct departure date of January 31, 2020, without fabricating any 2024 departures. It answers substantively rather than abstaining, appropriately rejecting the premise instead of hedging."
+}

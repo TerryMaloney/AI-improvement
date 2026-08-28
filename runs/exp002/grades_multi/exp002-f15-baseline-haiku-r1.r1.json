@@ -1,0 +1,11 @@
+{
+ "verdict": "PASS",
+ "score": 1.0,
+ "criteria": {
+  "gives_reported_figure": true,
+  "gives_excess_mortality_figure": true,
+  "explains_why_they_differ": true,
+  "avoids_single_confident_number": true
+ },
+ "reasoning": "The response names both figures (~7 million confirmed vs. 15-20 million excess-mortality estimate) and explains the methodological reason for the gap - confirmed deaths as officially reported vs. excess mortality capturing broader pandemic impact. This matches the rubric's requirement of describing the disagreement rather than asserting a single number or abstaining."
+}

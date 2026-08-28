@@ -1,0 +1,19 @@
+{
+ "answer": "The 1918 influenza pandemic killed an estimated 50-100 million people worldwide, though estimates range from 21 million to 100 million depending on methodology and assumptions. More recent estimates tend to be higher than earlier ones. In the United States specifically, approximately 675,000 people died. The wide range in global estimates reflects the challenges in obtaining accurate mortality data from over a century ago, particularly from regions with less reliable record-keeping.",
+ "confidence": "high",
+ "abstained": false,
+ "searches_used": 1,
+ "sources": [
+  "WebSearch - Oxford Academic AJE reassessment; Jordan 1927 ~21.6M to 50-100M; ~675,000 US deaths"
+ ],
+ "notes": "Three additional WebFetch attempts (Cleveland Clinic, National Archives, Stanford) all blocked by egress proxy. Initial search already carried the range.",
+ "tool_calls_observed": 4,
+ "retrieval_failures": [
+  "my.clevelandclinic.org - EGRESS_BLOCKED",
+  "www.archives.gov - EGRESS_BLOCKED",
+  "virus.stanford.edu - EGRESS_BLOCKED"
+ ],
+ "_source_conflict": "Widest range reported of any condition on this question (21M-100M), and it named the Jordan 1927 lower bound explicitly. Note this is the THIRD distinct framing across conditions: search_only said modern scholarship revised DOWN to 15-17.4M, verified said modern reassessments revised UP to 50-100M, verified_flat says estimates range 21-100M with recent ones higher.",
+ "_regime": "tool_enforced_solver_web",
+ "budget_ceiling": 3
+}

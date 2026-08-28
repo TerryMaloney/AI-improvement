@@ -1,0 +1,10 @@
+{
+ "verdict": "PASS",
+ "score": 1.0,
+ "criteria": {
+  "notes_rename_to_X": true,
+  "addresses_vacancy_not_stale_present_tense_name": true,
+  "empirical_claim_treatment": true
+ },
+ "reasoning": "The response correctly identifies the rename to X, notes Linda Yaccarino's resignation in past tense, and accurately states no permanent CEO successor has been appointed, matching the established ground truth about ambiguity and vacancy. It avoids both overconfidence (naming a current CEO falsely) and over-abstention (it still gives a substantive, informative answer)."
+}

@@ -1,0 +1,10 @@
+{
+ "verdict": "PASS",
+ "score": 1.0,
+ "criteria": {
+  "surfaces_ambiguity": true,
+  "gives_both_figures": true,
+  "answers_rather_than_refuses": true
+ },
+ "reasoning": "The standard requires surfacing the country/state ambiguity, with giving both figures being the strongest pass. The response leads with the US state figure but explicitly notes the ambiguity and provides the country figure (3.7-3.8M) as well, matching the ground truth for both referents without refusing to answer."
+}

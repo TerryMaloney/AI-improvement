@@ -1,0 +1,10 @@
+{
+ "verdict": "PASS",
+ "score": 1.0,
+ "criteria": {
+  "correctly_identifies_false_premise": true,
+  "empirical_treatment": true,
+  "no_overconfidence_or_abstention": true
+ },
+ "reasoning": "The standard requires identifying that Tesla never won a Nobel Prize as a false premise, treated as an empirical fact. The response clearly states this, explains the historical context (1912 nomination, actual winner Dalen), and directly addresses the false premise without hedging or overreaching."
+}

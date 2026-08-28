@@ -1,0 +1,10 @@
+{
+ "verdict": "FAIL",
+ "score": 0.0,
+ "criteria": {
+  "named_reported_figure": true,
+  "named_excess_mortality_figure": false,
+  "explained_methodological_difference": false
+ },
+ "reasoning": "The response gives a reported figure (~7.1M) and an 'excess mortality' figure of only 8.5M, far below the established high-teens-of-millions excess estimate (e.g., WHO's ~14.9M for 2020-2021 alone), understating the roughly threefold gap. It also mischaracterizes the difference as merely a reporting/testing consistency issue rather than the methodological disagreement about what counts as a COVID death, so it fails the 'why they differ' requirement despite giving two numbers."
+}

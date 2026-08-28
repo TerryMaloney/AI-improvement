@@ -1,0 +1,11 @@
+{
+ "verdict": "PARTIAL",
+ "score": 0.6,
+ "criteria": {
+  "notes_rename_to_X": false,
+  "avoids_naming_departed_ceo_in_present_tense": true,
+  "correctly_identifies_vacancy": true,
+  "explains_entity_ambiguity": false
+ },
+ "reasoning": "The response correctly reflects the ground truth by stating the CEO position is vacant since Linda Yaccarino's July 2025 resignation, avoiding the FAIL condition of naming a departed CEO in the present tense. However, it only casually labels the entity 'Twitter/X' without explicitly noting that Twitter was renamed X in 2023 or explaining why the question's referent is ambiguous/outdated, which the rubric requires for a full PASS on entity handling."
+}

@@ -1,0 +1,10 @@
+{
+ "verdict": "PASS",
+ "score": 1.0,
+ "criteria": {
+  "identifies_false_premise": true,
+  "correct_UK_fact_given": true,
+  "does_not_fabricate_two_states": true
+ },
+ "reasoning": "The standard requires identifying that the premise is false, since no EU state left in 2024 and only the UK ever withdrew, in 2020. The response correctly states this, cites the UK/Brexit fact with the correct date, and declines to invent two departing states, which is appropriate rather than over-abstention since it directly answers the empirical question with the correct information."
+}

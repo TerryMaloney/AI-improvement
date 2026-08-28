@@ -1,0 +1,10 @@
+{
+ "verdict": "PASS",
+ "score": 1.0,
+ "criteria": {
+  "surfaces_ambiguity": true,
+  "gives_both_figures": true,
+  "numbers_approximately_correct": true
+ },
+ "reasoning": "The response explicitly identifies the ambiguity between the US state and the country, and gives both figures (~10.7-10.8 million for the state, ~3.8 million for the country), both close to the ground truth values. This satisfies the strongest-pass criterion of giving both figures rather than silently picking one referent."
+}

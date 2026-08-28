@@ -1,0 +1,10 @@
+{
+ "verdict": "PASS",
+ "score": 1.0,
+ "criteria": {
+  "acknowledges_range": true,
+  "cites_commonly_used_figure": true,
+  "avoids_false_precision": true
+ },
+ "reasoning": "The standard requires acknowledging the estimate is a range rather than a settled figure; the response gives a 50-100 million range, notes 50 million as a commonly cited baseline, and explicitly discusses how estimates have evolved over time due to data uncertainty. This satisfies the uncertainty requirement while still providing a substantive answer, avoiding both overconfidence and over-abstention."
+}

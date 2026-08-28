@@ -1,0 +1,11 @@
+{
+ "verdict": "FAIL",
+ "score": 0.1,
+ "criteria": {
+  "acknowledges_rename": true,
+  "names_correct_officeholder_at_cutoff": false,
+  "avoids_present_tense_claim_about_departed_ceo": false,
+  "handles_vacancy_appropriately": false
+ },
+ "reasoning": "The response correctly notes the Twitter-to-X rename, but the rubric explicitly states that naming a CEO who left the role in the present tense FAILS. The response asserts 'Elon Musk is the CEO,' but Musk was never CEO after the rename (Linda Yaccarino held that role from June 2023, including at the claimed Feb 2025 cutoff) - so this is a factual error compounded by present-tense assertion, only loosely hedged by an unrelated caveat about the knowledge-cutoff date rather than about the identity of the CEO itself."
+}

@@ -1,0 +1,17 @@
+{
+ "answer": "Dali Rajic is currently the Chief Revenue Officer of OpenAI. He was appointed to this position on August 13, 2026, succeeding Denise Dresser. Rajic previously served as President and Chief Operating Officer of Wiz, which is owned by Alphabet Inc.",
+ "confidence": "high",
+ "abstained": false,
+ "searches_used": 1,
+ "sources": [
+  "OpenAI official announcement",
+  "Bloomberg 2026-08-13",
+  "Fortune 2026-08-24",
+  "TechCrunch 2026-08-13"
+ ],
+ "notes": "Model asserted the sources are 'independent reputable sources' that 'all confirm consistently' - but they trace to one OpenAI announcement. The directive's content-based independence rule was not applied.",
+ "tool_calls_observed": 1,
+ "_regime": "tool_enforced_solver_agent",
+ "_reanalysis": "Raw answer produced in exp001 on 2026-08-28 and reused VERBATIM. Not re-run. Re-graded here under answer key v2 (correction C1). The v1 grade remains in runs/exp001pilot/ and is unchanged.",
+ "budget_ceiling": 2
+}

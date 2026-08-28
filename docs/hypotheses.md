@@ -270,3 +270,30 @@ specific result would settle it.
 - **Prior art re-check.** Packet §8's "fragmented, open gap" framing rests on a
   time-bound search and the packet flags it as the claim most likely to have
   shifted. Re-run the multi-vocabulary search before relying on it.
+
+---
+
+## exp002 outcome (2026-08-28)
+
+**H1-budget — INCONCLUSIVE.** `verified_flat` (86.3%) ties `search_only` (86.0%) and beats
+`verified` (80.7%), which is consistent with the budget explanation on aggregate. But the +5.6
+points over `verified` decompose into one rubric-phrasing artifact (f12), one case of scoring
+higher for saying less (f15), and two within-band differences. None came from better retrieval.
+The experiment stopped rather than adding conditions. Full record: `runs/exp002/EXP002_REPORT.md`.
+
+New entries:
+
+* **H-phrasing** — a large share of between-condition variance is rubric sensitivity to answer
+  phrasing, not to retrieved content. (f12: 0.6 vs 1.0 for the same fact.)
+* **H-search-displacement** — retrieval can displace correct parametric knowledge with a wrong
+  retrieved figure on contested quantities. (f15: closed-book 100%, all search conditions ≤40%,
+  unanimous across 9 judgements.)
+* **H-arithmetic-blindness** — solvers narrate 146+128+11 and then assert 293 without checking
+  their own arithmetic. (f14, both directive conditions.)
+* **H-selfreport-invalidity** — self-reported tool use undercounts observed by ~2×,
+  one-directionally, and detects 0 of 18 observed budget violations. Near-established.
+
+**Battery ceiling reached.** 10 of 15 factual questions are flat across all five conditions; only
+f05, f07, f12, f14, f15 carry signal. At n=15 one question is 6.67 accuracy points and every
+measured difference is smaller than that. The next experiment needs more *discriminating*
+questions before it needs another condition.

@@ -1,0 +1,11 @@
+{
+ "verdict": "PASS",
+ "score": 1.0,
+ "criteria": {
+  "acknowledges_estimate": true,
+  "states_range": true,
+  "gives_commonly_cited_context": true,
+  "explains_uncertainty_source": true
+ },
+ "reasoning": "The response explicitly frames the death toll as an estimate with a stated range (50-100 million, with alternative bound of 21-100 million) rather than a single precise figure, and explains the uncertainty stems from unreliable historical record-keeping. This matches the rubric's requirement of citing a figure with explicit uncertainty/range rather than a false-precision single number or over-abstaining."
+}

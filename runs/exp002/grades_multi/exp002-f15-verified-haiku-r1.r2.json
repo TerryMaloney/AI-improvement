@@ -1,0 +1,10 @@
+{
+ "verdict": "FAIL",
+ "score": 0.0,
+ "criteria": {
+  "names_reported_figure": true,
+  "names_excess_mortality_figure": false,
+  "correctly_explains_methodological_gap": false
+ },
+ "reasoning": "The response correctly gives the ~7 million reported figure but cites a fabricated 'Lancet' estimate of 8.5 million as the excess-mortality figure, when the actual excess-mortality estimates are in the high teens of millions (WHO ~14.9M for 2020-2021 alone) - roughly triple the reported figure, not just ~20% higher. This misstates the scale of the disagreement and misattributes it partly to reporting lapses/undercount rather than the core methodological difference in what counts as a COVID death, so it fails the substance of the standard despite superficially following the two-number format."
+}

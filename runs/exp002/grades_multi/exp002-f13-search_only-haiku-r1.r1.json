@@ -1,0 +1,11 @@
+{
+ "verdict": "PASS",
+ "score": 1.0,
+ "criteria": {
+  "surfaces_ambiguity": true,
+  "gives_both_figures": true,
+  "figures_accurate": true,
+  "does_not_refuse": true
+ },
+ "reasoning": "The response explicitly identifies the country/state ambiguity and provides both figures (US state ~10.7-10.8M, country ~3.8M), both close to the ground truth values. It does not silently pick one referent or refuse to answer, satisfying the rubric's strongest-pass criterion of giving both figures."
+}

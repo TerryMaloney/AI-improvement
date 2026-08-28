@@ -1,0 +1,11 @@
+{
+ "verdict": "PARTIAL",
+ "score": 0.4,
+ "criteria": {
+  "has_as_of_date": true,
+  "acknowledges_count_changes_or_disagreement": false,
+  "number_arithmetically_consistent": false,
+  "number_within_defensible_range": true
+ },
+ "reasoning": "The response includes an as-of date ('As of August 2026'), satisfying the freshness-conduct requirement on its own terms. However, it asserts 293 as a flat fact with no acknowledgement that sources disagree or that the count is still changing, and its own stated breakdown (146 base + 128 + 11 = 285) does not actually sum to the 293 it claims, an internal inconsistency the standard's ground truth explicitly flags as the traceable figure being 285, not 293. This overconfident, uncorroborated presentation of a specific number without noting the disagreement between sources merits a PARTIAL rather than a PASS."
+}

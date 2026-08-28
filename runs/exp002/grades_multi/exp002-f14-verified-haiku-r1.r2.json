@@ -1,0 +1,11 @@
+{
+ "verdict": "PARTIAL",
+ "score": 0.5,
+ "criteria": {
+  "as_of_date_or_acknowledgement": true,
+  "correct_traceable_trail_mentioned": true,
+  "acknowledges_285_293_discrepancy_or_range": false,
+  "flat_overconfident_number": true
+ },
+ "reasoning": "The response satisfies the freshness-conduct requirement by giving an explicit as-of date (June 2026) and correctly recounts the 128-then-11 confirmation trail. However, it flatly asserts '293 confirmed' as settled fact without acknowledging that 293 is the figure whose arithmetic is not traceable (285 is the traceable one) or that sources disagree, which the standard says is the correct, defensible answer here. This is overconfidence on the numeric component even though the freshness conduct passes."
+}

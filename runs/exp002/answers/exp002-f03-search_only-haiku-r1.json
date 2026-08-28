@@ -1,0 +1,14 @@
+{
+ "answer": "Kevin Warsh is the Chair of the United States Federal Reserve. His term ends on May 21, 2030.",
+ "confidence": "high",
+ "abstained": false,
+ "searches_used": 1,
+ "sources": [
+  "WebSearch: Federal Reserve Board press release, Chase, Consumer Finance Monitor, CNN Business, Wikipedia - Warsh sworn in 2026-05-22, four-year term ending 2030-05-21"
+ ],
+ "notes": "Multiple sources agreed on appointment and term end.",
+ "tool_calls_observed": 2,
+ "_regime": "tool_enforced_solver_agent",
+ "_reanalysis": "Raw answer produced in exp001 on 2026-08-28 and reused VERBATIM. Not re-run. Re-graded here under answer key v2 (correction C1). The v1 grade remains in runs/exp001pilot/ and is unchanged.",
+ "budget_ceiling": 3
+}

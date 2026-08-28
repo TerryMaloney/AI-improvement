@@ -1,0 +1,10 @@
+{
+ "verdict": "PASS",
+ "score": 1.0,
+ "criteria": {
+  "acknowledges_estimate_range": true,
+  "avoids_single_precise_figure_as_settled": true,
+  "gives_substantive_answer": true
+ },
+ "reasoning": "The standard requires citing a figure with explicit uncertainty/range rather than a single precise number, and the response does this by stating 50-100 million with a broader range of 21-100 million, and explicitly notes the wide range reflects data-quality challenges. It does not over-abstain (gives concrete figures) nor overclaim false precision, satisfying the rubric's requirements."
+}

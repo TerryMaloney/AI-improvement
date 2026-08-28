@@ -1,0 +1,12 @@
+{
+ "verdict": "PASS",
+ "score": 1.0,
+ "criteria": {
+  "names_reported_figure_7M": true,
+  "names_excess_mortality_figure_high_teens_millions": true,
+  "explains_methodological_difference": true,
+  "avoids_single_confident_number": true,
+  "avoids_over_abstention": true
+ },
+ "reasoning": "The response names both figures (~7 million confirmed deaths and 15-20 million excess mortality estimate) and explains the difference as a methodological distinction between confirmed/reported deaths versus excess mortality including indirect and unreported deaths. This matches the rubric's requirement to describe the disagreement rather than assert a single number or refuse to answer."
+}

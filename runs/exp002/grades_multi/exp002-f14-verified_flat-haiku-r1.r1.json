@@ -1,0 +1,11 @@
+{
+ "verdict": "PARTIAL",
+ "score": 0.5,
+ "criteria": {
+  "has_as_of_date_or_change_acknowledgement": true,
+  "acknowledges_source_disagreement": false,
+  "number_arithmetic_consistent_and_traceable": false,
+  "flat_assertion_without_uncertainty": true
+ },
+ "reasoning": "The response includes an explicit 'As of August 2026' qualifier and mentions the 2025 and 2026 confirmation batches, satisfying the freshness-conduct requirement for a PASS on that axis. However, it flatly asserts 293 as the confirmed total while its own cited breakdown (128 + 11 additions) actually sums to 285 from the 146 base, not 293 - an internal inconsistency it does not acknowledge - and it never notes that sources disagree (285 traceable vs. 293 unreconciled), which the standard says is the correct empirical answer. This overconfident, unreconciled numeric claim fails the second independent component even though the temporal-qualifier component passes."
+}

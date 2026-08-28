@@ -1,0 +1,12 @@
+{
+ "answer": "This question is ambiguous between two locations both called Georgia. The U.S. state of Georgia had a population of approximately 10.7 million as of the 2020 Census, with estimates around 10.8-10.9 million by 2023-2024. The country of Georgia (in the South Caucasus region) has a population of approximately 3.7-3.8 million. However, I cannot provide current figures for August 2026, as my training data has a cutoff of February 2025, roughly 18 months prior to your question date. Population statistics can shift, and current official sources would be needed for accurate up-to-date figures.",
+ "confidence": "medium",
+ "abstained": false,
+ "searches_used": 0,
+ "sources": [
+  "Training data with Feb 2025 cutoff"
+ ],
+ "notes": "Led with the ambiguity rather than picking a referent.",
+ "_reanalysis": "Raw answer produced in exp001 on 2026-08-28 and reused VERBATIM. Not re-run. Re-graded here under answer key v2 (correction C1). The v1 grade remains in runs/exp001pilot/ and is unchanged.",
+ "budget_ceiling": 0
+}
