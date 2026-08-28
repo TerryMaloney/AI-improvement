@@ -1,0 +1,97 @@
+id: exp002
+title: "exp002 — was verified's deficit the directive, or the budget?"
+hypothesis: H1-budget
+batteries: [factual]
+asked_as_of: "2026-08-27"
+default_search_budget: 3
+repeats: 1
+
+notes: >
+  FOLLOW-UP, NOT A REPLICATION. This run adds exactly one new condition to
+  exp001 and reuses exp001's raw answers for the other three. It is not an
+  independent replication of exp001 and must never be reported as one: the
+  comparison conditions were run on 2026-08-28 under the same session, the same
+  model, and the same battery, and only `verified_flat` is new data.
+  .
+  THE AMBIGUITY THIS EXISTS TO RESOLVE. In exp001, `verified` (78%) scored
+  BELOW `search_only` (84%). Two explanations survive:
+    (i) the epistemic directive is harmful or ineffective;
+    (ii) `verified` was starved — it received a route-derived budget (2 searches
+         on most questions, 0 on deterministic) while `search_only` received a
+         flat 3, and it made FEWER observed tool calls (30 vs 39) while scoring
+         lower.
+  `verified_flat` holds the directive constant and lifts the budget to the same
+  flat 3 that `search_only` gets. It isolates budget from directive.
+  .
+  ITS PURPOSE IS NOT TO SCORE WELL. If `verified_flat` lands at or above
+  `search_only`, explanation (ii) is live and the directive is not what exp001
+  found fault with. If it lands with `verified`, explanation (ii) is weakened
+  and attention moves to the directive. If it lands between them, or inside the
+  measured noise floor, the answer is INCONCLUSIVE and this experiment stops.
+  .
+  GRADING. All conditions are graded against answer key v2 (correction C1).
+  exp001's frozen v1 grades are preserved untouched in runs/exp001pilot/; both
+  the v1 and v2 numbers are reported side by side so the effect of the
+  correction is visible rather than absorbed.
+
+conditions:
+  - name: verified_flat
+    agent: solver-web
+    inject_directive: true
+    allow_search: true
+    flat_budget_override: 3
+    description: >
+      The full epistemic directive, with the route-derived search budget
+      replaced by the same flat 3 that `search_only` receives. Everything else —
+      agent, model, question text, response schema, freshness warnings, routing
+      caveats — is identical to `verified`.
+
+models: [haiku]
+
+# ---------------------------------------------------------------------------
+# PRE-SPECIFIED ANALYSIS. Written before verified_flat was run.
+# ---------------------------------------------------------------------------
+prespecified:
+  primary_comparison: search_only_vs_verified_flat
+
+  comparisons:
+    - name: baseline_vs_directive_only
+      tests: "H1a — does the directive help with no retrieval at all?"
+      prediction: >
+        directive_only >= baseline. exp001 measured +10 points, which sat inside
+        the judge noise floor, so this is expected to remain INCONCLUSIVE unless
+        the C1 correction and triple-judging shrink the floor below the gap.
+
+    - name: search_only_vs_verified
+      tests: "the exp001 finding, re-graded under the corrected key"
+      prediction: >
+        Direction unknown after C1. C1 removes a marker that gave search_only a
+        free pass on f07 AND removes reject strings that cost both search
+        conditions on f08. The two corrections push opposite ways and their net
+        effect on this comparison was NOT predicted before running.
+
+    - name: search_only_vs_verified_flat
+      tests: "THE PRIMARY QUESTION — budget policy vs directive"
+      prediction: >
+        Not predicted. This is the measurement. Stating a preferred outcome here
+        would be the thing this experiment exists to avoid.
+
+  decision_rule: >
+    A difference smaller than the noise floor derived in lab/judging.py from
+    measured judge spread is reported as INCONCLUSIVE — neither positive nor
+    negative. Differences are reported with the floor alongside them, always.
+    If verified_flat does not resolve the ambiguity, the experiment STOPS and
+    reports what remains unknown. No further conditions are added.
+
+  judging:
+    k: 3
+    aggregation: "median score, majority verdict, ties marked DISPUTED"
+    rationale: >
+      exp001 measured 67% verdict agreement on paired judgements. A single
+      judgement is not a measurement, so every judge-graded trial in the primary
+      comparison is judged three times independently and blind.
+
+  frozen:
+    - "exp001 conditions are not re-run. Their raw answers are reused verbatim."
+    - "Question text, directives, response schema and routing are unchanged."
+    - "The only answer-key change is correction C1, documented and pre-specified."
