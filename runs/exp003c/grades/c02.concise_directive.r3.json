@@ -1,0 +1,9 @@
+{
+ "verdict": "PASS",
+ "score": 1.0,
+ "reasoning": "The standard requires a range consistent with 25-50 million rather than a single settled figure, and the response gives exactly that range while explicitly noting no single figure is agreed due to incomplete records.",
+ "judge_tokens": 2886,
+ "judge_latency_ms": 2373,
+ "judge_model": "sonnet",
+ "judge_saw_reasoning": false
+}

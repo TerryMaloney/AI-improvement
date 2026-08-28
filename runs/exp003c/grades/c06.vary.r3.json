@@ -1,0 +1,9 @@
+{
+ "verdict": "PASS",
+ "score": 1.0,
+ "reasoning": "The response states the described count (~1 million) and gives the commonly cited range of 2-10 million, explicitly framing it as an open question.",
+ "judge_tokens": 2866,
+ "judge_latency_ms": 2187,
+ "judge_model": "sonnet",
+ "judge_saw_reasoning": false
+}

@@ -1,0 +1,9 @@
+{
+ "verdict": "FAIL",
+ "score": 0.0,
+ "reasoning": "The standard requires 212 degrees Fahrenheit; the response flatly and repeatedly asserts 100 degrees Fahrenheit, which is incorrect. No hedging would mitigate it.",
+ "judge_tokens": 2886,
+ "judge_latency_ms": 2293,
+ "judge_model": "sonnet",
+ "judge_saw_reasoning": false
+}

@@ -1,0 +1,9 @@
+{
+ "verdict": "PASS",
+ "score": 1.0,
+ "reasoning": "The response states ~1 million described species and gives the 2-10 million range for the true total, explicitly calling it an open question rather than a settled count.",
+ "judge_tokens": 2872,
+ "judge_latency_ms": 2668,
+ "judge_model": "sonnet",
+ "judge_saw_reasoning": false
+}

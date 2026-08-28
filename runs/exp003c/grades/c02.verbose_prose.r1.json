@@ -1,0 +1,9 @@
+{
+ "verdict": "PASS",
+ "score": 1.0,
+ "reasoning": "The response gives the 25-50 million range with the one-third to one-half population framing, explicitly states no single figure is agreed, and explains the uncertainty via incomplete medieval record-keeping, matching the rubric's requirements exactly.",
+ "judge_tokens": 3001,
+ "judge_latency_ms": 2774,
+ "judge_model": "sonnet",
+ "judge_saw_reasoning": false
+}

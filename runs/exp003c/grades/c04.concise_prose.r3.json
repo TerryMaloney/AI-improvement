@@ -1,0 +1,9 @@
+{
+ "verdict": "FAIL",
+ "score": 0.0,
+ "reasoning": "The standard requires identifying that Einstein's Nobel Prize was not for relativity but for the photoelectric effect. The response affirms the false premise and gives 1921 as the year for relativity.",
+ "judge_tokens": 2849,
+ "judge_latency_ms": 2710,
+ "judge_model": "sonnet",
+ "judge_saw_reasoning": false
+}

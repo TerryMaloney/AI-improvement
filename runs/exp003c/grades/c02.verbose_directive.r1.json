@@ -1,0 +1,9 @@
+{
+ "verdict": "PASS",
+ "score": 1.0,
+ "reasoning": "The response gives the range of 25-50 million deaths (a third to a half of the population), matching the established ground truth, and explicitly explains that no single figure is agreed due to incomplete medieval records.",
+ "judge_tokens": 3022,
+ "judge_latency_ms": 3404,
+ "judge_model": "sonnet",
+ "judge_saw_reasoning": false
+}

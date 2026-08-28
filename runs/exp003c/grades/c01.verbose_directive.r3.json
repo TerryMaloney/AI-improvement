@@ -1,0 +1,9 @@
+{
+ "verdict": "PASS",
+ "score": 1.0,
+ "reasoning": "The rubric requires the figure 206 for a pass, and the response clearly states the adult human body has 206 bones, both in the summary and detail sections, with no contradicting hedge or alternative figure.",
+ "judge_tokens": 2860,
+ "judge_latency_ms": 2665,
+ "judge_model": "sonnet",
+ "judge_saw_reasoning": false
+}

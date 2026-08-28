@@ -1,0 +1,9 @@
+{
+ "verdict": "PASS",
+ "score": 1.0,
+ "reasoning": "The standard requires stating 206 bones, and the response directly and correctly states the adult human body has 206 bones with appropriate confidence.",
+ "judge_tokens": 2723,
+ "judge_latency_ms": 2225,
+ "judge_model": "sonnet",
+ "judge_saw_reasoning": false
+}

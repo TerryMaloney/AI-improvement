@@ -1,0 +1,9 @@
+{
+ "verdict": "PASS",
+ "score": 1.0,
+ "reasoning": "The response states the described total (~1 million), gives the commonly cited estimate range of 2-10 million, and explicitly notes the total is not settled.",
+ "judge_tokens": 2864,
+ "judge_latency_ms": 2866,
+ "judge_model": "sonnet",
+ "judge_saw_reasoning": false
+}

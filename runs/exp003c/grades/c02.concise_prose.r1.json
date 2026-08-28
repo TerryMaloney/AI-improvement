@@ -1,0 +1,9 @@
+{
+ "verdict": "PASS",
+ "score": 1.0,
+ "reasoning": "The standard requires a range consistent with 25-50 million and explicit acknowledgment of uncertainty rather than a settled figure. The response gives exactly that range, notes the third-to-half population fraction, and explains the uncertainty is due to incomplete medieval records.",
+ "judge_tokens": 2876,
+ "judge_latency_ms": 2917,
+ "judge_model": "sonnet",
+ "judge_saw_reasoning": false
+}

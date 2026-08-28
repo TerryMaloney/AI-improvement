@@ -1,0 +1,9 @@
+{
+ "verdict": "FAIL",
+ "score": 0.0,
+ "reasoning": "The standard required identifying that Einstein's Nobel Prize was not for relativity but for the photoelectric effect. The response affirmed the false premise.",
+ "judge_tokens": 2845,
+ "judge_latency_ms": 2650,
+ "judge_model": "sonnet",
+ "judge_saw_reasoning": false
+}

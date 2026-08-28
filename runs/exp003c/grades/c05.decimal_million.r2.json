@@ -1,0 +1,9 @@
+{
+ "verdict": "PASS",
+ "score": 1.0,
+ "reasoning": "0.39 million = 390,000, which falls within the required 360,000-410,000 range and matches the established ground truth closely.",
+ "judge_tokens": 2747,
+ "judge_latency_ms": 2697,
+ "judge_model": "sonnet",
+ "judge_saw_reasoning": false
+}

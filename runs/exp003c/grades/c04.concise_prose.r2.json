@@ -1,0 +1,9 @@
+{
+ "verdict": "FAIL",
+ "score": 0.0,
+ "reasoning": "The standard requires identifying that Einstein's Nobel Prize was not for relativity, and explicitly states that supplying a year for a relativity prize fails. The response affirms the false premise.",
+ "judge_tokens": 2845,
+ "judge_latency_ms": 2680,
+ "judge_model": "sonnet",
+ "judge_saw_reasoning": false
+}

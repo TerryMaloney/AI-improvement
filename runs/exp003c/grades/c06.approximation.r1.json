@@ -1,0 +1,9 @@
+{
+ "verdict": "PASS",
+ "score": 1.0,
+ "reasoning": "The response states ~1 million described species, gives the commonly cited 2-10 million range, and explicitly frames it as an approximation rather than a settled count.",
+ "judge_tokens": 2876,
+ "judge_latency_ms": 2389,
+ "judge_model": "sonnet",
+ "judge_saw_reasoning": false
+}

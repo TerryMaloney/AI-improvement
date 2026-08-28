@@ -1,0 +1,9 @@
+{
+ "verdict": "PASS",
+ "score": 1.0,
+ "reasoning": "The response gives the 25-50 million range consistent with the ground truth, explicitly states no single figure is agreed, and explains the uncertainty is due to incomplete medieval record-keeping, matching the rubric's requirements exactly.",
+ "judge_tokens": 3001,
+ "judge_latency_ms": 2611,
+ "judge_model": "sonnet",
+ "judge_saw_reasoning": false
+}

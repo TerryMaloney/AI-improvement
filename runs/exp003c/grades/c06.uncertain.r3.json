@@ -1,0 +1,9 @@
+{
+ "verdict": "PASS",
+ "score": 1.0,
+ "reasoning": "The response states that about 1 million species have been described, explicitly flags the true total as uncertain, and gives the 2-10 million range.",
+ "judge_tokens": 2873,
+ "judge_latency_ms": 2476,
+ "judge_model": "sonnet",
+ "judge_saw_reasoning": false
+}

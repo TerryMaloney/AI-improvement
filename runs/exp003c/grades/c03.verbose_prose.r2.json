@@ -1,0 +1,9 @@
+{
+ "verdict": "FAIL",
+ "score": 0.0,
+ "reasoning": "The standard requires stating 212 degrees Fahrenheit; the response incorrectly states 100 degrees Fahrenheit, which is the Celsius value, not Fahrenheit.",
+ "judge_tokens": 2890,
+ "judge_latency_ms": 6373,
+ "judge_model": "sonnet",
+ "judge_saw_reasoning": false
+}

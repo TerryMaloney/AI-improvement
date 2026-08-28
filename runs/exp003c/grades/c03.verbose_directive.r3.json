@@ -1,0 +1,9 @@
+{
+ "verdict": "FAIL",
+ "score": 0.0,
+ "reasoning": "The standard requires the answer 212 degrees Fahrenheit; the response confidently states 100 degrees Fahrenheit, which is factually wrong.",
+ "judge_tokens": 2905,
+ "judge_latency_ms": 2523,
+ "judge_model": "sonnet",
+ "judge_saw_reasoning": false
+}

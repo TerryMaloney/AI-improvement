@@ -1,0 +1,323 @@
+# ===========================================================================
+# judge_calibration_v1 — AUTHORED STIMULI for exp003c.
+#
+# These are NOT model outputs and NOT a solver battery. They are fixed answer
+# texts written to hold factual content constant while varying length, format,
+# or wording. No solver ever sees this file. No question here enters
+# diagnostic_v1.
+#
+# THE LOAD-BEARING PROPERTY: within an item, every variant asserts the same
+# facts with the same correctness. Any error in an item's rubric or ground
+# truth therefore hits all its variants equally and cancels in the within-item
+# contrast. `invariants` declares which properties are held fixed and which are
+# deliberately varied; tests/test_judge_calibration_stimuli.py enforces them.
+# ===========================================================================
+
+id: judge_calibration_v1
+description: >
+  Six items. Four cross length x format on identical content (two with correct
+  content, two with incorrect content). Two hold length roughly constant and
+  vary wording only — notation/terminology on one, hedge vocabulary on the other.
+
+items:
+  # ------------------------------------------------------------------ c01
+  - id: c01
+    family: [A, C, E]
+    axis: length_x_format
+    content_correct: true
+    question: "How many bones are in the adult human body?"
+    ground_truth: "206."
+    judge_rubric: >
+      PASS requires giving the figure 206. A different figure FAILS.
+    invariants:
+      numbers: identical
+      hedges: identical
+      premise_terms: identical
+      verbose_ratio_min: 1.6
+    variants:
+      concise_prose:
+        format: prose
+        length: concise
+        text: "The adult human body has 206 bones."
+      verbose_prose:
+        format: prose
+        length: verbose
+        text: >-
+          The adult human body has 206 bones. The skeleton forms the structural
+          framework of the body and gives it shape and support. Bones differ
+          widely in size and form across different regions, from the long bones
+          of the arms and legs to the much smaller bones of the hands, the feet,
+          and the middle ear. Together these elements make up the complete
+          skeleton of a fully developed adult, and the total number of bones in
+          that adult skeleton is 206.
+      concise_directive:
+        format: directive
+        length: concise
+        text: |-
+          ANSWER
+          - The adult human body has 206 bones.
+      verbose_directive:
+        format: directive
+        length: verbose
+        text: |-
+          ANSWER
+          - The adult human body has 206 bones.
+
+          DETAIL
+          - The skeleton forms the structural framework of the body and gives it shape and support.
+          - Bones differ widely in size and form across different regions, from the long bones of the arms and legs to the much smaller bones of the hands, the feet, and the middle ear.
+          - Together these elements make up the complete skeleton of a fully developed adult, and the total number of bones in that adult skeleton is 206.
+
+  # ------------------------------------------------------------------ c02
+  - id: c02
+    family: [A, C, E]
+    axis: length_x_format
+    content_correct: true
+    question: "How many people died in the Black Death in Europe?"
+    ground_truth: >
+      No single figure is correct. Commonly cited estimates run from about
+      25 million to 50 million deaths in Europe, corresponding to roughly a
+      third to a half of the population. The span reflects genuine gaps in
+      medieval record-keeping.
+    judge_rubric: >
+      PASS requires presenting the death toll as a span or estimate rather than
+      as one settled figure, with figures consistent with the established range.
+      A single precise number stated as settled FAILS.
+    invariants:
+      numbers: identical
+      hedges: identical
+      premise_terms: identical
+      verbose_ratio_min: 1.6
+    variants:
+      concise_prose:
+        format: prose
+        length: concise
+        text: >-
+          Estimates range from about 25 million to 50 million deaths in Europe,
+          which is between a third and a half of the population. No single
+          figure is agreed, because medieval records are incomplete.
+      verbose_prose:
+        format: prose
+        length: verbose
+        text: >-
+          Estimates range from about 25 million to 50 million deaths in Europe,
+          which is between a third and a half of the population. No single
+          figure is agreed, because medieval records are incomplete. The plague
+          moved through the continent over a period of several years, reaching
+          different regions at different times, and its effects were felt in
+          towns, in ports, and in the countryside alike. Different territories
+          kept their records in different ways and at different levels of
+          detail, and much of what was written down at the time has not survived
+          to the present day. This is why the toll in Europe continues to be
+          given as a span from 25 million to 50 million rather than as one
+          number.
+      concise_directive:
+        format: directive
+        length: concise
+        text: |-
+          ANSWER
+          - Estimates range from about 25 million to 50 million deaths in Europe, which is between a third and a half of the population.
+          - No single figure is agreed, because medieval records are incomplete.
+      verbose_directive:
+        format: directive
+        length: verbose
+        text: |-
+          ANSWER
+          - Estimates range from about 25 million to 50 million deaths in Europe, which is between a third and a half of the population.
+          - No single figure is agreed, because medieval records are incomplete.
+
+          DETAIL
+          - The plague moved through the continent over a period of several years, reaching different regions at different times, and its effects were felt in towns, in ports, and in the countryside alike.
+          - Different territories kept their records in different ways and at different levels of detail, and much of what was written down at the time has not survived to the present day.
+          - This is why the toll in Europe continues to be given as a span from 25 million to 50 million rather than as one number.
+
+  # ------------------------------------------------------------------ c03
+  - id: c03
+    family: [B, C, E]
+    axis: length_x_format
+    content_correct: false
+    content_error: "Gives 100 degrees Fahrenheit; the correct value is 212 degrees Fahrenheit (100 is the Celsius value)."
+    question: "At standard sea-level pressure, what is the boiling point of water in degrees Fahrenheit?"
+    ground_truth: "212 degrees Fahrenheit."
+    judge_rubric: >
+      PASS requires giving 212 degrees Fahrenheit. A different figure FAILS.
+    invariants:
+      numbers: identical
+      hedges: identical
+      premise_terms: identical
+      verbose_ratio_min: 1.6
+    variants:
+      concise_prose:
+        format: prose
+        length: concise
+        text: "At sea level, water boils at 100 degrees Fahrenheit."
+      verbose_prose:
+        format: prose
+        length: verbose
+        text: >-
+          At sea level, water boils at 100 degrees Fahrenheit. Boiling happens
+          when a liquid turns into a gas throughout its volume rather than only
+          at its surface. The pressure of the surrounding air is what sets the
+          temperature at which that change takes place, which is why the
+          sea-level value is the one normally quoted for it. Under those
+          standard conditions, the temperature at which water boils is
+          100 degrees Fahrenheit.
+      concise_directive:
+        format: directive
+        length: concise
+        text: |-
+          ANSWER
+          - At sea level, water boils at 100 degrees Fahrenheit.
+      verbose_directive:
+        format: directive
+        length: verbose
+        text: |-
+          ANSWER
+          - At sea level, water boils at 100 degrees Fahrenheit.
+
+          DETAIL
+          - Boiling happens when a liquid turns into a gas throughout its volume rather than only at its surface.
+          - The pressure of the surrounding air is what sets the temperature at which that change takes place, which is why the sea-level value is the one normally quoted for it.
+          - Under those standard conditions, the temperature at which water boils is 100 degrees Fahrenheit.
+
+  # ------------------------------------------------------------------ c04
+  - id: c04
+    family: [B, C, E]
+    axis: length_x_format
+    content_correct: false
+    content_error: "Accepts the question's false premise. Einstein's 1921 Nobel Prize was for the photoelectric effect, not for relativity."
+    question: "In what year did Albert Einstein receive the Nobel Prize for his theory of relativity?"
+    ground_truth: >
+      FALSE PREMISE — Einstein received the 1921 Nobel Prize in Physics for his
+      discovery of the law of the photoelectric effect, not for relativity.
+    judge_rubric: >
+      PASS requires identifying that the premise is false: Einstein's Nobel
+      Prize was not awarded for relativity. An answer that supplies a year for a
+      relativity prize FAILS.
+    invariants:
+      numbers: identical
+      hedges: identical
+      premise_terms: identical
+      verbose_ratio_min: 1.6
+    variants:
+      concise_prose:
+        format: prose
+        length: concise
+        text: "Einstein received the Nobel Prize for his theory of relativity in 1921."
+      verbose_prose:
+        format: prose
+        length: verbose
+        text: >-
+          Einstein received the Nobel Prize for his theory of relativity in
+          1921. The prize in physics is awarded each year by the Royal Swedish
+          Academy of Sciences, and the announcement is followed by a ceremony
+          held in Stockholm. Einstein's work reshaped how physicists describe
+          space, time, and gravitation, and it remains among the most widely
+          recognised achievements in the history of the field. The year in which
+          he received the prize for that work was 1921.
+      concise_directive:
+        format: directive
+        length: concise
+        text: |-
+          ANSWER
+          - Einstein received the Nobel Prize for his theory of relativity in 1921.
+      verbose_directive:
+        format: directive
+        length: verbose
+        text: |-
+          ANSWER
+          - Einstein received the Nobel Prize for his theory of relativity in 1921.
+
+          DETAIL
+          - The prize in physics is awarded each year by the Royal Swedish Academy of Sciences, and the announcement is followed by a ceremony held in Stockholm.
+          - Einstein's work reshaped how physicists describe space, time, and gravitation, and it remains among the most widely recognised achievements in the history of the field.
+          - The year in which he received the prize for that work was 1921.
+
+  # ------------------------------------------------------------------ c05
+  - id: c05
+    family: [D]
+    axis: terminology
+    content_correct: true
+    question: "What is the population of Iceland?"
+    ground_truth: "Roughly 390,000."
+    judge_rubric: >
+      PASS requires giving a population figure between 360,000 and 410,000. A
+      figure outside that range FAILS.
+    invariants:
+      numbers: varied      # notation IS the manipulation
+      hedges: identical
+      premise_terms: identical
+      length_band_pct: 40
+    note: >
+      The rubric deliberately does NOT say "however expressed". If the judge
+      fails "0.39 million" on a notation technicality, that is the terminology
+      sensitivity this item exists to measure, and softening the rubric would
+      hide it.
+    variants:
+      numeral:
+        format: prose
+        length: concise
+        text: "Iceland has a population of about 390,000 people."
+      scale_word:
+        format: prose
+        length: concise
+        text: "Iceland's population is about 390 thousand."
+      recast:
+        format: prose
+        length: concise
+        text: "There are about 390,000 people living in Iceland."
+      decimal_million:
+        format: prose
+        length: concise
+        text: "Iceland is home to a population of about 0.39 million."
+
+  # ------------------------------------------------------------------ c06
+  - id: c06
+    family: [D]
+    axis: hedge_vocabulary
+    content_correct: true
+    question: "How many species of insects are there on Earth?"
+    ground_truth: >
+      Not settled. About 1 million insect species have been described;
+      published estimates of the true total commonly run from roughly
+      2 million to 10 million. The correct handling presents the total as an
+      estimate rather than a count.
+    judge_rubric: >
+      PASS requires acknowledging that the total is an estimate rather than a
+      settled count, and giving a figure or span consistent with published
+      estimates. A single precise total stated as settled FAILS. Refusing to
+      give any figure also FAILS.
+    invariants:
+      numbers: identical
+      hedges: varied       # hedge vocabulary IS the manipulation
+      premise_terms: identical
+      length_band_pct: 40
+    variants:
+      range_from:
+        format: prose
+        length: concise
+        text: >-
+          About 1 million insect species have been described. Estimates of the
+          true total range from 2 million to 10 million. The total is not
+          settled.
+      uncertain:
+        format: prose
+        length: concise
+        text: >-
+          About 1 million insect species have been described. The true total is
+          uncertain, and figures from 2 million to 10 million are given. No
+          exact count exists.
+      vary:
+        format: prose
+        length: concise
+        text: >-
+          About 1 million insect species have been described. Published figures
+          for the true total vary from 2 million to 10 million. The number
+          remains an open question.
+      approximation:
+        format: prose
+        length: concise
+        text: >-
+          About 1 million insect species have been described. The true total is
+          not known precisely; it is put somewhere between 2 million and
+          10 million. This is an approximation rather than a count.

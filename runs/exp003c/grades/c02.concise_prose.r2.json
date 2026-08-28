@@ -1,0 +1,9 @@
+{
+ "verdict": "PASS",
+ "score": 1.0,
+ "reasoning": "The standard required a range (roughly 25-50 million) framed as an estimate rather than a settled single figure. The response gives exactly that range, notes the third-to-half population proportion, and explicitly states no single figure is agreed due to incomplete medieval records.",
+ "judge_tokens": 2877,
+ "judge_latency_ms": 2516,
+ "judge_model": "sonnet",
+ "judge_saw_reasoning": false
+}

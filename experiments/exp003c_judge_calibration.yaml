@@ -132,3 +132,73 @@ prior_art_boundary: >
   only be described as "a known effect, measured at magnitude X in our
   instrument, with consequence Y for our design". It may not be described as a
   discovery, a finding, or a contribution.
+
+# ===========================================================================
+# AMENDMENT 1 — ROUND 2, written and committed AFTER round 1's scores were
+# seen but BEFORE any round-2 stimulus was authored or dispatched.
+#
+# What round 1 returned: 48 scores of exactly 1.00 and 24 of exactly 0.00.
+# Zero variance. delta_length = delta_format = range_terminology =
+# sigma_judge = 0.0000, exactly, on every item.
+#
+# WHY THIS IS NOT SIMPLY "GREEN AND DONE".
+# Every round-1 stimulus was unambiguously right or unambiguously wrong against
+# a crisp rubric, so the judge never produced a PARTIAL and never used the
+# interior of the 0-1 scale. Score sensitivity to wording is undefined when all
+# scores are saturated: a ceiling cannot move up and a floor cannot move down.
+# Round 1 therefore establishes something real but narrow — wording does not
+# FLIP a verdict when correctness is unambiguous — and says nothing about the
+# regime the concern actually came from. f12 in exp002 scored 0.6 versus 1.0:
+# a PARTIAL, in the interior, on two answers containing the same fact.
+#
+# The pre-registration permits extending the 72-dispatch budget "unless the
+# implementation reveals a principled reason it is insufficient". A design that
+# cannot express the measured quantity is that reason.
+#
+# ROUND 2. Four items built to land in the PARTIAL band by construction: each
+# rubric has TWO required components, and each answer satisfies one fully and
+# the other only implicitly. That is the f12 shape. Length is varied; content is
+# held constant, enforced by the same tests.
+#
+#   4 items x 2 length variants x 3 replicates = 24 dispatches.
+#   Running total: 96.
+#
+# THRESHOLDS ARE UNCHANGED. The same GREEN/AMBER/RED bands and the same two
+# additional checks apply to round 2, computed over round-2 items only. They
+# were fixed before round 1 and are not being retuned now.
+#
+# PRE-SPECIFIED, BEFORE ROUND 2 RUNS — the third possible outcome:
+#   If the judge binarises the round-2 stimuli too (all 1.0 or all 0.0, no
+#   interior scores), that is itself a finding with a binding consequence:
+#   the judge does not use the middle of the scale, continuous judge scores in
+#   exp003a are illusory, and every judged dimension must be recorded and
+#   analysed as a BINARY outcome rather than as a 0-1 score. Reporting a mean
+#   of a scale the instrument does not actually use would be a fabricated
+#   precision of exactly the kind this lab exists to catch.
+# ===========================================================================
+
+amendment_1:
+  round: 2
+  reason: "round 1 saturated at ceiling/floor; score sensitivity is undefined when all scores are 0.0 or 1.0"
+  stimuli: judge_calibration_v1_round2
+  dispatches: 24
+  running_total: 96
+  thresholds: "unchanged from the original pre-registration; computed over round-2 items"
+  binarisation_rule: >
+    If round 2 also produces no interior scores, judged dimensions in exp003a
+    are recorded and analysed as binary outcomes, not as 0-1 means.
+
+# ---------------------------------------------------------------------------
+# NOTE ON THE ROUND-1 judge_noise_floor TRIGGER
+# ---------------------------------------------------------------------------
+# The rule "sigma_judge >= mean within-item variant range" fired on 0.0 >= 0.0.
+# That is a degenerate comparison: the rule was written to catch a judge whose
+# noise swamps the effect, and here BOTH are zero because the judge was
+# perfectly self-consistent. The rationale does not hold.
+#
+# It is applied anyway. Pre-registration is binding, and the consequence
+# (K rises from 1 to 3 for judged trials in exp003a, withdrawing the
+# K=1-with-audit-sample rule) is CONSERVATIVE — it buys more judging, not less.
+# A pre-registered rule that fires degenerately in the safe direction is
+# honoured, not argued away. The degeneracy is recorded here so that nobody
+# later reads the escalation as evidence of a noisy judge.

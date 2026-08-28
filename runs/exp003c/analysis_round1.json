@@ -1,0 +1,87 @@
+{
+ "analysis": {
+  "n_judgements": 72,
+  "delta_length": 0.0,
+  "delta_format": 0.0,
+  "delta_length_correct": 0.0,
+  "delta_length_incorrect": 0.0,
+  "range_terminology": 0.0,
+  "range_terminology_by_item": {
+   "c05": 0.0,
+   "c06": 0.0
+  },
+  "sigma_judge": 0.0,
+  "mean_item_range": 0.0,
+  "item_ranges": {
+   "c01": 0.0,
+   "c02": 0.0,
+   "c03": 0.0,
+   "c04": 0.0,
+   "c05": 0.0,
+   "c06": 0.0
+  },
+  "variant_means": {
+   "c01.concise_directive": 1.0,
+   "c01.concise_prose": 1.0,
+   "c01.verbose_directive": 1.0,
+   "c01.verbose_prose": 1.0,
+   "c02.concise_directive": 1.0,
+   "c02.concise_prose": 1.0,
+   "c02.verbose_directive": 1.0,
+   "c02.verbose_prose": 1.0,
+   "c03.concise_directive": 0.0,
+   "c03.concise_prose": 0.0,
+   "c03.verbose_directive": 0.0,
+   "c03.verbose_prose": 0.0,
+   "c04.concise_directive": 0.0,
+   "c04.concise_prose": 0.0,
+   "c04.verbose_directive": 0.0,
+   "c04.verbose_prose": 0.0,
+   "c05.decimal_million": 1.0,
+   "c05.numeral": 1.0,
+   "c05.recast": 1.0,
+   "c05.scale_word": 1.0,
+   "c06.approximation": 1.0,
+   "c06.range_from": 1.0,
+   "c06.uncertain": 1.0,
+   "c06.vary": 1.0
+  },
+  "variant_spreads": {
+   "c01.concise_directive": 0.0,
+   "c01.concise_prose": 0.0,
+   "c01.verbose_directive": 0.0,
+   "c01.verbose_prose": 0.0,
+   "c02.concise_directive": 0.0,
+   "c02.concise_prose": 0.0,
+   "c02.verbose_directive": 0.0,
+   "c02.verbose_prose": 0.0,
+   "c03.concise_directive": 0.0,
+   "c03.concise_prose": 0.0,
+   "c03.verbose_directive": 0.0,
+   "c03.verbose_prose": 0.0,
+   "c04.concise_directive": 0.0,
+   "c04.concise_prose": 0.0,
+   "c04.verbose_directive": 0.0,
+   "c04.verbose_prose": 0.0,
+   "c05.decimal_million": 0.0,
+   "c05.numeral": 0.0,
+   "c05.recast": 0.0,
+   "c05.scale_word": 0.0,
+   "c06.approximation": 0.0,
+   "c06.range_from": 0.0,
+   "c06.uncertain": 0.0,
+   "c06.vary": 0.0
+  }
+ },
+ "band": {
+  "band": "GREEN",
+  "worst_delta": 0.0,
+  "range_terminology": 0.0,
+  "checks": [
+   "verbosity_rescues_errors not triggered (incorrect +0.000, correct +0.000).",
+   "judge_noise_floor TRIGGERED: sigma_judge 0.000 >= mean within-item variant range 0.000. K rises to 3 for all judged trials in exp003a; the K=1-with-audit-sample rule is withdrawn."
+  ],
+  "verbosity_rescues_errors": false,
+  "judge_noise_floor": true
+ }
+}

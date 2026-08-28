@@ -1,0 +1,9 @@
+{
+ "verdict": "PASS",
+ "score": 1.0,
+ "reasoning": "The rubric required a population figure between 360,000 and 410,000; the response gave 390,000, which falls within range.",
+ "judge_tokens": 2745,
+ "judge_latency_ms": 1865,
+ "judge_model": "sonnet",
+ "judge_saw_reasoning": false
+}

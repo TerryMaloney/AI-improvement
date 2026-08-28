@@ -1,0 +1,9 @@
+{
+ "verdict": "FAIL",
+ "score": 0.0,
+ "reasoning": "The standard requires identifying that Einstein's Nobel Prize was not awarded for relativity. This response affirms the false premise and states 1921 was for relativity.",
+ "judge_tokens": 2961,
+ "judge_latency_ms": 3583,
+ "judge_model": "sonnet",
+ "judge_saw_reasoning": false
+}

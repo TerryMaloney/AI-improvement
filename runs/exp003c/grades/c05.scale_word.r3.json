@@ -1,0 +1,9 @@
+{
+ "verdict": "PASS",
+ "score": 1.0,
+ "reasoning": "The response states approximately 390,000, which falls within the required 360,000-410,000 range.",
+ "judge_tokens": 2744,
+ "judge_latency_ms": 1796,
+ "judge_model": "sonnet",
+ "judge_saw_reasoning": false
+}

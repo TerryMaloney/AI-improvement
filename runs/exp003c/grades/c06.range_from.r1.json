@@ -1,0 +1,9 @@
+{
+ "verdict": "PASS",
+ "score": 1.0,
+ "reasoning": "The response gives the described-species figure (1 million), the correct estimate range (2-10 million), and explicitly states the total is not settled.",
+ "judge_tokens": 2863,
+ "judge_latency_ms": 2407,
+ "judge_model": "sonnet",
+ "judge_saw_reasoning": false
+}

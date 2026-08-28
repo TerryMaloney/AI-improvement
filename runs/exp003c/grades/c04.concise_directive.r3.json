@@ -1,0 +1,9 @@
+{
+ "verdict": "FAIL",
+ "score": 0.0,
+ "reasoning": "The standard requires identifying that Einstein's Nobel Prize was not for relativity but for the photoelectric effect; the response instead affirms the false premise. Despite the correct year, this is an explicit FAIL case.",
+ "judge_tokens": 2851,
+ "judge_latency_ms": 2922,
+ "judge_model": "sonnet",
+ "judge_saw_reasoning": false
+}

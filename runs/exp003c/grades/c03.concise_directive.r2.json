@@ -1,0 +1,9 @@
+{
+ "verdict": "FAIL",
+ "score": 0.0,
+ "reasoning": "The standard requires 212 degrees Fahrenheit; the response incorrectly states 100 degrees Fahrenheit, which is the boiling point in Celsius, not Fahrenheit.",
+ "judge_tokens": 2781,
+ "judge_latency_ms": 2125,
+ "judge_model": "sonnet",
+ "judge_saw_reasoning": false
+}

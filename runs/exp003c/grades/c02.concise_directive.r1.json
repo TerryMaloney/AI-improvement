@@ -1,0 +1,9 @@
+{
+ "verdict": "PASS",
+ "score": 1.0,
+ "reasoning": "The response gives the 25-50 million range with the corresponding third-to-half population fraction, matching the established ground truth, and explicitly notes no single figure is agreed due to incomplete medieval records.",
+ "judge_tokens": 2885,
+ "judge_latency_ms": 2420,
+ "judge_model": "sonnet",
+ "judge_saw_reasoning": false
+}

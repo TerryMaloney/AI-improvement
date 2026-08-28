@@ -1,0 +1,9 @@
+{
+ "verdict": "PASS",
+ "score": 1.0,
+ "reasoning": "The standard requires a population figure between 360,000 and 410,000; the response states 390,000, which falls within the required range.",
+ "judge_tokens": 2746,
+ "judge_latency_ms": 1940,
+ "judge_model": "sonnet",
+ "judge_saw_reasoning": false
+}

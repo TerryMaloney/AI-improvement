@@ -1,0 +1,9 @@
+{
+ "verdict": "PASS",
+ "score": 1.0,
+ "reasoning": "The response states described species (~1 million) and correctly frames the true total as an approximation, giving the 2-10 million range.",
+ "judge_tokens": 2877,
+ "judge_latency_ms": 2734,
+ "judge_model": "sonnet",
+ "judge_saw_reasoning": false
+}

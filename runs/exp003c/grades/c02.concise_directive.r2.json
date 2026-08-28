@@ -1,0 +1,9 @@
+{
+ "verdict": "PASS",
+ "score": 1.0,
+ "reasoning": "The standard required a range (roughly 25-50 million, a third to a half of population) with acknowledgment of uncertainty rather than a settled single figure. The response gives exactly this range.",
+ "judge_tokens": 2892,
+ "judge_latency_ms": 2691,
+ "judge_model": "sonnet",
+ "judge_saw_reasoning": false
+}
