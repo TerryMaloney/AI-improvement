@@ -95,7 +95,6 @@ This does not invalidate judge-based experiments; it limits what they are allowe
 
 **Detailed program:** `docs/EXPERIMENTAL_PROGRAM_2026-08-29.md`.
 
-
 ---
 
 ## 2026-08-29 — Retire repeated-trial A_minus Stage-0 design
@@ -135,7 +134,6 @@ This does not invalidate judge-based experiments; it limits what they are allowe
 2. record them as discarded/non-reusable because provenance is incomplete.
 
 Do not leave them in an ambiguous middle state.
-
 
 ---
 
@@ -183,7 +181,6 @@ It does **not** support:
 
 **Interpretation rule:** If ordinary-search harm replicates but disappears under fixed-query search, classify the mechanism primarily as query-construction failure rather than retrieval intrinsically harming the class.
 
-
 ---
 
 ## 2026-08-29 — Stage 0A blocked by grading objectivity
@@ -200,3 +197,48 @@ It does **not** support:
 3. deterministic-only classes with narrower scientific scope.
 
 **Additional decision:** contested-quantity/definition should not be treated as a clean confirmatory class while its defining feature is answer ambiguity; if retained, its definition/key must be reformulated so the target answer is unambiguous.
+
+---
+
+## 2026-08-29 — Adopt anchored-stem objective mechanism assay for Stage 0A-M
+
+**Decision:** Use question-stem anchoring, not output-side epistemic scaffolds, as the candidate route to objective Stage 0A primary measurement.
+
+**Primary candidate classes:**
+- date-anchored / time-indexed;
+- definition-anchored / definition-fixed quantity;
+- arithmetic / deterministic.
+
+**Reason:** Explicitly fixing date/definition/scope in the question creates an objective target while preserving ordinary answer format. By contrast, fields such as `premise_status`, PROCEED/REJECT, or forced correction explicitly cue the reasoning step whose spontaneous failure is under study.
+
+**Claim limitation:** Stage 0A-M may support only retrieval-induced displacement on an authored anchored stress sample. It does not support naturalistic prevalence, controller value, or within-class sign heterogeneity.
+
+---
+
+## 2026-08-29 — Split objective mechanism assay from naturalistic manifestation
+
+**Decision:** Distinguish:
+- **Stage 0A-M:** objective anchored mechanism assay;
+- **Stage 0A-N:** separate naturalistic free-text manifestation study.
+
+**Reason:** Objective and naturalistic measurement require different instruments. Mixing judge-mediated free text into the confirmatory primary would sacrifice the objectivity gained by anchored keys.
+
+**Naturalistic instrument candidate:** arm-blinded pairwise judging with randomized/reversed presentation, reported separately and not pooled with Stage 0A-M.
+
+---
+
+## 2026-08-29 — False-premise moves out of the objective Stage 0A primary
+
+**Decision:** Do not force false-premise items into an objective structured-output primary.
+
+**Reason:** The observed false-premise failure involved failure to inspect the premise at all. A premise-status or forced-choice field would directly force that inspection and could eliminate the mechanism by measurement.
+
+**Future homes:** Stage 0A-N naturalistic free-text work and execution-grounded tasks where accepting a false premise leads to an objectively invalid downstream action.
+
+---
+
+## 2026-08-29 — Explicit epistemic structure is a separate intervention hypothesis
+
+**Decision:** Register, later and separately from exp004, the hypothesis that explicit epistemic structure (premise status, temporal scope, definition scope, source status, etc.) may itself reduce retrieval-induced displacement.
+
+**Reason:** If structured epistemic representation changes performance, that is a substantive procedure effect, not neutral grading calibration. It belongs to the epistemic-system research branch and must be evaluated as its own intervention.
