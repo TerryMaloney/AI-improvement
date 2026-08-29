@@ -94,3 +94,44 @@ This does not invalidate judge-based experiments; it limits what they are allowe
 **Reason:** A complex positive result is hard to interpret if its component mechanisms have never been isolated.
 
 **Detailed program:** `docs/EXPERIMENTAL_PROGRAM_2026-08-29.md`.
+
+
+---
+
+## 2026-08-29 — Retire repeated-trial A_minus Stage-0 design
+
+**Decision:** Do not use the n=18, R=10 fixed-LFC A_minus design as the primary Stage-0 inference.
+
+**Reason:** Simulated within-item×arm replicate ICC as small as 0.02 inflated nominal Type-I from ~0.05 to ~0.09, with larger inflation at modest ICC. Affordable diagnostics have essentially no power to certify ICC below the required level.
+
+**Consequence:** The old independence-diagnostic completion plan, n=18 recommendation, R=10 recommendation, and 0.1444 critical value are retired.
+
+---
+
+## 2026-08-29 — Candidate replacement uses R=1 exact discordant-pair inference
+
+**Decision:** Advance an R=1 per-arm exact discordant-pair / McNemar-style design as the candidate replacement for Stage 0.
+
+**Reason:** With no within-arm replicate set, within-arm ICC cannot contaminate the statistic. Tested Type-I behavior remained conservative/nominal across tied, heterogeneous, and burst-correlated configurations.
+
+**Status:** Candidate, not frozen. Feasibility depends on reversal prevalence and must be established before production design.
+
+---
+
+## 2026-08-29 — Reversal prevalence is an outcome, never a selection criterion
+
+**Decision:** Candidate items may be authored from treatment-blind, reversal-plausible task classes, but observed reversal direction/prevalence must never determine item inclusion.
+
+**Reason:** Selecting on treatment outcome would recreate the ascertainment failure already observed with the scout.
+
+**Consequence:** A prevalence pilot may estimate feasibility/sample size, but individual pilot items may not be retained or excluded based on whether they reversed.
+
+---
+
+## 2026-08-29 — Auditability gap for 27 screen dispatches
+
+**Decision required:** The 27 prior screen-class independence-check dispatches were not persisted to the repository. Before the next pilot, explicitly either:
+1. reconstruct/persist them as a clearly labeled non-analysis screen artifact if the raw records are available and trustworthy; or
+2. record them as discarded/non-reusable because provenance is incomplete.
+
+Do not leave them in an ambiguous middle state.
