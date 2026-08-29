@@ -242,3 +242,39 @@ It does **not** support:
 **Decision:** Register, later and separately from exp004, the hypothesis that explicit epistemic structure (premise status, temporal scope, definition scope, source status, etc.) may itself reduce retrieval-induced displacement.
 
 **Reason:** If structured epistemic representation changes performance, that is a substantive procedure effect, not neutral grading calibration. It belongs to the epistemic-system research branch and must be evaluated as its own intervention.
+
+---
+
+## 2026-08-29 — Stage 0A-M final spec audit: null hypothesis vs stated claim
+
+**Finding (external review, confirmed):** the committed proof in `lab/stage0am.py`
+established validity against the POINTWISE null (delta_i >= 0 for every item),
+while the specification described the estimand as a CLASS-AVERAGE effect. Those
+are different hypotheses, and the mean null is strictly larger.
+
+**Resolution:**
+- H0_pointwise validity is PROVEN and is now the primary licensed claim:
+  a rejection means *at least one item in the class is harmed*.
+- H0_mean validity is PROVEN under Poissonization and, in the exact Bernoulli
+  model, SEARCHED rather than proven: exact 2-D convolution over a structured
+  grid plus random search, hill-climbing and simulated annealing at n=25 found a
+  worst case of 0.030 at alpha=0.05 and 0.0105 at alpha=0.025, with worst
+  configurations on the boundary sum(a)=sum(b). The class-average reading is
+  reported as a clearly-labelled secondary with weaker warrant.
+
+**Other corrections in the same audit:**
+- Treatment frozen as RETRIEVAL-ENABLED (intent-to-treat), not mandatory
+  retrieval. Trials where the model declines to search stay in the arm; analysis
+  is never conditioned on observed tool use.
+- Negative-control headline metric changed from the conditional discordance share
+  to the harm RATE n10/n with an exact Clopper-Pearson upper bound, because the
+  old metric returned 1.0 for a perfectly clean control.
+- "Generic tool-use tax" demoted from an invalidation rule to diagnostic-only;
+  "comparable harm" was an undefined outcome-contingent judgement.
+- Stage 0B advancement no longer conditions on query quality. The fixed-query arm
+  is the experiment that settles query-vs-retrieval harm; screening on it at 0A
+  would pre-empt that experiment and may discard a real finding.
+- §14 criteria split into formal invalidation rules, power sensitivities and
+  interpretive limitations. Class purity is latent and is a power parameter only,
+  never an invalidation rule.
+- Null-result language frozen before outcomes.

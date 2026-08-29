@@ -16,8 +16,10 @@ from lab.stage0am import (
     analyse,
     discordance,
     exact_one_sided_p,
+    harm_rate_upper_bound,
     harm_share_upper_bound,
     holm,
+    paired_risk_difference,
 )
 
 ALPHA = 0.05
@@ -167,3 +169,113 @@ class TestReproducibility:
     def test_same_seed_same_answer(self):
         assert _reject_rate([(0.85, 0.4)] * 20, 500, seed=99) == \
                _reject_rate([(0.85, 0.4)] * 20, 500, seed=99)
+
+
+def _exact_type1(items, alpha):
+    """EXACT Type-I by 2-D convolution over (n10, n01). No Monte Carlo.
+
+    `items` is [(a_i, b_i)]: item i is baseline-favouring-discordant w.p. a_i,
+    retrieval-favouring-discordant w.p. b_i, concordant otherwise.
+    """
+    dist = {(0, 0): 1.0}
+    for a, b in items:
+        nxt = {}
+        for (i, j), v in dist.items():
+            if v < 1e-18:
+                continue
+            nxt[(i + 1, j)] = nxt.get((i + 1, j), 0.0) + v * a
+            nxt[(i, j + 1)] = nxt.get((i, j + 1), 0.0) + v * b
+            nxt[(i, j)] = nxt.get((i, j), 0.0) + v * (1 - a - b)
+        dist = nxt
+    return sum(v for (i, j), v in dist.items() if exact_one_sided_p(i, j) <= alpha)
+
+
+class TestPointwiseNullIsTheProvenGuarantee:
+    """H0_pointwise: delta_i >= 0 for every i, i.e. a_i <= b_i for every i."""
+
+    @pytest.mark.parametrize("a,b", [(0.1, 0.1), (0.3, 0.3), (0.05, 0.5), (0.2, 0.45), (0.0, 0.6)])
+    def test_exact_type_i_never_exceeds_alpha(self, a, b):
+        for alpha in (0.05, 0.025):
+            assert _exact_type1([(a, b)] * 25, alpha) <= alpha + 1e-12
+
+    def test_heterogeneous_pointwise_null(self):
+        items = [(0.02 * i, 0.02 * i + 0.05) for i in range(1, 26)]
+        for alpha in (0.05, 0.025):
+            assert _exact_type1(items, alpha) <= alpha
+
+
+class TestMeanNullIsSearchedNotProven:
+    """H0_mean: sum_i delta_i >= 0, i.e. sum(a) <= sum(b). Strictly larger than
+    H0_pointwise -- it permits genuinely harmed items offset by helped ones.
+
+    These are the adversarial configurations found by grid, random search,
+    hill-climbing and simulated annealing. They are pinned here so that a future
+    change to the statistic cannot silently break the searched bound.
+    """
+
+    @staticmethod
+    def _boundary(g, a, n=25):
+        """g harmed items at rate a, the rest helped at exactly the rate that puts
+        the configuration ON the H0_mean boundary: sum(a) == sum(b). Computed, not
+        rounded -- a rounded b silently leaves the null and the test then proves
+        nothing."""
+        return [(a, 0.0)] * g + [(0.0, g * a / (n - g))] * (n - g)
+
+    ADVERSARIAL = [
+        _boundary.__func__(10, 0.4),   # grid worst, alpha=0.05
+        _boundary.__func__(11, 0.4),   # grid worst, alpha=0.025
+        _boundary.__func__(8, 0.6),
+        _boundary.__func__(12, 0.35),
+        _boundary.__func__(12, 0.3),
+    ]
+
+    @pytest.mark.parametrize("items", ADVERSARIAL)
+    def test_searched_configurations_stay_under_nominal(self, items):
+        assert sum(b for _, b in items) + 1e-9 >= sum(a for a, _ in items), "not in H0_mean"
+        assert _exact_type1(items, 0.05) <= 0.05
+        assert _exact_type1(items, 0.025) <= 0.025
+
+    def test_boundary_configurations_are_the_worst_case(self):
+        """Worst cases sit on sum(a) == sum(b); moving into the interior of the
+        null (more helped mass) can only reduce rejection."""
+        boundary = [(0.4, 0.0)] * 10 + [(0.0, 0.267)] * 15
+        interior = [(0.4, 0.0)] * 10 + [(0.0, 0.500)] * 15
+        assert _exact_type1(interior, 0.05) < _exact_type1(boundary, 0.05)
+
+    def test_the_searched_bound_is_recorded(self):
+        """[MEASURED] worst Type-I found anywhere in the search: 0.030 at
+        alpha=0.05 and 0.0105 at alpha=0.025. Not a theorem -- a searched bound."""
+        worst = max(_exact_type1(items, 0.05) for items in self.ADVERSARIAL)
+        assert worst <= 0.030 + 1e-9
+
+
+class TestNegativeControlMetric:
+    def test_a_clean_control_is_informative_not_vacuous(self):
+        """The old conditional-share metric returned 1.0 for a perfectly clean
+        control. The rate metric must not."""
+        assert harm_share_upper_bound(0, 0) == 1.0
+        assert harm_rate_upper_bound(0, 15) < 0.20
+
+    def test_rate_bound_tightens_with_more_clean_items(self):
+        assert harm_rate_upper_bound(0, 30) < harm_rate_upper_bound(0, 15)
+
+    def test_rate_bound_covers_the_observed_rate(self):
+        assert harm_rate_upper_bound(3, 20) > 3 / 20
+
+    def test_single_baseline_favouring_item_still_bounds_low(self):
+        assert harm_rate_upper_bound(1, 15) < 0.35
+
+    def test_risk_difference_is_the_paired_contrast(self):
+        assert paired_risk_difference(5, 2, 20) == pytest.approx(0.15)
+        assert paired_risk_difference(0, 0, 20) == 0.0
+
+    def test_risk_difference_rejects_empty_class(self):
+        with pytest.raises(ValueError):
+            paired_risk_difference(0, 0, 0)
+
+    def test_control_result_carries_all_three_quantities(self):
+        r = analyse({"date": [(1, 1)] * 10}, {"arith": [(1, 1)] * 15})
+        c = r.negative_control["arith"]
+        assert c.harm_rate_upper_95 < 0.20
+        assert c.risk_difference == 0.0
+        assert c.rejected is None

@@ -9,25 +9,53 @@ item manifest that does not yet exist.
 
 ## 1. The claim, and its boundary
 
-**Stage 0A-M may establish exactly one thing:**
+### 1.1 Two nulls
 
-> On preregistered, treatment-blind classes of **explicitly anchored** questions,
-> retrieval reduces the probability of an objectively correct answer relative to
-> closed-book, on an authored stress sample.
+    H0_pointwise:  delta_i >= 0 for every item i in the class
+    H0_mean:       (1/n) sum_i delta_i >= 0
 
-Prohibited inferences, to be reproduced verbatim in the report regardless of
-outcome:
+H0_pointwise is a strict subset of H0_mean. Which one the test is valid against
+decides what a rejection may say, and an earlier draft of this specification
+claimed a class-average effect while the code proved only the pointwise
+guarantee. That gap is closed here.
 
-- **not** naturalistic prevalence — the sample is deliberately enriched;
-- **not** general retrieval harm — only anchored questions are tested;
-- **not** controller or router value of any kind;
-- **not** within-class sign heterogeneity — the statistic is blind to it by
-  construction, and a test asserts this (`test_blind_to_within_class_sign_heterogeneity`);
-- **not** existing-router performance or learned-router discoverability;
-- **not** false-premise behaviour — that class is excluded (§3);
-- **not** ordinary free-form temporal reasoning — see §2 on the construct.
+- **H0_pointwise — PROVEN.** Domination by Binomial(D, 1/2) via pi_i <= 1/2.
+- **H0_mean — PROVEN under Poissonization**, and `[MEASURED]` **searched, not
+  proven, in the exact Bernoulli model**: exact 2-D convolution over a
+  structured grid, 4000 random configurations, hill-climbing and simulated
+  annealing at n=25 found a worst case of **0.030 at alpha=0.05** and **0.0105
+  at alpha=0.025**. Worst configurations sit on the boundary sum(a)=sum(b).
+  `[OPEN]` No general Bernoulli proof is in hand.
 
----
+### 1.2 What a rejection licenses
+
+**PRIMARY, fully proven:** *at least one item in this class is harmed by
+retrieval* — the existence claim, which is what a mechanism assay is for.
+
+**SECONDARY, numerically supported at the planned design but not proven:** the
+class-average effect is negative.
+
+The report states the primary reading first and never presents the secondary as
+if it carried the same warrant.
+
+### 1.3 Reconciling this with blindness to sign heterogeneity
+
+These are consistent and both must be stated. The statistic responds to net
+directional imbalance:
+
+- rejection ==> at least one harmed item exists (valid);
+- **non-rejection does NOT imply no harmed items exist.**
+
+A class that is 40% badly harmed and 60% mildly helped returns a null. This is
+asserted by test (`test_blind_to_within_class_sign_heterogeneity`).
+
+### 1.4 Prohibited inferences
+
+Reproduced verbatim in the report regardless of outcome. **Not** naturalistic
+prevalence; **not** general retrieval harm; **not** controller or router value;
+**not** within-class sign heterogeneity; **not** existing-router performance or
+learned-router discoverability; **not** false-premise behaviour (excluded);
+**not** ordinary free-form temporal reasoning.
 
 ## 2. The construct is narrower than "epistemic displacement", and we accept that
 
@@ -83,11 +111,28 @@ it is demoted from a co-equal discovery hypothesis to a **negative control**.
 
 Rationale, and why this is statistically coherent: a negative control is not
 "a test we expect to fail". Failing to reject is not evidence of no effect. It is
-reported as an **exact Clopper-Pearson upper bound on the share of discordant
-items that are baseline-favouring** — a statement with content. If the control
-class shows harm comparable to the primary classes, the correct reading is a
-generic tool-use tax (wrapper differences, latency, budget language, broken
-retrieval) rather than anchored displacement.
+reported as **exact bounds**, not as a verdict.
+
+**Headline control metric `[PREREG]`: the RATE of baseline-favouring discordance
+among all control items, n10 / n, with an exact Clopper-Pearson upper bound.**
+This is what the control exists to bound — how often merely enabling retrieval
+flips a correct closed-book answer to an incorrect one on tasks where retrieval
+should be irrelevant. Critically it stays informative when the control is clean:
+0 of 15 gives an upper bound of **0.18**, whereas the conditional share
+n10/(n10+n01) returns 1.0 on an empty discordant denominator and makes a
+perfectly clean control read as maximally uninformative. Reported alongside,
+descriptively: the conditional share, and the paired risk difference
+(n10-n01)/n. No exact interval is claimed for the risk difference.
+
+**"Generic tool-use tax" is DIAGNOSTIC ONLY, with no invalidation rule
+`[PREREG]`.** An earlier draft said a control harm "comparable" to the primary
+classes would undermine the anchored-displacement reading. "Comparable" was
+undefined and would have been an outcome-contingent judgement call, so it is
+removed as a formal rule. Instead: the control's harm rate and bound are reported
+beside each primary class's, and it is stated in advance that a control harm rate
+of the same order **weakens** the anchored-displacement interpretation and
+**supports** a generic tool-use explanation without proving it, and that no
+automatic invalidation follows.
 
 Demoting it also improves the primary design on every axis at once `[MEASURED]`:
 K=2 rather than K=3 raises power (0.869 vs 0.812 at δ=0.45, n=25) while reducing
@@ -158,21 +203,33 @@ Authoring has not begun and is not authorized by this document.
 
 ---
 
-## 6. The retrieval treatment
+## 6. The retrieval treatment — RETRIEVAL-ENABLED, intent-to-treat
 
-CLOSED and RETRIEVAL wrappers are byte-identical except the retrieval
-intervention, verified by diff at preflight.
+`[PREREG]` **The treatment is A: RETRIEVAL-ENABLED.** The model has access to
+search and chooses whether to use it. It is *not* mandatory retrieval.
+
+**The estimand is therefore an intent-to-treat / procedure effect** — the effect
+of being placed in the retrieval-enabled procedure — **not the causal effect of
+actually retrieving evidence.** Every claim in the report uses that wording.
+
+Derivation, not preference: mandatory retrieval forces a search the model would
+judge unnecessary, which is both unnatural and a different intervention; and the
+deployment-relevant decision a controller makes is whether to *enable* retrieval,
+not whether the model *actually* searches. A trial where the model declines to
+search **stays in the treatment arm**. Analysis is never conditioned on observed
+tool use — that would be post-treatment selection.
+
+CLOSED and RETRIEVAL-ENABLED wrappers are byte-identical except the retrieval
+permission, verified by diff at preflight.
 
 **The FD-1 contradiction is resolved permanently for this experiment: the closed
 arm's packet contains no `SEARCH BUDGET` line and no reference to tools it does
-not have.** Prior experiments carried a phantom budget instruction in a
-no-tool arm; that text does not appear here.
+not have.**
 
 Logged per trial, with observed telemetry authoritative over model self-report:
 actual query text, query count, returned evidence/snippets, tool success, tool
 failures, timing, model snapshot, token counts, answer length, environment state.
-
----
+Tool use is logged and reported; it is never an analysis condition.
 
 ## 7. Failure and missingness
 
@@ -211,12 +268,22 @@ Fixed-query templates are generated **from the item stem alone**, by a rule
 written before Stage 0A dispatch, and are never optimized using Stage 0A search
 outcomes. Stage 0B items are fresh and are not authored yet.
 
-A class advances to Stage 0B iff its Holm-adjusted p <= 0.05, its discordant
-count is at least 8, and query logs show no systematic construction defect.
-Confirmation is powered for a **smaller** effect than discovery observed, because
-discovery selects the largest.
+**Advancement rule `[PREREG]`: a class advances to Stage 0B iff its
+Holm-adjusted p <= 0.05 and its discordant count D >= 8. Query quality is NOT an
+advancement criterion.**
 
----
+Derived, not assumed. The earlier third condition — "query logs show no
+systematic construction defect" — was not operationally defined and would have
+created a researcher degree of freedom exercised after seeing outcomes. Worse, it
+is self-defeating: **the fixed-query arm in Stage 0B is precisely the experiment
+that determines whether a discovery was retrieval harm or query-generation
+harm.** Excluding a class at 0A on query-quality grounds pre-empts that
+experiment and can discard a real finding, because the model's own query
+construction is part of what "ordinary retrieval" means — it is plausibly part of
+the treatment mechanism, not a defect to be screened out.
+
+Technical tool failure remains governed separately by §7's frozen missingness
+rules. Poor query quality is never a technical failure and is never excluded.
 
 ## 9. Stage 0A-N boundary
 
@@ -293,9 +360,74 @@ blindness to within-class sign heterogeneity; reproducibility under a fixed seed
 
 ---
 
-## 14. What would invalidate this specification
+## 14. Invalidation rules, power sensitivities and limitations — classified
 
-Honest failure modes, listed so they are not discovered late: class purity below
-~70% (power collapses); anchoring proving to suppress the effect (a null would be
-uninterpretable); the negative control showing harm comparable to the primary
-classes (indicts a generic tool-use tax); void rate above 10%.
+An earlier draft listed these together, which blurred an observable stopping rule
+with a latent simulation parameter. They are now separated by kind.
+
+### FORMAL INVALIDATION RULES — objectively observable, frozen threshold
+
+| rule | threshold |
+|---|---|
+| Technical-failure void rate | **> 10% of items** invalidates the run |
+| Egress / source access changes mid-run | run halts; before and after never pooled |
+| Arm packets differ by anything but the retrieval permission | preflight fails closed |
+| Any screening trial present in the production manifest | preflight fails closed |
+
+### POWER SENSITIVITIES — simulation parameters, not observable criteria
+
+**Class purity** — the fraction of a class's items with a truly negative delta —
+is **latent and never observed by this experiment.** It is a parameter of the
+power table in §4 and nothing else. `[METHOD]` It is **not** an inclusion
+criterion, **not** a post-hoc invalidation rule, and cannot be estimated from
+Stage 0A-M outcomes without the within-class heterogeneity detection the design
+explicitly lacks. Power falls steeply below ~70% purity; that is a reason the
+design may fail to detect a real effect, not a reason to discard a run.
+
+Baseline difficulty likewise affects power (`[MEASURED]` robust across p=0.60 to
+0.99, higher at high baseline) and is observable, but has no frozen threshold.
+
+### INTERPRETIVE LIMITATIONS — cannot be diagnosed by this experiment
+
+**Anchoring may suppress or amplify the effect.** Stage 0A-M contains no
+unanchored objective comparison, so it cannot tell which. `[OPEN]` This is a
+construct limitation belonging to Stage 0A-N and H-EPI-11 — **not** a
+run-invalidating event, and not something a null result can settle.
+
+**Stress-sample enrichment** means no naturalistic prevalence claim follows.
+
+### FUTURE ALTERNATIVE-EXPLANATION TESTS
+
+Query-generation harm (Stage 0B arm C). Generic tool-use tax (negative control,
+diagnostic only, no invalidation rule — see §3).
+
+---
+
+## 15. Null-result language, frozen before outcomes
+
+`[PREREG]` If no class rejects, the report says exactly this and no more:
+
+> **We did not detect the preregistered negative retrieval effect on the anchored
+> stress assay at the planned sensitivity.** At n=25 per class the design had
+> approximately 0.87 power against a uniform 0.45 per-item effect and about 0.73
+> if roughly 85% of a class carries the effect; it had materially less against
+> smaller or sparser effects, and none against effects offset within a class by
+> helped items. The result does not show that retrieval is harmless, that
+> anchored displacement does not occur, that unanchored or naturalistic tasks are
+> safe, or that a retrieval controller is unnecessary. It does not distinguish a
+> genuinely absent effect from one suppressed by the anchoring that makes this
+> assay objectively gradable.
+
+A null is informative about this assay's sensitivity and uninformative about the
+broader question. Both halves are stated.
+
+---
+
+## 16. Note on the reported power figures
+
+`[METHOD]` The power table in §4 is computed by rejecting when **any class
+p-value <= alpha/K**, which is Holm's first step. Full Holm can also reject a
+second hypothesis at alpha/1, so the tabulated figures are a **conservative lower
+bound** on the procedure's actual power, not an exact characterisation. The
+implementation in `lab/stage0am.py` performs full step-down Holm; the tests cover
+its ordering, its stop-on-failure behaviour, and its family-wise error rate.
