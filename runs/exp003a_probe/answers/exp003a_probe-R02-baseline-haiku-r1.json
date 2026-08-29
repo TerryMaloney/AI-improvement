@@ -1,0 +1,8 @@
+{
+ "answer": "Monday. March 31 + April 30 + May 31 = 92 days; 92 mod 7 = 1; Sunday + 1 = Monday.",
+ "confidence": "high",
+ "abstained": false,
+ "searches_used": 0,
+ "sources": [],
+ "tool_calls_observed": 0
+}

@@ -385,6 +385,31 @@ class Store:
             )
         }
 
+    def assert_single_dispatch_class(self, expected: str) -> None:
+        """Refuse to serve a database that mixes dispatch classes.
+
+        The hard invariant behind the probe/experiment boundary. Screening
+        observations select items on their baseline performance; reusing them as
+        experimental control data would condition the control on the selection
+        criterion and bias every contrast through regression to the mean.
+
+        This RAISES rather than filtering. Filtering would let a contaminated
+        database produce a clean-looking analysis, which is the failure the
+        invariant exists to prevent — the caller must fix the database, not have
+        the problem quietly removed from the numbers.
+        """
+        classes = self.dispatch_classes()
+        if not classes:
+            return  # pre-step-3 database: no class column, nothing to mix
+        foreign = {k: v for k, v in classes.items() if k != expected}
+        if foreign:
+            raise ValueError(
+                f"{self.path}: this analysis expects only `{expected}` trials, but the "
+                f"database also contains {foreign}. Screening and qualification dispatches "
+                f"may not enter a primary analysis. Refusing rather than filtering: a "
+                f"filtered result would look clean and be contaminated."
+            )
+
     def joined(self) -> list[sqlite3.Row]:
         """Every trial with its answer and grade, if present.
 

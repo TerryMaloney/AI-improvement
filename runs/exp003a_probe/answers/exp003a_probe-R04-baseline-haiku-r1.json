@@ -1,0 +1,8 @@
+{
+ "answer": "15. Counting ordered triples with values 1-6 summing to 7 gives 5+4+3+2+1 = 15.",
+ "confidence": "high",
+ "abstained": false,
+ "searches_used": 0,
+ "sources": [],
+ "tool_calls_observed": 0
+}

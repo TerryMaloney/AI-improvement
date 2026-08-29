@@ -1,0 +1,24 @@
+{
+  "probed_at": "2026-08-29",
+  "dispatch_class": "screen",
+  "k": 5,
+  "thresholds": {
+    "ceiling": 0.9,
+    "floor": 0.1
+  },
+  "baseline_rate": {
+    "C01": 0.0,
+    "C02": 0.0,
+    "L01": 1.0,
+    "L02": 1.0,
+    "L03": 1.0,
+    "L04": 1.0,
+    "L05": 1.0,
+    "L06": 1.0,
+    "R01": 1.0,
+    "R02": 1.0,
+    "R03": 1.0,
+    "R04": 1.0
+  },
+  "note": "PARTIAL probe: 12 of 23 items screened (60 of 115 dispatches). Halted deliberately \u2014 see docs. Not reused as experimental baseline."
+}

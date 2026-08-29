@@ -84,8 +84,15 @@ def _cost(cell: dict) -> str:
     return f"{cell['total_tool_calls']}{suffix}"
 
 
-def collect(run_dir: Path) -> dict:
+def collect(run_dir: Path, dispatch_class: str = "solver_experiment") -> dict:
+    """Gather one experiment's rows for reporting.
+
+    Refuses a database holding any other dispatch class. A screening run is read
+    by passing its own class explicitly; there is no way to read a mixture, and
+    that is deliberate.
+    """
     store = Store(run_dir / "results.db")
+    store.assert_single_dispatch_class(dispatch_class)
     config = store.config()
     rows = []
     for r in store.joined():
