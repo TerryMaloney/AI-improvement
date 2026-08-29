@@ -10,19 +10,26 @@ The previous prevalence-pilot architecture is retired.
 
 ## Current Stage-0 decomposition
 
-### Stage 0A — Mechanism discovery
-Question: does retrieval have a negative mean effect in at least one preregistered, treatment-blind task class?
+### Stage 0A-M — Objective mechanism assay
+Question: on preregistered, treatment-blind anchored task classes, can retrieval reduce objectively correct answers relative to closed-book?
 
-Candidate design:
-- 4 treatment-blind surface classes;
-- fixed-n discovery sample;
-- R=1 per arm;
-- exact one-sided conditional-binomial/McNemar-style test within class;
-- Holm correction across classes;
-- deterministic grading primary;
-- stress-sample interpretation only.
+Current candidate primary classes:
+- date-anchored / time-indexed;
+- definition-anchored / definition-fixed quantity;
+- arithmetic / deterministic.
 
-This is **mechanism discovery**, not general controller evidence.
+Primary measurement:
+- ordinary answer format;
+- frozen deterministic keys;
+- no LLM judge;
+- no task-directing output schema.
+
+Interpretation is deliberately narrow: this is an authored stress-sample mechanism assay, not naturalistic prevalence, controller value, or within-class sign heterogeneity.
+
+### Stage 0A-N — Naturalistic manifestation
+Free-form answers on separate fresh items, with blinded pairwise judging only as a separate exploratory/naturalistic instrument.
+
+False-premise is removed from the objective Stage 0A-M primary because forcing an explicit premise-status/decision field would itself cue premise inspection and alter the hypothesized mechanism.
 
 ### Stage 0B — Independent confirmation
 Freeze one discovered class/hypothesis, then test it on entirely fresh items authored without outcome visibility.
@@ -40,6 +47,9 @@ On held-out mixed tasks, compare fixed policies with a router using only pre-tre
 
 Only this stage can begin to support a general controller claim.
 
+### Stage 0E — Richer action space
+Only after binary conditional retrieval earns value.
+
 ## Established / measured so far
 
 - The pooled R=1 discordant-pair design is an ATE test, not a sign-heterogeneity/controller test; it is retired as the primary controller route.
@@ -48,32 +58,35 @@ Only this stage can begin to support a general controller claim.
 - Hand-authored classes can establish a stress-sample mechanism and a trivial class rule; they do **not** establish that a general router can discover/generalize the signal.
 - A discovery→fresh-confirmation design is cleaner and cheaper than prevalence-pilot→production.
 - The strongest current alternative explanation for apparent retrieval harm is **query-generation failure**; confirmation should explicitly test this with a fixed-query arm.
-- Surface classes should be used for preregistered stratification; hypothesized mechanism dimensions may be recorded as frozen covariates but are not yet operationally validated.
 - Naturalistic prevalence remains completely unmeasured.
 - 27 earlier screen-class diagnostic calls are discarded/non-reusable due to incomplete persisted provenance.
+- Frozen grading data showed that harm-plausible free-text classes were anti-correlated with deterministic gradability.
+- Forcing explicit premise-status or forced-choice fields is itself a cognitive intervention and cannot be treated as a neutral grading device.
+- Anchoring the target in the **question stem** can remove ambiguity without adding a new output-side reasoning scaffold.
+- Date-anchored and definition-anchored formulations therefore provide the current cleanest objective mechanism assay.
+- The old contested-quantity class is not retained as such; it is reformulated into a definition-fixed class with an objective target.
+- False-premise remains scientifically important but moves to naturalistic/execution-grounded work rather than the objective Stage 0A-M primary.
+- Explicit epistemic structure as a protective intervention is now a separate future hypothesis and must not be smuggled into exp004 as measurement calibration.
 
-## Current candidate discovery burden
+## Current candidate Stage 0A-M burden
 
 Illustrative candidate:
-- 4 classes × 20 items × 2 arms = 160 solver dispatches.
-- Approximate power from the red-team:
-  - pure class harm delta≈0.55: 0.87
-  - pure class harm delta≈0.40: 0.54
-  - 67% reversal-pure at delta≈0.55: 0.43
+- 3 classes × 20 items × 2 arms = 60 items / 120 solver dispatches.
 
-These numbers are orientation only until the discovery specification is independently frozen.
+This is not yet frozen. A final specification/red-team must verify that the anchored classes are operational, treatment-blind, and sufficiently powerable before production.
 
-## Current blockers before Stage 0A
+## Current blockers before Stage 0A-M
 
-1. Independently specify the four treatment-blind classes and one-class-per-item assignment rule.
-2. Freeze item-authoring rules before outcomes.
-3. Decide discovery n/class after a final power/cost check.
-4. Freeze exact grading/key rules and clean arms.
-5. Define query logging and confirmation fixed-query intervention now, before discovery outcomes.
-6. Define the report skeleton and stress-sample claim language.
-7. Re-probe egress / tool environment.
-8. Resolve the pre-existing stale test assertion without altering frozen historical evidence.
-9. Freeze Stage 0A in a distinct preregistration commit before any production dispatch.
+1. Formalize exact date-anchored, definition-anchored, and arithmetic class definitions.
+2. Verify one-class-per-item assignment and objective key construction.
+3. Recompute fixed-n power for 15/20/25 items per retained class under the new 3-class multiplicity structure.
+4. Define treatment-blind authoring rules that do not use prior search results.
+5. Freeze the ordinary closed/search arm wrappers and exact query logging.
+6. Predefine the Stage 0B fixed-query challenge.
+7. Define a separate Stage 0A-N naturalistic pairwise-judging protocol, but do not mix it into the objective primary.
+8. Re-probe egress / tool environment.
+9. Replace the stale knowledge-probe infrastructure assertion only if separately authorized; frozen evidence must remain untouched.
+10. Freeze Stage 0A-M in a distinct preregistration commit before any production dispatch.
 
 ## Retired recommendations
 
@@ -84,36 +97,19 @@ Do not revive without a new derivation:
 - prevalence pilot as the next stage;
 - pooled R=1 McNemar as a controller test;
 - observed reversal prevalence as an inclusion criterion;
-- treatment-side scouting.
+- treatment-side scouting;
+- runtime judge escalation;
+- treating structured output fields as neutral measurement;
+- contested-quantity as an ambiguity-defined confirmatory class.
 
 ## Explicitly not authorized
 
-- No Stage 0A production dispatches until its discovery specification is frozen.
-- No confirmation-item authoring with discovery outcomes visible unless the authoring process prevents outcome leakage.
+- No Stage 0A-M production dispatches until its specification is frozen.
+- No false-premise structured-output primary in exp004.
 - No controller claim from a class-level discovery result.
 - No naturalistic prevalence claim from an enriched stress battery.
 - No Stage-1/recursive procedure work yet.
 
 ## Broader direction
 
-See `docs/RESEARCH_MAP.md` and `docs/EXPERIMENTAL_PROGRAM_2026-08-29.md`.
-
-
-## Latest Stage 0A specification red-team — grading blocker
-
-[MEASURED] Three of the four proposed harm-plausible Stage 0A classes escalated 100% of their frozen examples to an LLM judge. Only deterministic/arithmetic graded cleanly.
-
-This exposes a structural conflict:
-- the classes most likely to show retrieval harm require nuanced epistemic judgment;
-- the classes easiest to grade deterministically are the least harm-plausible.
-
-Therefore Stage 0A is **not ready to freeze**. The blocker is now grading architecture, not statistics or taxonomy.
-
-Contested-quantity/definition should not remain a primary class in its current form because its defining property is answer ambiguity, which conflicts with the requirement for an unambiguous frozen key.
-
-Three remediation directions remain open:
-1. pre-author deterministic acceptance criteria and validate coverage before dispatch;
-2. admit judged items to the primary under a pre-registered bias audit / measurement model;
-3. restrict to deterministic classes, accepting reduced scientific relevance.
-
-Do not author Stage 0A items until one grading path is selected and independently scrutinized.
+See `docs/RESEARCH_MAP.md`, `docs/EXPERIMENTAL_PROGRAM_2026-08-29.md`, and `docs/EPISTEMIC_SYSTEMS_PRIOR_ART_MAP_2026-08-29.md`.
