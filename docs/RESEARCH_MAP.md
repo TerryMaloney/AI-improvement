@@ -12,6 +12,15 @@ This repository should distinguish five levels of claim at all times:
 4. **Hypothesis** — worth testing; not evidence.
 5. **Engineering idea** — build only when an upstream hypothesis earns it.
 
+## Detailed experimental ordering
+
+See [`docs/EXPERIMENTAL_PROGRAM_2026-08-29.md`](EXPERIMENTAL_PROGRAM_2026-08-29.md) for the dependency-ordered experiment program, branch points, interaction tests, alternative-explanation protocol, and promotion ladder for provisional findings.
+
+Related research branches:
+- [`docs/EPISTEMIC_SYSTEMS_PRIOR_ART_MAP_2026-08-29.md`](EPISTEMIC_SYSTEMS_PRIOR_ART_MAP_2026-08-29.md)
+- [`docs/PERSISTENT_SELF_IDENTITY_RESEARCH_MAP_2026-08-29.md`](PERSISTENT_SELF_IDENTITY_RESEARCH_MAP_2026-08-29.md)
+- [`docs/PRIOR_ART_AND_DESIGN_SIGNALS_2026-08-29.md`](PRIOR_ART_AND_DESIGN_SIGNALS_2026-08-29.md)
+
 ## Program structure
 
 ### Stage 0 — Validate the laboratory
@@ -110,3 +119,4 @@ Do not commercialize first. Use the system internally on useful work and generat
 - Judged effects must remain separated from deterministic effects when the measurement process can itself create arm differences.
 - Procedure improvements must eventually generalize to unseen tasks.
 - Real execution evidence outranks a model judging another model’s usefulness.
+- An interesting result is a signal to investigate, not permission to call a mechanism verified.
