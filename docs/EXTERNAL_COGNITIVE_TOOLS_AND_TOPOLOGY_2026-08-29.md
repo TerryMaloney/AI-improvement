@@ -275,3 +275,37 @@ C. ledger + explicit dependency graph
 Then test whether C improves tasks where relational paths, contradiction, provenance, or stale-state revision matter.
 
 Only if graph structure earns value should learned spatial topology be tested.
+
+
+## Mandatory manual-action alert protocol
+
+The user may skim or not read every research message in full. Therefore any stage that cannot continue without a manual install, authorization, login, hardware action, or local configuration MUST NOT bury that requirement in the body of a report.
+
+### Required behavior
+
+When a manual prerequisite becomes necessary, the very beginning of the agent's response/report must contain a conspicuous block in this form:
+
+**MANUAL SETUP REQUIRED BEFORE CONTINUING**
+
+**What Terry needs to do:** <specific action>
+
+**Why it is required now:** <one sentence>
+
+**Do not continue this experimental stage until this is complete.**
+
+Only after that block may the normal report continue.
+
+If setup is optional rather than blocking, label it **OPTIONAL MANUAL SETUP** instead. Never present an optional setup as blocking.
+
+### Known trigger points
+
+- Docker sandbox experiment → check whether Docker Desktop/Engine is installed and running. If not, trigger the mandatory alert.
+- Literal 3D / Blender experiment → check whether Blender is installed and script-accessible. If not, trigger the mandatory alert.
+- Playwright/browser automation → first attempt automated/runtime setup. If browser binaries, permissions, or user action are required, trigger the mandatory alert.
+- External MCP/service/account → trigger the mandatory alert before any required login, authorization, API key, or connection step.
+- Hardware/device experiments → trigger the mandatory alert before any cable, headset, developer-mode, permission, or physical-device action required from Terry.
+- Any future dependency that Claude cannot safely install/configure itself → trigger the same protocol.
+
+### Coordination rule
+
+Before beginning each new experimental stage, inspect its prerequisites. If a manual trigger is reached, stop at the boundary and request the setup explicitly. Do not silently skip the experiment, substitute a weaker tool, or proceed with a materially different environment merely because manual setup has not happened.
