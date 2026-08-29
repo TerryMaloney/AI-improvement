@@ -2,7 +2,7 @@
   "question": "CAN THE EXPERIMENT RUN WITHOUT CHANGING ANY EXPERIMENTAL RULE AFTER SEEING SOLVER RESULTS?",
   "answer": "NO",
   "runnable": false,
-  "passed": 20,
+  "passed": 21,
   "total": 25,
   "blockers": [
     {
@@ -11,13 +11,6 @@
       "status": "FAIL",
       "detail": "no experiments/exp003a_mechanism.yaml",
       "fix": "write the experiment configuration: id, conditions, models, repeats, battery, and the frozen fingerprints it runs against"
-    },
-    {
-      "id": "git_identity",
-      "question": "Can the exact runnable experiment be identified from the repository?",
-      "status": "FAIL",
-      "detail": "10 uncommitted change(s); HEAD c641bce3e51d does not describe what would run",
-      "fix": "commit everything before dispatch so the run has an identity"
     },
     {
       "id": "screens_complete",
@@ -185,9 +178,9 @@
     {
       "id": "git_identity",
       "question": "Can the exact runnable experiment be identified from the repository?",
-      "status": "FAIL",
-      "detail": "10 uncommitted change(s); HEAD c641bce3e51d does not describe what would run",
-      "fix": "commit everything before dispatch so the run has an identity"
+      "status": "PASS",
+      "detail": "clean tree at 8da1b924cd93",
+      "fix": ""
     },
     {
       "id": "screens_complete",
