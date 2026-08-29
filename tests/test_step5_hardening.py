@@ -82,12 +82,19 @@ class TestRoutingScreen:
         assert len(results) == len(BATTERY.questions)
 
     def test_it_detects_the_known_misroutes(self):
-        """FD-12. Recorded as a test so a classifier change that silently fixes
-        or worsens this is visible rather than absorbed."""
+        """FD-12 and FD-14. Recorded as a test so a classifier change that
+        silently fixes or worsens this is visible rather than absorbed.
+
+        L05 left this set at D-prime: its wording changed from "In which year" to
+        "In what year" (J2), which is a one-word surface change that stops the
+        choice-framing pattern firing. Nine misroutes remain, each with a
+        declared disposition checked by `preflight.routing_consistency`.
+        """
         bad = {r.item_id for r in routing_screen(BATTERY) if r.decision == EXCLUDE}
         assert {"R01", "R02", "R03", "R04"} <= bad, "cell R must still be flagged"
-        assert {"L05", "D04", "C02"} <= bad, "the superlative misroutes must still be flagged"
-        assert len(bad) == 10
+        assert {"D04", "C02"} <= bad, "the superlative misroutes must still be flagged"
+        assert "L05" not in bad, "L05 was reworded at D-prime and must now route as declared"
+        assert len(bad) == 9
 
     def test_a_misroute_reason_names_the_directive_that_would_be_delivered(self):
         r = next(x for x in routing_screen(BATTERY) if x.item_id == "R01")
@@ -315,8 +322,12 @@ class TestPreflightFailsClosed:
         r = run()
         assert r["answer"] == "NO"
         ids = {c["id"] for c in r["blockers"]}
-        assert "screens_complete" in ids
-        assert "routing_consistency" in ids
+        assert "screens_complete" in ids, (
+            "the knowledge probe has not run; that must keep the experiment NOT RUNNABLE"
+        )
+        assert "routing_consistency" not in ids, (
+            "D-prime resolved routing: every misroute now carries a verified disposition"
+        )
 
     def test_a_check_that_errors_counts_against_the_verdict(self):
         from lab.preflight import Check, ERROR

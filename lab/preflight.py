@@ -426,18 +426,45 @@ def _separation(ctx) -> Check:
 
 @check("no_solver_contamination", "Has any solver result touched the specification?")
 def _contamination(ctx) -> Check:
+    """Tests for RESULTS, not for structure.
+
+    An earlier version failed if `runs/exp003a/` existed at all, which would have
+    made it impossible to prepare a manifest before dispatch — and preparing the
+    manifest is exactly the pre-dispatch work this preflight is supposed to
+    permit. Worse, checking for a directory is a weaker test than checking for
+    rows: an empty `answers/` proves nothing either way. So the check now counts
+    actual answers, grades and stored answer rows.
+    """
+    import sqlite3
+
     run = REPO_ROOT / "runs" / "exp003a"
     found = []
     if run.exists():
-        for sub in ("answers", "grades", "results.db"):
-            if (run / sub).exists():
-                found.append(str((run / sub).relative_to(REPO_ROOT)))
+        answers = list((run / "answers").glob("*.json")) if (run / "answers").exists() else []
+        grades = list((run / "grades").glob("*.json")) if (run / "grades").exists() else []
+        if answers:
+            found.append(f"{len(answers)} answer file(s)")
+        if grades:
+            found.append(f"{len(grades)} grade file(s)")
+        db = run / "results.db"
+        if db.exists():
+            conn = sqlite3.connect(db)
+            try:
+                n = conn.execute("SELECT COUNT(*) FROM answers").fetchone()[0]
+                if n:
+                    found.append(f"{n} stored answer row(s)")
+            except sqlite3.Error:
+                pass
+            finally:
+                conn.close()
     if found:
         return Check("no_solver_contamination", "", FAIL,
-                     f"solver artefacts already present: {found}",
+                     f"solver results already present: {', '.join(found)}",
                      "the specification must be frozen before results exist, not after")
+    prepared = (run / "manifest.json").exists()
     return Check("no_solver_contamination", "", PASS,
-                 "no exp003a answers, grades or database exist; the specification predates all results")
+                 f"no answers, grades or stored answer rows exist"
+                 + (" (manifest prepared, which is pre-dispatch work)" if prepared else ""))
 
 
 @check("experiment_identity", "Is there a versioned experiment configuration to run?")
@@ -490,24 +517,77 @@ def _screens(ctx) -> Check:
     return Check("screens_complete", "", PASS, "knowledge screen has run on every item")
 
 
-@check("routing_consistency", "Does each item receive the directive its specification predicts about?")
+@check("routing_consistency", "Does every item's routing have a declared, verified disposition?")
 def _routing(ctx) -> Check:
-    from lab.screens import EXCLUDE, routing_screen
+    """The check changed shape at D-prime, and the reason matters.
 
-    bad = [r for r in routing_screen(ctx["battery"]) if r.decision == EXCLUDE]
-    if bad:
-        cells: dict[str, list[str]] = {}
-        for r in bad:
-            cells.setdefault(r.detail["cell"], []).append(r.item_id)
-        return Check(
-            "routing_consistency", "", FAIL,
-            f"{len(bad)}/{len(ctx['battery'].questions)} items route to a different claim type "
-            f"than declared: " + "; ".join(f"{k}: {v}" for k, v in sorted(cells.items())),
-            "decide, in writing and before dispatch, between (a) pre-registered route overrides so "
-            "each arm delivers the directive its spec predicts about, (b) rewording the items, or "
-            "(c) excluding them. Whichever is chosen changes the estimand and must be recorded.",
-        )
-    return Check("routing_consistency", "", PASS, "every item routes to its declared claim type")
+    It used to demand that no item misroute. That is the wrong requirement: the
+    classifier's failures are a property of the system under study, and demanding
+    their absence would mean either rewriting items to suit the instrument or
+    deleting the cells where the failures live. What the experiment actually
+    needs is that every misroute has a DECLARED disposition and that the
+    declaration matches reality.
+    """
+    from datetime import date
+
+    from lab.routing import agrees
+    from epistemic.registry import seed_registry
+
+    registry = seed_registry()
+    asked_on = date.fromisoformat(ctx["battery"].asked_as_of)
+    problems, tally = [], {}
+    for q in ctx["battery"].questions:
+        disposition = q.spec["routing_disposition"]
+        tally[disposition] = tally.get(disposition, 0) + 1
+        matches = agrees(q.text, q.expected_claim_type, asked_on, registry)
+        if disposition == "agrees" and not matches:
+            problems.append(f"{q.id}: declared `agrees` but routes differently")
+        if disposition == "crossed" and matches:
+            problems.append(
+                f"{q.id}: declared `crossed` but the classifier already agrees, so both arms "
+                f"receive byte-identical blocks and the trials buy nothing"
+            )
+        if disposition == "accepted_as_system" and matches:
+            problems.append(
+                f"{q.id}: declared `accepted_as_system` but the classifier agrees, so the "
+                f"label misdescribes what is delivered"
+            )
+    if problems:
+        return Check("routing_consistency", "", FAIL, "; ".join(problems[:5]),
+                     "correct the declaration or the design; a disposition that does not "
+                     "match reality is worse than none")
+    return Check("routing_consistency", "", PASS,
+                 "every item's routing disposition matches the classifier's actual behaviour: "
+                 + ", ".join(f"{k}={v}" for k, v in sorted(tally.items())))
+
+
+@check("estimand_separation", "Can a routed result ever be reported as an intended one?")
+def _estimands(ctx) -> Check:
+    problems = []
+    for q in ctx["battery"].questions:
+        est = set(q.spec["estimand"])
+        conds = set(q.spec["conditions"])
+        crossed = {"directive_routed", "directive_intended"} <= conds
+        if {"theta_system", "theta_directive"} <= est and not crossed:
+            problems.append(
+                f"{q.id}: claims both theta_system and theta_directive without running both "
+                f"arms — one of them is not measured"
+            )
+        if "theta_routing" in est and not crossed:
+            problems.append(f"{q.id}: claims theta_routing without both arms")
+        if crossed and not {"placebo_routed", "placebo_intended"} <= conds:
+            problems.append(
+                f"{q.id}: crosses the directives without a matched placebo for each block, so "
+                f"the routing contrast is confounded with a 68-word length difference"
+            )
+    if problems:
+        return Check("estimand_separation", "", FAIL, "; ".join(problems[:4]),
+                     "an estimand may only be declared where the arms that identify it are run")
+    crossed_items = [q.id for q in ctx["battery"].questions
+                     if "theta_routing" in q.spec["estimand"]]
+    return Check("estimand_separation", "", PASS,
+                 f"theta_system and theta_directive are only claimed together where both arms "
+                 f"run, each with its own matched placebo: {crossed_items}")
 
 
 @check("power_recomputed", "Is the power statement recomputed for the surviving items?")
@@ -563,6 +643,239 @@ def _confounds(ctx) -> Check:
 
 
 # --------------------------------------------------------------------------
+# Anti-vacuity: "the field exists" is not "the field means something"
+# --------------------------------------------------------------------------
+#
+# Every check above can pass for the wrong reason. A screen passes when no items
+# were presented to it. A routing test passes when no routed trials were
+# generated. A statistical guard passes when its branch was never exercised. An
+# identity check passes without ever opening the thing it names. These checks
+# exist to catch that class of vacuous pass, and they are deliberately phrased as
+# "did this actually evaluate something", not "did it return true".
+
+def _injected_block(prompt: str) -> str | None:
+    """Just the guidance block, not the harness wrapper around it.
+
+    Found by this check failing on its first run: scanning the whole prompt
+    prefix flagged every placebo for carrying "source" and "abstain", which come
+    from the RESPONSE SCHEMA and the closed-book block — the harness wrapper that
+    is IDENTICAL in every condition. A check that fires on text common to all
+    arms is testing the wrapper, not the treatment.
+    """
+    marker = "HANDLING GUIDANCE FOR THIS QUESTION"
+    if marker not in prompt:
+        return None
+    after = prompt.split(marker, 1)[1]
+    after = after.split("-" * 20, 1)[1] if "-" * 20 in after else after
+    return after.split("THE QUESTION", 1)[0].rstrip("- \n")
+
+
+def _manifest() -> dict | None:
+    path = REPO_ROOT / "runs" / "exp003a" / "manifest.json"
+    return json.loads(path.read_text()) if path.exists() else None
+
+
+@check("nonvacuous_manifest", "Does a prepared manifest exist with the trials the plan requires?")
+def _nonvacuous_manifest(ctx) -> Check:
+    m = _manifest()
+    if m is None:
+        return Check("nonvacuous_manifest", "", FAIL, "no runs/exp003a/manifest.json",
+                     "run `python -m lab prepare exp003a_mechanism`")
+    if not m.get("trial_count"):
+        return Check("nonvacuous_manifest", "", FAIL, "manifest contains zero trials",
+                     "an empty manifest passes every downstream check vacuously")
+    expected = {"L": 120, "R": 100, "D": 60, "U": 60, "N": 36, "C": 12}
+    if m["by_cell"] != expected:
+        return Check("nonvacuous_manifest", "", FAIL,
+                     f"per-cell counts {m['by_cell']} do not match the plan {expected}",
+                     "the generated manifest is the authority; correct the config or the plan")
+    if m["trial_count"] != sum(expected.values()):
+        return Check("nonvacuous_manifest", "", FAIL,
+                     f"trial_count {m['trial_count']} != {sum(expected.values())}", "as above")
+    return Check("nonvacuous_manifest", "", PASS,
+                 f"{m['trial_count']} trials, {m['dispatch_count']} dispatches, "
+                 f"per-cell counts match the plan exactly")
+
+
+@check("nonvacuous_crossed_arms", "Do the crossed arms actually deliver different text?")
+def _nonvacuous_crossed(ctx) -> Check:
+    """The failure this catches: `directive_routed` and `directive_intended`
+    exist as names, generate cleanly, and produce identical prompts — so the
+    routing contrast is structurally present and empirically empty."""
+    m = _manifest()
+    if m is None:
+        return Check("nonvacuous_crossed_arms", "", FAIL, "no manifest", "prepare first")
+    by_item: dict[str, dict[str, str]] = {}
+    for t in m["trials"]:
+        by_item.setdefault(t["question_id"], {})[t["condition"]] = t["prompt"]
+    crossed = [q.id for q in ctx["battery"].questions
+               if q.spec["routing_disposition"] == "crossed" and q.id in by_item]
+    if not crossed:
+        return Check("nonvacuous_crossed_arms", "", FAIL,
+                     "no crossed items appear in the manifest",
+                     "a routing test that generated no routed trials proves nothing")
+    identical, placebo_identical = [], []
+    for qid in crossed:
+        arms = by_item[qid]
+        if arms.get("directive_routed") == arms.get("directive_intended"):
+            identical.append(qid)
+        if arms.get("placebo_routed") == arms.get("placebo_intended"):
+            placebo_identical.append(qid)
+    if identical:
+        return Check("nonvacuous_crossed_arms", "", FAIL,
+                     f"routed and intended prompts are identical on {identical}",
+                     "the contrast is empty; check route_mode is reaching build_prompt")
+    if placebo_identical:
+        return Check("nonvacuous_crossed_arms", "", FAIL,
+                     f"the two placebos are identical on {placebo_identical}",
+                     "each placebo must be matched to its own block, or one arm is uncontrolled")
+    return Check("nonvacuous_crossed_arms", "", PASS,
+                 f"on all {len(crossed)} crossed items the routed and intended directives differ, "
+                 f"and each has its own distinct matched placebo")
+
+
+@check("nonvacuous_treatment_text", "Do the generated blocks contain what they claim?")
+def _nonvacuous_treatment(ctx) -> Check:
+    """Treatment validation that opens the generated text, rather than checking
+    that a generator function exists."""
+    from lab.placebo import FORBIDDEN
+    from lab.routing import intended_route
+    from datetime import date
+    from epistemic.registry import seed_registry
+
+    m = _manifest()
+    if m is None:
+        return Check("nonvacuous_treatment_text", "", FAIL, "no manifest", "prepare first")
+    registry = seed_registry()
+    asked_on = date.fromisoformat(ctx["battery"].asked_as_of)
+    problems, checked = [], 0
+    for t in m["trials"]:
+        q = ctx["battery"].by_id(t["question_id"])
+        block = _injected_block(t["prompt"])
+        if t["block"] == "placebo":
+            checked += 1
+            if block is None:
+                problems.append(f"{t['trial_id']}: declared a placebo but no block was injected")
+                continue
+            leaked = [w for w in FORBIDDEN if w in block.lower()]
+            if leaked:
+                problems.append(f"{t['trial_id']}: placebo carries {leaked[:2]}")
+        elif t["block"] == "directive" and t["route_mode"] == "intended":
+            checked += 1
+            want = intended_route(q.text, q.expected_claim_type, asked_on, registry)
+            if f"CLAIM TYPE: {want.claim_type.value}" not in t["prompt"]:
+                problems.append(f"{t['trial_id']}: intended arm does not carry {want.claim_type.value}")
+    if not checked:
+        return Check("nonvacuous_treatment_text", "", FAIL,
+                     "no placebo or intended-directive prompts were examined",
+                     "a treatment validation that inspected nothing is not a validation")
+    if problems:
+        return Check("nonvacuous_treatment_text", "", FAIL, "; ".join(problems[:4]),
+                     "fix the generator")
+    return Check("nonvacuous_treatment_text", "", PASS,
+                 f"{checked} generated blocks opened and verified: placebos carry no mechanism "
+                 f"vocabulary, intended arms carry the intended claim type")
+
+
+@check("nonvacuous_screen_input", "Was the screen actually given items to judge?")
+def _nonvacuous_screen(ctx) -> Check:
+    from lab.screens import knowledge_screen
+
+    results = knowledge_screen(ctx["battery"], None)
+    if len(results) != len(ctx["battery"].questions):
+        return Check("nonvacuous_screen_input", "", FAIL,
+                     f"screen returned {len(results)} decisions for "
+                     f"{len(ctx['battery'].questions)} items",
+                     "a screen that skips items passes vacuously for those items")
+    return Check("nonvacuous_screen_input", "", PASS,
+                 f"the screen returns a decision for all {len(results)} items; it currently "
+                 f"returns NOT_SCREENED for all of them, which BLOCKS rather than passes")
+
+
+@check("artifact_identity_verified", "Does the config's declared identity match what is on disk?")
+def _identity_verified(ctx) -> Check:
+    """Opens every artefact the configuration names, instead of trusting that a
+    `runs_against:` block exists."""
+    import yaml
+
+    cfg_path = REPO_ROOT / "experiments" / "exp003a_mechanism.yaml"
+    if not cfg_path.exists():
+        return Check("artifact_identity_verified", "", FAIL, "no config", "write it")
+    raw = yaml.safe_load(cfg_path.read_text())
+    against = raw.get("runs_against") or {}
+    problems = []
+    if against.get("battery") != ctx["battery"].id:
+        problems.append(f"battery {against.get('battery')!r} != {ctx['battery'].id!r}")
+    if against.get("egress_probe") != ctx["egress"].probed_at[:10]:
+        problems.append(
+            f"egress probe date {against.get('egress_probe')!r} != {ctx['egress'].probed_at[:10]!r}")
+    from lab.scout import load_scout
+
+    scout = load_scout()
+    if against.get("retrieval_scout") != scout["probed_at"]:
+        problems.append(
+            f"scout date {against.get('retrieval_scout')!r} != {scout['probed_at']!r}")
+    if not (REPO_ROOT / (against.get("frozen_decisions") or "")).exists():
+        problems.append("frozen_decisions path does not exist")
+    if problems:
+        return Check("artifact_identity_verified", "", FAIL, "; ".join(problems),
+                     "the configuration must name the artefacts it actually runs against")
+    return Check("artifact_identity_verified", "", PASS,
+                 "battery id, egress probe date, scout date and frozen-decisions path all "
+                 "opened and matched")
+
+
+@check("dispatch_class_isolation", "Can screening data reach a primary analysis?")
+def _class_isolation(ctx) -> Check:
+    import sqlite3
+
+    db = REPO_ROOT / "runs" / "exp003a" / "results.db"
+    if not db.exists():
+        return Check("dispatch_class_isolation", "", FAIL, "no prepared experiment database",
+                     "prepare the experiment first")
+    from lab.store import Store
+
+    store = Store(db)
+    classes = store.dispatch_classes()
+    store.close()
+    if not classes:
+        return Check("dispatch_class_isolation", "", FAIL, "no trials carry a dispatch class",
+                     "the class must be assigned at preparation time, not inferred later")
+    foreign = {k: v for k, v in classes.items() if k != "solver_experiment"}
+    if foreign:
+        return Check("dispatch_class_isolation", "", FAIL,
+                     f"the primary database contains non-experimental trials: {foreign}",
+                     "screening and qualification dispatches live in their own run directory")
+    probe_dir = REPO_ROOT / "runs" / "exp003a_probe"
+    return Check("dispatch_class_isolation", "", PASS,
+                 f"primary database holds {classes['solver_experiment']} trials, all "
+                 f"`solver_experiment`; the probe has its own run directory "
+                 f"({'prepared' if probe_dir.exists() else 'not yet prepared'})")
+
+
+@check("dispatch_order_reproducible", "Does the frozen seed reproduce the same order?")
+def _order(ctx) -> Check:
+    m = _manifest()
+    if m is None:
+        return Check("dispatch_order_reproducible", "", FAIL, "no manifest", "prepare first")
+    if m.get("dispatch_seed") is None:
+        return Check("dispatch_order_reproducible", "", FAIL, "no dispatch seed recorded",
+                     "a paired within-item design needs its order fixed and reproducible")
+    import random
+
+    ids = sorted(t["trial_id"] for t in m["trials"])
+    random.Random(m["dispatch_seed"]).shuffle(ids)
+    actual = [t["trial_id"] for t in sorted(m["trials"], key=lambda t: t["dispatch_position"])]
+    if ids != actual:
+        return Check("dispatch_order_reproducible", "", FAIL,
+                     "recomputing the order from the recorded seed does not reproduce the manifest",
+                     "the order must be derivable from the frozen configuration alone")
+    return Check("dispatch_order_reproducible", "", PASS,
+                 f"seed {m['dispatch_seed']} reproduces the manifest order exactly; "
+                 f"{len(actual)} positions verified")
+
+
+# --------------------------------------------------------------------------
 # Runner
 # --------------------------------------------------------------------------
 
@@ -593,6 +906,20 @@ def run() -> dict:
             result = Check(fn._cid, fn._question, ERROR, f"{type(e).__name__}: {e}",
                            "a check that cannot run counts against the verdict")
         checks.append(result)
+
+    # Meta-check: a preflight that passes because a check never ran is the
+    # exact failure this whole layer exists to prevent.
+    if len(checks) != len(_CHECKS):
+        checks.append(Check(
+            "all_checks_ran", "Did every registered check actually execute?", FAIL,
+            f"{len(checks)} results for {len(_CHECKS)} registered checks",
+            "a skipped check counts against the verdict",
+        ))
+    else:
+        checks.append(Check(
+            "all_checks_ran", "Did every registered check actually execute?", PASS,
+            f"all {len(_CHECKS)} registered checks executed and returned a status", "",
+        ))
 
     runnable = all(c.ok for c in checks)
     return {

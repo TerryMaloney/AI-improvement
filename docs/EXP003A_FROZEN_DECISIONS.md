@@ -35,8 +35,8 @@ them while looking like it did not.
 Recorded so that an edit after freezing is visible rather than silent. The
 preflight recomputes each and FAILS on a mismatch — it does not warn.
 
-    TREATMENT_FREEZE: ec82dca23261c6c8c85a8612a5c667606246c1a135b7f0c0ab90e85bf179a97b
-    SCORING_FREEZE: 8c56840fda131883ddd36e1b84250027817b58663979b6ba6384bc40fcf8a7ac
+    TREATMENT_FREEZE: 4623768955413fa4f35fdefc0fed0fcc8afe498036bea1884d83a612cd68fbc5
+    SCORING_FREEZE: 1907431bee938fdc65ebb9846d269fcd832aacf3f80a190668d0c1e4d31ee9ec
     JUDGE_FREEZE: 394088980cee3220c1aee821a7cac5b0f74dd7a9319dc553979ec02a6a52a71b
 
 `TREATMENT_FREEZE` covers the three condition texts plus `ELABORATION_LEAD`, the
@@ -504,23 +504,38 @@ carrying an instruction to work step by step and nothing else. Then:
 
 Cost: 4 items × k=5 = **20 solver trials**. The text is written and frozen in
 `lab/treatments.py` (`build_elaboration_only`), so adopting it is a
-configuration change rather than a rewrite. It is deliberately **not** in
-`diagnostic_v1`'s conditions: adding it changes cell R's estimand and its trial
-budget, which is the operator's decision.
+configuration change rather than a rewrite.
+
+**DECIDED (J5): deferred to a follow-up experiment, NOT added to exp003a.** Its
+whole purpose is to decompose the estimand, so adding it would change the
+estimand — which is the condition under which it was to be excluded. The cost is
+paid entirely in claim strength, and the constrained claim is written out in
+`docs/EXP003A_DECISION_PACKET.md` §8.7 so nothing is lost silently.
 
 Note the deliberate asymmetry with FD-5. The placebo may not instruct on length,
 because it exists to hold that variable still. This arm exists to manipulate it.
 Anyone later "fixing" the placebo to match this arm would destroy both.
 
-**Smallest change that BOUNDS it without new trials** — free, and adopted now:
+**There is no free bound. The covariate is WITHDRAWN** (J4, adopted).
 
-Response tokens are already recorded per dispatch (step 3). Every cell-L and
-cell-R contrast is reported with a **response-token covariate**, and any contrast
-whose effect is absorbed by it is reported as NOT ESTABLISHED as a reasoning
-effect. This is strictly weaker than the arm, and the reason must be stated
-wherever it is used: response length is a **mediator** of the treatment, not a
-pre-treatment covariate, so conditioning on it can under-correct or over-correct
-and cannot identify the direct effect. It bounds; it does not measure.
+Response length is a post-treatment mediator, and item difficulty causes both it
+and the outcome. Conditioning on it (a) removes the portion of the total effect
+that flows through it, changing the estimand from a total effect to a controlled
+direct effect identified only under assumptions that do not hold here, and (b)
+opens a collider path `Z -> L <- U -> S`, which can bias the estimate **away
+from** zero as easily as toward it. An adjusted estimate would therefore be not a
+weak bound but a biased one.
+
+Response length is instead reported as a **manipulation check**: did the
+directive change it, and by how much. A directive that did not move response
+length cannot have acted through response length, which is informative and costs
+nothing. Two sentences that must never be run together in a report:
+
+* "the treatment caused longer responses" — supported by the manipulation check;
+* "longer responses caused the treatment effect" — **not** supported, and not
+  inferable from any measurement in this experiment.
+
+Decomposition requires exogenous manipulation of length, not adjustment for it.
 
 ### NOT separated — confound 2: self-correction versus a second pass
 
@@ -601,3 +616,120 @@ Whichever option is chosen, the routing accuracy figure is published. A layer
 that routes 60% of questions correctly cannot deliver more than 60% of whatever
 its directives are worth, and that is a finding about the epistemic layer
 obtained for zero solver dispatches.
+
+---
+
+## FD-13 — The intended arm's confidence figure is constructed, and visible
+
+**Bucket:** FROZEN (touches treatment). Found while implementing D′.
+
+The directive block's header prints `CLAIM TYPE: X (classifier confidence N)`. On
+a cell-R item the routed arm prints `EMPIRICAL … 0.60`; the intended arm prints
+`DETERMINISTIC … 0.90`.
+
+That 0.90 is constructed, and it is constructed to a rule rather than invented:
+`0.9` is what this classifier assigns when exactly one type signal fires, so it
+is what the router **would have produced** had it classified the item correctly —
+which is precisely what the intended arm represents.
+
+**It is nonetheless a visible one-token difference between the two arms beyond
+the directive text.** It is recorded here rather than left for a reader to
+notice. It is not treated as a confound requiring a halt: the two arms already
+differ by their entire directive body, each has its own length- and
+format-matched placebo, and a two-character numeric difference inside a block
+that differs in 68 words is not the channel a result would travel down. Any
+cell-R report cites FD-13 alongside FD-1.
+
+---
+
+## FD-14 — D1 resolved: option D′ (J1, J2, J3)
+
+**Bucket:** FROZEN. Supersedes FD-12's open status.
+
+**J1 — decision.** Option **D′**: reword L05; accept the routed directive in cell
+N with the estimand relabelled θ_system; cross routed against intended in cell R
+only, each with its own matched placebo. **388 trials, verified from the
+generated manifest** (`runs/exp003a/manifest.json`), not from arithmetic.
+
+Option D as first costed (+34 trials) was **rejected on implementation**: the
+intended directive is 68 words shorter than the routed one on every cell-R item
+(211 → 143, 5 bullets → 4, budget 2 → 0), so a single placebo would have left one
+arm uncontrolled and put E4 and E5 back into the routing contrast. Two placebos
+cost +40 instead of +34.
+
+**J2 — L05 reworded**, "In which year" → "In what year". `which … first` matched
+the classifier's choice-framing pattern and routed the item NORMATIVE at 0.90.
+The question, answer, ground truth, difficulty and construct are unchanged. L05
+now routes EMPIRICAL as declared.
+
+**J3 — cell-R rewrites rejected, recorded so the option is not revisited.**
+Tested against the real classifier: R01 routes correctly only as an explicit
+symbolic recipe that **states the decomposition** the item exists to measure;
+R03 and R04 need a task-type cue prefix that moves part of the treatment into the
+stimulus; **R02 has no rewrite at all** — "March" and "Sunday" trip the
+proper-noun veto, and a calendar question cannot drop month names. Rewriting
+three of four items in three different ways, each changing the construct by a
+different unmeasured amount, would leave a cell whose items are no longer
+comparable to one another.
+
+**J7 — routing accuracy is unmeasured.** The 15/25 agreement figure is agreement
+on a battery authored for specific diagnostic properties. It is **not** an
+estimate of routing accuracy on any task distribution and may not be cited as
+one. What generalises is the two identified failure modes — word problems never
+reach DETERMINISTIC, and temporal superlatives route NORMATIVE at high confidence
+— not the rate.
+
+---
+
+## FD-15 — Re-freeze after the D′ amendment
+
+**Bucket:** FREE (bookkeeping), recorded because a freeze that moves silently is
+no freeze.
+
+`TREATMENT_FREEZE` and `SCORING_FREEZE` both changed, deliberately, as part of
+implementing D′:
+
+* **TREATMENT_FREEZE** — `DISPATCH_COUNT` gained the four cell-R arm names
+  (`placebo_routed`, `placebo_intended`, `directive_routed`, `directive_intended`,
+  all single-dispatch) and the two retired names `verified` / `verified_flat`,
+  which were single-dispatch and are declared so that exp001 and exp002
+  configurations still load and cost correctly. No treatment TEXT changed.
+* **SCORING_FREEZE** — the battery changed: L05's wording (J2), cell R's
+  conditions, expected retrieval states and predictions, and the new `estimand`
+  and `routing_disposition` fields on all 25 items. No answer key entry changed.
+
+Both are re-recorded below against the post-amendment state. The old values are
+retained here so the amendment is auditable rather than erased.
+
+    SUPERSEDED_TREATMENT_FREEZE: ec82dca23261c6c8c85a8612a5c667606246c1a135b7f0c0ab90e85bf179a97b
+    SUPERSEDED_SCORING_FREEZE: 8c56840fda13...
+
+---
+
+## FD-16 — C3 frozen (J8)
+
+**Bucket:** FROZEN as a limitation. No independence is manufactured.
+
+| Quantity | Value |
+|---|---|
+| Items in `diagnostic_v1` | 25 |
+| Authored by the same process that authored the mechanism | **25 (100%)** |
+| Drawn from an external source | **0** |
+| Authored by a party blind to the mechanism | **0** |
+| Task axes that vary across the battery | 6 of 6 |
+| Task axes collinear with `claim_type` | 0 of 6 |
+
+The last two rows establish that the axes carry information the router does not
+already have. They establish **nothing** about independence from the mechanism's
+design: independence is a property of the authoring process, and that process was
+not independent. Axis variation and a passed collinearity check may never be
+reported as evidence of independence.
+
+Four routes to independence were considered and rejected (decision packet §5.2):
+an external benchmark subset is a forbidden capability addition; no blind author
+is available; programmatic generation relocates the bias into the generator while
+adding an appearance of objectivity; and `factual_v1` was itself authored with
+the layer's claim types in mind. The remedy — a blind- or externally-authored
+battery, pre-registered before anyone sees exp003a's results — belongs to exp004.
+
+These counts appear in any exp003a result, in the result's own words.

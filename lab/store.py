@@ -44,6 +44,19 @@ _TRIAL_COLUMNS = [
     ("routed_claim_type", "TEXT"),
     ("route_json", "TEXT"),
     ("prompt", "TEXT NOT NULL"),
+    # Every dispatch is classified BEFORE it is generated, and the class is
+    # stored with the trial. A screening dispatch and an experimental dispatch
+    # can be byte-identical prompts; only this column tells them apart, and it is
+    # what stops a screen's data being reused as the experiment's control.
+    ("dispatch_class", "TEXT"),
+    # The router as an explicit experimental component. `route_mode` says whether
+    # this trial received the directive the classifier selected (`routed`, the
+    # deployed behaviour) or the one its specification predicts about
+    # (`intended`). Conflating the two is the error the whole D-prime design
+    # exists to prevent, so both types travel with every row.
+    ("route_mode", "TEXT"),
+    ("intended_claim_type", "TEXT"),
+    ("block_kind", "TEXT"),
     ("created_at", "TEXT NOT NULL"),
 ]
 
@@ -149,6 +162,10 @@ class TrialRow:
     routed_claim_type: str | None
     route_json: str | None
     prompt: str
+    dispatch_class: str = "solver_experiment"
+    route_mode: str = "routed"
+    block_kind: str | None = None
+    intended_claim_type: str | None = None
 
 
 class Store:
@@ -235,7 +252,10 @@ class Store:
                 "question_id": t.question_id, "battery_id": t.battery_id,
                 "condition": t.condition, "model": t.model, "repeat": t.repeat,
                 "agent": t.agent, "routed_claim_type": t.routed_claim_type,
-                "route_json": t.route_json, "prompt": t.prompt, "created_at": _now(),
+                "route_json": t.route_json, "prompt": t.prompt,
+                "dispatch_class": t.dispatch_class, "route_mode": t.route_mode,
+                "block_kind": t.block_kind, "intended_claim_type": t.intended_claim_type,
+                "created_at": _now(),
             })
 
     def save_answer(
@@ -347,6 +367,23 @@ class Store:
 
     def graded_ids(self) -> set[str]:
         return {r["trial_id"] for r in self.conn.execute("SELECT trial_id FROM grades")}
+
+    def dispatch_classes(self) -> dict[str, int]:
+        """How many trials of each dispatch class this database holds.
+
+        Read by the preflight and by the report. A primary analysis over a
+        database containing anything other than `solver_experiment` rows is a
+        contaminated analysis, and the caller is expected to refuse rather than
+        filter — filtering silently would make the contamination invisible.
+        """
+        if "dispatch_class" not in self._cols["trials"]:
+            return {}
+        return {
+            r["dispatch_class"] or "unclassified": r["n"]
+            for r in self.conn.execute(
+                "SELECT dispatch_class, COUNT(*) AS n FROM trials GROUP BY dispatch_class"
+            )
+        }
 
     def joined(self) -> list[sqlite3.Row]:
         """Every trial with its answer and grade, if present.

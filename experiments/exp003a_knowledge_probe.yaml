@@ -1,0 +1,56 @@
+# ============================================================================
+# exp003a knowledge probe — SCREENING, not evidence.
+# ============================================================================
+#
+# Every trial here is `dispatch_class: screen`, stored in its own run directory,
+# and may NEVER enter a primary analysis. The rule that matters most:
+#
+#   The probe's baseline results may not be reused as the experiment's baseline
+#   arm.
+#
+# The probe SELECTS items on their baseline performance. Reusing that same data
+# as the experiment's control would condition the control on the selection
+# criterion and bias every contrast through regression to the mean. exp003a
+# dispatches its own `baseline` arm, independently, after selection — which is
+# why `runs/exp003a/manifest.json` contains baseline trials of its own.
+#
+# Thresholds were frozen in lab/screens.py at commit 8da1b92, before this file
+# existed and before any probe result existed: ceiling >= 0.90, floor <= 0.10,
+# k = 5. Running the probe cannot change them.
+
+id: exp003a_probe
+title: "exp003a knowledge probe — ceiling/floor screen"
+hypothesis: >
+  Not a hypothesis. This is a screen: it measures each item's baseline
+  correctness so that ceiling and floor items can be excluded before the
+  experiment runs. It has no treatment arm and therefore cannot favour the
+  mechanism.
+
+batteries: [diagnostic_v1]
+models: [haiku]
+repeats: 5
+asked_as_of: "2026-08-28"
+use_item_conditions: false
+dispatch_seed: 20260829
+
+# The same exclusions the experiment carries: an item the experiment will not
+# run does not need screening.
+exclude_items:
+  D01: "excluded from exp003a by the frozen retrieval scout; not screened"
+  D02: "excluded from exp003a by the frozen retrieval scout; not screened"
+
+conditions:
+  - name: baseline
+    agent: solver-closed
+    block: none
+    allow_search: false
+    dispatch_class: screen
+    description: >
+      The question alone, no directive, no placebo, no tools. The only arm the
+      probe has — which is why it cannot compare treatments and cannot select
+      items where the mechanism happens to help.
+
+notes: >
+  23 items x 1 condition x k=5 = 115 screening dispatches. Results are written to
+  runs/exp003a_probe/ and summarised into runs/screens/knowledge_probe.json.
+  They are excluded from every primary analysis by dispatch_class.

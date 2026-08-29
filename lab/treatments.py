@@ -50,10 +50,21 @@ DISPATCH_COUNT: dict[str, int] = {
     "A_only": 1,
     "directive_only": 1,
     "closed_book": 1,
+    # D-prime cell-R arms; all single dispatch.
+    "placebo_routed": 1,
+    "placebo_intended": 1,
+    "directive_routed": 1,
+    "directive_intended": 1,
     "search_only": 1,
     "search_directive": 1,
     "search_selfcheck": 2,
     "search_independent": 3,
+    # Retired names, retained so exp001 and exp002 configurations still load and
+    # cost correctly. Both were single-dispatch; declaring them is a statement of
+    # fact, not a relaxation of the guard, which exists to stop a MULTI-dispatch
+    # arm being costed as one.
+    "verified": 1,
+    "verified_flat": 1,
 }
 
 MULTI_DISPATCH = frozenset({"search_selfcheck", "search_independent"})

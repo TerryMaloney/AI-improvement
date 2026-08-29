@@ -36,8 +36,13 @@ BATTERY = load_battery("diagnostic_v1")
 AS_OF = date(2026, 8, 28)
 _REG = seed_registry()
 
-# Only cells whose conditions actually inject a directive or the routed framing.
-ROUTE_DEPENDENT = {"directive_only", "search_directive", "A_only"}
+# Conditions that make the routed claim type causally relevant. Cell R's crossed
+# arms joined this set at D-prime; without them the check would pass vacuously
+# for the one cell where routing is now measured rather than accepted.
+ROUTE_DEPENDENT = {
+    "directive_only", "search_directive", "A_only",
+    "directive_routed", "directive_intended",
+}
 
 
 def _triple(qid):

@@ -283,12 +283,43 @@ R → 3 items (−15). `A_only` and k≥3 are **not** trim levers (D1, §6).
 | Cell N, k=3 | 4 items | a difference of ≥1 observed tool call per item | sub-call differences |
 | Cell C, k=3 | 2 items | tripwire only — is search ≫ closed, yes/no | nothing else |
 
-**Restated plainly:** exp003 is powered to detect a mechanism that changes an
-individual item's outcome rate by roughly 0.4 or more. It is **not** powered to
-detect a uniform few-point battery-wide shift, and the battery mean is not a
-primary outcome. If the effect we care about is smaller than that, this design
-cannot see it and the design must change before solver calls are spent — that
-decision point is here, in this section, not after the results.
+**SUPERSEDED (J6).** The paragraph that stood here claimed the design was
+"powered to detect a mechanism that changes an individual item's outcome rate by
+roughly 0.4 or more". That is false as a statistical claim and is replaced by the
+following, which separates four things the original conflated.
+
+**Effect-size resolution.** The design *displays* per-item shifts of about 0.2 and
+above. This is a descriptive property of k=5 and says nothing about significance.
+
+**Statistical significance.** At k=5 versus k=5, Fisher one-sided: a 0.4 shift
+gives p ≈ 0.22–0.26; **p < 0.05 requires a shift of 0.8** (4/5 vs 0/5, or 5/5 vs
+1/5, both p = 0.024). The figure formerly called the MDE is a detection
+threshold, not a significance threshold.
+
+**Uncertainty.** Clopper–Pearson 95% intervals at k=5: 0/5 → [0.00, 0.52];
+2/5 → [0.05, 0.85]; 5/5 → [0.48, 1.00]. **No per-item rate is known to better
+than about ±0.4**, and ±0.45 at k=3. Every per-item figure ships with its interval.
+
+**Direction consistency.** Sign test across a cell's items, null p = 0.5 per item.
+Best achievable p with unanimous agreement: 3 items → 0.125; 4 → 0.0625;
+5 → 0.031; 6 → 0.016. **Cells with fewer than five items cannot reach p < 0.05
+even if every item agrees.**
+
+**Confirmatory versus descriptive.** Cell L (6 items) is the **only** cell that
+can produce a confirmatory result, and only if 5 or 6 items agree. Cells R (4),
+D (3), U (4), N (4) and C (2) are **descriptive**: they report effect sizes,
+per-item rates with intervals, and direction counts, and their language must be
+"on these items, X was higher than Y by Δ", never "X improves Y". Anything not
+named here — including θ_routing, the cell-U mode distribution, and every
+cross-cell comparison — is **exploratory**, labelled as such, and generates
+hypotheses rather than conclusions.
+
+**If item counts fall further.** Pre-committed: if cell L drops below five items,
+exp003a has **no confirmatory cell at all**, and that is stated in the report's
+first paragraph rather than discovered in its discussion. If cell C drops to zero,
+the gate fails and no search result in the run may be interpreted.
+
+**The battery mean is not an outcome** and is not reported.
 
 ---
 

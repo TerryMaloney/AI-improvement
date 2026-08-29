@@ -124,6 +124,30 @@ REQUIRED_FIELDS = (
     "predictions",              # plan §5
     "discriminator",            # plan §5
     "evidence_tier",            # the tier wall
+    "estimand",                 # which causal quantities this item can inform
+    "routing_disposition",      # how this item's routing is handled, explicitly
+)
+
+# The causal quantities an item may contribute to. Declared per item so a result
+# can never be attributed to an estimand the item was not built to inform.
+ESTIMANDS = (
+    "theta_system",       # the deployed layer, classifier included — comparable to exp001/exp002
+    "theta_directive",    # the intended directive, correctly delivered
+    "theta_routing",      # theta_system minus theta_directive, as a difference in differences
+    "theta_framing",      # the claim-type framing sentence alone
+    "theta_instruction",  # the placebo effect: being instructed at all
+    "delta_displacement", # retrieval making an answer worse
+    "mode_shift",         # categorical response-mode change
+    "gate",               # instrument validity only
+)
+
+# How each item's routing is handled. Every misroute must carry a declared
+# disposition; "nobody noticed" is not one of the options.
+ROUTING_DISPOSITIONS = (
+    "agrees",                  # the classifier already produces the declared type
+    "crossed",                 # both directives are delivered, as separate arms
+    "accepted_as_system",      # the routed directive is used; the estimand is theta_system
+    "inert_no_directive_arm",  # no condition injects a directive, so routing cannot matter
 )
 
 VERDICTS = ("PASS", "PARTIAL", "FAIL", "NOT_ESTABLISHED")
@@ -131,9 +155,14 @@ VERDICTS = ("PASS", "PARTIAL", "FAIL", "NOT_ESTABLISHED")
 # Which conditions hand the solver a search tool. `directive_placebo` and
 # `A_only` are closed-book variants of the directive contrast; the four cell-D
 # conditions are the search ladder.
-CLOSED_CONDITIONS = frozenset(
-    {"baseline", "directive_placebo", "A_only", "directive_only", "closed_book"}
-)
+CLOSED_CONDITIONS = frozenset({
+    "baseline", "directive_placebo", "A_only", "directive_only", "closed_book",
+    # D-prime (decision packet §1.3). Cell R crosses the routed directive against
+    # the intended one, each with its OWN length-matched placebo — because the
+    # intended block is 68 words shorter than the routed one, so a single placebo
+    # would leave one arm uncontrolled and put E4/E5 back into the contrast.
+    "placebo_routed", "placebo_intended", "directive_routed", "directive_intended",
+})
 SEARCH_CONDITIONS = frozenset(
     {"search_only", "search_directive", "search_selfcheck", "search_independent"}
 )
@@ -283,6 +312,40 @@ def validate_item(item: dict, where: str | None = None) -> dict:
 
     if not str(item["discriminator"]).strip():
         raise ValueError(f"{where}: discriminator is empty")
+
+    estimands = list(item["estimand"])
+    unknown_estimands = [e for e in estimands if e not in ESTIMANDS]
+    if unknown_estimands:
+        raise ValueError(f"{where}: unknown estimands {unknown_estimands}; expected {list(ESTIMANDS)}")
+
+    disposition = item["routing_disposition"]
+    if disposition not in ROUTING_DISPOSITIONS:
+        raise ValueError(
+            f"{where}: routing_disposition {disposition!r} not in {list(ROUTING_DISPOSITIONS)}"
+        )
+    route_dependent = bool(set(conditions) & {"directive_only", "search_directive", "A_only",
+                                              "directive_routed", "directive_intended"})
+    if disposition == "inert_no_directive_arm" and route_dependent:
+        raise ValueError(
+            f"{where}: declared inert, but its conditions inject a routed directive or framing. "
+            f"A misroute here would reach the solver."
+        )
+    if disposition == "crossed" and not {"directive_routed", "directive_intended"} <= set(conditions):
+        raise ValueError(
+            f"{where}: declared crossed, but does not run both directive_routed and "
+            f"directive_intended. A crossed disposition without both arms measures nothing."
+        )
+    if disposition == "crossed" and "theta_routing" not in estimands:
+        raise ValueError(
+            f"{where}: a crossed item must declare theta_routing, or the contrast it pays for "
+            f"is not attributed to any estimand"
+        )
+    if disposition == "accepted_as_system" and "theta_directive" in estimands:
+        raise ValueError(
+            f"{where}: accepted_as_system means the ROUTED directive is delivered, so the item "
+            f"informs theta_system and cannot inform theta_directive — that directive is never "
+            f"delivered to it"
+        )
 
     metric = item.get("primary_metric")
     if metric is not None and metric not in ("verdict", "tool_calls_observed", "response_mode"):

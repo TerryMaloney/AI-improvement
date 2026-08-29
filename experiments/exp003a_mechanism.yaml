@@ -1,0 +1,186 @@
+# ============================================================================
+# exp003a — mechanism disambiguation. FROZEN CONFIGURATION.
+# ============================================================================
+#
+# Implements decision-packet option D-prime. Every design choice here was taken
+# in docs/EXP003A_DECISION_PACKET.md and reviewed before any code was written;
+# nothing in this file is a choice made while coding.
+#
+# WHAT IS RANDOMISED: the dispatch ORDER only, from `dispatch_seed`, shuffled
+# once over the full trial list. The design contains paired within-item contrasts
+# (routed against intended), and dispatching arm-by-arm would let drift over the
+# run land unevenly across a pair.
+#
+# WHAT IS NOT RANDOMISED: treatment assignment. Every item receives every
+# condition its specification declares — a full within-item factorial with no
+# allocation step. There is nothing to allocate, so "randomised assignment" has
+# no referent here, and the seed provides no protection against confounding.
+
+id: exp003a
+title: "exp003a — mechanism disambiguation under D-prime"
+hypothesis: >
+  Determine whether the epistemic directive does anything beyond prompt length,
+  format, stochasticity, retrieval quality and judge artifacts; and, in cell R,
+  separate what the deployed layer does (theta_system) from what the intended
+  directive does when correctly delivered (theta_directive).
+
+batteries: [diagnostic_v1]
+models: [haiku]
+# Plan §6 sets k per cell. A single global number cannot express that, and an
+# earlier draft of this file silently produced 500 trials instead of 388 because
+# of it — caught by counting the generated manifest rather than trusting the
+# arithmetic.
+repeats: 5
+repeats_by_cell:
+  L: 5
+  R: 5
+  D: 5
+  U: 3
+  N: 3
+  C: 3
+
+# Pre-registered exclusions, with their reason. Decided by the frozen retrieval
+# scout (runs/screens/retrieval_scout.json) BEFORE any solver ran, against each
+# item's own pre-registered criterion.
+exclude_items:
+  D01: >
+    Frozen scout: the search space CORRECTS the premise — the top result is
+    titled "Why didn't Einstein get the Nobel Prize for the theory of
+    relativity?". The item tests retrieval benefit, not displacement.
+  D02: >
+    Frozen scout: every first-page result debunks the claim. Displacement cannot
+    be tested where retrieval hands over the correction unprompted.
+
+asked_as_of: "2026-08-28"
+default_search_budget: 3
+
+# Each item runs the conditions ITS OWN specification declares. Cells differ in
+# their condition sets — cell R has five arms, cell C has two — so a single flat
+# list could not express the design.
+use_item_conditions: true
+
+# Frozen once. Regenerating with this seed reproduces the identical order; the
+# preflight verifies that rather than assuming it.
+dispatch_seed: 20260829
+
+# --------------------------------------------------------------------------
+# Fingerprints this configuration runs against. The preflight recomputes each
+# and FAILS on a mismatch, so an edit to any of them after freezing is visible.
+# --------------------------------------------------------------------------
+runs_against:
+  battery: diagnostic_v1
+  egress_probe: "2026-08-28"
+  retrieval_scout: "2026-08-28"
+  judge_calibration: exp003c
+  frozen_decisions: docs/EXP003A_FROZEN_DECISIONS.md
+
+# --------------------------------------------------------------------------
+# Conditions. `block` says what is injected; `route_mode` says whose claim type
+# selected it. The two are orthogonal, which is what lets cell R hold the block
+# kind constant while varying only the route.
+# --------------------------------------------------------------------------
+conditions:
+  - name: baseline
+    agent: solver-closed
+    block: none
+    allow_search: false
+    description: "The question alone. Floor for every closed-book cell."
+
+  - name: directive_placebo
+    agent: solver-closed
+    block: placebo
+    route_mode: routed
+    allow_search: false
+    description: >
+      Inert block matched to the routed directive on word count, bullets,
+      structure and formatting markers. Controls E4 and E5.
+
+  - name: placebo_routed
+    agent: solver-closed
+    block: placebo
+    route_mode: routed
+    allow_search: false
+    description: "Cell R. Matched to the ROUTED block; control for directive_routed."
+
+  - name: placebo_intended
+    agent: solver-closed
+    block: placebo
+    route_mode: intended
+    allow_search: false
+    description: >
+      Cell R. Matched to the INTENDED block, which is 68 words shorter. Without
+      this arm the routing contrast would be confounded with block length.
+
+  - name: A_only
+    agent: solver-closed
+    block: a_only
+    route_mode: routed
+    allow_search: false
+    description: "The claim-type framing sentence on the placebo's own carrier."
+
+  - name: directive_only
+    agent: solver-closed
+    block: directive
+    route_mode: routed
+    allow_search: false
+    description: "The full routed directive, closed book. Carries FD-1's contradiction as measured."
+
+  - name: directive_routed
+    agent: solver-closed
+    block: directive
+    route_mode: routed
+    allow_search: false
+    description: "Cell R. The directive the classifier selects — theta_system."
+
+  - name: directive_intended
+    agent: solver-closed
+    block: directive
+    route_mode: intended
+    allow_search: false
+    description: "Cell R. The directive the item was written for — theta_directive."
+
+  - name: closed_book
+    agent: solver-closed
+    block: none
+    allow_search: false
+    description: "Cell D's no-tool arm."
+
+  - name: search_only
+    agent: solver-web
+    block: none
+    allow_search: true
+    description: "Search tool, flat budget, no directive."
+
+  - name: search_directive
+    agent: solver-web
+    block: directive
+    route_mode: routed
+    allow_search: true
+    description: >
+      Cell N. The routed directive with a search tool. Cell N's estimand is
+      theta_system by decision: a claim about tool restraint should be about the
+      behaviour the deployed layer actually produces.
+
+  - name: search_selfcheck
+    agent: solver-web
+    block: none
+    allow_search: true
+    protocol: selfcheck
+    description: >
+      Two dispatches. The first is generated here; the reviewer prompt is in
+      lab/treatments.py and sees the question and the draft, not the snippets.
+
+  - name: search_independent
+    agent: solver-closed
+    block: none
+    allow_search: false
+    protocol: independent
+    description: >
+      Three dispatches. The first is a closed-book draft, generated here. The
+      claim-blind gatherer receives the item's frozen neutral topic string, and
+      the verifier sees question, draft and gathered evidence.
+
+notes: >
+  Neither multi-dispatch arm is verification. WebFetch is egress-blocked, so
+  SOURCE_ACCESS and VERIFICATION are unreachable and no conclusion about either
+  may be drawn from this run. Cost is reported in dispatches, not trials.

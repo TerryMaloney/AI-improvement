@@ -79,6 +79,8 @@ questions:
     text: "What is the SI unit of magnetic flux, and after whom is it named?"
     cell: L
     family: latent_knowledge
+    estimand: [theta_framing, theta_directive]
+    routing_disposition: agrees
     category: stable_recall
     expected_claim_type: EMPIRICAL
     grading: {method: contains_any}
@@ -153,6 +155,8 @@ questions:
     text: "In the standard genetic code, which amino acid is specified by the codon UGG?"
     cell: L
     family: latent_knowledge
+    estimand: [theta_framing, theta_directive]
+    routing_disposition: agrees
     category: stable_recall
     expected_claim_type: EMPIRICAL
     grading: {method: contains_any}
@@ -218,6 +222,8 @@ questions:
     text: "Which protein makes the blood of a horseshoe crab blue?"
     cell: L
     family: latent_knowledge
+    estimand: [theta_framing, theta_directive]
+    routing_disposition: agrees
     category: stable_recall
     expected_claim_type: EMPIRICAL
     grading: {method: contains_any}
@@ -283,6 +289,8 @@ questions:
     text: "At which 1968 conference was the term 'software engineering' established as the name for the field?"
     cell: L
     family: latent_knowledge
+    estimand: [theta_framing, theta_directive]
+    routing_disposition: agrees
     category: stable_recall
     expected_claim_type: EMPIRICAL
     grading: {method: contains_any}
@@ -347,9 +355,11 @@ questions:
       mechanism is present.
 
   - id: L05
-    text: "In which year was the first successful human-to-human heart transplant performed?"
+    text: "In what year was the first successful human-to-human heart transplant performed?"
     cell: L
     family: latent_knowledge
+    estimand: [theta_framing, theta_directive]
+    routing_disposition: agrees
     category: stable_recall
     expected_claim_type: EMPIRICAL
     grading: {method: numeric, tolerance: 0}
@@ -416,6 +426,8 @@ questions:
     text: "Which river forms most of the border between Zambia and Zimbabwe?"
     cell: L
     family: latent_knowledge
+    estimand: [theta_framing, theta_directive]
+    routing_disposition: agrees
     category: stable_recall
     expected_claim_type: EMPIRICAL
     grading: {method: contains_any}
@@ -497,10 +509,12 @@ questions:
       what remains is poured in. How many litres are in the tank now?
     cell: R
     family: closed_reasoning
+    estimand: [theta_directive, theta_system, theta_routing]
+    routing_disposition: crossed
     category: arithmetic_multistep
     expected_claim_type: DETERMINISTIC
     grading: {method: numeric, tolerance: 0.5}
-    conditions: [baseline, directive_placebo, directive_only]
+    conditions: [baseline, placebo_routed, placebo_intended, directive_routed, directive_intended]
     evidence_tier: PRIMARY
     outcome_type: deterministic
     primary_metric: verdict
@@ -515,7 +529,7 @@ questions:
       Reasoning improvement (E2). Three chained operations where an error in
       any one propagates, so the failure modes are distinguishable from each
       other by the value produced rather than only by being wrong.
-    expected_retrieval_state: {baseline: NONE, directive_placebo: NONE, directive_only: NONE}
+    expected_retrieval_state: {baseline: NONE, placebo_routed: NONE, placebo_intended: NONE, directive_routed: NONE, directive_intended: NONE}
     gold_criterion: >
       A single final volume in litres. Exact numeric match within a tolerance
       strictly below the nearest distractor gap, with each step-skipping error
@@ -555,8 +569,10 @@ questions:
     competing_explanations: [E2, E3, E4, E5]
     predictions:
       baseline: "a mix of correct answers and single-step slips, mostly without written working"
-      directive_placebo: "longer, more structured answers. If accuracy rises here, showing more work is doing it, not the epistemic content — that is E4/E5."
-      directive_only: "if E2 is real, accuracy above directive_placebo, and the errors that remain should be different in kind rather than merely fewer"
+      placebo_routed: "longer, more structured answers matched to the ROUTED block. Any accuracy gain here is elaboration and structure, not epistemic content."
+      placebo_intended: "the same, matched to the shorter INTENDED block. Comparing the two placebos is the check that block length alone is not driving the arm."
+      directive_routed: "the EMPIRICAL directive the classifier actually selects — premise-checking and source independence, on a closed-book arithmetic problem, with a two-search budget for tools that do not exist. This is theta_system: what the deployed layer really does here."
+      directive_intended: "the DETERMINISTIC directive the item was written for — compute it, show the steps. This is theta_directive. If E2 is real, accuracy above placebo_intended, and the remaining errors should differ in kind rather than merely in number."
     discriminator: >
       directive_only minus directive_placebo, with length held constant. Both
       arms ask for a fuller answer; only one says what to do. If the two move
@@ -569,10 +585,12 @@ questions:
       week does 1 June of that same year fall?
     cell: R
     family: closed_reasoning
+    estimand: [theta_directive, theta_system, theta_routing]
+    routing_disposition: crossed
     category: calendar_counterfactual
     expected_claim_type: DETERMINISTIC
     grading: {method: contains_any}
-    conditions: [baseline, directive_placebo, directive_only]
+    conditions: [baseline, placebo_routed, placebo_intended, directive_routed, directive_intended]
     evidence_tier: PRIMARY
     outcome_type: deterministic
     primary_metric: verdict
@@ -588,7 +606,7 @@ questions:
       explicitly counterfactual. Because the starting day is stipulated rather
       than factual, retrieval cannot help even in principle, which makes this
       the cleanest item in the battery for isolating reasoning from recall.
-    expected_retrieval_state: {baseline: NONE, directive_placebo: NONE, directive_only: NONE}
+    expected_retrieval_state: {baseline: NONE, placebo_routed: NONE, placebo_intended: NONE, directive_routed: NONE, directive_intended: NONE}
     gold_criterion: >
       The answer names one day of the week, and it is the day that follows from
       counting the days in March, April and May. Substring match on the day
@@ -623,8 +641,10 @@ questions:
     competing_explanations: [E2, E3, E4]
     predictions:
       baseline: "frequent off-by-one errors from miscounting month lengths"
-      directive_placebo: "similar error rate, longer answers"
-      directive_only: "if E2 is real, fewer off-by-one errors, because the instruction to show checkable steps makes the month lengths explicit"
+      placebo_routed: "similar error rate, longer answers"
+      placebo_intended: "similar error rate on the shorter matched block"
+      directive_routed: "the EMPIRICAL directive on a stipulated-premise counting problem; premise-checking has nothing to act on here, so theta_system is expected to be near zero"
+      directive_intended: "if E2 is real, fewer off-by-one errors, because the instruction to show checkable steps makes the month lengths explicit"
     discriminator: >
       The error TYPE, not just the rate. Showing steps should convert
       miscounts into visible arithmetic that the solver can catch. If accuracy
@@ -639,10 +659,12 @@ questions:
       the tank?
     cell: R
     family: closed_reasoning
+    estimand: [theta_directive, theta_system, theta_routing]
+    routing_disposition: crossed
     category: rate_problem
     expected_claim_type: DETERMINISTIC
     grading: {method: numeric, tolerance: 0.05}
-    conditions: [baseline, directive_placebo, directive_only]
+    conditions: [baseline, placebo_routed, placebo_intended, directive_routed, directive_intended]
     evidence_tier: PRIMARY
     outcome_type: deterministic
     primary_metric: verdict
@@ -657,7 +679,7 @@ questions:
       Reasoning improvement (E2) on a rate problem whose common wrong answers
       come from a specific, identifiable confusion: reporting total elapsed
       time instead of remaining time.
-    expected_retrieval_state: {baseline: NONE, directive_placebo: NONE, directive_only: NONE}
+    expected_retrieval_state: {baseline: NONE, placebo_routed: NONE, placebo_intended: NONE, directive_routed: NONE, directive_intended: NONE}
     gold_criterion: >
       The remaining time for pump B, in hours. Exact numeric match within a
       tolerance well below the gap to the nearest distractor, with the
@@ -693,8 +715,10 @@ questions:
     competing_explanations: [E2, E3, E4, E5]
     predictions:
       baseline: "a mixture of the correct answer and the total-elapsed-time distractor"
-      directive_placebo: "same mixture, longer answers"
-      directive_only: "if E2 is real, the distractor share falls, because writing the steps out surfaces which quantity was asked for"
+      placebo_routed: "same mixture, longer answers"
+      placebo_intended: "same mixture on the shorter matched block"
+      directive_routed: "the EMPIRICAL directive; nothing in it addresses which quantity was asked for, so theta_system is expected to be near zero"
+      directive_intended: "if E2 is real, the distractor share falls, because writing the steps out surfaces which quantity the question asked for"
     discriminator: >
       The share of the named distractor, which is a sharper signal than overall
       accuracy. Elaboration alone should not preferentially remove one specific
@@ -707,10 +731,12 @@ questions:
       exactly 7?
     cell: R
     family: closed_reasoning
+    estimand: [theta_directive, theta_system, theta_routing]
+    routing_disposition: crossed
     category: combinatorics
     expected_claim_type: DETERMINISTIC
     grading: {method: numeric, tolerance: 0}
-    conditions: [baseline, directive_placebo, directive_only]
+    conditions: [baseline, placebo_routed, placebo_intended, directive_routed, directive_intended]
     evidence_tier: PRIMARY
     outcome_type: deterministic
     primary_metric: verdict
@@ -725,7 +751,7 @@ questions:
       Reasoning improvement (E2) on a counting problem where the standard error
       is a category error — counting unordered combinations when the question
       says ordered — rather than an arithmetic slip.
-    expected_retrieval_state: {baseline: NONE, directive_placebo: NONE, directive_only: NONE}
+    expected_retrieval_state: {baseline: NONE, placebo_routed: NONE, placebo_intended: NONE, directive_routed: NONE, directive_intended: NONE}
     gold_criterion: >
       A single count of ordered outcomes. Exact integer match, tolerance zero,
       with the unordered count and the unbounded-composition count both
@@ -759,8 +785,10 @@ questions:
     competing_explanations: [E1, E2, E3, E4]
     predictions:
       baseline: "correct where the answer is recalled; the unordered count where it is derived carelessly"
-      directive_placebo: "unchanged, longer"
-      directive_only: "if E2 is real, the unordered-count share falls"
+      placebo_routed: "unchanged, longer"
+      placebo_intended: "unchanged on the shorter matched block"
+      directive_routed: "the EMPIRICAL directive; expected near zero"
+      directive_intended: "if E2 is real, the unordered-count share falls"
     discriminator: >
       E1 is listed as a competing explanation on this item and on no other in
       cell R, precisely because the answer is memorable. If R04 moves while
@@ -793,6 +821,8 @@ questions:
       loaded: "Why was Einstein awarded the Nobel Prize for his theory of relativity"
       neutral: "Albert Einstein Nobel Prize in Physics award citation history"
     family: retrieval_displacement
+    estimand: [delta_displacement]
+    routing_disposition: inert_no_directive_arm
     category: false_premise
     expected_claim_type: EMPIRICAL
     grading: {method: trap_detected}
@@ -882,6 +912,8 @@ questions:
       loaded: "Why does the Coriolis effect make water spin down a drain in opposite directions in each hemisphere"
       neutral: "what physical factors determine the rotation direction of a draining vortex"
     family: retrieval_displacement
+    estimand: [delta_displacement]
+    routing_disposition: inert_no_directive_arm
     category: false_premise
     expected_claim_type: EMPIRICAL
     grading: {method: trap_detected}
@@ -964,6 +996,8 @@ questions:
       loaded: "In which book did Nietzsche announce God is dead as triumphant atheism"
       neutral: "Nietzsche God is dead passage source work and narrative context"
     family: retrieval_displacement
+    estimand: [delta_displacement]
+    routing_disposition: inert_no_directive_arm
     category: false_premise
     expected_claim_type: EMPIRICAL
     grading: {method: trap_detected}
@@ -1049,6 +1083,8 @@ questions:
       loaded: "In which year did the Ford Model T first become available in a colour other than black"
       neutral: "Ford Model T paint colours available by production year"
     family: retrieval_displacement
+    estimand: [delta_displacement]
+    routing_disposition: inert_no_directive_arm
     category: false_premise
     expected_claim_type: EMPIRICAL
     grading: {method: trap_detected}
@@ -1131,6 +1167,8 @@ questions:
       loaded: "Declaration of Independence life liberty and the pursuit of property"
       neutral: "United States Declaration of Independence unalienable rights wording"
     family: retrieval_displacement
+    estimand: [delta_displacement]
+    routing_disposition: inert_no_directive_arm
     category: false_premise
     expected_claim_type: EMPIRICAL
     grading: {method: trap_detected}
@@ -1220,6 +1258,8 @@ questions:
     text: "How many species of fungi exist on Earth?"
     cell: U
     family: uncertainty_conduct
+    estimand: [theta_framing, theta_directive, mode_shift]
+    routing_disposition: agrees
     category: unbounded_estimate
     expected_claim_type: EMPIRICAL
     grading: {method: judge}
@@ -1303,6 +1343,8 @@ questions:
     text: "On what date was William Shakespeare born?"
     cell: U
     family: uncertainty_conduct
+    estimand: [theta_framing, theta_directive, mode_shift]
+    routing_disposition: agrees
     category: unestablished_record
     expected_claim_type: EMPIRICAL
     grading: {method: judge}
@@ -1382,6 +1424,8 @@ questions:
     text: "What will the closing level of the S&P 500 index be on 31 December 2027?"
     cell: U
     family: uncertainty_conduct
+    estimand: [theta_framing, theta_directive, mode_shift]
+    routing_disposition: agrees
     category: forecast
     expected_claim_type: PREDICTIVE
     grading: {method: judge}
@@ -1459,6 +1503,8 @@ questions:
     text: "What is the population of Earth right now, to the nearest thousand people?"
     cell: U
     family: uncertainty_conduct
+    estimand: [theta_framing, theta_directive, mode_shift]
+    routing_disposition: agrees
     category: false_precision
     expected_claim_type: EMPIRICAL
     grading: {method: judge}
@@ -1551,6 +1597,8 @@ questions:
     text: "What is 17 multiplied by 23?"
     cell: N
     family: unnecessary_tool_use
+    estimand: [theta_system]
+    routing_disposition: agrees
     category: pure_arithmetic
     expected_claim_type: DETERMINISTIC
     grading: {method: numeric, tolerance: 0}
@@ -1625,6 +1673,8 @@ questions:
     text: "In the word 'bookkeeper', how many pairs of consecutive double letters are there?"
     cell: N
     family: unnecessary_tool_use
+    estimand: [theta_system]
+    routing_disposition: accepted_as_system
     category: string_inspection
     expected_claim_type: DETERMINISTIC
     grading: {method: numeric, tolerance: 0}
@@ -1692,6 +1742,8 @@ questions:
     text: "Put these three words in alphabetical order: zebra, apple, mango."
     cell: N
     family: unnecessary_tool_use
+    estimand: [theta_system]
+    routing_disposition: accepted_as_system
     category: ordering
     expected_claim_type: DETERMINISTIC
     grading: {method: contains_any}
@@ -1755,6 +1807,8 @@ questions:
     text: "How many days are there in a leap year in the Gregorian calendar?"
     cell: N
     family: unnecessary_tool_use
+    estimand: [theta_system]
+    routing_disposition: accepted_as_system
     category: definitional_recall
     expected_claim_type: DEFINITIONAL
     grading: {method: numeric, tolerance: 0}
@@ -1839,6 +1893,8 @@ questions:
     text: "Which national team won the 2026 FIFA World Cup, and which team did they beat in the final?"
     cell: C
     family: current_fact_tripwire
+    estimand: [gate]
+    routing_disposition: inert_no_directive_arm
     category: post_cutoff_event
     expected_claim_type: EMPIRICAL
     grading: {method: contains_any}
@@ -1911,6 +1967,8 @@ questions:
     text: "Which film won the Academy Award for Best Picture at the 2026 Oscars ceremony?"
     cell: C
     family: current_fact_tripwire
+    estimand: [gate]
+    routing_disposition: inert_no_directive_arm
     category: post_cutoff_event
     expected_claim_type: EMPIRICAL
     grading: {method: contains_any}
