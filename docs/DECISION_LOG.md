@@ -72,3 +72,25 @@ Examples:
 - workflows → completion/error/intervention metrics.
 
 This does not invalidate judge-based experiments; it limits what they are allowed to prove.
+
+---
+
+## 2026-08-29 — Positive findings remain provisional by default
+
+**Decision:** An interesting or statistically positive result does not directly become a verified mechanism or architecture component.
+
+**Promotion ladder:** signal → replicated → mechanistically narrowed → transferred → execution-valid → operational candidate → broader claim.
+
+**Reason:** Throughout this project, apparently meaningful results have already been vulnerable to alternative explanations including grader effects, key definitions, missing replication, screening, selection bias, invalid null calibration, and environment constraints.
+
+**Operational consequence:** after a positive result, identify and test the most plausible competing explanations before promoting the mechanism. Prefer simpler explanations/components when they reproduce the effect.
+
+---
+
+## 2026-08-29 — Order future research by interpretability dependencies
+
+**Decision:** World-epistemology experiments precede evidence-grounded self-model experiments; self-modeling and execution evidence precede recursive procedure search; combinations follow interpretable single-component tests.
+
+**Reason:** A complex positive result is hard to interpret if its component mechanisms have never been isolated.
+
+**Detailed program:** `docs/EXPERIMENTAL_PROGRAM_2026-08-29.md`.
