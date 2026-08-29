@@ -4,59 +4,96 @@
 
 ## Current phase
 
-**Stage 0 — redesigning the next retrieval-heterogeneity experiment after the R=10/A_minus design failed a dependence robustness check.**
+**Stage 0 is now split into successive mechanism-discovery, confirmation, naturalistic-validation, and controller phases.**
 
-The immediate objective is now to determine whether reversal prevalence is high enough in treatment-blind candidate task classes to make an exact R=1 discordant-pair design feasible.
+The previous prevalence-pilot architecture is retired.
+
+## Current Stage-0 decomposition
+
+### Stage 0A — Mechanism discovery
+Question: does retrieval have a negative mean effect in at least one preregistered, treatment-blind task class?
+
+Candidate design:
+- 4 treatment-blind surface classes;
+- fixed-n discovery sample;
+- R=1 per arm;
+- exact one-sided conditional-binomial/McNemar-style test within class;
+- Holm correction across classes;
+- deterministic grading primary;
+- stress-sample interpretation only.
+
+This is **mechanism discovery**, not general controller evidence.
+
+### Stage 0B — Independent confirmation
+Freeze one discovered class/hypothesis, then test it on entirely fresh items authored without outcome visibility.
+
+Important follow-up arm:
+- search with fixed/high-quality query construction
+
+Purpose: distinguish retrieval harm from naive query-generation harm.
+
+### Stage 0C — Naturalistic validation
+Use an unenriched task source to estimate how often the confirmed condition appears and whether it matters outside the authored stress sample.
+
+### Stage 0D — Controller test
+On held-out mixed tasks, compare fixed policies with a router using only pre-treatment observables.
+
+Only this stage can begin to support a general controller claim.
 
 ## Established / measured so far
 
-- exp003c found judge sensitivity at a rubric boundary: verbosity changed one deliberately boundary-sensitive item by half a verdict step; the aggregate measured length contrast was -0.125.
-- Fixed-input judge replicates were deterministic in that instrument (reported sigma_judge = 0 across 96 judgments). This does **not** establish absence of systematic judge bias across different inputs.
-- Frozen exp001/exp002 data do not provide true solver replication; shared exp002 arms were re-grades of earlier solver outputs.
-- Self-reported search counts materially understated observed tool calls in the audited frozen data. Observed telemetry is authoritative going forward.
-- Retrieval state predicates are not a single ladder. Search can occur without source access or verification.
-- Current environment probing found search available while source fetch was blocked; unreachable states must be reported as NOT MEASURED.
-- The original oracle-gap null/test is retired after configuration-dependent Type-I failure.
-- The subsequent A_minus fixed-LFC design with repeated within-arm trials is also retired as the primary Stage-0 route: within-arm ICC as small as 0.02 materially inflated Type-I, and no affordable diagnostic could certify ICC below the required threshold.
-- Across-arm shared latent effects and across-item burst correlation were conservative in the tested simulations; within-item×arm replicate correlation was the dangerous direction.
-- A new candidate Stage-0 procedure uses R=1 per arm and an exact one-sided discordant-pair / McNemar-style test. It is immune to within-arm replicate ICC by construction.
-- The new candidate procedure was well calibrated across the tested tied, heterogeneous, and burst-correlation configurations.
-- Power under the new design depends strongly on the number/prevalence of true baseline-favouring reversal items.
-- The frozen 15-item battery provides only weak evidence of ~13% apparent reversal prevalence and zero established reversals; this is insufficient to set production battery size.
-- The old CEILING screen remains prohibited for reversal-sensitive experiments.
-- Treatment-side scout selection remains prohibited.
-- Deterministic outcomes remain primary; judged outcomes must be analyzed separately.
+- The pooled R=1 discordant-pair design is an ATE test, not a sign-heterogeneity/controller test; it is retired as the primary controller route.
+- The class-stratified R=1 design is mathematically valid for detecting negative class-level mean effects under heterogeneous items when class membership is frozen before outcomes.
+- The stratified test is blind to within-class sign heterogeneity; this is appropriate for a controller that only sees class labels, but disqualifies it as a general-headroom test.
+- Hand-authored classes can establish a stress-sample mechanism and a trivial class rule; they do **not** establish that a general router can discover/generalize the signal.
+- A discovery→fresh-confirmation design is cleaner and cheaper than prevalence-pilot→production.
+- The strongest current alternative explanation for apparent retrieval harm is **query-generation failure**; confirmation should explicitly test this with a fixed-query arm.
+- Surface classes should be used for preregistered stratification; hypothesized mechanism dimensions may be recorded as frozen covariates but are not yet operationally validated.
+- Naturalistic prevalence remains completely unmeasured.
+- 27 earlier screen-class diagnostic calls are discarded/non-reusable due to incomplete persisted provenance.
 
-## Current blockers before formal preregistration
+## Current candidate discovery burden
 
-1. Design and pre-register a **reversal-prevalence pilot** using treatment-blind candidate task classes.
-2. Decide whether pilot items are wholly discarded or wholly carried forward; never filter them based on observed treatment direction.
-3. Quantify feasible production sample size as a function of the observed pilot prevalence without post-hoc threshold shopping.
-4. Persist or explicitly discard the 27 prior screen-class independence-check dispatches; they currently exist only in transcript/scratchpad and are not auditable in the repository.
-5. Re-probe egress before any production freeze.
-6. Freeze clean closed-book/search arms, grading routes, reporting skeleton, and telemetry.
-7. Only then write/freeze the production Stage-0 preregistration and battery.
+Illustrative candidate:
+- 4 classes × 20 items × 2 arms = 160 solver dispatches.
+- Approximate power from the red-team:
+  - pure class harm delta≈0.55: 0.87
+  - pure class harm delta≈0.40: 0.54
+  - 67% reversal-pure at delta≈0.55: 0.43
+
+These numbers are orientation only until the discovery specification is independently frozen.
+
+## Current blockers before Stage 0A
+
+1. Independently specify the four treatment-blind classes and one-class-per-item assignment rule.
+2. Freeze item-authoring rules before outcomes.
+3. Decide discovery n/class after a final power/cost check.
+4. Freeze exact grading/key rules and clean arms.
+5. Define query logging and confirmation fixed-query intervention now, before discovery outcomes.
+6. Define the report skeleton and stress-sample claim language.
+7. Re-probe egress / tool environment.
+8. Resolve the pre-existing stale test assertion without altering frozen historical evidence.
+9. Freeze Stage 0A in a distinct preregistration commit before any production dispatch.
 
 ## Retired recommendations
 
-Do not revive these without a new derivation:
-- A_minus fixed-LFC with n=18, R=10;
-- exact critical value 0.1444 for that design;
-- completing the old 80-dispatch independence diagnostic;
-- selecting n based on fixed reversal count;
-- targeting observed reversal prevalence as an inclusion criterion.
+Do not revive without a new derivation:
+- oracle-gap primary test;
+- repeated-trial A_minus fixed-LFC design;
+- n=18/R=10/critical=0.1444;
+- prevalence pilot as the next stage;
+- pooled R=1 McNemar as a controller test;
+- observed reversal prevalence as an inclusion criterion;
+- treatment-side scouting.
 
-## Explicitly not authorized by this status
+## Explicitly not authorized
 
-- No production Stage-0 solver dispatches.
-- No production battery freeze.
-- No treatment-arm-based item selection.
-- No Stage-1 controller build.
-- No recursive procedure search.
-- No claims that retrieval control works or does not work.
+- No Stage 0A production dispatches until its discovery specification is frozen.
+- No confirmation-item authoring with discovery outcomes visible unless the authoring process prevents outcome leakage.
+- No controller claim from a class-level discovery result.
+- No naturalistic prevalence claim from an enriched stress battery.
+- No Stage-1/recursive procedure work yet.
 
 ## Broader direction
 
 See `docs/RESEARCH_MAP.md` and `docs/EXPERIMENTAL_PROGRAM_2026-08-29.md`.
-
-The long-term program includes intervention science, epistemic state, execution grounding, persistent self-models, external cognitive tools, memory topology, generalization, and later automated/recursive procedure search. None of those branches alter the current Stage-0 gate.
