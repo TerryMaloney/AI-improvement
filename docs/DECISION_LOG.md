@@ -182,3 +182,21 @@ It does **not** support:
 **Decision:** Log search queries in Stage 0A and predefine a fixed/high-quality query arm for fresh Stage 0B confirmation.
 
 **Interpretation rule:** If ordinary-search harm replicates but disappears under fixed-query search, classify the mechanism primarily as query-construction failure rather than retrieval intrinsically harming the class.
+
+
+---
+
+## 2026-08-29 — Stage 0A blocked by grading objectivity
+
+**Decision:** Do not freeze or author Stage 0A until the grading architecture is resolved.
+
+**Reason:** Frozen-data audit shows the harm-plausible classes (false-premise, contested quantity/definition, stale/renamed) escalated entirely to judge-based grading, while deterministic/arithmetic graded cleanly. This creates an anti-correlation between scientific relevance and objective gradability.
+
+**Implication:** Runtime judge fallback is prohibited because it makes grader route depend on the answer and therefore on treatment outcome.
+
+**Open remediation paths:**
+1. deterministic relational/structured grading validated before dispatch;
+2. judged-primary measurement with independently established bias properties;
+3. deterministic-only classes with narrower scientific scope.
+
+**Additional decision:** contested-quantity/definition should not be treated as a clean confirmatory class while its defining feature is answer ambiguity; if retained, its definition/key must be reformulated so the target answer is unambiguous.
