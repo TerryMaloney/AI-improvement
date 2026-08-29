@@ -2,36 +2,15 @@
   "question": "CAN THE EXPERIMENT RUN WITHOUT CHANGING ANY EXPERIMENTAL RULE AFTER SEEING SOLVER RESULTS?",
   "answer": "NO",
   "runnable": false,
-  "passed": 21,
-  "total": 25,
+  "passed": 33,
+  "total": 34,
   "blockers": [
-    {
-      "id": "experiment_identity",
-      "question": "Is there a versioned experiment configuration to run?",
-      "status": "FAIL",
-      "detail": "no experiments/exp003a_mechanism.yaml",
-      "fix": "write the experiment configuration: id, conditions, models, repeats, battery, and the frozen fingerprints it runs against"
-    },
     {
       "id": "screens_complete",
       "question": "Has every screen actually run?",
       "status": "BLOCKED",
       "detail": "25 of 25 items have no knowledge-probe result",
       "fix": "dispatch the knowledge probe (baseline only, k=5) and commit runs/screens/knowledge_probe.json. Thresholds are already frozen at ceiling>=0.90 / floor<=0.10, so running it cannot change them."
-    },
-    {
-      "id": "routing_consistency",
-      "question": "Does each item receive the directive its specification predicts about?",
-      "status": "FAIL",
-      "detail": "10/25 items route to a different claim type than declared: C: ['C02']; D: ['D04']; L: ['L05']; N: ['N02', 'N03', 'N04']; R: ['R01', 'R02', 'R03', 'R04']",
-      "fix": "decide, in writing and before dispatch, between (a) pre-registered route overrides so each arm delivers the directive its spec predicts about, (b) rewording the items, or (c) excluding them. Whichever is chosen changes the estimand and must be recorded."
-    },
-    {
-      "id": "power_recomputed",
-      "question": "Is the power statement recomputed for the surviving items?",
-      "status": "BLOCKED",
-      "detail": "power is recomputed and committed, but 10 exclusions are still an open decision. If they were applied, these cells would fall to DEAD or SINGLE-ITEM: ['R', 'N', 'C']",
-      "fix": "resolve `routing_consistency`; the operative power figures cannot be final while an exclusion set is undecided"
     }
   ],
   "checks": [
@@ -46,7 +25,7 @@
       "id": "required_fields",
       "question": "Does every item carry every required specification field?",
       "status": "PASS",
-      "detail": "all 22 fields present on all 25 items",
+      "detail": "all 24 fields present on all 25 items",
       "fix": ""
     },
     {
@@ -102,21 +81,21 @@
       "id": "treatment_definitions",
       "question": "Is every condition the battery names actually defined?",
       "status": "PASS",
-      "detail": "all 9 conditions defined with texts and dispatch costs",
+      "detail": "all 13 conditions defined with texts and dispatch costs",
       "fix": ""
     },
     {
       "id": "treatment_freeze",
       "question": "Do the treatment texts still match the frozen fingerprint?",
       "status": "PASS",
-      "detail": "matches frozen fingerprint ec82dca23261",
+      "detail": "matches frozen fingerprint 462376895541",
       "fix": ""
     },
     {
       "id": "scoring_freeze",
       "question": "Are the scoring rules and rubrics frozen?",
       "status": "PASS",
-      "detail": "battery + key match frozen fingerprint 8c56840fda13",
+      "detail": "battery + key match frozen fingerprint 1907431bee93",
       "fix": ""
     },
     {
@@ -144,7 +123,7 @@
       "id": "dispatch_accounting",
       "question": "Are multi-dispatch arms counted at their real cost?",
       "status": "PASS",
-      "detail": "A_only=1, baseline=1, closed_book=1, directive_only=1, directive_placebo=1, search_directive=1, search_independent=3, search_only=1, search_selfcheck=2",
+      "detail": "A_only=1, baseline=1, closed_book=1, directive_intended=1, directive_only=1, directive_placebo=1, directive_routed=1, placebo_intended=1, placebo_routed=1, search_directive=1, search_independent=3, search_only=1, search_selfcheck=2",
       "fix": ""
     },
     {
@@ -165,21 +144,21 @@
       "id": "no_solver_contamination",
       "question": "Has any solver result touched the specification?",
       "status": "PASS",
-      "detail": "no exp003a answers, grades or database exist; the specification predates all results",
+      "detail": "no answers, grades or stored answer rows exist (manifest prepared, which is pre-dispatch work)",
       "fix": ""
     },
     {
       "id": "experiment_identity",
       "question": "Is there a versioned experiment configuration to run?",
-      "status": "FAIL",
-      "detail": "no experiments/exp003a_mechanism.yaml",
-      "fix": "write the experiment configuration: id, conditions, models, repeats, battery, and the frozen fingerprints it runs against"
+      "status": "PASS",
+      "detail": "config present: exp003a_mechanism.yaml",
+      "fix": ""
     },
     {
       "id": "git_identity",
       "question": "Can the exact runnable experiment be identified from the repository?",
       "status": "PASS",
-      "detail": "clean tree at 8da1b924cd93",
+      "detail": "clean tree at 5be672a322ff",
       "fix": ""
     },
     {
@@ -191,23 +170,86 @@
     },
     {
       "id": "routing_consistency",
-      "question": "Does each item receive the directive its specification predicts about?",
-      "status": "FAIL",
-      "detail": "10/25 items route to a different claim type than declared: C: ['C02']; D: ['D04']; L: ['L05']; N: ['N02', 'N03', 'N04']; R: ['R01', 'R02', 'R03', 'R04']",
-      "fix": "decide, in writing and before dispatch, between (a) pre-registered route overrides so each arm delivers the directive its spec predicts about, (b) rewording the items, or (c) excluding them. Whichever is chosen changes the estimand and must be recorded."
+      "question": "Does every item's routing have a declared, verified disposition?",
+      "status": "PASS",
+      "detail": "every item's routing disposition matches the classifier's actual behaviour: accepted_as_system=3, agrees=11, crossed=4, inert_no_directive_arm=7",
+      "fix": ""
+    },
+    {
+      "id": "estimand_separation",
+      "question": "Can a routed result ever be reported as an intended one?",
+      "status": "PASS",
+      "detail": "theta_system and theta_directive are only claimed together where both arms run, each with its own matched placebo: ['R01', 'R02', 'R03', 'R04']",
+      "fix": ""
     },
     {
       "id": "power_recomputed",
       "question": "Is the power statement recomputed for the surviving items?",
-      "status": "BLOCKED",
-      "detail": "power is recomputed and committed, but 10 exclusions are still an open decision. If they were applied, these cells would fall to DEAD or SINGLE-ITEM: ['R', 'N', 'C']",
-      "fix": "resolve `routing_consistency`; the operative power figures cannot be final while an exclusion set is undecided"
+      "status": "PASS",
+      "detail": "recomputed: 388 trials, 2 exclusions, reduced cells ['D']",
+      "fix": ""
     },
     {
       "id": "mechanism_confounds",
       "question": "Is every mechanism the design cannot separate written down?",
       "status": "PASS",
       "detail": "FD-11 records the mechanisms the design cannot separate and how each is bounded",
+      "fix": ""
+    },
+    {
+      "id": "nonvacuous_manifest",
+      "question": "Does a prepared manifest exist with the trials the plan requires?",
+      "status": "PASS",
+      "detail": "388 trials, 433 dispatches, per-cell counts match the plan exactly",
+      "fix": ""
+    },
+    {
+      "id": "nonvacuous_crossed_arms",
+      "question": "Do the crossed arms actually deliver different text?",
+      "status": "PASS",
+      "detail": "on all 4 crossed items the routed and intended directives differ, and each has its own distinct matched placebo",
+      "fix": ""
+    },
+    {
+      "id": "nonvacuous_treatment_text",
+      "question": "Do the generated blocks contain what they claim?",
+      "status": "PASS",
+      "detail": "102 generated blocks opened and verified: placebos carry no mechanism vocabulary, intended arms carry the intended claim type",
+      "fix": ""
+    },
+    {
+      "id": "nonvacuous_screen_input",
+      "question": "Was the screen actually given items to judge?",
+      "status": "PASS",
+      "detail": "the screen returns a decision for all 25 items; it currently returns NOT_SCREENED for all of them, which BLOCKS rather than passes",
+      "fix": ""
+    },
+    {
+      "id": "artifact_identity_verified",
+      "question": "Does the config's declared identity match what is on disk?",
+      "status": "PASS",
+      "detail": "battery id, egress probe date, scout date and frozen-decisions path all opened and matched",
+      "fix": ""
+    },
+    {
+      "id": "dispatch_class_isolation",
+      "question": "Can screening data reach a primary analysis?",
+      "status": "PASS",
+      "detail": "primary database holds 388 trials, all `solver_experiment`; the probe has its own run directory (not yet prepared)",
+      "fix": ""
+    },
+    {
+      "id": "dispatch_order_reproducible",
+      "question": "Does the frozen seed reproduce the same order?",
+      "status": "PASS",
+      "detail": "seed 20260829 reproduces the manifest order exactly; 388 positions verified",
+      "fix": ""
+    },
+    {
+      "id": "all_checks_ran",
+      "question": "Did every registered check actually execute?",
+      "status": "PASS",
+      "detail": "all 33 registered checks executed and returned a status",
       "fix": ""
     }
   ]
