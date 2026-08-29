@@ -97,3 +97,23 @@ Do not revive without a new derivation:
 ## Broader direction
 
 See `docs/RESEARCH_MAP.md` and `docs/EXPERIMENTAL_PROGRAM_2026-08-29.md`.
+
+
+## Latest Stage 0A specification red-team — grading blocker
+
+[MEASURED] Three of the four proposed harm-plausible Stage 0A classes escalated 100% of their frozen examples to an LLM judge. Only deterministic/arithmetic graded cleanly.
+
+This exposes a structural conflict:
+- the classes most likely to show retrieval harm require nuanced epistemic judgment;
+- the classes easiest to grade deterministically are the least harm-plausible.
+
+Therefore Stage 0A is **not ready to freeze**. The blocker is now grading architecture, not statistics or taxonomy.
+
+Contested-quantity/definition should not remain a primary class in its current form because its defining property is answer ambiguity, which conflicts with the requirement for an unambiguous frozen key.
+
+Three remediation directions remain open:
+1. pre-author deterministic acceptance criteria and validate coverage before dispatch;
+2. admit judged items to the primary under a pre-registered bias audit / measurement model;
+3. restrict to deterministic classes, accepting reduced scientific relevance.
+
+Do not author Stage 0A items until one grading path is selected and independently scrutinized.
