@@ -278,3 +278,51 @@ are different hypotheses, and the mean null is strictly larger.
   interpretive limitations. Class purity is latent and is a power parameter only,
   never an invalidation rule.
 - Null-result language frozen before outcomes.
+
+---
+
+## 2026-08-29 — Stage 0A-M: the cross-item dependence assumption, named and defended
+
+**Question:** what dependence assumption across items does the exact conditional
+binomial argument actually require?
+
+**Within-item: none.** [PROVEN] a_i - b_i = p_closed_i - p_search_i for an
+arbitrary joint distribution of the two arm outcomes; the both-correct terms
+cancel. Within-item arm correlation is irrelevant to the test.
+
+**Across items: a real and breakable assumption.** [MEASURED] Type-I at n=25,
+alpha=0.05, under structures satisfying H0_pointwise only marginally: one shared
+orientation coin 0.498; exchangeable beta mixture c=0.5 0.324; five blocks of
+five 0.144; shared pi ~ U(0.2,0.8) 0.121; even a mild beta mixture at c=10
+reaches 0.063. Arbitrary cross-item dependence breaks this test badly.
+
+**Weakest sufficient condition, and it is weaker than independence:** the
+sequential conditional inequality — for a preregistered ordering, conditioning on
+the discordance pattern, P(baseline-favouring | earlier orientations) <= 1/2 for
+every discordant item. [PROVEN] by sequential coupling to iid uniforms: X_j <=
+1{U_j <= 1/2} pointwise, so the sum is dominated by Binomial(D, 1/2).
+
+It holds automatically when H0_pointwise holds conditional on every realisation
+of any shared latent state, and fails when the null holds only marginally.
+[MEASURED] conditionally-safe cases are conservative: shared pi ~ U(0,0.5) gives
+0.003, an adversary held at the bound 0.028, a history-adaptive adversary 0.000.
+
+**Consequences adopted:**
+- A frozen dispatch schedule is now part of the specification, because the defence
+  is procedural rather than statistical: arm order randomised independently within
+  each item (the key control — it prevents temporal drift from becoming systematic
+  orientation correlation), arms of an item paired in time, item order randomised
+  from a recorded seed, classes interleaved rather than dispatched in bursts,
+  fresh context per trial, runtime metadata recorded.
+- Dependence diagnostics are reported but may never exclude an item, class or run.
+  At D ~ 13 they have very little power and must not become a fake gate.
+- The earlier "burst correlation is conservative" simulation result is reclassified
+  as model-specific evidence, not a theorem. It simulated a shared shift in outcome
+  probability, not shared ORIENTATION, which is the structure that breaks this test.
+- Primary claim wording frozen, about response probabilities and scoped to the
+  frozen authored items rather than the semantic class.
+- The class-average effect is demoted from a formal secondary claim to a
+  descriptive estimate with no inferential content.
+- Interpretive consequence carried: because the assumption is
+  conditional-on-environment, a degraded index during the run is part of the
+  alternative rather than a Type-I threat. Stage 0B's replication separates them.

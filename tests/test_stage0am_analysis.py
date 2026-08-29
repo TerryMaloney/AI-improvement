@@ -279,3 +279,112 @@ class TestNegativeControlMetric:
         assert c.harm_rate_upper_95 < 0.20
         assert c.risk_difference == 0.0
         assert c.rejected is None
+
+
+class TestWithinItemArmDependenceIsIrrelevant:
+    """a_i - b_i = p_closed_i - p_search_i for an ARBITRARY joint distribution of
+    the two arm outcomes. The P(1,1) terms cancel, so within-item arm correlation
+    never enters the test. This is algebra, not an assumption."""
+
+    def test_identity_holds_for_arbitrary_joint_tables(self):
+        rng = random.Random(5)
+        for _ in range(2000):
+            v = [rng.random() for _ in range(4)]
+            tot = sum(v)
+            p11, p10, p01, _ = [x / tot for x in v]
+            a_minus_b = p10 - p01
+            p_closed, p_search = p11 + p10, p11 + p01
+            assert a_minus_b == pytest.approx(p_closed - p_search, abs=1e-12)
+
+
+def _orientation_type1(sampler, alpha, trials, seed):
+    rng = random.Random(seed)
+    hits = 0
+    for _ in range(trials):
+        n10, n01 = sampler(rng)
+        if exact_one_sided_p(n10, n01) <= alpha:
+            hits += 1
+    return hits / trials
+
+
+N_ITEMS = 25
+
+
+def _shared_pi(rng, lo, hi):
+    """One latent state, shared by every item in the run, sets the orientation
+    probability. Discordance occurrence stays independent."""
+    pi = rng.uniform(lo, hi)
+    n10 = n01 = 0
+    for _ in range(N_ITEMS):
+        if rng.random() < 0.5:
+            if rng.random() < pi:
+                n10 += 1
+            else:
+                n01 += 1
+    return n10, n01
+
+
+class TestArbitraryCrossItemDependenceBreaksTheTest:
+    """Not a bug to fix -- the assumption boundary, pinned so it cannot be
+    forgotten. These configurations satisfy H0_pointwise only MARGINALLY."""
+
+    def test_one_shared_orientation_coin_is_catastrophic(self):
+        def sampler(rng):
+            d = sum(1 for _ in range(N_ITEMS) if rng.random() < 0.5)
+            return (d, 0) if rng.random() < 0.5 else (0, d)
+        rate = _orientation_type1(sampler, 0.05, 8000, seed=41)
+        assert rate > 0.30, "a shared orientation coin must visibly break the test"
+
+    def test_even_mild_exchangeable_correlation_exceeds_nominal(self):
+        def sampler(rng):
+            pi = rng.betavariate(10.0, 10.0)
+            n10 = n01 = 0
+            for _ in range(N_ITEMS):
+                if rng.random() < 0.5:
+                    if rng.random() < pi:
+                        n10 += 1
+                    else:
+                        n01 += 1
+            return n10, n01
+        assert _orientation_type1(sampler, 0.05, 20000, seed=42) > 0.05
+
+    def test_latent_state_straddling_one_half_inflates(self):
+        rate = _orientation_type1(lambda r: _shared_pi(r, 0.2, 0.8), 0.05, 12000, seed=43)
+        assert rate > 0.05
+
+
+class TestConditionallySafeDependenceIsFine:
+    """If H0_pointwise holds conditional on EVERY realisation of the shared state
+    -- pi(Theta) <= 1/2 always, not merely on average -- the sequential
+    conditional inequality holds and validity is preserved."""
+
+    @pytest.mark.parametrize("hi", [0.5, 0.4, 0.3])
+    def test_shared_latent_state_never_above_one_half(self, hi):
+        rate = _orientation_type1(lambda r: _shared_pi(r, 0.0, hi), 0.05, 12000, seed=int(hi * 100))
+        assert rate <= 0.05
+
+    def test_adaptive_adversary_held_at_the_bound(self):
+        """Maximally hostile subject to P(X_j=1 | history) <= 1/2."""
+        def sampler(rng):
+            n10 = n01 = 0
+            for _ in range(N_ITEMS):
+                if rng.random() < 0.5:
+                    if rng.random() < 0.5:
+                        n10 += 1
+                    else:
+                        n01 += 1
+            return n10, n01
+        assert _orientation_type1(sampler, 0.05, 20000, seed=44) <= 0.05
+
+    def test_history_adaptive_adversary(self):
+        def sampler(rng):
+            n10 = n01 = 0
+            for _ in range(N_ITEMS):
+                if rng.random() < 0.5:
+                    p = 0.5 if n10 <= n01 else 0.1
+                    if rng.random() < p:
+                        n10 += 1
+                    else:
+                        n01 += 1
+            return n10, n01
+        assert _orientation_type1(sampler, 0.05, 20000, seed=45) <= 0.05

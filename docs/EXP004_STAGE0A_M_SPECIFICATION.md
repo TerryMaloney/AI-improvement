@@ -27,16 +27,28 @@ guarantee. That gap is closed here.
   at alpha=0.025**. Worst configurations sit on the boundary sum(a)=sum(b).
   `[OPEN]` No general Bernoulli proof is in hand.
 
-### 1.2 What a rejection licenses
+### 1.2 What a rejection licenses — exact frozen wording
 
-**PRIMARY, fully proven:** *at least one item in this class is harmed by
-retrieval* — the existence claim, which is what a mechanism assay is for.
+`[PREREG]` The primary claim is stated in the report in exactly these words:
 
-**SECONDARY, numerically supported at the planned design but not proven:** the
-class-average effect is negative.
+> **Among the preregistered authored items in this class, at least one item has a
+> lower probability of an objectively correct answer under the retrieval-enabled
+> procedure than under closed-book.**
 
-The report states the primary reading first and never presents the secondary as
-if it carried the same warrant.
+Three things that wording is doing deliberately. It is about **response
+probabilities**, not about the single observed answer — "this item was harmed" is
+not what a rejection shows. It is scoped to the **frozen authored item set**, not
+to the semantic class: no claim is made about date-anchored or
+definition-anchored questions in general. And it names the **retrieval-enabled
+procedure**, matching the intent-to-treat treatment definition in §6.
+
+**Class-average effect: descriptive only.** `[PREREG]` The class-average is
+reported as a point estimate with its discordance counts and carries **no
+inferential claim**. Its warrant is weaker than the primary claim's (proof only
+under Poissonization; a searched, non-exhaustive bound in the Bernoulli model),
+and the cross-item dependence assumption in §1.5 applies to it as well. Rather
+than maintain a formal secondary hypothesis with two layers of caveat, it is
+demoted to description — the option least likely to be inflated later.
 
 ### 1.3 Reconciling this with blindness to sign heterogeneity
 
@@ -55,7 +67,53 @@ Reproduced verbatim in the report regardless of outcome. **Not** naturalistic
 prevalence; **not** general retrieval harm; **not** controller or router value;
 **not** within-class sign heterogeneity; **not** existing-router performance or
 learned-router discoverability; **not** false-premise behaviour (excluded);
-**not** ordinary free-form temporal reasoning.
+**not** ordinary free-form temporal reasoning; **not** a generalisation from the
+frozen authored items to the semantic class.
+
+### 1.5 The cross-item dependence assumption
+
+Separate API requests are **not** by themselves statistically independent
+observations. The assumption is named rather than assumed away.
+
+**Not required — within-item arm independence.** `[PROVEN]` The identity
+a_i - b_i = p_closed_i - p_search_i holds for an arbitrary joint distribution of
+the two arm outcomes, because the P(both correct) terms cancel. Within-item arm
+correlation is irrelevant to the test.
+
+**Required, in its weakest sufficient form — the sequential conditional
+inequality.** For a preregistered item ordering, conditioning on which items came
+out discordant, the orientation of the j-th discordant item must satisfy
+P(baseline-favouring | earlier orientations, discordance pattern) <= 1/2.
+
+`[PROVEN]` Under that condition the baseline-favouring count is stochastically
+dominated by Binomial(D, 1/2), by sequential coupling to iid uniforms — the proof
+is in `lab/stage0am.py`. This is strictly weaker than independence: arbitrary
+dependence is permitted so long as no history makes a baseline-favouring
+orientation more likely than even.
+
+**It holds automatically if H0_pointwise holds conditional on every realisation of
+any shared latent state** (server load, index freshness, time of day). It **fails
+when the null holds only marginally.** `[MEASURED]` Type-I at n=25, alpha=0.05:
+
+| dependence structure | Type-I |
+|---|---:|
+| one shared orientation coin | **0.498** |
+| exchangeable beta mixture, c=0.5 | 0.324 |
+| 5 blocks of 5, orientation shared within block | 0.144 |
+| shared pi ~ U(0.2,0.8), mean exactly 1/2 | 0.121 |
+| **exchangeable beta mixture, c=10 (mild)** | **0.063** |
+| shared pi ~ U(0,0.5), always <= 1/2 | 0.003 |
+| adaptive adversary held at the bound | 0.028 |
+
+**Arbitrary cross-item dependence breaks this test badly, and even mild
+exchangeable orientation correlation exceeds nominal.** The defence is therefore
+procedural, not statistical — see §6.1.
+
+`[ASSUME]` One interpretive consequence must be carried: because the assumption
+is conditional-on-environment, a degraded search index during the run is not a
+Type-I threat but part of the alternative. A rejection may mean "retrieval hurt"
+or "retrieval hurt under that day's environment". Stage 0B's replication on a
+different day is what separates them.
 
 ## 2. The construct is narrower than "epistemic displacement", and we accept that
 
@@ -226,6 +284,39 @@ permission, verified by diff at preflight.
 arm's packet contains no `SEARCH BUDGET` line and no reference to tools it does
 not have.**
 
+### 6.1 Frozen dispatch schedule — the defence of the dependence assumption
+
+`[PREREG]` These rules exist to make §1.5's sequential conditional inequality
+credible. They are frozen before authoring and recorded in the manifest.
+
+| rule | why |
+|---|---|
+| **Arm order randomised independently within each item** | The single most important control. If temporal drift degrades later dispatches and arm order is randomised per item, drift cannot systematically favour one arm — it becomes noise rather than orientation correlation. |
+| **The two arms of an item dispatched close together in time** | Shared conditions then largely cancel *within* the item, and `[PROVEN]` within-item correlation is harmless. |
+| **Item order randomised, from a recorded seed** | Prevents position in the run from aligning with item identity. |
+| **Classes interleaved, never dispatched in per-class bursts** | Prevents class-by-time confounding, which is exactly the block structure measured at Type-I 0.144. |
+| **Fresh conversation/context per trial; no state reused** | No answer from one item may enter another item's prompt. |
+| **Model snapshot, timestamp, and available runtime metadata recorded per trial** | Enables the §6.2 diagnostics. |
+
+Note the tension resolved here: pairing arms in time makes shared conditions
+cancel within item, while interleaving items spreads any drift across classes.
+Both are adopted because they act on different failure modes.
+
+### 6.2 Dependence diagnostics — reported, never an inclusion rule
+
+`[METHOD]` With R=1 the available diagnostics are weak, and are described as such
+rather than presented as an independence test:
+
+- runs test on orientation in dispatch order;
+- orientation rate by run-position tercile;
+- orientation rate by arm-order assignment;
+- orientation rate by class, against the interleaving schedule.
+
+**These have very low power at D ≈ 13 and cannot establish independence.** They
+are reported as diagnostics. `[PREREG]` No result of theirs may exclude an item,
+a class, or a run — inventing a post-hoc "independence passed" gate with no power
+would be worse than reporting the weakness honestly.
+
 Logged per trial, with observed telemetry authoritative over model self-report:
 actual query text, query count, returned evidence/snippets, tool success, tool
 failures, timing, model snapshot, token counts, answer length, environment state.
@@ -357,6 +448,9 @@ blindness to within-class sign heterogeneity; reproducibility under a fixed seed
 13. Statistical analysis artifact committed and green
 14. Stop and failure rules committed
 15. Dispatch budget computed from the manifest
+16. Dispatch schedule frozen: item-order seed, per-item arm-order seed, class
+    interleaving pattern — all recorded in the manifest before dispatch
+17. Fresh-context-per-trial verified on a dry run
 
 ---
 

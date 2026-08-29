@@ -64,6 +64,71 @@ Non-rejection licenses neither the negation of the other. The statistic responds
 to net directional imbalance, so a class that is 40% badly harmed and 60% mildly
 helped returns a null -- asserted by test, so nobody later claims otherwise.
 
+THE CROSS-ITEM DEPENDENCE ASSUMPTION
+------------------------------------
+The domination argument needs the orientations of DIFFERENT items not to conspire.
+Separate API requests are not by themselves statistically independent
+observations, so the assumption has to be stated rather than assumed.
+
+What is NOT required: independence between the two arms WITHIN an item. That is
+an algebraic fact, not an assumption --
+    a_i - b_i = P(1,0) - P(0,1) = p_closed_i - p_search_i
+holds for an arbitrary joint distribution of the two arm outcomes, because
+p_closed = P(1,1)+P(1,0) and p_search = P(1,1)+P(0,1) and the P(1,1) terms
+cancel. Within-item arm correlation is therefore irrelevant to the test.
+
+What IS required, in its weakest sufficient form:
+
+    [SEQUENTIAL CONDITIONAL INEQUALITY]
+    Fix a preregistered ordering of items. Condition on which items came out
+    discordant. Let X_1..X_D be their orientations in that order, X_j = 1 for
+    baseline-favouring. Assume
+        P(X_j = 1 | X_1..X_{j-1}, the discordance pattern) <= 1/2   for every j.
+
+[PROVEN] Under that condition, sum_j X_j is stochastically dominated by
+Binomial(D, 1/2), so the one-sided binomial tail remains a valid p-value.
+Proof by sequential coupling: draw U_1..U_D iid Uniform(0,1) and realise
+X_j = 1{U_j <= p_j} where p_j is the conditional probability above. Since
+p_j <= 1/2 we have X_j <= 1{U_j <= 1/2} =: Z_j pointwise, the Z_j are iid
+Bernoulli(1/2), hence sum X_j <= sum Z_j ~ Binomial(D, 1/2) pointwise. D is
+fixed by the conditioning, and averaging over discordance patterns preserves the
+domination.
+
+This is strictly weaker than independence: it permits arbitrary dependence, so
+long as no history ever makes a baseline-favouring orientation more likely than
+even.
+
+WHEN THE CONDITION HOLDS, AND WHEN IT DOES NOT
+-----------------------------------------------
+It holds automatically if H0_pointwise holds CONDITIONAL ON every realisation of
+any shared latent state (server load, index freshness, time of day): if
+pi_i(Theta) <= 1/2 for every Theta, then any mixture over Theta given history is
+also <= 1/2.
+
+It FAILS when the null holds only MARGINALLY -- when a shared state pushes
+pi above 1/2 for some realisations and below for others. [MEASURED] Type-I at
+n=25, alpha=0.05:
+
+    one shared orientation coin (pi=0 or 1)          0.498
+    exchangeable beta mixture, c=0.5                 0.324
+    exchangeable beta mixture, c=2                   0.172
+    exchangeable beta mixture, c=10 (mild!)          0.063
+    5 blocks of 5, orientation shared in block       0.144
+    shared pi ~ U(0.2,0.8), mean exactly 1/2         0.121
+
+versus the conditionally-safe cases, which are conservative:
+
+    shared pi ~ U(0,0.5), always <= 1/2              0.003
+    adaptive adversary held at the bound             0.028
+    history-adaptive hostile adversary               0.000
+
+So arbitrary cross-item dependence breaks this test badly, and even mild
+exchangeable orientation correlation exceeds nominal. The design's defence is
+therefore procedural, not statistical: the dispatch schedule (randomised arm
+order within item, randomised item order, interleaved classes, arms paired in
+time, fresh context per trial) exists to make the sequential conditional
+inequality credible. See the specification's dispatch-schedule section.
+
 WHY R=1
 -------
 With a single replicate per item x arm there is no within-arm replicate
