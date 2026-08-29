@@ -135,3 +135,50 @@ This does not invalidate judge-based experiments; it limits what they are allowe
 2. record them as discarded/non-reusable because provenance is incomplete.
 
 Do not leave them in an ambiguous middle state.
+
+
+---
+
+## 2026-08-29 — Split Stage 0 into discovery, confirmation, naturalistic validation, and controller phases
+
+**Decision:** Stop trying to prove controller value in one large Stage-0 experiment.
+
+**Reason:** The class-stratified exact test can validly establish a negative class-level mean retrieval effect, but it cannot distinguish a trivial class rule from a general controller, cannot detect within-class sign heterogeneity, and says nothing about naturalistic prevalence.
+
+**Architecture:**
+1. Stage 0A — treatment-blind class mechanism discovery.
+2. Stage 0B — fresh independent confirmation and query-construction challenge.
+3. Stage 0C — naturalistic validation on unenriched tasks.
+4. Stage 0D — held-out mixed-task router/controller comparison.
+5. Stage 0E — richer action space only after binary control earns value.
+
+---
+
+## 2026-08-29 — Retire the prevalence-pilot-first architecture
+
+**Decision:** Do not run a separate prevalence pilot before Stage 0A.
+
+**Reason:** A per-class pilot informative enough to size production costs roughly production scale while producing no stronger scientific claim. Fixed-n discovery produces both feasibility information and a testable mechanism hypothesis for similar or lower cost.
+
+---
+
+## 2026-08-29 — Class-stratified discovery is mechanism evidence, not general controller evidence
+
+**Decision:** A significant class-level discovery may support:
+- retrieval harm under a preregistered stress condition;
+- a hand-authored class rule on that distribution.
+
+It does **not** support:
+- general sign heterogeneity;
+- existing-router performance;
+- learned-router discoverability;
+- naturalistic prevalence;
+- held-out controller value.
+
+---
+
+## 2026-08-29 — Query-generation failure is the primary planned alternative explanation
+
+**Decision:** Log search queries in Stage 0A and predefine a fixed/high-quality query arm for fresh Stage 0B confirmation.
+
+**Interpretation rule:** If ordinary-search harm replicates but disappears under fixed-query search, classify the mechanism primarily as query-construction failure rather than retrieval intrinsically harming the class.
