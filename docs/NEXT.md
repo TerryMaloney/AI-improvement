@@ -4,71 +4,80 @@
 
 ## Next authorized research action
 
-Design the **reversal-prevalence pilot** that determines whether the new R=1 exact discordant-pair Stage-0 design is feasible.
+Write and red-team the **Stage 0A mechanism-discovery specification**. No solver dispatches yet.
 
-Before any pilot dispatch:
+The specification must define:
 
-1. Re-derive and document the exact R=1 primary hypothesis/test.
-2. Define treatment-blind candidate task classes only.
-3. Define a fixed pilot item count and authoring process.
-4. Freeze whether pilot items are:
-   - wholly discarded after sample-size estimation, or
-   - wholly retained in the eventual analysis under a valid design.
-   Never retain/drop individual items based on observed arm direction.
-5. Predefine how pilot prevalence maps to:
-   - feasible production n;
-   - underpowered / infeasible verdict;
-   - any continuation or stop decision.
-6. Analyze uncertainty on prevalence; do not use the raw point estimate alone.
-7. Decide how the 27 unpersisted prior screen-class dispatches are recorded or explicitly discarded.
+1. The exact scientific claim:
+   - a preregistered treatment-blind class has a negative mean retrieval effect on an authored stress sample.
+   - explicitly not a general controller or naturalistic prevalence claim.
 
-Only after those choices are fixed may screen-class pilot dispatches occur.
+2. Four treatment-blind classes:
+   - one class per item;
+   - membership frozen before outcomes;
+   - surface classes used for stratification;
+   - hypothesized mechanism dimensions recorded only as covariates.
+
+3. Fixed-n discovery design:
+   - candidate starting point: 20 items/class;
+   - two arms;
+   - R=1;
+   - deterministic subset primary;
+   - exact one-sided conditional-binomial/McNemar-style test per class;
+   - Holm across classes.
+
+4. Authoring safeguards:
+   - no treatment-arm outcomes during item construction;
+   - no class rebalancing after outcome visibility;
+   - answer definitions explicit enough to avoid f15-style key ambiguity;
+   - clean closed arm;
+   - identical wrappers except the retrieval intervention.
+
+5. Query-generation confound:
+   - log generated queries verbatim in Stage 0A;
+   - predefine Stage 0B fixed-query arm now;
+   - if discovery survives but confirmation harm disappears under fixed query, classify as query-construction failure rather than retrieval harm.
+
+6. Confirmation architecture:
+   - fresh independently authored items;
+   - winner class/hypothesis frozen before confirmation items exist;
+   - power confirmation for a smaller effect than discovery because of winner's curse;
+   - candidate 25 fresh items;
+   - three arms: closed, ordinary search, fixed-query search.
+
+7. Stress-sample language:
+   - discovery/confirmation may establish predictable harm under condition X;
+   - they do not estimate naturalistic frequency or general-router value.
+
+8. Final preflight:
+   - egress state;
+   - telemetry;
+   - grading/key fingerprint;
+   - report skeleton;
+   - stale frozen-test assertion handled transparently.
 
 ## Hard stop
 
-Do **not** run production Stage-0 trials until:
-- the prevalence pilot is complete;
-- sample-size feasibility is resolved;
-- the statistical procedure is frozen;
-- item selection rules are frozen;
-- grading is frozen;
-- answer keys and prompts are frozen;
-- egress/telemetry/preflight passes;
+Do not dispatch Stage 0A until:
+- the discovery specification has been independently red-teamed;
+- item texts/keys are frozen;
+- class assignments are frozen;
+- n/classes/arms/grading/statistics are frozen;
+- query logging is active;
 - a distinct preregistration/freeze commit exists.
 
-## Current candidate design
+## Future stages after a positive Stage 0A
 
-Not frozen:
-- two arms;
-- R=1 per item×arm;
-- exact one-sided discordant-pair/McNemar-style primary test;
-- deterministic subset primary;
-- judged subset separate;
-- router secondary/descriptive.
+0B — fresh independent confirmation + fixed-query alternative.
+0C — naturalistic prevalence/importance.
+0D — held-out mixed-task controller test.
+0E — richer action space, only if earned.
 
-Treat all of the above as candidate decisions until the prevalence pilot and final red-team are complete.
+## Manual setup reminder
 
-## Cross-chat workflow
+If a future stage requires Terry to manually install, authorize, connect, or physically configure anything, the response must begin with the mandatory manual-setup alert defined in `docs/EXTERNAL_COGNITIVE_TOOLS_AND_TOPOLOGY_2026-08-29.md`.
 
-1. **GPT research/red-team session**
-   - inspect committed state;
-   - identify the smallest justified next question;
-   - produce an explicit Claude Code task with permissions and stop conditions.
-
-2. **Claude Code operator session**
-   - read repository first;
-   - execute only the authorized task;
-   - run tests;
-   - update coordination docs;
-   - commit and push;
-   - return a compact handoff.
-
-3. **GitHub**
-   - canonical memory and audit trail;
-   - frozen artifacts identified by commit SHA;
-   - chats never substitute for committed state.
-
-## Required Claude handoff format
+## Required Claude handoff
 
 ```text
 COMMIT:
@@ -83,5 +92,3 @@ OPEN:
 
 DO NOT:
 ```
-
-If a future stage requires Terry to manually install, authorize, connect, or physically configure anything, the response must begin with the mandatory manual-setup alert defined in `docs/EXTERNAL_COGNITIVE_TOOLS_AND_TOPOLOGY_2026-08-29.md`.
