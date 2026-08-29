@@ -172,8 +172,23 @@ class TestKnowledgeProbeSeparation:
     def test_the_primary_manifest_contains_no_screening_trials(self):
         assert MANIFEST["dispatch_classes"] == ["solver_experiment"]
 
-    def test_the_probe_has_not_run(self):
-        assert not (REPO / "runs" / "screens" / "knowledge_probe.json").exists()
+    def test_probe_artifact_if_present_is_screen_classed_and_uncontaminating(self):
+        """Infrastructure invariant, not an experimental assertion.
+
+        The original form of this test asserted the probe had not yet run. That
+        was a workflow precondition, and it expired the moment the probe was
+        dispatched and committed. What actually has to hold — before the probe,
+        after the probe, and forever — is that screening observations never leak
+        into a solver experiment. That is what is checked here. The probe
+        artifact and every frozen grade are read only.
+        """
+        artifact = REPO / "runs" / "screens" / "knowledge_probe.json"
+        if artifact.exists():
+            probe = json.loads(artifact.read_text())
+            assert probe["dispatch_class"] == "screen", \
+                "a probe artifact that is not screen-classed could be mistaken for experimental data"
+        assert not [t for t in MANIFEST["trials"] if t["dispatch_class"] == "screen"], \
+            "no screening trial may appear in the production manifest"
 
 
 class TestConsistencyAuditAcrossTheNineChanges:
