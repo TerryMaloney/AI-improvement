@@ -111,6 +111,24 @@ Let automated procedure search choose operations such as:
 retrieve / verify / revise / invalidate / execute / ask / defer / stop.
 Use frozen discovery/validation/holdout splits and a champion-regression policy.
 
+### H-EPI-11 — Explicit epistemic structure as a protective intervention
+This hypothesis emerged from the exp004 grading problem and must remain separate from exp004 itself.
+
+Compare ordinary answering against an otherwise matched condition that requires explicit fields such as:
+- premise status;
+- temporal scope;
+- definition scope;
+- source/evidence status;
+- uncertainty / unresolved status.
+
+Primary questions:
+1. Does explicit epistemic structure improve objective correctness?
+2. Does it specifically reduce retrieval-induced displacement?
+3. Is there a retrieval × epistemic-structure interaction?
+4. Does any benefit survive unseen tasks and naturalistic/execution settings?
+
+Important interpretation rule: structured epistemic output is an intervention on cognition, not a neutral grading device. If it improves performance, that is a procedure effect to be independently validated, not evidence that the original free-form measurement was unbiased.
+
 ## Likely avoid / do not build first
 
 - giant general-purpose knowledge graph;
@@ -143,13 +161,14 @@ Important: start with a small ledger backed by SQLite/JSON, not a graph database
 ## Candidate experimental progression
 
 1. Equal-evidence RAG vs explicit claim ledger.
-2. Add temporal validity.
-3. Add dependency invalidation / belief revision.
-4. Add execution observations.
-5. Add active routing based on epistemic state.
-6. Compare against uncertainty-only and generic controller baselines.
-7. Generalize to unseen tasks.
-8. Only then allow automated procedure search over epistemic operations.
+2. Explicit epistemic-structure intervention (H-EPI-11) as a small isolated test where objective grading is available.
+3. Add temporal validity.
+4. Add dependency invalidation / belief revision.
+5. Add execution observations.
+6. Add active routing based on epistemic state.
+7. Compare against uncertainty-only and generic controller baselines.
+8. Generalize to unseen tasks.
+9. Only then allow automated procedure search over epistemic operations.
 
 ## Novelty posture
 
