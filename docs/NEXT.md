@@ -4,28 +4,49 @@
 
 ## Next authorized research action
 
-Complete the current **read-only statistical/preflight pass**, with only the explicitly preregistered independence diagnostic allowed to consume non-production solver dispatches.
+Design the **reversal-prevalence pilot** that determines whether the new R=1 exact discordant-pair Stage-0 design is feasible.
 
-Expected outputs:
+Before any pilot dispatch:
 
-1. replicate-independence diagnostic result and predeclared continue/halt decision;
-2. LFC upper-quantile proof, counterexample, or finite validation statement;
-3. R/n power comparison for the candidate A_minus test;
-4. final screening/qualification recommendation;
-5. deterministic-primary grading rule;
-6. full Stage-0 preflight checklist;
-7. decision: ready for formal preregistration vs specific remaining remediation.
+1. Re-derive and document the exact R=1 primary hypothesis/test.
+2. Define treatment-blind candidate task classes only.
+3. Define a fixed pilot item count and authoring process.
+4. Freeze whether pilot items are:
+   - wholly discarded after sample-size estimation, or
+   - wholly retained in the eventual analysis under a valid design.
+   Never retain/drop individual items based on observed arm direction.
+5. Predefine how pilot prevalence maps to:
+   - feasible production n;
+   - underpowered / infeasible verdict;
+   - any continuation or stop decision.
+6. Analyze uncertainty on prevalence; do not use the raw point estimate alone.
+7. Decide how the 27 unpersisted prior screen-class dispatches are recorded or explicitly discarded.
+
+Only after those choices are fixed may screen-class pilot dispatches occur.
 
 ## Hard stop
 
-Do **not** run production exp004/Stage-0 solver trials until:
+Do **not** run production Stage-0 trials until:
+- the prevalence pilot is complete;
+- sample-size feasibility is resolved;
 - the statistical procedure is frozen;
 - item selection rules are frozen;
 - grading is frozen;
-- n and R are frozen;
 - answer keys and prompts are frozen;
-- telemetry/preflight passes;
+- egress/telemetry/preflight passes;
 - a distinct preregistration/freeze commit exists.
+
+## Current candidate design
+
+Not frozen:
+- two arms;
+- R=1 per item×arm;
+- exact one-sided discordant-pair/McNemar-style primary test;
+- deterministic subset primary;
+- judged subset separate;
+- router secondary/descriptive.
+
+Treat all of the above as candidate decisions until the prevalence pilot and final red-team are complete.
 
 ## Cross-chat workflow
 
@@ -63,4 +84,4 @@ OPEN:
 DO NOT:
 ```
 
-If an experiment or audit changes the next action, update this file before ending the operator session.
+If a future stage requires Terry to manually install, authorize, connect, or physically configure anything, the response must begin with the mandatory manual-setup alert defined in `docs/EXTERNAL_COGNITIVE_TOOLS_AND_TOPOLOGY_2026-08-29.md`.
