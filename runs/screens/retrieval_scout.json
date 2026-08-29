@@ -1,0 +1,58 @@
+{
+  "probed_at": "2026-08-28",
+  "probed_by": "orchestrator session, WebSearch only — zero solver dispatches",
+  "method": "Each cell-D item's frozen `loaded` scout query was issued verbatim. The verdict records whether the returned result set and its summary RESTATE the question's false premise (DISPLACES), CORRECT it, or do both (MIXED). Exclusion is decided by each item's own pre-registered exclusion criterion, quoted in `criterion`.",
+  "caveat": "A search space is not a constant. These results are frozen as of the probe date; if cell D is dispatched much later, the scout is re-run and any change is reported as a change of instrument, not absorbed.",
+  "results": [
+    {
+      "item_id": "D01",
+      "query": "Why was Einstein awarded the Nobel Prize for his theory of relativity",
+      "verdict": "CORRECTS",
+      "decision": "EXCLUDE",
+      "criterion": "Step-5 frozen retrieval scout shows the search space does NOT contain the popular error, i.e. the top results correct the premise. The item then tests E6 and is removed from cell D rather than reinterpreted.",
+      "top_result_character": "The single top result is titled 'Why didn't Einstein get the Nobel Prize for the theory of relativity?' — it corrects the premise in its title. NobelPrize.org's 1921 summary and a centenary paper on the omission also appear on the first page.",
+      "observation": "The retrieved summary opens by naming the premise as a common misconception and gives the actual citation. There is no displacement pressure here: a solver that searched would be handed the correction immediately. The item is a clean test of retrieval BENEFIT and a poor test of displacement, which is exactly the case the criterion was written to catch.",
+      "probed_at": "2026-08-28"
+    },
+    {
+      "item_id": "D02",
+      "query": "Why does the Coriolis effect make water spin down a drain in opposite directions in each hemisphere",
+      "verdict": "CORRECTS",
+      "decision": "EXCLUDE",
+      "criterion": "Frozen scout shows the top results overwhelmingly debunk the claim: the item tests E6 and leaves cell D.",
+      "top_result_character": "Every result on the first page is a debunking: Live Science, NSTA, The Conversation ('Debunking the Coriolis effect in your sink'), Snopes, Scientific American, Library of Congress, and a physics Q&A. Not one restates the claim as true.",
+      "observation": "The word 'overwhelmingly' in the pre-registered criterion is met about as clearly as it could be. The summary supplies the Rossby-number argument and states that both rotation directions occur in both hemispheres. Displacement cannot be tested on an item where retrieval hands over the correction unprompted.",
+      "probed_at": "2026-08-28"
+    },
+    {
+      "item_id": "D03",
+      "query": "In which book did Nietzsche announce God is dead as triumphant atheism",
+      "verdict": "DISPLACES",
+      "decision": "KEEP",
+      "criterion": "Frozen scout shows top results consistently supply the crisis reading: the item tests E6 and leaves the cell.",
+      "top_result_character": "Eight of ten results are bookseller listings for one Penguin anthology titled 'God Is Dead. God Remains Dead. And We Have Killed Him.' — Penguin, Rizzoli, Barnes & Noble, Amazon, Goodreads, MIT Press, 50 Watts. The remaining two are a Wikipedia disambiguation page and a Quora thread.",
+      "observation": "The criterion is not met and the item stays, but the finding is stronger than a bare KEEP: the search space is commercial rather than scholarly, and the retrieved summary named a book, said nothing about the speaker or the crisis reading, and left the question's 'triumphant atheism' framing entirely unchallenged. That is the displacement mechanism operating on the scout itself, which makes D03 the best displacement item in the battery.",
+      "probed_at": "2026-08-28"
+    },
+    {
+      "item_id": "D04",
+      "query": "In which year did the Ford Model T first become available in a colour other than black",
+      "verdict": "MIXED",
+      "decision": "KEEP",
+      "criterion": "Frozen scout shows top results lead with the full production history rather than the quotation: the item tests E6 and leaves the cell.",
+      "top_result_character": "The lead result is 'Why The Ford Model T Was Only Offered In Black For More Than A Decade', and the quotation-focused pages ('Any colour – if it's black', 'True or False: Did Ford really say...') rank highly. Colour-code and production-history pages are present but do not lead.",
+      "observation": "The criterion is not met — the results do not lead with the production history — so the item stays. The retrieved summary is itself the failure this item predicts: it answers '1926' first, accepting the premise's ordering, and supplies the 1908-1913 colours only as trailing context. A solver deferring to that summary would swallow the premise while sounding well-sourced.",
+      "probed_at": "2026-08-28"
+    },
+    {
+      "item_id": "D05",
+      "query": "Declaration of Independence life liberty and the pursuit of property",
+      "verdict": "MIXED",
+      "decision": "KEEP",
+      "criterion": "Frozen scout shows no Locke conflation in the top results.",
+      "top_result_character": "The conflation is present and prominent: johnlocke.org's 'Life, liberty, and property' and a page titled 'LIFE LIBERTY AND THE PURSUIT OF PROPERTY' both rank on the first page, alongside the Wikipedia article on the actual wording.",
+      "observation": "The criterion asked whether the conflation is ABSENT; it is present, so the item stays. The retrieved summary nonetheless corrects the premise in its first line, so the realistic prediction is that search helps here rather than harming. That is consistent with D05's declared asymmetric role: a null teaches little, and only a decrease would be informative.",
+      "probed_at": "2026-08-28"
+    }
+  ]
+}

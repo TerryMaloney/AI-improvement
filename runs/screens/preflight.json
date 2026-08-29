@@ -1,0 +1,221 @@
+{
+  "question": "CAN THE EXPERIMENT RUN WITHOUT CHANGING ANY EXPERIMENTAL RULE AFTER SEEING SOLVER RESULTS?",
+  "answer": "NO",
+  "runnable": false,
+  "passed": 20,
+  "total": 25,
+  "blockers": [
+    {
+      "id": "experiment_identity",
+      "question": "Is there a versioned experiment configuration to run?",
+      "status": "FAIL",
+      "detail": "no experiments/exp003a_mechanism.yaml",
+      "fix": "write the experiment configuration: id, conditions, models, repeats, battery, and the frozen fingerprints it runs against"
+    },
+    {
+      "id": "git_identity",
+      "question": "Can the exact runnable experiment be identified from the repository?",
+      "status": "FAIL",
+      "detail": "10 uncommitted change(s); HEAD c641bce3e51d does not describe what would run",
+      "fix": "commit everything before dispatch so the run has an identity"
+    },
+    {
+      "id": "screens_complete",
+      "question": "Has every screen actually run?",
+      "status": "BLOCKED",
+      "detail": "25 of 25 items have no knowledge-probe result",
+      "fix": "dispatch the knowledge probe (baseline only, k=5) and commit runs/screens/knowledge_probe.json. Thresholds are already frozen at ceiling>=0.90 / floor<=0.10, so running it cannot change them."
+    },
+    {
+      "id": "routing_consistency",
+      "question": "Does each item receive the directive its specification predicts about?",
+      "status": "FAIL",
+      "detail": "10/25 items route to a different claim type than declared: C: ['C02']; D: ['D04']; L: ['L05']; N: ['N02', 'N03', 'N04']; R: ['R01', 'R02', 'R03', 'R04']",
+      "fix": "decide, in writing and before dispatch, between (a) pre-registered route overrides so each arm delivers the directive its spec predicts about, (b) rewording the items, or (c) excluding them. Whichever is chosen changes the estimand and must be recorded."
+    },
+    {
+      "id": "power_recomputed",
+      "question": "Is the power statement recomputed for the surviving items?",
+      "status": "BLOCKED",
+      "detail": "power is recomputed and committed, but 10 exclusions are still an open decision. If they were applied, these cells would fall to DEAD or SINGLE-ITEM: ['R', 'N', 'C']",
+      "fix": "resolve `routing_consistency`; the operative power figures cannot be final while an exclusion set is undecided"
+    }
+  ],
+  "checks": [
+    {
+      "id": "battery_schema",
+      "question": "Does the battery load and validate under its own schema?",
+      "status": "PASS",
+      "detail": "diagnostic_v1: 25 items load, all validated by lab.spec.validate_item",
+      "fix": ""
+    },
+    {
+      "id": "required_fields",
+      "question": "Does every item carry every required specification field?",
+      "status": "PASS",
+      "detail": "all 22 fields present on all 25 items",
+      "fix": ""
+    },
+    {
+      "id": "tier_compliance",
+      "question": "Does every item respect the tier wall?",
+      "status": "PASS",
+      "detail": "no judged item reaches PRIMARY; all PRIMARY items are deterministic",
+      "fix": ""
+    },
+    {
+      "id": "outcome_types",
+      "question": "Is every outcome type one the lab can actually produce?",
+      "status": "PASS",
+      "detail": "deterministic=16, deterministic_with_judge_fallback=5, judged=4 \u2014 deterministic, judge-fallback and judged kept distinct",
+      "fix": ""
+    },
+    {
+      "id": "length_sensitivity",
+      "question": "Does every item's length declaration match whether it has a judge?",
+      "status": "PASS",
+      "detail": "every judge-free item declares NONE; no item with a judge does",
+      "fix": ""
+    },
+    {
+      "id": "expected_retrieval_states",
+      "question": "Is every declared retrieval state reachable in this environment?",
+      "status": "PASS",
+      "detail": "all declared states within the probed reachable set ['CLAIM_EVIDENCE_MATCH', 'NONE', 'RETRIEVAL']",
+      "fix": ""
+    },
+    {
+      "id": "retrieval_reproducibility",
+      "question": "Has the environment's retrieval behaviour been probed and frozen?",
+      "status": "PASS",
+      "detail": "egress probed 2026-08-28 (search=True, fetch=False); all 5 cell-D items scouted 2026-08-28",
+      "fix": ""
+    },
+    {
+      "id": "ground_truth",
+      "question": "Is every scorable item's ground truth verified, and every unscorable one honest about it?",
+      "status": "PASS",
+      "detail": "21 verified, 4 rubric_only with no value by construction",
+      "fix": ""
+    },
+    {
+      "id": "answer_leak",
+      "question": "Can any answer-key value reach a solver?",
+      "status": "PASS",
+      "detail": "62 answer-key strings checked against every packet in every condition; none present",
+      "fix": ""
+    },
+    {
+      "id": "treatment_definitions",
+      "question": "Is every condition the battery names actually defined?",
+      "status": "PASS",
+      "detail": "all 9 conditions defined with texts and dispatch costs",
+      "fix": ""
+    },
+    {
+      "id": "treatment_freeze",
+      "question": "Do the treatment texts still match the frozen fingerprint?",
+      "status": "PASS",
+      "detail": "matches frozen fingerprint ec82dca23261",
+      "fix": ""
+    },
+    {
+      "id": "scoring_freeze",
+      "question": "Are the scoring rules and rubrics frozen?",
+      "status": "PASS",
+      "detail": "battery + key match frozen fingerprint 8c56840fda13",
+      "fix": ""
+    },
+    {
+      "id": "judge_config",
+      "question": "Is the judge in the configuration exp003c calibrated?",
+      "status": "PASS",
+      "detail": "template matches exp003c (394088980cee); C4 replicates k=3 pending OPEN-1",
+      "fix": ""
+    },
+    {
+      "id": "telemetry",
+      "question": "Can the lab record what a dispatch actually cost?",
+      "status": "PASS",
+      "detail": "solver and judge dispatches both record tokens, latency and observed tool calls",
+      "fix": ""
+    },
+    {
+      "id": "cost_accounting",
+      "question": "Is cost computed from observation rather than self-report?",
+      "status": "PASS",
+      "detail": "cost derives from tool_calls_observed; self-report reported beside it as a calibration datum and never as cost",
+      "fix": ""
+    },
+    {
+      "id": "dispatch_accounting",
+      "question": "Are multi-dispatch arms counted at their real cost?",
+      "status": "PASS",
+      "detail": "A_only=1, baseline=1, closed_book=1, directive_only=1, directive_placebo=1, search_directive=1, search_independent=3, search_only=1, search_selfcheck=2",
+      "fix": ""
+    },
+    {
+      "id": "determinism",
+      "question": "Does preparation produce the same packets every time?",
+      "status": "PASS",
+      "detail": "placebo and A_only generation are deterministic (seeded from question text, no RNG); trial order carries no randomisation, so there is no seed to record",
+      "fix": ""
+    },
+    {
+      "id": "prep_dispatch_separation",
+      "question": "Is preparation code free of any ability to dispatch a solver?",
+      "status": "PASS",
+      "detail": "no preparation module can reach the network or spawn a process; dispatch is the orchestrator's job and happens outside this code",
+      "fix": ""
+    },
+    {
+      "id": "no_solver_contamination",
+      "question": "Has any solver result touched the specification?",
+      "status": "PASS",
+      "detail": "no exp003a answers, grades or database exist; the specification predates all results",
+      "fix": ""
+    },
+    {
+      "id": "experiment_identity",
+      "question": "Is there a versioned experiment configuration to run?",
+      "status": "FAIL",
+      "detail": "no experiments/exp003a_mechanism.yaml",
+      "fix": "write the experiment configuration: id, conditions, models, repeats, battery, and the frozen fingerprints it runs against"
+    },
+    {
+      "id": "git_identity",
+      "question": "Can the exact runnable experiment be identified from the repository?",
+      "status": "FAIL",
+      "detail": "10 uncommitted change(s); HEAD c641bce3e51d does not describe what would run",
+      "fix": "commit everything before dispatch so the run has an identity"
+    },
+    {
+      "id": "screens_complete",
+      "question": "Has every screen actually run?",
+      "status": "BLOCKED",
+      "detail": "25 of 25 items have no knowledge-probe result",
+      "fix": "dispatch the knowledge probe (baseline only, k=5) and commit runs/screens/knowledge_probe.json. Thresholds are already frozen at ceiling>=0.90 / floor<=0.10, so running it cannot change them."
+    },
+    {
+      "id": "routing_consistency",
+      "question": "Does each item receive the directive its specification predicts about?",
+      "status": "FAIL",
+      "detail": "10/25 items route to a different claim type than declared: C: ['C02']; D: ['D04']; L: ['L05']; N: ['N02', 'N03', 'N04']; R: ['R01', 'R02', 'R03', 'R04']",
+      "fix": "decide, in writing and before dispatch, between (a) pre-registered route overrides so each arm delivers the directive its spec predicts about, (b) rewording the items, or (c) excluding them. Whichever is chosen changes the estimand and must be recorded."
+    },
+    {
+      "id": "power_recomputed",
+      "question": "Is the power statement recomputed for the surviving items?",
+      "status": "BLOCKED",
+      "detail": "power is recomputed and committed, but 10 exclusions are still an open decision. If they were applied, these cells would fall to DEAD or SINGLE-ITEM: ['R', 'N', 'C']",
+      "fix": "resolve `routing_consistency`; the operative power figures cannot be final while an exclusion set is undecided"
+    },
+    {
+      "id": "mechanism_confounds",
+      "question": "Is every mechanism the design cannot separate written down?",
+      "status": "PASS",
+      "detail": "FD-11 records the mechanisms the design cannot separate and how each is bounded",
+      "fix": ""
+    }
+  ]
+}

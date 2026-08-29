@@ -394,34 +394,31 @@ def _seeded(question: str, n: int) -> int:
 # Generation
 # --------------------------------------------------------------------------
 
-def build(block: str, question: str) -> str:
-    """Generate the placebo that mirrors `block` for `question`.
+def _assemble(block: str, question: str, lead_override: str | None = None,
+              header_override: str | None = None, pinned: dict[int, str] | None = None):
+    """Shared body: build the plan and slots, solve the lengths, render.
 
-    `block` is the real `Route.prompt_block()` output for that question, so the
-    placebo tracks it question by question rather than matching on average.
+    Returns (text, chosen, slot_roles) so a caller can reuse the exact variant
+    choices. `pinned` fixes named slots to a given string before solving, which
+    is how `A_only` reuses the placebo's carrier verbatim.
     """
     shape = parse_shape(block)
     reg = _REGISTERS[_seeded(question, len(_REGISTERS))]
     conf = 0.60 + (_seeded(question + "|c", 40) / 100.0)
 
     slots: list[list[str]] = []
+    roles: list[str] = []
     plan: list[tuple[str, object]] = []
-    bullet_cursor = 0
-    note_cursor = 0
-    caveat_cursor = 0
-    section_index = 0
+    bullet_cursor = note_cursor = caveat_cursor = section_index = 0
 
     for seg in shape.segments:
         if seg.kind == "inline":
             if section_index == 0:
-                # Mirrors "CLAIM TYPE: X (classifier confidence 0.85)" — a fixed
-                # single line, so no length slot.
-                plan.append(("fixed", f"RESPONSE REGISTER: {reg} (profile weight {conf:.2f})"))
+                plan.append(("fixed", header_override or
+                             f"RESPONSE REGISTER: {reg} (profile weight {conf:.2f})"))
             else:
-                # Mirrors the SEARCH BUDGET paragraph. Deliberately carries no
-                # number of any kind (FD-5).
                 plan.append(("slot", len(slots)))
-                slots.append(list(_CLOSING[0]))
+                slots.append(list(_CLOSING[0])); roles.append("closing")
         else:
             header = (
                 _SECTION_HEADERS["emdash"] if seg.header_has_emdash
@@ -430,37 +427,36 @@ def build(block: str, question: str) -> str:
             )
             lines: list[tuple[str, object]] = [("fixed", header)]
             for _ in range(seg.n_lead_prose):
-                plan_slot = len(slots)
-                slots.append([v.format(reg=reg) for v in _LEAD[0]])
-                lines.append(("slot", plan_slot))
+                idx = len(slots)
+                slots.append([lead_override] if lead_override
+                             else [v.format(reg=reg) for v in _LEAD[0]])
+                roles.append("lead"); lines.append(("slot", idx))
             for _ in range(seg.n_bullets):
                 if seg.header_has_emdash:
-                    pool = _NOTE_BULLETS[note_cursor % len(_NOTE_BULLETS)]
-                    note_cursor += 1
+                    pool = _NOTE_BULLETS[note_cursor % len(_NOTE_BULLETS)]; note_cursor += 1
                 elif section_index > 1:
-                    pool = _CAVEAT_BULLETS[caveat_cursor % len(_CAVEAT_BULLETS)]
-                    caveat_cursor += 1
+                    pool = _CAVEAT_BULLETS[caveat_cursor % len(_CAVEAT_BULLETS)]; caveat_cursor += 1
                 else:
-                    pool = _BULLETS[bullet_cursor % len(_BULLETS)]
-                    bullet_cursor += 1
-                plan_slot = len(slots)
-                slots.append(["- " + v for v in pool])
-                lines.append(("slot", plan_slot))
+                    pool = _BULLETS[bullet_cursor % len(_BULLETS)]; bullet_cursor += 1
+                idx = len(slots)
+                slots.append(["- " + v for v in pool]); roles.append("bullet")
+                lines.append(("slot", idx))
             for _ in range(seg.n_trailing_prose):
-                plan_slot = len(slots)
-                slots.append(list(_TRAILING[0]))
-                lines.append(("slot", plan_slot))
+                idx = len(slots)
+                slots.append(list(_TRAILING[0])); roles.append("trailing")
+                lines.append(("slot", idx))
             plan.append(("section", lines))
         section_index += 1
 
+    for idx, text in (pinned or {}).items():
+        slots[idx] = [text]
+
     fixed = [v for kind, v in plan if kind == "fixed"]
     fixed += [v for kind, lines in plan if kind == "section" for k, v in lines if k == "fixed"]
-    fixed_words = sum(_words(v) for v in fixed)
-    fixed_emdash = sum(v.count("\u2014") for v in fixed)
     chosen = _choose(
         slots,
-        max(shape.words - fixed_words, 0),
-        max(block.count("\u2014") - fixed_emdash, 0),
+        max(shape.words - sum(_words(v) for v in fixed), 0),
+        max(block.count("\u2014") - sum(v.count("\u2014") for v in fixed), 0),
     )
 
     def render(entry) -> str:
@@ -473,7 +469,58 @@ def build(block: str, question: str) -> str:
             out.append("\n".join(render(e) for e in value))
         else:
             out.append(render((kind, value)))
-    return "\n\n".join(out)
+    return "\n\n".join(out), chosen, roles
+
+
+def build(block: str, question: str, lead_override: str | None = None,
+          header_override: str | None = None) -> str:
+    """Generate the placebo that mirrors `block` for `question`.
+
+    `block` is the real `Route.prompt_block()` output for that question, so the
+    placebo tracks it question by question rather than matching on average.
+
+    `lead_override` and `header_override` exist for `A_only` and the
+    `elaboration_only` compute control (lab/treatments.py), which need a
+    length-matched carrier and should get it from the machinery that already
+    does the matching rather than from a hand-written block.
+    """
+    return _assemble(block, question, lead_override, header_override)[0]
+
+
+def build_reusing_carrier(block: str, question: str, lead: str, header: str) -> str:
+    """Build a variant that reuses the placebo's carrier text VERBATIM.
+
+    Why this exists, found by a test: `build(..., lead_override=...)` pins the
+    lead, which changes the length budget, which makes the length solver pick
+    different variants for the carrier bullets. `A_only` and
+    `directive_placebo` then differed on EIGHT lines instead of two — so the
+    contrast between them was "the epistemic framing, plus a redistribution of
+    inert prose" rather than the framing alone.
+
+    The fix is to pin most of the carrier and leave a few slots free to absorb
+    the difference: the closing paragraph, the trailing prose where there is
+    one, and the last bullet. Everything else is the placebo's text verbatim, so
+    the two blocks differ on a handful of lines instead of most of them, with
+    total word count, bullet count, structure and formatting markers all still
+    matched exactly.
+    """
+    _, base_choices, roles = _assemble(block, question)
+    # Slots left free to absorb the difference. The closing paragraph has the
+    # widest range, but it alone is not always enough: a framing sentence with
+    # no em dash where the placebo's lead had one leaves an em-dash deficit the
+    # closing cannot always cover (found on U03, whose PREDICTIVE framing has
+    # none and which has no trailing or caveat slot to borrow from). Freeing the
+    # trailing slot and the LAST bullet gives two more degrees of freedom while
+    # keeping every other bullet identical to the placebo's.
+    last_bullet = max(
+        (i for i, role in enumerate(roles) if role == "bullet"), default=None
+    )
+    free = {i for i, role in enumerate(roles) if role in ("lead", "closing", "trailing")}
+    if last_bullet is not None:
+        free.add(last_bullet)
+    pinned = {i: base_choices[i] for i in range(len(roles)) if i not in free}
+    return _assemble(block, question, lead_override=lead, header_override=header,
+                     pinned=pinned)[0]
 
 
 # --------------------------------------------------------------------------

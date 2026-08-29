@@ -433,8 +433,8 @@ not a correction to them. Neither is rescored; both remain frozen.
 | 2 evaluation-design revision | **done — C1–C4 above** |
 | 3 instrument work (§7) | **done — §12** |
 | 4 `diagnostic_v1` battery + per-item specs | **done — §13** |
-| 5 screens + frozen retrieval scout | next |
-| 6 formal preflight (§8) | blocked on 5 |
+| 5 screens + frozen retrieval scout | **done — §14** |
+| 6 formal preflight (§8) | **built and failing closed — §14.4** |
 | 7 exp003a | blocked on 6 |
 
 **No solver trial has been run. None may run until steps 3–6 are complete.**
@@ -605,3 +605,89 @@ not a prediction.
 ### 13.5 Test baseline
 
 The 130-test baseline remains unmodified and green. The suite is now **670**.
+
+
+---
+
+## 14. Step 5 — final pre-experiment hardening
+
+Zero solver dispatches. The step's objective was not to finish the setup but to
+establish whether the experiment is *runnable* — every rule fixed in writing,
+every screen actually run on criteria fixed beforehand, no specification claim
+the runtime cannot produce, every named condition an actual text, and every
+mechanism the design cannot separate written down in advance.
+
+**Verdict: NOT RUNNABLE.** The preflight answers **NO** at 20/25. Full report in
+`docs/EXP003A_READINESS.md`; blockers summarised in §14.5.
+
+### 14.1 Two findings, obtained for zero solver dispatches
+
+**Routing agreement is 60% (15/25).** The router picks which directive gets
+injected, so a misroute means the arm delivers a different treatment from the one
+the item's specification predicts about. The failures are systematic: word
+problems never reach DETERMINISTIC (the classifier needs an explicit operator
+between two numbers), and superlatives — "first successful", "Best Picture" —
+route NORMATIVE at 0.90 confidence. All four cell-R items are affected, which
+would leave cell R testing an irrelevant directive. Recorded as FD-12 with three
+options and their measured costs; the decision is the operator's.
+
+**Two of five cell-D items excluded by their own pre-registered criteria.** The
+frozen scout showed D01's and D02's search spaces *correct* the premise rather
+than restating it — D01's top result is titled "Why didn't Einstein get the Nobel
+Prize for the theory of relativity?", and every first-page result for D02 is a
+debunking. They test retrieval benefit, not displacement. Cell D runs on three
+items and is REDUCED: consistency falls from 2-of-5 to 2-of-3.
+
+### 14.2 The three conditions that were only labels are now treatments
+
+`A_only` is built by the placebo machinery, reusing the placebo's carrier text
+almost verbatim, so it is matched on word count within 10% and on bullet count,
+section headers, paragraph blocks and em-dash count **exactly**, and differs from
+`directive_placebo` on at most four lines. `search_selfcheck`'s reviewer sees the
+question and the draft but not the snippets. `search_independent`'s gatherer
+receives a **frozen neutral topic string** rather than the question — without
+which "claim-blind" is empty on this battery, since every cell-D question
+contains its own false premise.
+
+Neither multi-dispatch arm is called verification: `is_verification()` computes
+the answer from the formal definition and the probed environment, and returns
+True for `search_independent` only under hypothetical open egress. Neither is
+counted as one dispatch.
+
+### 14.3 The mechanism question, answered before dispatch
+
+Retrieval, external information and repeated attempts are excluded from the
+primary cells **by construction** — closed-book arms, no retries, replicates
+scored independently. Two mechanisms are **not** separated, and both are recorded
+in FD-11 with a bounding plan rather than discovered later:
+
+* **Additional computation.** "Show the steps" elicits more intermediate tokens,
+  which improves arithmetic on its own. The placebo matches the prompt, not the
+  response. Bounded now by a response-token covariate — explicitly a weak bound,
+  since response length is a mediator. Measured properly only by adopting
+  `elaboration_only`, which is written and frozen but deliberately not adopted:
+  it costs 20 trials and changes cell R's estimand.
+* **Self-correction versus a second pass.** Reported as "a second dispatch of any
+  kind", never as self-correction.
+
+### 14.4 The preflight
+
+Twenty-five checks, fail-closed, one binary question: *can the experiment run
+without changing any experimental rule after seeing solver results?* An unknown
+check is a FAIL, an unrun screen is BLOCKED, and `runnable` is the conjunction of
+all of them. A test asserts it currently answers NO — so clearing the blockers is
+visible as that test starting to fail, rather than as nothing.
+
+### 14.5 Blockers
+
+| # | Check | Status | Needs |
+|---|---|---|---|
+| D1 | `routing_consistency` | FAIL | an operator decision between route overrides, rewording, or exclusion (FD-12) |
+| D2 | `screens_complete` | BLOCKED | the knowledge probe dispatched, ~125 trials, thresholds already frozen |
+| D3 | `power_recomputed` | BLOCKED | resolution of D1, then one operative power table |
+| D4 | `experiment_identity` | FAIL | the exp003a config, written after D1 and D2 |
+| D5 | `git_identity` | FAIL | a clean tree at dispatch time |
+
+### 14.6 Test baseline
+
+The 130-test baseline remains unmodified and green. The suite is now **756**.

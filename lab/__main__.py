@@ -185,6 +185,36 @@ def cmd_spec(args) -> None:
         print(text)
 
 
+def cmd_preflight(args) -> None:
+    """Run the fail-closed preflight and print its verdict."""
+    from lab.preflight import render, run, write
+
+    result = run()
+    print(render(result))
+    path = write(result)
+    print(f"\nwrote {path}")
+    if not result["runnable"]:
+        sys.exit(1)
+
+
+def cmd_screens(args) -> None:
+    """Run the deterministic screens that need no solver."""
+    from lab.battery import load_battery
+    from lab.screens import EXCLUDE, routing_screen, write_screen_report
+
+    battery = load_battery(args.battery)
+    results = routing_screen(battery)
+    bad = [r for r in results if r.decision == EXCLUDE]
+    payload = {
+        "screen": "routing",
+        "battery": battery.id,
+        "agreement": f"{len(results) - len(bad)}/{len(results)}",
+        "results": [r.__dict__ for r in results],
+    }
+    print(json.dumps(payload, indent=2, default=str))
+    print(f"\nwrote {write_screen_report('routing', payload)}")
+
+
 def main(argv: list[str] | None = None) -> None:
     p = argparse.ArgumentParser(prog="lab", description=__doc__,
                                 formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -228,6 +258,13 @@ def main(argv: list[str] | None = None) -> None:
                     help="what was actually observed — the evidence behind the two flags")
     sp.add_argument("--as-of", default=None)
     sp.set_defaults(func=cmd_egress_probe)
+
+    sp = sub.add_parser("preflight")
+    sp.set_defaults(func=cmd_preflight)
+
+    sp = sub.add_parser("screens")
+    sp.add_argument("battery", nargs="?", default="diagnostic_v1")
+    sp.set_defaults(func=cmd_screens)
 
     sp = sub.add_parser("spec")
     sp.add_argument("battery")

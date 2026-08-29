@@ -1,0 +1,465 @@
+{
+  "screen": "routing",
+  "battery": "diagnostic_v1",
+  "agreement": "15/25",
+  "results": [
+    {
+      "item_id": "L01",
+      "screen": "routing",
+      "decision": "KEEP",
+      "reason": "routes EMPIRICAL as declared",
+      "detail": {
+        "declared": "EMPIRICAL",
+        "routed": "EMPIRICAL",
+        "confidence": 0.6,
+        "search_budget": 2,
+        "signals": {
+          "ENTITY_VETO": [
+            "who/when/where/which interrogative"
+          ]
+        },
+        "cell": "L"
+      }
+    },
+    {
+      "item_id": "L02",
+      "screen": "routing",
+      "decision": "KEEP",
+      "reason": "routes EMPIRICAL as declared",
+      "detail": {
+        "declared": "EMPIRICAL",
+        "routed": "EMPIRICAL",
+        "confidence": 0.6,
+        "search_budget": 2,
+        "signals": {
+          "ENTITY_VETO": [
+            "who/when/where/which interrogative"
+          ]
+        },
+        "cell": "L"
+      }
+    },
+    {
+      "item_id": "L03",
+      "screen": "routing",
+      "decision": "KEEP",
+      "reason": "routes EMPIRICAL as declared",
+      "detail": {
+        "declared": "EMPIRICAL",
+        "routed": "EMPIRICAL",
+        "confidence": 0.6,
+        "search_budget": 2,
+        "signals": {
+          "ENTITY_VETO": [
+            "who/when/where/which interrogative"
+          ]
+        },
+        "cell": "L"
+      }
+    },
+    {
+      "item_id": "L04",
+      "screen": "routing",
+      "decision": "KEEP",
+      "reason": "routes EMPIRICAL as declared",
+      "detail": {
+        "declared": "EMPIRICAL",
+        "routed": "EMPIRICAL",
+        "confidence": 0.6,
+        "search_budget": 2,
+        "signals": {
+          "ENTITY_VETO": [
+            "who/when/where/which interrogative"
+          ]
+        },
+        "cell": "L"
+      }
+    },
+    {
+      "item_id": "L05",
+      "screen": "routing",
+      "decision": "EXCLUDE",
+      "reason": "declared EMPIRICAL, routes NORMATIVE at confidence 0.90 \u2014 the injected directive would be the NORMATIVE one, not the EMPIRICAL one the specification predicts about",
+      "detail": {
+        "declared": "EMPIRICAL",
+        "routed": "NORMATIVE",
+        "confidence": 0.9,
+        "search_budget": 0,
+        "signals": {
+          "NORMATIVE": [
+            "choice framing"
+          ],
+          "ENTITY_VETO": [
+            "who/when/where/which interrogative"
+          ]
+        },
+        "cell": "L"
+      }
+    },
+    {
+      "item_id": "L06",
+      "screen": "routing",
+      "decision": "KEEP",
+      "reason": "routes EMPIRICAL as declared",
+      "detail": {
+        "declared": "EMPIRICAL",
+        "routed": "EMPIRICAL",
+        "confidence": 0.6,
+        "search_budget": 2,
+        "signals": {
+          "ENTITY_VETO": [
+            "who/when/where/which interrogative",
+            "proper noun present"
+          ]
+        },
+        "cell": "L"
+      }
+    },
+    {
+      "item_id": "R01",
+      "screen": "routing",
+      "decision": "EXCLUDE",
+      "reason": "declared DETERMINISTIC, routes EMPIRICAL at confidence 0.60 \u2014 the injected directive would be the EMPIRICAL one, not the DETERMINISTIC one the specification predicts about",
+      "detail": {
+        "declared": "DETERMINISTIC",
+        "routed": "EMPIRICAL",
+        "confidence": 0.6,
+        "search_budget": 2,
+        "signals": {
+          "ENTITY_VETO": [
+            "who/when/where/which interrogative",
+            "current-state framing"
+          ]
+        },
+        "cell": "R"
+      }
+    },
+    {
+      "item_id": "R02",
+      "screen": "routing",
+      "decision": "EXCLUDE",
+      "reason": "declared DETERMINISTIC, routes EMPIRICAL at confidence 0.60 \u2014 the injected directive would be the EMPIRICAL one, not the DETERMINISTIC one the specification predicts about",
+      "detail": {
+        "declared": "DETERMINISTIC",
+        "routed": "EMPIRICAL",
+        "confidence": 0.6,
+        "search_budget": 2,
+        "signals": {
+          "ENTITY_VETO": [
+            "proper noun present"
+          ]
+        },
+        "cell": "R"
+      }
+    },
+    {
+      "item_id": "R03",
+      "screen": "routing",
+      "decision": "EXCLUDE",
+      "reason": "declared DETERMINISTIC, routes EMPIRICAL at confidence 0.60 \u2014 the injected directive would be the EMPIRICAL one, not the DETERMINISTIC one the specification predicts about",
+      "detail": {
+        "declared": "DETERMINISTIC",
+        "routed": "EMPIRICAL",
+        "confidence": 0.6,
+        "search_budget": 2,
+        "signals": {
+          "ENTITY_VETO": [
+            "who/when/where/which interrogative"
+          ]
+        },
+        "cell": "R"
+      }
+    },
+    {
+      "item_id": "R04",
+      "screen": "routing",
+      "decision": "EXCLUDE",
+      "reason": "declared DETERMINISTIC, routes EMPIRICAL at confidence 0.60 \u2014 the injected directive would be the EMPIRICAL one, not the DETERMINISTIC one the specification predicts about",
+      "detail": {
+        "declared": "DETERMINISTIC",
+        "routed": "EMPIRICAL",
+        "confidence": 0.6,
+        "search_budget": 2,
+        "signals": {},
+        "cell": "R"
+      }
+    },
+    {
+      "item_id": "D01",
+      "screen": "routing",
+      "decision": "KEEP",
+      "reason": "routes EMPIRICAL as declared",
+      "detail": {
+        "declared": "EMPIRICAL",
+        "routed": "EMPIRICAL",
+        "confidence": 0.6,
+        "search_budget": 2,
+        "signals": {
+          "ENTITY_VETO": [
+            "proper noun present"
+          ]
+        },
+        "cell": "D"
+      }
+    },
+    {
+      "item_id": "D02",
+      "screen": "routing",
+      "decision": "KEEP",
+      "reason": "routes EMPIRICAL as declared",
+      "detail": {
+        "declared": "EMPIRICAL",
+        "routed": "EMPIRICAL",
+        "confidence": 0.6,
+        "search_budget": 2,
+        "signals": {
+          "ENTITY_VETO": [
+            "proper noun present"
+          ]
+        },
+        "cell": "D"
+      }
+    },
+    {
+      "item_id": "D03",
+      "screen": "routing",
+      "decision": "KEEP",
+      "reason": "routes EMPIRICAL as declared",
+      "detail": {
+        "declared": "EMPIRICAL",
+        "routed": "EMPIRICAL",
+        "confidence": 0.6,
+        "search_budget": 2,
+        "signals": {
+          "ENTITY_VETO": [
+            "who/when/where/which interrogative",
+            "proper noun present"
+          ]
+        },
+        "cell": "D"
+      }
+    },
+    {
+      "item_id": "D04",
+      "screen": "routing",
+      "decision": "EXCLUDE",
+      "reason": "declared EMPIRICAL, routes NORMATIVE at confidence 0.90 \u2014 the injected directive would be the NORMATIVE one, not the EMPIRICAL one the specification predicts about",
+      "detail": {
+        "declared": "EMPIRICAL",
+        "routed": "NORMATIVE",
+        "confidence": 0.9,
+        "search_budget": 0,
+        "signals": {
+          "NORMATIVE": [
+            "choice framing"
+          ],
+          "ENTITY_VETO": [
+            "who/when/where/which interrogative",
+            "proper noun present"
+          ]
+        },
+        "cell": "D"
+      }
+    },
+    {
+      "item_id": "D05",
+      "screen": "routing",
+      "decision": "KEEP",
+      "reason": "routes EMPIRICAL as declared",
+      "detail": {
+        "declared": "EMPIRICAL",
+        "routed": "EMPIRICAL",
+        "confidence": 0.6,
+        "search_budget": 2,
+        "signals": {
+          "ENTITY_VETO": [
+            "who/when/where/which interrogative",
+            "proper noun present"
+          ]
+        },
+        "cell": "D"
+      }
+    },
+    {
+      "item_id": "U01",
+      "screen": "routing",
+      "decision": "KEEP",
+      "reason": "routes EMPIRICAL as declared",
+      "detail": {
+        "declared": "EMPIRICAL",
+        "routed": "EMPIRICAL",
+        "confidence": 0.6,
+        "search_budget": 2,
+        "signals": {
+          "ENTITY_VETO": [
+            "proper noun present"
+          ]
+        },
+        "cell": "U"
+      }
+    },
+    {
+      "item_id": "U02",
+      "screen": "routing",
+      "decision": "KEEP",
+      "reason": "routes EMPIRICAL as declared",
+      "detail": {
+        "declared": "EMPIRICAL",
+        "routed": "EMPIRICAL",
+        "confidence": 0.6,
+        "search_budget": 2,
+        "signals": {
+          "ENTITY_VETO": [
+            "proper noun present"
+          ]
+        },
+        "cell": "U"
+      }
+    },
+    {
+      "item_id": "U03",
+      "screen": "routing",
+      "decision": "KEEP",
+      "reason": "routes PREDICTIVE as declared",
+      "detail": {
+        "declared": "PREDICTIVE",
+        "routed": "PREDICTIVE",
+        "confidence": 0.9,
+        "search_budget": 2,
+        "signals": {
+          "PREDICTIVE": [
+            "future-tense 'will'"
+          ],
+          "ENTITY_VETO": [
+            "proper noun present"
+          ]
+        },
+        "cell": "U"
+      }
+    },
+    {
+      "item_id": "U04",
+      "screen": "routing",
+      "decision": "KEEP",
+      "reason": "routes EMPIRICAL as declared",
+      "detail": {
+        "declared": "EMPIRICAL",
+        "routed": "EMPIRICAL",
+        "confidence": 0.6,
+        "search_budget": 2,
+        "signals": {
+          "ENTITY_VETO": [
+            "current-state framing",
+            "proper noun present"
+          ]
+        },
+        "cell": "U"
+      }
+    },
+    {
+      "item_id": "N01",
+      "screen": "routing",
+      "decision": "KEEP",
+      "reason": "routes DETERMINISTIC as declared",
+      "detail": {
+        "declared": "DETERMINISTIC",
+        "routed": "DETERMINISTIC",
+        "confidence": 0.9,
+        "search_budget": 0,
+        "signals": {
+          "DETERMINISTIC": [
+            "arithmetic word operator between two numbers"
+          ]
+        },
+        "cell": "N"
+      }
+    },
+    {
+      "item_id": "N02",
+      "screen": "routing",
+      "decision": "EXCLUDE",
+      "reason": "declared DETERMINISTIC, routes EMPIRICAL at confidence 0.60 \u2014 the injected directive would be the EMPIRICAL one, not the DETERMINISTIC one the specification predicts about",
+      "detail": {
+        "declared": "DETERMINISTIC",
+        "routed": "EMPIRICAL",
+        "confidence": 0.6,
+        "search_budget": 2,
+        "signals": {},
+        "cell": "N"
+      }
+    },
+    {
+      "item_id": "N03",
+      "screen": "routing",
+      "decision": "EXCLUDE",
+      "reason": "declared DETERMINISTIC, routes EMPIRICAL at confidence 0.60 \u2014 the injected directive would be the EMPIRICAL one, not the DETERMINISTIC one the specification predicts about",
+      "detail": {
+        "declared": "DETERMINISTIC",
+        "routed": "EMPIRICAL",
+        "confidence": 0.6,
+        "search_budget": 2,
+        "signals": {},
+        "cell": "N"
+      }
+    },
+    {
+      "item_id": "N04",
+      "screen": "routing",
+      "decision": "EXCLUDE",
+      "reason": "declared DEFINITIONAL, routes EMPIRICAL at confidence 0.60 \u2014 the injected directive would be the EMPIRICAL one, not the DEFINITIONAL one the specification predicts about",
+      "detail": {
+        "declared": "DEFINITIONAL",
+        "routed": "EMPIRICAL",
+        "confidence": 0.6,
+        "search_budget": 2,
+        "signals": {
+          "ENTITY_VETO": [
+            "proper noun present"
+          ]
+        },
+        "cell": "N"
+      }
+    },
+    {
+      "item_id": "C01",
+      "screen": "routing",
+      "decision": "KEEP",
+      "reason": "routes EMPIRICAL as declared",
+      "detail": {
+        "declared": "EMPIRICAL",
+        "routed": "EMPIRICAL",
+        "confidence": 0.6,
+        "search_budget": 2,
+        "signals": {
+          "ENTITY_VETO": [
+            "who/when/where/which interrogative",
+            "proper noun present"
+          ]
+        },
+        "cell": "C"
+      }
+    },
+    {
+      "item_id": "C02",
+      "screen": "routing",
+      "decision": "EXCLUDE",
+      "reason": "declared EMPIRICAL, routes NORMATIVE at confidence 0.90 \u2014 the injected directive would be the NORMATIVE one, not the EMPIRICAL one the specification predicts about",
+      "detail": {
+        "declared": "EMPIRICAL",
+        "routed": "NORMATIVE",
+        "confidence": 0.9,
+        "search_budget": 0,
+        "signals": {
+          "NORMATIVE": [
+            "evaluative comparative"
+          ],
+          "ENTITY_VETO": [
+            "who/when/where/which interrogative",
+            "proper noun present"
+          ]
+        },
+        "cell": "C"
+      }
+    }
+  ]
+}

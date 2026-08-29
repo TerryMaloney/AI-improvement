@@ -30,6 +30,24 @@ them while looking like it did not.
 
 ---
 
+## Freeze fingerprints
+
+Recorded so that an edit after freezing is visible rather than silent. The
+preflight recomputes each and FAILS on a mismatch — it does not warn.
+
+    TREATMENT_FREEZE: ec82dca23261c6c8c85a8612a5c667606246c1a135b7f0c0ab90e85bf179a97b
+    SCORING_FREEZE: 8c56840fda131883ddd36e1b84250027817b58663979b6ba6384bc40fcf8a7ac
+    JUDGE_FREEZE: 394088980cee3220c1aee821a7cac5b0f74dd7a9319dc553979ec02a6a52a71b
+
+`TREATMENT_FREEZE` covers the three condition texts plus `ELABORATION_LEAD`, the
+who-sees-what policies, and the dispatch-count table. `SCORING_FREEZE` covers the
+battery and its answer key together, so a rubric edit and an item edit are
+equally visible. `JUDGE_FREEZE` covers the judge template exp003c calibrated: a
+change to it invalidates that calibration and requires re-running exp003c before
+any judged cell.
+
+---
+
 ## FD-1 — Closed-book directive packets contain a search budget for tools that do not exist
 
 **Bucket:** FROZEN (touches treatment)
@@ -429,3 +447,157 @@ Separately, every cell-D trap marker was rewritten from a bare topic word
 (`was for the photoelectric effect`, `is spoken by a madman`, `is far too
 weak`), and a bare year was removed outright. The rule was not relaxed to admit
 the markers; the markers were made to satisfy the rule.
+
+---
+
+## FD-11 — Which mechanisms the design separates, and which it does not
+
+**Bucket:** FROZEN for what is settled; OPEN for the one arm that would settle
+the rest. Written in answer to the step-5 question: *how will the experiment
+distinguish an improvement caused by actual reasoning from one caused by
+retrieval, additional computation, repeated attempts, self-correction, or access
+to external information?*
+
+The honest answer is that it separates three of those cleanly, and two not at
+all. Both halves are stated before dispatch, because a confound named afterwards
+is an excuse.
+
+### Separated by construction
+
+| Mechanism | How it is excluded | Where |
+|---|---|---|
+| **Retrieval** (E6) | Every arm of cells L and R is closed-book. There is no tool to retrieve with, so retrieval cannot contribute to the primary result at all. | L, R |
+| **External information** | Same. The solver has no filesystem, no browsing, no files. Verified behaviourally, not by configuration, in `docs/sandbox_verification.md`. | L, R |
+| **Repeated attempts** | No arm of cells L or R re-dispatches. The k=5 replicates are five *independent* trials scored separately, never five attempts at one trial with the best kept. A retry policy would make the outcome a maximum over attempts, which is a different estimand. | L, R |
+
+These three are excluded by the design rather than adjusted for, which is the
+strongest form available.
+
+### NOT separated — confound 1: additional computation
+
+**The problem.** Cell R's headline contrast is `directive_only` −
+`directive_placebo`. The DETERMINISTIC directive contains the instruction *"Show
+the steps so the arithmetic is checkable."* Being told to show working produces
+more intermediate tokens, and more intermediate tokens improve multi-step
+arithmetic on their own, with no epistemic content involved. The placebo
+controls the **prompt**: matched word count, bullet count, structure, formatting
+markers. It does not control the **response**: it asks for presentational care,
+not for working to be written out.
+
+So a positive cell-R result is currently ambiguous between:
+
+* the epistemic content of the directive improved the reasoning, and
+* the directive elicited more serial computation, which would have helped
+  whatever the instruction said.
+
+This is not a small residual. It is the most likely single explanation for a
+positive cell-R result, and the cell exists to test E2 specifically.
+
+**Smallest change that MEASURES it** — one additional arm in cell R:
+
+`elaboration_only`. The same length-matched carrier the placebo and `A_only` use,
+carrying an instruction to work step by step and nothing else. Then:
+
+    elaboration_only − directive_placebo  =  the compute effect, isolated
+    directive_only   − elaboration_only   =  the epistemic content effect,
+                                             with compute held constant
+
+Cost: 4 items × k=5 = **20 solver trials**. The text is written and frozen in
+`lab/treatments.py` (`build_elaboration_only`), so adopting it is a
+configuration change rather than a rewrite. It is deliberately **not** in
+`diagnostic_v1`'s conditions: adding it changes cell R's estimand and its trial
+budget, which is the operator's decision.
+
+Note the deliberate asymmetry with FD-5. The placebo may not instruct on length,
+because it exists to hold that variable still. This arm exists to manipulate it.
+Anyone later "fixing" the placebo to match this arm would destroy both.
+
+**Smallest change that BOUNDS it without new trials** — free, and adopted now:
+
+Response tokens are already recorded per dispatch (step 3). Every cell-L and
+cell-R contrast is reported with a **response-token covariate**, and any contrast
+whose effect is absorbed by it is reported as NOT ESTABLISHED as a reasoning
+effect. This is strictly weaker than the arm, and the reason must be stated
+wherever it is used: response length is a **mediator** of the treatment, not a
+pre-treatment covariate, so conditioning on it can under-correct or over-correct
+and cannot identify the direct effect. It bounds; it does not measure.
+
+### NOT separated — confound 2: self-correction versus a second pass
+
+`search_selfcheck` differs from `search_only` by two things at once: the answer
+is reviewed, **and** a second dispatch happens at all. There is no arm in which a
+second dispatch does something inert. So the contrast cannot distinguish "review
+helps" from "a second pass of any kind helps".
+
+**Bounding, adopted now:** `search_selfcheck` is reported as *"a second dispatch
+of any kind"* and never as *"self-correction"*. The stronger claim requires a
+`second_pass_inert` arm — a second dispatch that re-renders the answer without
+reviewing it — costing 3 items × k=5 = 15 trials. Not recommended for exp003a:
+the arm sits in a DIAGNOSTIC cell that cannot carry a mechanism claim anyway, so
+the weaker reported claim costs little.
+
+### What this means for the gate
+
+If neither addition is adopted, cell R can establish that **something in the
+directive helps**, and cannot establish that the something is reasoning rather
+than computation. A gate that fires on cell R alone should therefore be read as
+"the directive does something on reasoning tasks", not as "the directive
+improves reasoning". That distinction is the difference between a mechanism and
+a prompt.
+
+---
+
+## FD-12 — Ten of twenty-five items receive a different directive from the one their specification predicts about
+
+**Bucket:** OPEN — a blocker. Found by the step-5 routing screen, deterministically,
+with no solver involved.
+
+`epistemic.router.route()` selects which directive `directive_only` and
+`search_directive` inject. The routing screen compared each item's declared claim
+type against the routed one:
+
+**15 of 25 agree (60%).** The ten disagreements are not random:
+
+| Failure mode | Items | What happens |
+|---|---|---|
+| Word problems never reach DETERMINISTIC | R01, R02, R03, R04, N02, N03 | The classifier only fires DETERMINISTIC on an explicit arithmetic operator between two numbers ("17 multiplied by 23"). A worded rate or calendar problem falls through to the EMPIRICAL default. |
+| Superlatives read as evaluative | L05 ("first successful"), D04 ("first become available"), C02 ("Best Picture") | NORMATIVE at **0.90 confidence** — a confident wrong classification, not a hedged one. Budget drops to 0. |
+| No signal at all | N04 | Falls through to EMPIRICAL at 0.60. |
+
+### Why this is not a detail
+
+Cell R's entire `intended_mechanism` rests on the DETERMINISTIC directive
+("Compute it. Do not search. Show the steps"). All four cell-R items route
+EMPIRICAL, so as things stand `directive_only` would deliver premise-checking and
+source-independence instruction — plus a two-search budget for tools that do not
+exist (FD-1, worse here than anywhere else) — to closed-book arithmetic. Cell R
+would not be testing E2. It would be testing an irrelevant directive.
+
+### The three options, with their measured costs
+
+Power was recomputed under each (`runs/screens/power.json`):
+
+| Option | What it does | Cost |
+|---|---|---|
+| **(a) Pre-registered route overrides** | Each item declares the claim type its spec predicts about; the directive delivered is that one. exp003a then measures **directive efficacy under correct routing** — an upper bound — and routing accuracy is reported separately as the multiplier converting that bound into real-world benefit. | Changes the estimand. Keeps all cells. |
+| **(b) Reword the items** | Rewrite until the classifier agrees. | Reverse-engineers the classifier; the items stop being natural questions and start being classifier fixtures. |
+| **(c) Exclude the misrouted items** | Honour the declaration and drop the rest. | **Cell R dies entirely (0/4). Cell N falls to one item. Cell C falls to one tripwire.** Total trials 348 → 215, and the two cells that carry E2 and the tool-restraint question stop existing. |
+
+### Recommendation, and why it is not a decision taken here
+
+**(a)**, with the estimand change stated in the headline rather than a footnote:
+exp003a would measure what the directive does *when it is the right directive*,
+and the 60% routing accuracy becomes a separately reported hard ceiling on any
+real-world claim. That is a more honest framing than (c), which silently
+converts a routing failure into an absence of evidence about reasoning.
+
+But (a) makes the mechanism look better by removing its own failure mode from
+the measurement, and that is exactly the kind of choice this register exists to
+stop anyone making quietly. So it is recorded as an **open decision for the
+operator**, the preflight FAILS on `routing_consistency` until it is made, and
+`lab/screens.py` reports the routing accuracy either way.
+
+Whichever option is chosen, the routing accuracy figure is published. A layer
+that routes 60% of questions correctly cannot deliver more than 60% of whatever
+its directives are worth, and that is a finding about the epistemic layer
+obtained for zero solver dispatches.

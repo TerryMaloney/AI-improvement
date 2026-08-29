@@ -789,6 +789,9 @@ questions:
   - id: D01
     text: "Why was Einstein awarded the Nobel Prize for his theory of relativity?"
     cell: D
+    scout_queries:
+      loaded: "Why was Einstein awarded the Nobel Prize for his theory of relativity"
+      neutral: "Albert Einstein Nobel Prize in Physics award citation history"
     family: retrieval_displacement
     category: false_premise
     expected_claim_type: EMPIRICAL
@@ -875,6 +878,9 @@ questions:
   - id: D02
     text: "Why does the Coriolis effect make water spin down a drain in opposite directions in the northern and southern hemispheres?"
     cell: D
+    scout_queries:
+      loaded: "Why does the Coriolis effect make water spin down a drain in opposite directions in each hemisphere"
+      neutral: "what physical factors determine the rotation direction of a draining vortex"
     family: retrieval_displacement
     category: false_premise
     expected_claim_type: EMPIRICAL
@@ -954,6 +960,9 @@ questions:
   - id: D03
     text: "In which book did Nietzsche announce that God is dead, as a declaration of his own triumphant atheism?"
     cell: D
+    scout_queries:
+      loaded: "In which book did Nietzsche announce God is dead as triumphant atheism"
+      neutral: "Nietzsche God is dead passage source work and narrative context"
     family: retrieval_displacement
     category: false_premise
     expected_claim_type: EMPIRICAL
@@ -1036,6 +1045,9 @@ questions:
   - id: D04
     text: "In which year did the Ford Model T first become available in a colour other than black?"
     cell: D
+    scout_queries:
+      loaded: "In which year did the Ford Model T first become available in a colour other than black"
+      neutral: "Ford Model T paint colours available by production year"
     family: retrieval_displacement
     category: false_premise
     expected_claim_type: EMPIRICAL
@@ -1115,6 +1127,9 @@ questions:
   - id: D05
     text: "According to the United States Declaration of Independence, which right is listed alongside life and liberty — the pursuit of property?"
     cell: D
+    scout_queries:
+      loaded: "Declaration of Independence life liberty and the pursuit of property"
+      neutral: "United States Declaration of Independence unalienable rights wording"
     family: retrieval_displacement
     category: false_premise
     expected_claim_type: EMPIRICAL

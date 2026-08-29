@@ -1,0 +1,187 @@
+{
+  "computed_at": "2026-08-28",
+  "basis": "Recomputed from surviving items after the frozen retrieval scout. Plan \u00a76 described a battery that no longer exists; these are the operative numbers.",
+  "settled_exclusions": {
+    "scout": [
+      "D01",
+      "D02"
+    ]
+  },
+  "open_exclusions": {
+    "routing": [
+      "C02",
+      "D04",
+      "L05",
+      "N02",
+      "N03",
+      "N04",
+      "R01",
+      "R02",
+      "R03",
+      "R04"
+    ],
+    "note": "not yet applied \u2014 the routing/estimand decision is open (preflight `routing_consistency`). Reported so the cost of each option is visible before it is chosen."
+  },
+  "if_only_scout_exclusions_apply": {
+    "cells": {
+      "L": {
+        "cell": "L",
+        "planned_items": 6,
+        "surviving_items": 6,
+        "k": 5,
+        "per_item_mde": 0.4,
+        "consistency_required": 3,
+        "trials": 120,
+        "verdict": "AS PLANNED",
+        "note": "all 6 items survive; plan \u00a76 stands unchanged for this cell"
+      },
+      "R": {
+        "cell": "R",
+        "planned_items": 4,
+        "surviving_items": 4,
+        "k": 5,
+        "per_item_mde": 0.4,
+        "consistency_required": 2,
+        "trials": 60,
+        "verdict": "AS PLANNED",
+        "note": "all 4 items survive; plan \u00a76 stands unchanged for this cell"
+      },
+      "D": {
+        "cell": "D",
+        "planned_items": 5,
+        "surviving_items": 3,
+        "k": 5,
+        "per_item_mde": 0.4,
+        "consistency_required": 2,
+        "trials": 60,
+        "verdict": "REDUCED",
+        "note": "reduced from 5 items to 3. The per-item detectable shift is unchanged at 0.4 because k is unchanged, but the consistency requirement is now 2 of 3 rather than 2 of 5, which is a weaker claim on a smaller base and must be stated as such."
+      },
+      "U": {
+        "cell": "U",
+        "planned_items": 4,
+        "surviving_items": 4,
+        "k": 3,
+        "per_item_mde": null,
+        "consistency_required": 2,
+        "trials": 60,
+        "verdict": "AS PLANNED",
+        "note": "all 4 items survive; plan \u00a76 stands unchanged for this cell"
+      },
+      "N": {
+        "cell": "N",
+        "planned_items": 4,
+        "surviving_items": 4,
+        "k": 3,
+        "per_item_mde": null,
+        "consistency_required": 2,
+        "trials": 36,
+        "verdict": "AS PLANNED",
+        "note": "all 4 items survive; plan \u00a76 stands unchanged for this cell"
+      },
+      "C": {
+        "cell": "C",
+        "planned_items": 2,
+        "surviving_items": 2,
+        "k": 3,
+        "per_item_mde": null,
+        "consistency_required": 2,
+        "trials": 12,
+        "verdict": "AS PLANNED",
+        "note": "all 2 items survive; plan \u00a76 stands unchanged for this cell"
+      }
+    },
+    "total_solver_trials": 348,
+    "excluded": [
+      "D01",
+      "D02"
+    ],
+    "warning": "Recomputed from the surviving items. The plan \u00a76 figures describe a battery that no longer exists where a cell reads REDUCED or DEAD; they are kept for comparison and are not the operative numbers."
+  },
+  "if_routing_exclusions_also_apply": {
+    "cells": {
+      "L": {
+        "cell": "L",
+        "planned_items": 6,
+        "surviving_items": 5,
+        "k": 5,
+        "per_item_mde": 0.4,
+        "consistency_required": 3,
+        "trials": 100,
+        "verdict": "REDUCED",
+        "note": "reduced from 6 items to 5. The per-item detectable shift is unchanged at 0.4 because k is unchanged, but the consistency requirement is now 3 of 5 rather than 3 of 6, which is a weaker claim on a smaller base and must be stated as such."
+      },
+      "R": {
+        "cell": "R",
+        "planned_items": 4,
+        "surviving_items": 0,
+        "k": 5,
+        "per_item_mde": 0.4,
+        "consistency_required": null,
+        "trials": 0,
+        "verdict": "DEAD",
+        "note": "no items survive; the cell reports nothing and its hypothesis is untested, not refuted"
+      },
+      "D": {
+        "cell": "D",
+        "planned_items": 5,
+        "surviving_items": 2,
+        "k": 5,
+        "per_item_mde": 0.4,
+        "consistency_required": 2,
+        "trials": 40,
+        "verdict": "REDUCED",
+        "note": "reduced from 5 items to 2. The per-item detectable shift is unchanged at 0.4 because k is unchanged, but the consistency requirement is now 2 of 2 rather than 2 of 5, which is a weaker claim on a smaller base and must be stated as such."
+      },
+      "U": {
+        "cell": "U",
+        "planned_items": 4,
+        "surviving_items": 4,
+        "k": 3,
+        "per_item_mde": null,
+        "consistency_required": 2,
+        "trials": 60,
+        "verdict": "AS PLANNED",
+        "note": "all 4 items survive; plan \u00a76 stands unchanged for this cell"
+      },
+      "N": {
+        "cell": "N",
+        "planned_items": 4,
+        "surviving_items": 1,
+        "k": 3,
+        "per_item_mde": null,
+        "consistency_required": null,
+        "trials": 9,
+        "verdict": "SINGLE-ITEM",
+        "note": "one surviving item. A per-item result is still reportable, but no consistency claim is available: one item moving is a fact about that item."
+      },
+      "C": {
+        "cell": "C",
+        "planned_items": 2,
+        "surviving_items": 1,
+        "k": 3,
+        "per_item_mde": null,
+        "consistency_required": null,
+        "trials": 6,
+        "verdict": "SINGLE-ITEM",
+        "note": "one surviving item. A per-item result is still reportable, but no consistency claim is available: one item moving is a fact about that item."
+      }
+    },
+    "total_solver_trials": 215,
+    "excluded": [
+      "C02",
+      "D01",
+      "D02",
+      "D04",
+      "L05",
+      "N02",
+      "N03",
+      "N04",
+      "R01",
+      "R02",
+      "R03",
+      "R04"
+    ],
+    "warning": "Recomputed from the surviving items. The plan \u00a76 figures describe a battery that no longer exists where a cell reads REDUCED or DEAD; they are kept for comparison and are not the operative numbers."
+  }
+}
