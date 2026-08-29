@@ -4,91 +4,52 @@
 
 ## Next authorized research action
 
-Write and red-team the **Stage 0A mechanism-discovery specification**. No solver dispatches yet.
+Resolve the **Stage 0A grading architecture**. No solver dispatches and no Stage 0A item authoring yet.
 
-The specification must define:
+The design red-team found that the main harm-plausible classes are not cleanly deterministic under the current grading system. The next task is to compare, mathematically and operationally, the three candidate remediation paths:
 
-1. The exact scientific claim:
-   - a preregistered treatment-blind class has a negative mean retrieval effect on an authored stress sample.
-   - explicitly not a general controller or naturalistic prevalence claim.
+1. deterministic acceptance criteria with pre-dispatch coverage validation;
+2. judged-primary analysis with a pre-registered measurement-bias audit;
+3. deterministic-only class restriction.
 
-2. Four treatment-blind classes:
-   - one class per item;
-   - membership frozen before outcomes;
-   - surface classes used for stratification;
-   - hypothesized mechanism dimensions recorded only as covariates.
+### Required questions
 
-3. Fixed-n discovery design:
-   - candidate starting point: 20 items/class;
-   - two arms;
-   - R=1;
-   - deterministic subset primary;
-   - exact one-sided conditional-binomial/McNemar-style test per class;
-   - Holm across classes.
+- Can free-text false-premise / stale-state answers be converted into objective relational checks rather than brittle lexical markers?
+- Can deterministic grading be validated on authored paraphrase/adversarial answer sets without leaking treatment outcomes?
+- If judge-based grading is used, what estimand is actually measured?
+- Can judge bias be bounded strongly enough before production to support a directional harm claim?
+- Is the measured exp003c length effect transferable enough to justify calling judged-primary conservative, or is that an unsupported extrapolation?
+- Can multiple independent judges, pairwise ranking, blinded arm labels, response normalization, or structured response formats reduce measurement bias?
+- Would forcing the solver into a categorical/structured answer format eliminate the need for free-text judging while preserving the harm mechanism?
+- Does changing response format itself change the intervention being studied?
+- Which classes should be dropped/redefined, especially contested-quantity?
+- What is the simplest grading design that keeps the scientific question meaningful?
 
-4. Authoring safeguards:
-   - no treatment-arm outcomes during item construction;
-   - no class rebalancing after outcome visibility;
-   - answer definitions explicit enough to avoid f15-style key ambiguity;
-   - clean closed arm;
-   - identical wrappers except the retrieval intervention.
+### Stale test
 
-5. Query-generation confound:
-   - log generated queries verbatim in Stage 0A;
-   - predefine Stage 0B fixed-query arm now;
-   - if discovery survives but confirmation harm disappears under fixed query, classify as query-construction failure rather than retrieval harm.
+Separately assess the proposed replacement for the stale knowledge-probe test:
+- preserve frozen evidence;
+- restore suite signal;
+- assert the actual invariant that screen-class probe data never enters solver-experiment manifests.
 
-6. Confirmation architecture:
-   - fresh independently authored items;
-   - winner class/hypothesis frozen before confirmation items exist;
-   - power confirmation for a smaller effect than discovery because of winner's curse;
-   - candidate 25 fresh items;
-   - three arms: closed, ordinary search, fixed-query search.
-
-7. Stress-sample language:
-   - discovery/confirmation may establish predictable harm under condition X;
-   - they do not estimate naturalistic frequency or general-router value.
-
-8. Final preflight:
-   - egress state;
-   - telemetry;
-   - grading/key fingerprint;
-   - report skeleton;
-   - stale frozen-test assertion handled transparently.
+Do not change it unless the grading investigation concludes the replacement is clearly infrastructure-only and authorized.
 
 ## Hard stop
 
-Do not dispatch Stage 0A until:
-- the discovery specification has been independently red-teamed;
-- item texts/keys are frozen;
-- class assignments are frozen;
-- n/classes/arms/grading/statistics are frozen;
-- query logging is active;
-- a distinct preregistration/freeze commit exists.
+Do not:
+- freeze Stage 0A;
+- author production items;
+- run production solver calls;
+- permit runtime judge escalation;
+- pool deterministic and judged outcomes without a frozen measurement model.
 
-## Future stages after a positive Stage 0A
+## Final gate for next turn
 
-0B — fresh independent confirmation + fixed-query alternative.
-0C — naturalistic prevalence/importance.
-0D — held-out mixed-task controller test.
-0E — richer action space, only if earned.
+Return one:
+A. OBJECTIVE GRADING PATH FOUND
+B. JUDGED-PRIMARY PATH DEFENSIBLE WITH SPECIFIC CALIBRATION
+C. ONLY DETERMINISTIC-CLASS DESIGN IS DEFENSIBLE
+D. STAGE 0A QUESTION MUST BE REFORMULATED
+E. NO CURRENTLY DEFENSIBLE GRADING PATH
 
-## Manual setup reminder
-
-If a future stage requires Terry to manually install, authorize, connect, or physically configure anything, the response must begin with the mandatory manual-setup alert defined in `docs/EXTERNAL_COGNITIVE_TOOLS_AND_TOPOLOGY_2026-08-29.md`.
-
-## Required Claude handoff
-
-```text
-COMMIT:
-TESTS:
-DISPATCHES:
-
-RESULT:
-
-CHANGED:
-
-OPEN:
-
-DO NOT:
-```
+If a future stage requires Terry to manually install, authorize, connect, or physically configure anything, begin with the mandatory manual-setup alert defined in `docs/EXTERNAL_COGNITIVE_TOOLS_AND_TOPOLOGY_2026-08-29.md`.
