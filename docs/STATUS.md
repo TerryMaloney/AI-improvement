@@ -4,62 +4,67 @@
 
 ## Current phase
 
-**Stage 0A-M is FREEZE-READY. All pre-treatment work is complete; what remains is execution-time only.**
+**Stage 0A-M is NOT YET FROZEN. A pre-production execution audit found and repaired a load-bearing arm-symmetry confound; the repair candidate now requires full-suite and synthetic Claude validation before execution.**
 
-State:
-- 25 date-anchored / 25 definition-anchored / 15 arithmetic controls = 65 items, 130 production dispatches;
+Latest candidate remediation commit: `0fb8a7f7b856337d26116378b0d6c399c0ffc061`.
+
+Scientific state preserved:
+- 25 date-anchored / 25 definition-anchored / 15 arithmetic controls = 65 items;
+- 130 planned production dispatches;
 - 50/50 primary keys source-verified; 65/65 production-eligible;
-- 1324 tests pass;
-- **production dispatches 0; treatment exposure NONE**;
-- battery fingerprint `1ec90754f1de2696` (unchanged by this turn — no stem or key changed);
-- grader fingerprint `10adaf1dac94ea70`, now recorded separately in the manifest.
+- battery fingerprint `1ec90754f1de2696`;
+- grader fingerprint `10adaf1dac94ea70`;
+- **production dispatches 0; treatment exposure NONE**.
 
-Fingerprint lineage: `a53d4d59856fc1db` authoring → `afc208e1e8d1bd00` source verification → `1ec90754f1de2696` post-verification audit.
+The last fully executed non-production suite before this remediation was **1324 passed, 0 failed** at `9c57635`. The new remediation has focused static checks authored but the complete repository suite has NOT been run in the GPT environment and must be re-run before freeze.
 
-## Retrieval environment — now MEASURED on the solver's own path
+## Newly found arm-symmetry confound
 
-The frozen probe (design committed at `46ebdd9` **before** any observation) was re-run in the missing arm and completed.
+The Stage 0A-M packet templates were nearly arm-symmetric, but the actual shared Claude subagents were not.
 
-| tool | result, BOTH arms | |
-|---|---|---|
-| `WebFetch` | 5/5 `REFUSED_BY_PROXY`, including `example.com` | block is total, not per-domain |
-| `WebSearch` | 2/2 `OK`, substantive extracted page text | search is the only external channel |
+`.claude/agents/solver-web.md` adds web-arm-specific system instructions including premise checking, source-independence reasoning, dating claims and conflict-resolution guidance.
 
-The solver-web subagent matched the orchestrator on **all seven targets**, so the two share one egress path and the transfer is licensed by measurement, not by architectural expectation.
+`.claude/agents/solver-closed.md` carries a different epistemic system prompt concerning stale knowledge, premise doubt, confidence and abstention.
 
-**`E` = search-capable, fetch-blocked.** Stage 0A-M therefore studies *retrieval-enabled under a search-capable, fetch-blocked environment* — materially **weaker** than unrestricted browsing, and every claim is scoped to that (specification §6.3). The probe was never a gate: `E` came back degraded and the experiment proceeds, scoped rather than cancelled.
+Because custom Claude Code agent markdown bodies are system prompts, executing Stage 0A-M with those agents would contrast **instructions + retrieval access**, not retrieval permission alone. This was discovered before any production output existed.
 
-## Both independently-reported inconsistencies are resolved
+## Candidate repair
 
-**1. Failure semantics (§6.3 vs §7).** Resolved in favour of §6, on grounds rather than by tie-break: voiding on retrieval-tool failure is post-treatment selection on a variable only the treatment arm can exhibit, since the closed arm has no tools and can never register one. §7 now separates **case A — retrieval-tool outcome** (retained, graded, logged, never excludes) from **case B — dispatch-level failure** (no gradeable answer exists; pair voided, since a half-missing pair cannot enter a paired test at all). The discriminating question is *did the dispatch yield a gradeable final answer?* — not which tool failed. The 10% ceiling now scopes to case B only, and the void rate is reported broken down by which arm failed. The taxonomy is executable (`lab/stage0am.py`) and pinned by 21 tests.
+Stage 0A-M now has dedicated agents:
+- `.claude/agents/stage0am-solver-closed.md`
+- `.claude/agents/stage0am-solver-web.md`
 
-**2. Primary estimand (§4 vs §1).** §4's `Estimand: the class-average effect` is gone. The inferential target is violation of the **pointwise** null; the class-average difference is a descriptive summary carrying no inferential claim; H0_mean is not tested. The power table is relabelled a design sensitivity — a class-level generative parameter used for sizing does not become a quantity the test licenses a claim about.
+Their markdown bodies are byte-identical. Both use `model: inherit` and retain `TodoWrite`; the retrieval-enabled agent differs in tool access only by `WebSearch` and `WebFetch`.
 
-## A third defect, found by this audit, in the dangerous direction
+Machine-readable candidate invariants/hashes:
+`experiments/exp004_stage0am/agent_symmetry.candidate.json`
 
-Probing the repaired b11 surfaced a systemic grading fault. On the numeric route, a reject overrode a correct answer, so every one of these graded **incorrect**:
+Regression tests:
+`tests/test_stage0am_agent_symmetry.py`
 
-- `"193 member states, excluding the 2 permanent observers"` (b15)
-- `"13 individual golds, out of 23 total"` (b08)
-- `"381 m to the architectural top; 443 m with the antenna"` (b17)
-- `"8 planets; there were 9 before 2006"` (b05)
-- `"20 of the 27 EU member states"` (b09)
+Authoritative remediation note:
+`docs/EXP004_STAGE0A_M_AGENT_SYMMETRY_REMEDIATION.md`
 
-Each answers correctly and names the contrast to show the distinction was understood — the behaviour the anchored-stem design exists to elicit. **A solver that has just retrieved a source is likelier to state both figures**, so the false negatives concentrate in the retrieval-enabled arm and manufacture n10: a **false harm signal, pointing the way the hypothesis predicts.**
+The shared solvers were deliberately left unchanged because older experiments may depend on their behavior.
 
-Fixed before any outcome was observed. Rejects no longer override a correct numeric answer — which costs nothing, because the separation invariant already puts every reject outside its accept band, so a bare displacing answer still fails on the accept test alone. Reject-precedence is retained on the entity route, where naming the displacing entity genuinely is a non-answer.
+## Retrieval environment already measured
 
-Also fixed: spelled-out integers 0–20 are now extracted alongside digits (six items have keys in that range), for the same arm-correlation reason.
+The previous frozen probe established on the old shared solver-web path:
+- WebFetch: 5/5 `REFUSED_BY_PROXY`, including `example.com`;
+- WebSearch: 2/2 `OK`, with substantive extracted text.
+
+`E` was therefore search-capable, fetch-blocked.
+
+Because Stage 0A-M now uses a dedicated web agent, execution-time preflight must re-run the same neutral environment check through `stage0am-solver-web`. Reachability is expected to match but must be measured, not assumed.
 
 ## Still prohibited
 
-Until execution authorization:
-- no Stage 0A-M production solver/model dispatches;
-- no production-item search/retrieval scout;
-- no outcome-based item replacement/reclassification;
-- no runtime re-keying;
+Until the candidate repair passes the full non-production suite and synthetic Claude canaries:
+- no Stage 0A-M production dispatch;
+- no production-item exposure;
+- no production run directory;
+- no outcome-based battery change;
+- no runtime re-keying/reclassification;
 - no Stage 0A-N or Stage 0B execution.
 
-The reflexive/error-correction research added 2026-08-30 remains research context only and did not alter Stage 0A-M.
-
-See `docs/NEXT.md` for the execution-time checklist.
+See `docs/NEXT.md`.
