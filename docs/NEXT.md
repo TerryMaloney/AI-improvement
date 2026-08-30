@@ -4,143 +4,216 @@
 
 ## Current state
 
-Stage 0A-M candidate battery is authored at commit `4c7725f`.
+Stage 0A-M candidate battery has now been fully source-verified at commit `a262b89`.
 
 Reported state:
-- 65 items total: 25 date-anchored + 25 definition-anchored + 15 arithmetic control;
-- 1279 non-dispatch tests passed;
-- 0 solver/model dispatches;
-- schedule, arm packets, quarantined keys, provenance, grading tests, preflight checklist and report skeleton exist;
-- no production run directory exists;
-- no production item has been shown to the target solver.
+- 25 date-anchored primary items;
+- 25 definition-anchored primary items;
+- 15 arithmetic negative controls;
+- 65 total items / 130 eventual production dispatches;
+- 50/50 primary keys source-verified;
+- 65/65 production-eligible;
+- 1281 non-dispatch tests passed;
+- 0 production solver/model dispatches;
+- no production run directory;
+- battery fingerprint `afc208e1e8d1bd00`.
 
-**Execution is still blocked.**
+Verification forced legitimate pre-treatment changes:
+- b09 and b25 replaced;
+- b11 key corrected;
+- b18 reject refined;
+- pass-1 provenance metadata repaired.
 
-The only current blocking remediation is independent public-source verification of **32 of the 50 primary keys**.
+Because the battery changed during verification, a fresh bounded audit is required before final freeze/execution authorization.
 
-18/50 primary keys are already verified. The remaining 32 are marked `PENDING_INDEPENDENT_VERIFICATION` / `production_eligible: false` and must stay that way until direct source inspection supports them.
+## Next authorized action — post-verification battery / retrieval-environment audit
 
-## Next authorized action — source verification only
+No production solver dispatches.
 
-Verify every pending primary item using authoritative public source material.
+### 1. Re-audit the changed items
 
-This is KEY-CONSTRUCTION EVIDENCE, not EXPERIMENTAL RETRIEVAL EVIDENCE.
+Independently inspect:
+- b09 replacement: euro-area membership scope;
+- b25 replacement: contiguous Pacific-coast state count;
+- b11 corrected Lake Michigan item/key/tolerance;
+- b18 refined reject;
+- provenance/fingerprint consistency after the verification pass.
 
-### Required verification for each pending item
+For each confirm:
+- it still satisfies exactly one frozen class;
+- the answer is deterministic under the stem;
+- the principal alternative/reject is genuinely outside the accepted answer region;
+- no answer leakage was introduced;
+- no source-verification change weakened the intended displacement mechanism;
+- manifest, answer-key, provenance and grading fingerprints agree.
 
-Check directly from source material:
+### 2. Resolve b11 explicitly
 
-1. **Canonical answer**
-   - Does the source actually support the frozen answer?
+Current stem:
+> What is the surface area of Lake Michigan alone, excluding Lake Huron, in square kilometres?
 
-2. **Anchor / scope / definition**
-   - Date-anchored: does the source support the answer specifically at the requested date/state?
-   - Definition-anchored: does the source support the exact requested definition, scope, unit, period and convention?
+Verification found multiple defensible published figures (including NOAA 57,573 and other commonly published figures around 58,000), and the key currently uses a ±1,500 km² tolerance.
 
-3. **Objective gradability**
-   - Is there a unique production key under the stem as written?
-   - Are aliases/tolerances correct and disjoint from the principal wrong answer?
+This may conflict with the frozen definition-anchored principle that ambiguity should be eliminated in the question rather than absorbed by a broad grading tolerance.
 
-4. **Mechanism metadata**
-   - Where the item records a newer state or alternative definition/value, confirm that it is genuinely distinct if practical from authoritative authoring evidence.
-   - This is construct metadata only; never select the item based on target-model behavior.
+Choose one pre-treatment resolution:
+- source-anchor the stem (for example, to NOAA) and tighten the grading rule appropriately;
+- replace the item with a cleaner scope-contrast item;
+- or provide a rigorous reason the present acceptance-region formulation still gives an objective binary endpoint and remains consistent with the frozen specification.
 
-5. **Provenance**
-   Record enough for audit:
-   - authoritative source/provider;
-   - URL or stable source identifier;
-   - access date;
-   - relevant table/page/section/date where available;
-   - short paraphrased evidence note;
-   - verification status.
+Do not preserve the current form merely to keep the fingerprint unchanged.
 
-Do not store long copyrighted passages.
+### 3. Re-audit b09 and b25 class identity
 
-### Source hierarchy
+b09 contains both a date and a scope restriction. Confirm its primary mechanism/classification is definition/scope displacement (20 euro adopters vs 27 EU members), not a date-anchored item that would violate the one-class-per-item design.
 
-Prefer, in order where applicable:
-- primary official/statistical/government/intergovernmental source;
-- first-party corporate filing/report for company figures;
-- governing sports/scientific body for official records/definitions;
-- other authoritative reference only when a primary source is unavailable.
+b25 should cleanly test contiguous geographic scope (3 vs 5 including Alaska/Hawaii).
 
-Do not mark a key verified merely because multiple secondary websites repeat it.
+If classification is ambiguous, repair before production exposure.
 
-### If verification disagrees with the authored battery
+### 4. Retrieval environment must become part of treatment provenance
 
-This is still pre-treatment, so correction is permitted.
+During key verification, web search worked while direct fetches to at least `en.wikipedia.org` and `www.bls.gov` were refused by the network egress proxy.
 
-If direct source evidence shows a pending item is wrong or ambiguous:
-- keep an audit note of the original authored version;
-- correct the key/stem/accepted representation if the class mechanism remains intact;
-- replace the item if necessary using the same treatment-blind authoring rules;
-- re-run all grading/diversity/schedule/manifest tests affected by the change;
-- update fingerprints/hashes/schedule only as required by the actual changed artifacts.
+Do not treat this merely as an after-the-fact caveat.
 
-Do not preserve an incorrect remembered answer for the sake of keeping the battery unchanged.
+The treatment is the actual **retrieval-enabled procedure available in the production environment**.
 
-Do not use any solver/model answer to resolve the disagreement.
+Before final freeze, define and record the retrieval surface:
+- exact tool(s) available to the solver;
+- search capability;
+- fetch/source-access capability if exposed;
+- query/tool-call policy;
+- search/fetch failure semantics;
+- environment/model/tool versions where available.
 
-### Verification must not become a scout
+### 5. Run a fixed non-production egress probe if it can be done without production-item exposure
 
-Forbidden:
-- asking the target solver to answer an item;
-- answering with and without search to see whether it reverses;
-- asking another frontier model whether the item is likely to fool the target;
-- dropping/replacing an item because it appears too easy/hard for a model;
-- inspecting future experimental retrieval results.
+This turn explicitly authorizes a **screen-class / diagnostic-only egress probe** provided it does NOT expose any production item and does NOT count as a `solver_experiment` dispatch.
 
-Direct source lookup for factual key construction is authorized.
+Probe a fixed, treatment-blind representative set covering at minimum:
+- one clearly reachable general web domain;
+- BLS or another known refused authoritative domain;
+- Wikipedia or another known refused domain;
+- at least two authoritative domains heavily represented in the battery, chosen independently of production outcomes.
 
-## After all pending keys are resolved
+Where the actual production tool stack supports both search and fetch, test both separately.
 
-Required state before gate A:
-- 50/50 primary keys independently source-verified;
-- 15/15 arithmetic controls deterministically verified;
-- every production item `production_eligible: true`;
-- no unresolved ambiguity flags;
-- battery/answers/provenance fingerprints updated consistently;
-- schedule and packet integrity tests green;
-- treatment-exposure audit still zero;
-- full non-dispatch suite green;
-- no run directory and no production dispatch.
+Record:
+- domain;
+- operation (search/fetch);
+- success/failure;
+- failure class;
+- timestamp;
+- environment/tool identity.
 
-Then commit/push the verified candidate freeze package and STOP for final execution review.
+Do not tune the domain set based on what succeeds.
 
-## Still not authorized
+If the probe would require a genuine solver/model production call, STOP and leave it for the final execution turn instead.
 
-- no Stage 0A-M production dispatch;
-- no egress/production probe if it would create a solver dispatch unless separately allowed by the existing preflight protocol;
-- no Stage 0A-N;
-- no Stage 0B;
-- no controller work.
+### 6. Interpretation of degraded retrieval
+
+Do not automatically invalidate Stage 0A-M merely because some domains cannot be fetched.
+
+Instead determine exactly what a positive result would mean under the observed retrieval surface.
+
+Candidate scope:
+> the retrieval-enabled procedure available in this recorded environment lowers correctness probability for at least one frozen authored item.
+
+Explicitly separate that from:
+> ideal unrestricted web retrieval intrinsically harms the item.
+
+Stage 0B replication/fixed-query work remains the place to distinguish query/tool/environment mechanisms.
+
+If the environment is so degraded that retrieval is functionally unavailable on most/all trials, that may be a preflight failure rather than an interpretable treatment. Define an objective rule before outcomes if needed.
+
+### 7. Do not create a post-outcome reachability filter
+
+Per-item source/domain reachability may be logged after execution, but it must not determine inclusion/exclusion based on observed answer direction.
+
+Do not say:
+- keep items whose sources were reachable;
+- drop items whose sites were blocked;
+
+unless such a rule is formally justified and frozen before outcomes. The current preference is ITT: the available retrieval procedure, including its environment limitations, is the treatment.
+
+### 8. Re-run complete consistency audit
+
+After any b11 or other pre-treatment correction verify:
+- exactly 25 + 25 + 15 items;
+- all 50 primary keys source-verified;
+- all 65 items production-eligible;
+- all grading tests green;
+- wrong-state/alternative-definition rejects remain outside acceptance regions;
+- no duplicate IDs/stems;
+- class/diversity limits remain satisfied;
+- schedule IDs/classes still match;
+- randomization seeds are preserved or transparently regenerated if required;
+- packet hashes/diffs are updated consistently;
+- report skeleton remains frozen;
+- treatment exposure remains zero;
+- no production run directory exists.
+
+### 9. Recompute all fingerprints affected by changes
+
+If b11 or anything else changes, regenerate the battery/key/manifest hashes as required.
+
+Never retain a stale fingerprint after a legitimate pre-treatment repair.
+
+### 10. Final preflight inventory
+
+List exactly what would remain for the execution turn after this audit:
+- commit SHA/freeze fingerprint;
+- model snapshot/version;
+- environment fingerprint;
+- egress/retrieval-surface result;
+- telemetry dry run if still pending;
+- fresh-context verification;
+- run-directory initialization;
+- any other execution-only checks.
+
+Do not dispatch production items in this turn.
+
+## Hard stop
+
+Still prohibited:
+- production Stage 0A-M solver/model dispatches;
+- closed/retrieval trial on any production item;
+- production-item search scout;
+- outcome-based item changes;
+- runtime re-keying;
+- Stage 0A-N or Stage 0B execution.
 
 ## Final gate
 
 Return exactly one:
 
-A. ALL PRIMARY KEYS VERIFIED — READY FOR FINAL FREEZE/EXECUTION REVIEW
-B. VERIFICATION INCOMPLETE — SPECIFIC KEYS REMAIN BLOCKED
-C. VERIFICATION FORCED NONTRIVIAL BATTERY REPAIRS — REAUDIT REQUIRED
-D. SOURCE EVIDENCE EXPOSED A LOAD-BEARING DESIGN PROBLEM
+A. POST-VERIFICATION AUDIT CLEAN — READY FOR FINAL FREEZE / EXECUTION TURN
+B. CLEAN AFTER SPECIFIC PRE-TREATMENT REPAIRS — READY FOR FINAL FREEZE / EXECUTION TURN
+C. BATTERY STILL HAS OBJECTIVITY / CLASSIFICATION DEFECTS
+D. RETRIEVAL ENVIRONMENT IS TOO DEGRADED TO DELIVER THE FROZEN TREATMENT
+E. NEW LOAD-BEARING DESIGN FLAW FOUND
 
-Regardless of gate: **DISPATCHES: 0**.
-
-Return:
+Report:
 
 COMMIT:
 TESTS:
-DISPATCHES: 0
+PRODUCTION DISPATCHES: 0
+DIAGNOSTIC/SCREEN CALLS:
 
 RESULT:
-VERIFIED PRIMARY KEYS:
-REPAIRED / REPLACED ITEMS:
-UNRESOLVED ITEMS:
-PROVENANCE AUDIT:
-GRADING AUDIT:
+
+CHANGED-ITEM AUDIT:
+B11 RESOLUTION:
+B09 CLASSIFICATION:
+B25 CLASSIFICATION:
 BATTERY FINGERPRINT:
+KEY / MANIFEST CONSISTENCY:
+RETRIEVAL TOOL SURFACE:
+EGRESS PROBE:
+POSITIVE-RESULT SCOPE:
+PREFLIGHT REMAINING:
 TREATMENT-EXPOSURE AUDIT:
-PREFLIGHT STATUS:
 OPEN:
 DO NOT:
 

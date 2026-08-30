@@ -4,13 +4,13 @@
 
 ## Current phase
 
-**Stage 0A-M candidate production battery is authored and prefreeze-tested, but execution remains blocked on independent source verification of 32 primary keys.**
+**Stage 0A-M now has a fully source-verified 65-item candidate battery, but final freeze/execution remains blocked on a fresh post-repair audit and retrieval-environment fingerprint.**
 
-Latest battery commit: `4c7725f`.
+Latest battery verification commit: `a262b89`.
 
-Reported non-dispatch suite: **1279 passed, 0 failed**.
+Reported non-dispatch suite: **1281 passed, 0 failed**.
 
-Solver/model dispatches: **0**.
+Solver/model production dispatches: **0**.
 
 ## Candidate battery
 
@@ -21,34 +21,40 @@ Solver/model dispatches: **0**.
 - 2 arms per item, R=1;
 - 130 planned production dispatches only after final freeze/execution authorization.
 
-Battery fingerprint: `a53d4d59856fc1db`.
+Current battery fingerprint: `afc208e1e8d1bd00`.
 
-The production schedule, arm-order randomization, fresh-context rule, quarantined answers, provenance records, packet templates, preflight checklist, and report skeleton have been authored. No production item has been exposed to the target solver or retrieval treatment.
+All 50 primary keys are now source-verified and all 65 items are marked production-eligible. No production item has been exposed to the target solver or retrieval treatment.
 
-## Current blocker — key verification only
+## Verification changes requiring fresh audit
 
-Of the 50 primary keys:
-- **18 are source-verified** in the authoring session;
-- **32 remain `PENDING_INDEPENDENT_VERIFICATION` and `production_eligible: false`.**
+Source verification legitimately changed the candidate battery:
+- b09 retired/replaced: unstable IMF nominal-GDP item -> euro-area membership-scope item;
+- b25 retired/replaced: unstable IMF nominal-GDP item -> contiguous-Pacific-state-count item;
+- b11 Lake Michigan key corrected from 58,030 to NOAA 57,573 km²;
+- b18 principal reject refined to 8,851.8 km;
+- pass-1 provenance records were repaired with UTC timestamps and verifier-pass metadata.
 
-The 15 arithmetic-control keys are deterministic and were recomputed in-session.
+Because those changes moved the battery fingerprint, the authoring/verifying agent did not self-certify the same-turn repaired battery.
 
-A remembered or model-supplied answer is not sufficient evidence. Every pending primary key must be checked directly against authoritative public source material before eligibility can be flipped.
+## Fresh audit issue already identified
 
-This is a bounded pre-treatment remediation, not a redesign.
+**b11 remains potentially non-objective under its current stem.** The stem asks for Lake Michigan's surface area without fixing a source/convention, while verification found several defensible published values. The current ±1,500 km² tolerance absorbs source disagreement, but Stage 0A-M's definition-anchored rule prefers ambiguity to be eliminated in the stem rather than tolerated after the fact. Final audit must either source-anchor/reformulate b11 or explicitly prove that the acceptance-region formulation still satisfies the frozen class definition.
 
-## What may change during verification
+## Retrieval-environment issue
 
-Before any production exposure, a pending item may be corrected or replaced if direct source inspection shows that:
-- the remembered key is wrong;
-- the requested date/definition/scope is not uniquely supported;
-- the named source does not support the claimed answer;
-- the accepted-answer normalization is incomplete or incorrect;
-- the proposed displacing/alternative state is not actually distinct in the intended way.
+During key verification, direct fetches to at least `en.wikipedia.org` and `www.bls.gov` were refused by the network egress proxy while web search worked.
 
-Every such change must be documented as an authoring-stage correction and re-tested.
+This does not invalidate the authored battery, but the production treatment must be fingerprinted as the **actual retrieval-enabled procedure available in the execution environment**, not an abstract idealized retrieval system.
 
-No item may be changed because of observed or predicted target-solver behavior.
+Before execution the preflight must record, using the same production tool path where possible:
+- search reachability;
+- fetch/source-access reachability;
+- fixed representative domains;
+- tool identities/policies;
+- model/runtime snapshot;
+- environment state.
+
+A positive result must be scoped to that reachable retrieval surface. Do not silently repair or change the retrieval environment after seeing production outcomes.
 
 ## Stage 0A-M design still in force
 
@@ -86,17 +92,16 @@ The class-average effect is descriptive only.
 
 ## Still prohibited
 
-Until all 50 primary keys are independently verified and a final freeze/execution review passes:
-- no Stage 0A-M solver/model dispatches;
-- no treatment search-result inspection;
+Until the post-repair audit and execution preflight pass:
+- no Stage 0A-M production solver/model dispatches;
+- no treatment search-result inspection on production items;
 - no search-arm dry run on production items;
-- no target-model answer used for key verification;
 - no outcome-based item replacement/reclassification;
-- no run directory creation;
+- no runtime re-keying;
 - no Stage 0A-N or Stage 0B execution.
 
 ## Next step
 
-Verify the 32 pending primary keys directly against the named or better authoritative sources, update provenance and production eligibility, rerun the full non-dispatch suite, then conduct one final freeze/execution review.
+Perform a bounded post-verification battery audit focused on the repaired/replaced items, b11 objectivity, artifact/fingerprint consistency, and the actual retrieval-tool reachability surface. If clean after any pre-treatment corrections, produce the final freeze/execution candidate and stop before production dispatch unless explicitly authorized.
 
-See `docs/NEXT.md` for the exact authorized remediation.
+See `docs/NEXT.md` for the exact authorized action.

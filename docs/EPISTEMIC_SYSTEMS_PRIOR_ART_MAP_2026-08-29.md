@@ -6,6 +6,10 @@ Status: research context only. Not a novelty claim, not a preregistration, and d
 
 Can an explicit epistemic state around an LLM — claims, provenance, temporal validity, contradiction/dependency structure, uncertainty, and revision rules — improve reliability or execution beyond ordinary prompt context / RAG / memory?
 
+Extended meta-epistemic question:
+
+> Can the system also represent and test whether the **process exposing evidence to it** is trustworthy — including source lineage, retrieval reachability, tool constraints, correlated evidence, and hidden environment limitations?
+
 ## Existing traditions we should not reinvent
 
 ### 1. Truth Maintenance Systems (TMS / ATMS)
@@ -53,6 +57,16 @@ Lesson: more context is not automatically better; structured memory can outperfo
 
 Lesson: recursive procedure improvement is not hypothetical prior art anymore. Our differentiation must come from stronger measurement validity, negative-effect detection, execution grounding, or a broader epistemic/control action space.
 
+### 10. Correlated model errors / algorithmic monoculture
+ICML 2025 work evaluating hundreds of LLMs reports substantial correlated errors, including among accurate models and across provider/architecture differences.
+
+Lesson: multiple models, agents, calls, or sources are not automatically independent. Evidence and critic lineage must be modeled rather than inferred from count.
+
+### 11. Anomaly / out-of-distribution detection
+OOD and anomaly detection are mature ML areas, with a growing LLM-specific literature.
+
+Lesson: our useful niche is not generic anomaly detection, but whether an agent can recognize that the **assumptions of its current procedure/world representation are broken** and escalate to a higher-level hypothesis.
+
 ## Recent design signals
 
 - Structured/temporal memory can improve temporal and cross-session reasoning relative to naive full-context approaches.
@@ -61,6 +75,8 @@ Lesson: recursive procedure improvement is not hypothetical prior art anymore. O
 - Memory/update benchmarks repeatedly show that stale/corrected information is a distinct capability, not ordinary retrieval.
 - Agent provenance is emerging as its own research area because final-answer accuracy cannot explain whether evidence/tool use was justified.
 - Recursive optimization must have regression guards and held-out transfer tests or it risks benchmark overfitting.
+- Correlated LLM errors mean “independent critic” must be earned structurally or empirically rather than assumed from model count.
+- Tool availability and source accessibility can vary independently; “has web” is not a sufficiently precise environment state.
 
 ## Underexplored combinations worth testing
 
@@ -129,6 +145,44 @@ Primary questions:
 
 Important interpretation rule: structured epistemic output is an intervention on cognition, not a neutral grading device. If it improves performance, that is a procedure effect to be independently validated, not evidence that the original free-form measurement was unbiased.
 
+### H-EPI-12 — Environment-state representation
+Explicitly represent tool/observation state separately from world claims:
+- search availability;
+- fetch/source-open availability;
+- domain reachability;
+- permissions/sandbox state;
+- tool/version fingerprint;
+- observed failure class and timestamp.
+
+Compare against ordinary agents that receive the same tool errors only as transient prose.
+
+Question: does an explicit environment model reduce errors such as “source is false/unavailable” when the actual problem is “my current tool cannot reach it”?
+
+### H-EPI-13 — Evidence-environment integrity / epistemic captivity
+Construct controlled evidence worlds where many apparently independent sources derive from one corrupted origin or where one observation channel is systematically distorted.
+
+Compare:
+A. ordinary RAG;
+B. citation/source counting;
+C. provenance-lineage-aware support;
+D. lineage + active independent counterevidence search.
+
+Question: can the system detect that its evidence-generating process is misleading it rather than merely adjudicating claims inside that process?
+
+### H-EPI-14 — Procedure assumption / model-break detection
+Give the agent a procedure that works on a dominant pattern, then introduce held-out cases that violate a load-bearing assumption.
+
+Compare ordinary uncertainty with an explicit assumption ledger and anomaly/escalation rule.
+
+Question: can the system recognize “my current model/procedure is inappropriate” rather than expressing ordinary low confidence inside a broken model?
+
+### H-EPI-15 — Objective state × motivated retrieval
+Hold evidence fixed while changing incentives/costs so that one conclusion is easier or more rewarding.
+
+Measure search choice, stopping, disconfirming-evidence seeking and interpretation.
+
+Question: does explicit separation of truth/evidence state from objective/preference state reduce motivated information seeking?
+
 ## Likely avoid / do not build first
 
 - giant general-purpose knowledge graph;
@@ -137,6 +191,8 @@ Important interpretation rule: structured epistemic output is an intervention on
 - allowing model-generated summaries to overwrite raw evidence;
 - using coherence as a proxy for truth;
 - permanent memory without supersession / valid-time semantics;
+- representing “web access” as a single boolean when search/fetch/domain reachability differ;
+- assuming multiple model critics are independent because they are separate calls/providers;
 - recursive self-improvement before held-out evaluation exists;
 - evaluating the epistemic layer primarily with another LLM judge when objective outcomes are possible.
 
@@ -156,6 +212,16 @@ Claim record:
 - falsification condition
 - execution observations
 
+Environment record:
+- environment/tool fingerprint
+- operation requested
+- availability/reachability
+- domain/resource scope
+- observed timestamp
+- failure class
+- evidence for the environment claim
+- supersession/version history
+
 Important: start with a small ledger backed by SQLite/JSON, not a graph database. Promote to graph storage only if dependency/temporal queries prove useful.
 
 ## Candidate experimental progression
@@ -163,17 +229,22 @@ Important: start with a small ledger backed by SQLite/JSON, not a graph database
 1. Equal-evidence RAG vs explicit claim ledger.
 2. Explicit epistemic-structure intervention (H-EPI-11) as a small isolated test where objective grading is available.
 3. Add temporal validity.
-4. Add dependency invalidation / belief revision.
-5. Add execution observations.
-6. Add active routing based on epistemic state.
-7. Compare against uncertainty-only and generic controller baselines.
-8. Generalize to unseen tasks.
-9. Only then allow automated procedure search over epistemic operations.
+4. Add environment-state representation (H-EPI-12).
+5. Add dependency invalidation / belief revision.
+6. Add evidence-lineage independence and evidence-environment integrity.
+7. Add execution observations.
+8. Add model-break/anomaly escalation.
+9. Add active routing based on epistemic state.
+10. Compare against uncertainty-only and generic controller baselines.
+11. Generalize to unseen tasks/environments.
+12. Only then allow automated procedure search over epistemic operations.
 
 ## Novelty posture
 
-The ingredients are not novel individually. TMS, AGM belief revision, knowledge graphs, temporal memory, provenance, uncertainty-aware retrieval, and self-evolving memory all have substantial prior art.
+The ingredients are not novel individually. TMS, AGM belief revision, knowledge graphs, temporal memory, provenance, uncertainty-aware retrieval, OOD detection, performative systems, correlated-error research, and self-evolving memory all have substantial prior art.
 
-The potentially interesting research question is whether a **minimal, externally grounded synthesis** of these mechanisms produces measurable downstream gains at fixed model/evidence/cost, especially on execution tasks and negative-intervention cases.
+The potentially interesting research question is whether a **minimal, externally grounded synthesis** of these mechanisms produces measurable downstream gains at fixed model/evidence/cost, especially on execution tasks, negative-intervention cases, evidence-environment failures, and recursive correction.
 
 Treat that as an empirical hypothesis until a dedicated prior-art review establishes otherwise.
+
+See `docs/REFLEXIVE_ERROR_CORRECTION_RESEARCH_MAP_2026-08-30.md` for the broader six-state architecture, self-model performativity, causal introspection, correlated critics, Goodhart tests, recursive error correction, and human↔AI reciprocal correction.

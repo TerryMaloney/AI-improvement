@@ -4,6 +4,12 @@
 
 Can we experimentally discover procedures that make an existing AI model measurably more reliable, useful, and efficient — and can those procedures themselves be improved automatically without changing model weights?
 
+Higher-order extension:
+
+> Can a mixed human–AI system recursively improve its own error-detection and correction procedures using externally grounded evidence, while detecting when shared assumptions, self-models, evidence environments, incentives, evaluators, or critic lineages are themselves the source of error?
+
+The long-run target is therefore not assumed to be a faultless model. A potentially stronger target is an **error-correcting intelligence stack** in which faults become increasingly observable, diagnosable, challengeable, and correctable across humans, models, tools, evidence, execution, evaluators, and descendants.
+
 This repository should distinguish five levels of claim at all times:
 
 1. **Proven / exactly established** — mathematical proof or exact enumeration.
@@ -19,8 +25,19 @@ See [`docs/EXPERIMENTAL_PROGRAM_2026-08-29.md`](EXPERIMENTAL_PROGRAM_2026-08-29.
 Related research branches:
 - [`docs/EPISTEMIC_SYSTEMS_PRIOR_ART_MAP_2026-08-29.md`](EPISTEMIC_SYSTEMS_PRIOR_ART_MAP_2026-08-29.md)
 - [`docs/PERSISTENT_SELF_IDENTITY_RESEARCH_MAP_2026-08-29.md`](PERSISTENT_SELF_IDENTITY_RESEARCH_MAP_2026-08-29.md)
+- [`docs/REFLEXIVE_ERROR_CORRECTION_RESEARCH_MAP_2026-08-30.md`](REFLEXIVE_ERROR_CORRECTION_RESEARCH_MAP_2026-08-30.md)
 - [`docs/EXTERNAL_COGNITIVE_TOOLS_AND_TOPOLOGY_2026-08-29.md`](EXTERNAL_COGNITIVE_TOOLS_AND_TOPOLOGY_2026-08-29.md)
 - [`docs/PRIOR_ART_AND_DESIGN_SIGNALS_2026-08-29.md`](PRIOR_ART_AND_DESIGN_SIGNALS_2026-08-29.md)
+
+The reflexive error-correction branch adds six state families that future architecture should avoid collapsing:
+- world epistemic state;
+- functional self state;
+- environment / observation state;
+- objective / preference state;
+- evaluator state;
+- lineage / independence state.
+
+These are program-level hypotheses. They do not alter frozen experiment-specific artifacts.
 
 ## Program structure
 
@@ -50,6 +67,8 @@ Question: can observable task/model signals predict which procedure should be us
 
 Begin with the smallest action space that the Stage-1 result justifies.
 
+Future controllability work should distinguish task signals from self-state, environment-state, evaluator-state and incentive-state signals rather than treating every predictor as a generic feature.
+
 ### Stage 3 — Establish execution value
 Move beyond judged benchmark answers.
 
@@ -71,10 +90,14 @@ Separate:
 - held-out / later-authored tasks
 - real-world execution tasks
 
+Generalization should eventually vary not only model/task family but also environment/tool state and evaluator lineage, because a procedure that works only under one retrieval surface or judge is a local procedure.
+
 ### Stage 5 — Automated procedure discovery
 Given the frozen current champion procedure, allow an AI researcher role to propose candidate procedures.
 
 Candidates do not replace the champion until they pass the same experimental and holdout rules.
+
+Automated search must treat evaluator quality as part of the experiment. Improving the exposed score is not sufficient evidence of improving the underlying capability.
 
 ### Stage 6 — Recursive procedure improvement
 Loop:
@@ -82,6 +105,16 @@ Loop:
 current champion → candidate generation → controlled test → red-team → independent validation → promote or reject.
 
 Primary risk: optimizing the benchmark rather than real capability.
+
+Additional recursive risks:
+- self-confirming evaluator loops;
+- inherited false self-beliefs;
+- correlated critic blind spots;
+- environmental limitations misread as model traits;
+- a prediction about the agent changing the agent once revealed;
+- objective/incentive distortion of information seeking.
+
+Recursive descendants inherit artifacts and lineage, not validated capability claims. Claims must be re-earned against external evidence.
 
 ### Stage 7 — Model-agnostic execution runtime
 Only after the preceding stages earn it.
@@ -96,6 +129,16 @@ Long-term runtime may choose:
 - retry/repair
 - stopping
 
+Additional experimentally earned inputs/actions may eventually include:
+- environment/tool reachability state;
+- evidence-lineage independence;
+- evaluator reliability/state;
+- descriptive self-model state;
+- objective/incentive state;
+- anomaly / model-break escalation;
+- independent critic selection;
+- stronger external-verifier escalation.
+
 The product is the empirically validated procedure/control layer, not necessarily a new model.
 
 ## Execution lane
@@ -108,6 +151,9 @@ measure → discover → validate → generalize.
 Execution lane:
 choose real task → execute → observe external outcome → measure usefulness → feed failures back into research.
 
+A later reciprocal-correction lane may explicitly test:
+human proposal → AI criticism → external evidence/execution → human/system revision → future decision.
+
 Do not commercialize first. Use the system internally on useful work and generate evidence that it accomplishes something valuable before abstracting it into an API or platform.
 
 ## Permanent guardrails
@@ -116,8 +162,15 @@ Do not commercialize first. Use the system internally on useful work and generat
 - Frozen artifacts are never silently changed after outcome visibility.
 - Re-grades are not replications.
 - Model self-report is not authoritative telemetry where observed telemetry exists.
+- A model's explanation of why it acted is a claim, not privileged causal telemetry.
+- A self-prediction shown to the acting agent may become an intervention; disclosure effects must be tested rather than assumed away.
 - Unreachable environment states are NOT MEASURED, not failures.
+- Tool access is an environment-state property with time/tool/version scope, not a permanent model capability.
+- Multiple sources, calls, agents, or model providers are not automatically independent; lineage and correlated errors matter.
 - Judged effects must remain separated from deterministic effects when the measurement process can itself create arm differences.
+- Truth state, objective/preference state, environment state, and evaluator state must not be collapsed.
 - Procedure improvements must eventually generalize to unseen tasks.
 - Real execution evidence outranks a model judging another model’s usefulness.
+- Recursive descendants do not inherit validated performance claims without revalidation.
+- Human judgments are revisable inputs to the research loop, not an infallible oracle.
 - An interesting result is a signal to investigate, not permission to call a mechanism verified.
