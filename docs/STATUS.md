@@ -1,60 +1,100 @@
 # Current Research Status
 
-> Coordination document only. This file is not a preregistration and must not override experiment-specific frozen artifacts.
+> Coordination document only. Experiment-specific frozen artifacts remain authoritative for their scope.
 
 ## Current phase
 
-**Stage 0A-M has a committed objective-mechanism specification, but production item authoring remains blocked by one final inferential-consistency audit.**
+**Stage 0A-M statistical/specification red-team is complete enough to begin production item authoring. Solver dispatch remains blocked until a distinct production freeze/preflight commit.**
 
-Committed specification: `docs/EXP004_STAGE0A_M_SPECIFICATION.md` at `330392d`.
+Latest load-bearing audit commit: `3015ea6`.
 
-The design currently uses:
-- date-anchored and definition-anchored primary classes;
-- arithmetic/deterministic as a negative control outside the Holm family;
-- n=25 per primary class, n=15 control;
-- two arms, R=1;
-- deterministic keys;
-- exact one-sided conditional-binomial/McNemar-style analysis;
-- Holm over K=2 primary classes;
-- 130 planned solver dispatches after production freeze.
+## Stage 0A-M design now in force
 
-The stale knowledge-probe infrastructure assertion has been replaced by the stronger contamination-prevention invariant; the non-dispatch suite reported 1029 passed / 0 failed at `330392d`.
+Primary mechanism-assay classes:
+- **date-anchored / time-indexed** — 25 items;
+- **definition-anchored / definition-fixed quantity** — 25 items.
 
-## Current load-bearing audit questions
+Negative control:
+- **arithmetic / deterministic** — 15 items, outside the Holm family.
 
-### Null / claim alignment
+Planned production total after freeze:
+- 65 authored items;
+- 2 arms per item;
+- R=1;
+- 130 solver dispatches.
 
-The committed analysis proof establishes validity under the pointwise null `delta_i >= 0 for every item`, while the specification describes the target as a negative **class-average effect**. Before authoring, the lab must prove the exact test also controls Type-I for the broader class-average null, or narrow/change the claim/test.
+Primary analysis:
+- exact one-sided conditional-binomial / McNemar-style test within each primary class;
+- Holm correction across K=2 primary classes;
+- deterministic objective grading only;
+- retrieval treatment is **retrieval-enabled** (intent-to-treat procedure effect), never conditioned on observed tool use.
 
-### Treatment definition
+Primary licensed claim is deliberately finite and narrow:
+> Among the preregistered authored items in this class, at least one item has a lower probability of an objectively correct answer under the retrieval-enabled procedure than under closed-book.
 
-The retrieval arm must be frozen as either:
-- retrieval-enabled/optional use (intent-to-treat procedure effect), or
-- mandatory actual retrieval.
+The class-average difference is descriptive only, with no formal inferential claim.
 
-The scientific wording must match the delivered treatment.
+## Dependence boundary
 
-### Negative-control measurement
+The test does **not** assume arbitrary cross-item dependence is harmless.
 
-The current control bound is conditional on discordant items and returns 1.0 when D=0, making a clean arithmetic control uninformative. The control metric must be reconsidered before production.
+Sufficient condition: for the preregistered item order, conditional on the discordance pattern and previous orientations, each discordant item's probability of being baseline-favouring is <= 1/2 under the pointwise null.
 
-### Stage 0B advancement
+Frozen procedural protections:
+- item order randomized from a recorded seed;
+- primary classes interleaved, not dispatched in contiguous class bursts;
+- arm order randomized independently within item;
+- the two arms of an item paired closely in time;
+- fresh context per trial;
+- no answer/output from one trial enters another;
+- model/runtime/timing metadata recorded;
+- dependence diagnostics reported only, never used as post-hoc gates.
 
-“Query logs show no systematic construction defect” is currently non-operational and cannot remain an outcome-dependent subjective advancement gate. It must be objectively prespecified or removed; the fixed-query confirmation arm is the planned direct test of query-generation failure.
+Arbitrary shared-orientation dependence was shown to break the ordinary binomial tail severely, so separate API calls must never be described as automatically independent.
 
-### Invalidation language
+## Negative control
 
-Latent/unobservable quantities such as true class harm-purity must not become post-outcome invalidation gates. Power sensitivities, observable invalidation rules, and interpretive limitations must be separated.
+Headline metric is the baseline-favouring discordance rate `n10 / n` among all arithmetic-control items with an exact Clopper-Pearson upper bound.
 
-## Hard stop
+Generic tool-use tax interpretation is diagnostic only; it is not an automatic invalidation criterion.
 
-Until this audit closes:
-- no production item authoring;
-- no Stage 0A-M solver dispatches;
-- no production manifest freeze;
-- no treatment search-result inspection.
+## Stage 0B bridge
 
-## Broader Stage-0 architecture
+A primary class advances iff:
+- Holm-adjusted p <= 0.05; and
+- discordant count D >= 8.
+
+Query quality is not a Stage 0A exclusion/advancement criterion. A fresh Stage 0B fixed-query arm is the planned direct test of query-generation failure.
+
+## Now authorized
+
+Production **authoring and prefreeze construction only**:
+- author the 25 date-anchored items;
+- author the 25 definition-anchored items;
+- author the 15 arithmetic negative-control items;
+- build objective frozen keys;
+- store key-construction provenance separately from experimental retrieval evidence;
+- independently verify keys/class membership;
+- create the production manifest and frozen authoring/preflight artifacts;
+- run only non-solver validation/tests;
+- commit/push the candidate production freeze package.
+
+## Still prohibited
+
+Until a separate post-authoring audit authorizes execution:
+- no Stage 0A-M solver/model dispatches;
+- no treatment search-result inspection;
+- no search-arm dry run on production items;
+- no outcome-based item replacement/reclassification;
+- no runtime re-keying;
+- no Stage 0A-N or Stage 0B dispatches;
+- no controller claims.
+
+## Authoring interpretation
+
+This is an intentionally authored stress assay. Public authoritative references may be used to construct and verify keys before freeze. Such references are **KEY-CONSTRUCTION EVIDENCE**, not experimental retrieval evidence. The item set is not a random sample from all date-anchored or definition-anchored questions, so no prevalence/generalization claim follows.
+
+## Broader architecture
 
 0A-M — objective anchored mechanism assay.
 0A-N — separate naturalistic/free-text manifestation.
@@ -63,6 +103,6 @@ Until this audit closes:
 0D — held-out controller test.
 0E — richer action space only if earned.
 
-False-premise remains outside 0A-M and belongs in 0A-N/execution-grounded work. H-EPI-11 (explicit epistemic structure as a protective intervention) remains a separate future experiment.
+False-premise remains outside 0A-M. H-EPI-11 remains a separate future intervention experiment.
 
-See `docs/NEXT.md` for the exact authorized audit.
+See `docs/NEXT.md` for the exact authoring authorization and stop conditions.
