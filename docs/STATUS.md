@@ -4,104 +4,82 @@
 
 ## Current phase
 
-**Stage 0A-M now has a fully source-verified 65-item candidate battery, but final freeze/execution remains blocked on a fresh post-repair audit and retrieval-environment fingerprint.**
+**Stage 0A-M has cleared the post-verification battery audit at `da5f9b2`, with one diagnostic measurement still missing and two cross-section specification inconsistencies identified by independent review before final freeze.**
 
-Latest battery verification commit: `a262b89`.
+Reported state at `da5f9b2`:
+- 25 date-anchored primary items;
+- 25 definition-anchored primary items;
+- 15 arithmetic negative controls;
+- 65 total items / 130 eventual production dispatches;
+- 50/50 primary keys source-verified;
+- 65/65 production-eligible;
+- 1293 tests passed;
+- 0 production dispatches;
+- final audited battery fingerprint `1ec90754f1de2696`.
 
-Reported non-dispatch suite: **1281 passed, 0 failed**.
+Fingerprint lineage:
+`a53d4d59856fc1db` authoring -> `afc208e1e8d1bd00` source verification -> `1ec90754f1de2696` post-verification audit.
 
-Solver/model production dispatches: **0**.
+## Post-verification repairs completed
 
-## Candidate battery
+- b11 Lake Michigan area item was replaced rather than tolerance-patched because the named NOAA source itself gave mutually inconsistent metric/imperial conversions. Replacement preserves the lake-definition mechanism with an exact 4-vs-5 count.
+- b03 Everest tolerance was tightened from ±0.5 m to ±0.2 m after a generalized accept/reject separation audit exposed insufficient margin from the displacing value.
+- A regression rule now requires numeric acceptance regions to remain separated from principal reject values.
+- b09 definition-vs-date classification was made explicit in specification §3; b25 and b18 were re-audited cleanly.
+- Fingerprints are now reproducibly generated from committed YAML by `lab/stage0am_fingerprint.py`.
+- Retrieval packet now names both WebSearch and WebFetch, matching the solver-web grant.
 
-- 25 date-anchored / time-indexed primary items;
-- 25 definition-anchored / definition-fixed quantity primary items;
-- 15 arithmetic / deterministic negative-control items;
-- 65 total items;
-- 2 arms per item, R=1;
-- 130 planned production dispatches only after final freeze/execution authorization.
+## Retrieval environment measurement
 
-Current battery fingerprint: `afc208e1e8d1bd00`.
+Frozen probe design was committed before observation (`46ebdd9`).
 
-All 50 primary keys are now source-verified and all 65 items are marked production-eligible. No production item has been exposed to the target solver or retrieval treatment.
+Orchestrator arm:
+- WebFetch refused 5/5 targets including `example.com` — page fetch is unavailable wholesale in that environment;
+- WebSearch succeeded and returned substantive extracted page text.
 
-## Verification changes requiring fresh audit
+Solver-web subagent arm:
+- **INCONCLUSIVE / NO DATA** because the session rate limit terminated the screen-class subagent before it issued a tool call.
+- This must not be inferred from architectural expectation.
+- It may be rerun once, unchanged, as a screen-class diagnostic; it consumes zero production budget and must use no production item.
 
-Source verification legitimately changed the candidate battery:
-- b09 retired/replaced: unstable IMF nominal-GDP item -> euro-area membership-scope item;
-- b25 retired/replaced: unstable IMF nominal-GDP item -> contiguous-Pacific-state-count item;
-- b11 Lake Michigan key corrected from 58,030 to NOAA 57,573 km²;
-- b18 principal reject refined to 8,851.8 km;
-- pass-1 provenance records were repaired with UTC timestamps and verifier-pass metadata.
+The experiment remains ITT over the retrieval procedure actually delivered. Reachability is treatment/environment provenance, never a post-outcome item filter.
 
-Because those changes moved the battery fingerprint, the authoring/verifying agent did not self-certify the same-turn repaired battery.
+## Two concrete pre-freeze specification inconsistencies found by independent review
 
-## Fresh audit issue already identified
+### 1. Tool failure vs trial failure semantics
 
-**b11 remains potentially non-objective under its current stem.** The stem asks for Lake Michigan's surface area without fixing a source/convention, while verification found several defensible published values. The current ±1,500 km² tolerance absorbs source disagreement, but Stage 0A-M's definition-anchored rule prefers ambiguity to be eliminated in the stem rather than tolerated after the fact. Final audit must either source-anchor/reformulate b11 or explicitly prove that the acceptance-region formulation still satisfies the frozen class definition.
+Specification §6.3 says a trial where retrieval is attempted and fails stays in the retrieval-enabled arm under ITT/no reachability conditioning. Specification §7 still defines tool-call error/timeout/egress refusal as a technical failure that voids the item across both arms.
 
-## Retrieval-environment issue
+Those rules conflict if, for example, WebFetch is refused but the solver still returns a gradeable final answer.
 
-During key verification, direct fetches to at least `en.wikipedia.org` and `www.bls.gov` were refused by the network egress proxy while web search worked.
+Required resolution before freeze:
+- distinguish **internal retrieval-tool failure with a completed solver answer** from **trial/dispatch failure that produces no gradeable response**;
+- the former should be logged as a treatment outcome and remain in ITT unless a stronger preregistered justification says otherwise;
+- the latter may require paired voiding under the frozen missingness rule;
+- do not condition inclusion on which domains/tools succeeded.
 
-This does not invalidate the authored battery, but the production treatment must be fingerprinted as the **actual retrieval-enabled procedure available in the execution environment**, not an abstract idealized retrieval system.
+### 2. Primary estimand wording
 
-Before execution the preflight must record, using the same production tool path where possible:
-- search reachability;
-- fetch/source-access reachability;
-- fixed representative domains;
-- tool identities/policies;
-- model/runtime snapshot;
-- environment state.
+Specification §4 still says `Estimand: the class-average effect`, while §1 explicitly demotes the class-average effect to descriptive-only and freezes the inferential claim as rejection of the pointwise null / existence of at least one authored item with lower correctness probability under retrieval-enabled.
 
-A positive result must be scoped to that reachable retrieval surface. Do not silently repair or change the retrieval environment after seeing production outcomes.
+Required resolution before freeze:
+- make §4 consistent with §1;
+- do not restore class-average inference without a valid proof/test;
+- power parameterizations may remain descriptive design calculations but must not be mislabeled as the licensed inferential estimand.
 
-## Stage 0A-M design still in force
+## Current interpretation
 
-Primary classes:
-- date-anchored / time-indexed;
-- definition-anchored / definition-fixed quantity.
-
-Negative control:
-- arithmetic / deterministic, outside the Holm family.
-
-Treatment:
-- **retrieval-enabled** intent-to-treat procedure versus closed-book;
-- never condition analysis on observed tool use.
-
-Primary inference:
-- exact one-sided conditional-binomial / McNemar-style test within each primary class;
-- Holm across K=2;
-- finite authored-item existence claim only.
-
-Frozen primary wording:
-> Among the preregistered authored items in this class, at least one item has a lower probability of an objectively correct answer under the retrieval-enabled procedure than under closed-book.
-
-The class-average effect is descriptive only.
-
-## Dependence protections
-
-- randomized item order from recorded seed;
-- classes interleaved;
-- independently randomized arm order within item;
-- paired arms adjacent/close in time;
-- fresh context per trial;
-- no prior output enters later prompts;
-- runtime/timing metadata recorded;
-- dependence diagnostics reported only, never used as exclusion gates.
+No new statistical redesign is presently indicated. The battery changes themselves look coherent, but final freeze should not occur until the two contradictions above are resolved and the solver-side egress screen is either measured or explicitly frozen as missing with no unsupported transfer claim.
 
 ## Still prohibited
 
-Until the post-repair audit and execution preflight pass:
+Until final freeze/execution authorization:
 - no Stage 0A-M production solver/model dispatches;
-- no treatment search-result inspection on production items;
-- no search-arm dry run on production items;
+- no production-item search/retrieval scout;
 - no outcome-based item replacement/reclassification;
 - no runtime re-keying;
 - no Stage 0A-N or Stage 0B execution.
 
-## Next step
+Program-level reflexive/error-correction research added on 2026-08-30 remains research context only and does not alter Stage 0A-M.
 
-Perform a bounded post-verification battery audit focused on the repaired/replaced items, b11 objectivity, artifact/fingerprint consistency, and the actual retrieval-tool reachability surface. If clean after any pre-treatment corrections, produce the final freeze/execution candidate and stop before production dispatch unless explicitly authorized.
-
-See `docs/NEXT.md` for the exact authorized action.
+See `docs/NEXT.md` for the exact last pre-freeze action.
