@@ -4,106 +4,127 @@
 
 ## Current state
 
-Stage 0A-M has passed the successive design audits far enough to begin **production item authoring**.
+Stage 0A-M candidate battery is authored at commit `4c7725f`.
 
-Latest load-bearing audit commit: `3015ea6`.
+Reported state:
+- 65 items total: 25 date-anchored + 25 definition-anchored + 15 arithmetic control;
+- 1279 non-dispatch tests passed;
+- 0 solver/model dispatches;
+- schedule, arm packets, quarantined keys, provenance, grading tests, preflight checklist and report skeleton exist;
+- no production run directory exists;
+- no production item has been shown to the target solver.
 
-Authoring is now authorized. **Solver/model dispatch is still not authorized.**
+**Execution is still blocked.**
 
-## Next authorized research action
+The only current blocking remediation is independent public-source verification of **32 of the 50 primary keys**.
 
-Create the complete candidate Stage 0A-M production battery and prefreeze package without exposing any production item to the retrieval treatment.
+18/50 primary keys are already verified. The remaining 32 are marked `PENDING_INDEPENDENT_VERIFICATION` / `production_eligible: false` and must stay that way until direct source inspection supports them.
 
-### Required battery
+## Next authorized action — source verification only
 
-Primary classes:
-- 25 date-anchored / time-indexed items;
-- 25 definition-anchored / definition-fixed quantity items.
+Verify every pending primary item using authoritative public source material.
 
-Negative control:
-- 15 arithmetic / deterministic items.
+This is KEY-CONSTRUCTION EVIDENCE, not EXPERIMENTAL RETRIEVAL EVIDENCE.
 
-Total: 65 items.
+### Required verification for each pending item
 
-### Authoring rules
+Check directly from source material:
 
-1. Follow `docs/EXP004_STAGE0A_M_SPECIFICATION.md` exactly.
-2. One primary class per item; no overlap.
-3. No production item may be selected, rewritten, dropped, or reclassified based on any model/search-arm outcome.
-4. Do not run the experiment, a pilot, a scout, or a retrieval dry-run on these items.
-5. Public authoritative sources may be used to create/verify keys only as **KEY-CONSTRUCTION EVIDENCE**.
-6. Store key-construction provenance separately from future **EXPERIMENTAL RETRIEVAL EVIDENCE**.
-7. Every key must be objective before freeze; no runtime judge route and no runtime re-keying.
-8. Independently verify class membership, stem interpretation, date/definition/scope, accepted-answer representation, and provenance.
-9. For date-anchored items, the target date/state must be explicit and stable enough to support an objective key.
-10. For definition-anchored items, definition/scope/unit/date/convention must be explicit enough that incompatible quantities are wrong by construction rather than merely debatable.
-11. Arithmetic controls must be exact, deterministic, and unrelated enough to the anchored mechanisms to function as a diagnostic negative control.
+1. **Canonical answer**
+   - Does the source actually support the frozen answer?
 
-### Stress-sample discipline
+2. **Anchor / scope / definition**
+   - Date-anchored: does the source support the answer specifically at the requested date/state?
+   - Definition-anchored: does the source support the exact requested definition, scope, unit, period and convention?
 
-The battery may deliberately enrich for plausible displacement mechanisms using treatment-blind properties and public key-construction evidence.
+3. **Objective gradability**
+   - Is there a unique production key under the stem as written?
+   - Are aliases/tolerances correct and disjoint from the principal wrong answer?
 
-That enrichment must be documented. It does not license prevalence or semantic-class generalization.
+4. **Mechanism metadata**
+   - Where the item records a newer state or alternative definition/value, confirm that it is genuinely distinct if practical from authoritative authoring evidence.
+   - This is construct metadata only; never select the item based on target-model behavior.
 
-Do not use observed model behavior to improve “purity.” True harm-purity remains latent and is only a power-sensitivity parameter.
+5. **Provenance**
+   Record enough for audit:
+   - authoritative source/provider;
+   - URL or stable source identifier;
+   - access date;
+   - relevant table/page/section/date where available;
+   - short paraphrased evidence note;
+   - verification status.
 
-### Create/freeze-support artifacts
+Do not store long copyrighted passages.
 
-Create the candidate production artifacts required by the specification, including as applicable:
-- item manifest;
-- objective keys / accepted-answer representation;
-- class assignments and subtype covariates;
-- key-construction provenance;
-- independent verification record;
-- arm templates/wrapper hashes or preflight-ready packet artifacts;
-- randomized item-order seed and resulting schedule;
-- independent within-item arm-order seed/rules;
-- report skeleton;
-- statistical/preflight metadata needed for the later freeze.
+### Source hierarchy
 
-The final production freeze commit must still occur only after the authored battery passes the audit below.
+Prefer, in order where applicable:
+- primary official/statistical/government/intergovernmental source;
+- first-party corporate filing/report for company figures;
+- governing sports/scientific body for official records/definitions;
+- other authoritative reference only when a primary source is unavailable.
 
-### Required prefreeze audit
+Do not mark a key verified merely because multiple secondary websites repeat it.
 
-Before declaring the battery ready:
+### If verification disagrees with the authored battery
 
-- verify exactly 25 + 25 + 15 items;
-- verify no duplicate or near-duplicate mechanism templates that collapse effective diversity;
-- verify one-class-per-item;
-- verify objective deterministic grading for every item;
-- verify key-construction provenance exists for every non-arithmetic item;
-- verify no experimental retrieval evidence exists;
-- independently re-check all date anchors and definition anchors;
-- run ambiguity/adversarial checks on stems and accepted-answer rules without using solver-treatment outputs;
-- verify closed/retrieval-enabled packet differences are limited to the frozen retrieval permission;
-- verify dispatch schedule interleaves primary classes and randomizes arm order;
-- verify fresh-context requirement is enforceable;
-- run full non-dispatch tests.
+This is still pre-treatment, so correction is permitted.
 
-### Hard stop
+If direct source evidence shows a pending item is wrong or ambiguous:
+- keep an audit note of the original authored version;
+- correct the key/stem/accepted representation if the class mechanism remains intact;
+- replace the item if necessary using the same treatment-blind authoring rules;
+- re-run all grading/diversity/schedule/manifest tests affected by the change;
+- update fingerprints/hashes/schedule only as required by the actual changed artifacts.
 
-Do **not**:
-- dispatch any solver/model call on production items;
-- run retrieval/search as an experimental arm on production items;
-- inspect how the target model answers the production items;
-- replace hard items based on predicted/observed solver difficulty from model outcomes;
-- alter a key after treatment outcomes exist;
-- begin Stage 0A-N, Stage 0B, or controller work.
+Do not preserve an incorrect remembered answer for the sake of keeping the battery unchanged.
 
-Key-construction web/source research is permitted; experimental treatment exposure is not.
+Do not use any solver/model answer to resolve the disagreement.
 
-## Final gate for this authoring turn
+### Verification must not become a scout
+
+Forbidden:
+- asking the target solver to answer an item;
+- answering with and without search to see whether it reverses;
+- asking another frontier model whether the item is likely to fool the target;
+- dropping/replacing an item because it appears too easy/hard for a model;
+- inspecting future experimental retrieval results.
+
+Direct source lookup for factual key construction is authorized.
+
+## After all pending keys are resolved
+
+Required state before gate A:
+- 50/50 primary keys independently source-verified;
+- 15/15 arithmetic controls deterministically verified;
+- every production item `production_eligible: true`;
+- no unresolved ambiguity flags;
+- battery/answers/provenance fingerprints updated consistently;
+- schedule and packet integrity tests green;
+- treatment-exposure audit still zero;
+- full non-dispatch suite green;
+- no run directory and no production dispatch.
+
+Then commit/push the verified candidate freeze package and STOP for final execution review.
+
+## Still not authorized
+
+- no Stage 0A-M production dispatch;
+- no egress/production probe if it would create a solver dispatch unless separately allowed by the existing preflight protocol;
+- no Stage 0A-N;
+- no Stage 0B;
+- no controller work.
+
+## Final gate
 
 Return exactly one:
 
-A. BATTERY AUTHORED AND PREFREEZE AUDIT CLEAN — READY FOR FINAL FREEZE/EXECUTION REVIEW
-B. BATTERY AUTHORED BUT SPECIFIC NON-DISPATCH REMEDIATIONS REQUIRED
-C. DATE-ANCHORED CLASS COULD NOT SUPPLY 25 OBJECTIVE ITEMS
-D. DEFINITION-ANCHORED CLASS COULD NOT SUPPLY 25 OBJECTIVE ITEMS
-E. NEGATIVE CONTROL DESIGN FAILED AUTHORING
-F. AUTHORING EXPOSED A NEW LOAD-BEARING DESIGN FLAW
+A. ALL PRIMARY KEYS VERIFIED — READY FOR FINAL FREEZE/EXECUTION REVIEW
+B. VERIFICATION INCOMPLETE — SPECIFIC KEYS REMAIN BLOCKED
+C. VERIFICATION FORCED NONTRIVIAL BATTERY REPAIRS — REAUDIT REQUIRED
+D. SOURCE EVIDENCE EXPOSED A LOAD-BEARING DESIGN PROBLEM
 
-Regardless of gate: **DISPATCHES must remain 0.**
+Regardless of gate: **DISPATCHES: 0**.
 
 Return:
 
@@ -112,29 +133,15 @@ TESTS:
 DISPATCHES: 0
 
 RESULT:
-
-BATTERY COUNTS:
-
-DATE-ANCHORED SUMMARY:
-
-DEFINITION-ANCHORED SUMMARY:
-
-NEGATIVE CONTROL SUMMARY:
-
-KEY/PROVENANCE AUDIT:
-
-DIVERSITY / DUPLICATION AUDIT:
-
-AMBIGUITY AUDIT:
-
-SCHEDULE / RANDOMIZATION:
-
+VERIFIED PRIMARY KEYS:
+REPAIRED / REPLACED ITEMS:
+UNRESOLVED ITEMS:
+PROVENANCE AUDIT:
+GRADING AUDIT:
+BATTERY FINGERPRINT:
+TREATMENT-EXPOSURE AUDIT:
 PREFLIGHT STATUS:
-
-CHANGED:
-
 OPEN:
-
 DO NOT:
 
 If a future stage requires Terry to manually install, authorize, connect, or physically configure anything, begin with the mandatory manual-setup alert defined in `docs/EXTERNAL_COGNITIVE_TOOLS_AND_TOPOLOGY_2026-08-29.md`.
