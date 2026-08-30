@@ -1,40 +1,92 @@
-# Next action — Stage 0A-M execution
+# Next action — validate Stage 0A-M agent-symmetry repair, then freeze
 
-**Stage 0A-M is freeze-ready. The next session performs execution-time preflight only, then runs the experiment. No design decisions remain, and none may be made after outcomes become visible.**
+**Do NOT run production yet.**
 
-Read first, in this order:
-1. `docs/EXP004_STAGE0A_M_SPECIFICATION.md` — the frozen design. §1.2 is the exact claim wording; §6.3 the treatment scope; §7 the failure semantics.
-2. `docs/EXP004_STAGE0A_M_PREFLIGHT.md` — what is done and what remains.
-3. `experiments/exp004_stage0am/manifest.json` — counts, fingerprints, grading semantics.
-4. `experiments/exp004_stage0am/schedule.json` — the frozen dispatch order.
-5. `docs/EXP004_STAGE0A_M_REPORT_SKELETON.md` — the report you will fill in.
+A pre-production audit found that the shared `solver-web` and `solver-closed` Claude agents had different epistemic system prompts. The Stage 0A-M contrast therefore would have changed prompting as well as retrieval access.
 
-## Execution-time preflight — the complete remaining list
+Candidate remediation commit:
+`0fb8a7f7b856337d26116378b0d6c399c0ffc061`
 
-| # | Check | How |
-|---|---|---|
-| 1 | Freeze commit SHA | `git rev-parse HEAD`; record in the run manifest |
-| 10 | Model/version snapshot | record the solver model id per trial, plus any served-model fallback |
-| 11 | Environment fingerprint | re-run the frozen egress probe once, screen-class; compare against `E` |
-| 13 | Telemetry dry run | **synthetic stem only** |
-| 15 | Fresh-context-per-trial | **synthetic canary only**: two synthetic trials, confirm the second cannot recall the first |
-| 17 | Run directory | create at dispatch time; must not exist before |
+Read first:
+1. `docs/EXP004_STAGE0A_M_AGENT_SYMMETRY_REMEDIATION.md`
+2. `experiments/exp004_stage0am/agent_symmetry.candidate.json`
+3. `.claude/agents/stage0am-solver-closed.md`
+4. `.claude/agents/stage0am-solver-web.md`
+5. `tests/test_stage0am_agent_symmetry.py`
+6. `docs/EXP004_STAGE0A_M_SPECIFICATION.md`
+7. `docs/EXP004_STAGE0A_M_PREFLIGHT.md`
 
-**Checks 13 and 15 must never use a production stem.** Spending treatment exposure on infrastructure validation is exactly what the zero-exposure invariant protects against.
+## Required validation before freeze
 
-## Then run it
+Use the candidate dedicated Stage 0A-M agents, not the shared agents.
 
-130 dispatches: 65 items × 2 arms × 1 replicate, in the order in `schedule.json`, arms adjacent per item, fresh context per trial. Grade with `lab/anchored_grading.py`; analyse with `lab.stage0am.analyse`; partition failures with `lab.stage0am.partition_pairs` before analysing.
+1. Run the complete non-production test suite.
+   - Require all tests green.
+   - Confirm `tests/test_stage0am_agent_symmetry.py` passes.
+   - Do not weaken a scientific invariant to restore green.
 
-## The traps this package already closed — do not reopen them
+2. Run a synthetic closed-agent canary.
+   - `stage0am-solver-closed`
+   - no production stem
+   - confirm successful launch and gradeable JSON
+   - record exact served model/model id.
 
-- **Do not condition anything on retrieval success.** A refused fetch with an answer is retained and graded (§7 case A). Only a dispatch that produced no gradeable answer voids its pair (case B). `partition_pairs` implements this; do not hand-filter.
-- **Do not claim a class-average effect.** The licensed claim is §1.2's wording, verbatim. The class average is descriptive.
-- **Do not drop an item because a source is unreachable.** `E` is search-capable, fetch-blocked; that scopes the conclusion, not the item set.
-- **Do not re-key, re-word or reclassify an item after seeing an outcome.**
-- **Do not pool across environments.** If check 11 disagrees with `E`, re-scope before dispatch or halt and report a split-environment run.
-- **Scope every retrieval claim to `E`**, including in the null-result language of §15.
+3. Run a synthetic retrieval-agent canary.
+   - `stage0am-solver-web`
+   - neutral non-production question
+   - confirm successful launch and gradeable JSON
+   - record exact served model/model id.
+   - require the same model snapshot as the closed arm.
 
-## Not authorization
+4. Re-run the already-frozen neutral retrieval-environment probe through `stage0am-solver-web`.
+   - do not change probe targets or queries after seeing results;
+   - record WebSearch/WebFetch reachability;
+   - compare with prior `E = search-capable, fetch-blocked`;
+   - if different, re-scope the environment BEFORE any production outcome.
 
-The reflexive / error-correction research maps added 2026-08-30 are future context. They do not alter the Stage 0A-M battery, action space, hypothesis, inference, treatment, sample size, or report claim.
+5. Verify the committed symmetry record.
+   - common agent body hash: `60a61de44f7837fe`
+   - closed candidate agent file hash: `0acdce6151bdcdc1`
+   - retrieval candidate agent file hash: `233b797412d3ee7f`
+   - packet hashes: closed `1d47dc05e460a07b`, retrieval `4ad32bd810a1b542`
+   - retrieval-only tool difference: `WebSearch`, `WebFetch`.
+
+6. Record the validated agent/packet hashes in the final execution manifest or freeze record and mark `agent_symmetry.candidate.json` as validated/frozen.
+
+7. Record the final freeze commit SHA.
+
+8. Only after steps 1–7 pass, create the production run directory and execute the frozen 130-dispatch schedule.
+
+## Scientific state that must not change
+
+- battery fingerprint `1ec90754f1de2696`;
+- grader fingerprint `10adaf1dac94ea70`;
+- 25 date + 25 definition + 15 arithmetic items;
+- R=1;
+- 130 production dispatches;
+- pointwise-null / finite-authored-set primary claim;
+- ITT analysis;
+- existing schedule/randomization;
+- no reachability-conditioned item selection;
+- no production re-keying/reclassification.
+
+## Execution traps
+
+- Use `stage0am-solver-closed` / `stage0am-solver-web`, NOT the shared `solver-closed` / `solver-web`.
+- A retrieval-tool failure with a gradeable answer is retained and graded.
+- Only a dispatch-level failure with no gradeable answer pair-voids.
+- Do not claim a class-average inferential effect.
+- Do not drop items for unreachable sources.
+- Do not pool across different environments.
+- Never expose a production stem in a dry run/canary.
+
+## Current authorization boundary
+
+Authorized now:
+- non-dispatch tests;
+- neutral synthetic agent canaries;
+- neutral environment probe;
+- final freeze bookkeeping if all checks pass.
+
+Not authorized until those checks pass:
+- any of the 130 production Stage 0A-M dispatches.
