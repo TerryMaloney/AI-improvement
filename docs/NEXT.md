@@ -4,120 +4,137 @@
 
 ## Current state
 
-Stage 0A-M has a committed specification and tested synthetic analysis at commit `330392d`, but **production item authoring is not yet authorized**.
+Stage 0A-M has passed the successive design audits far enough to begin **production item authoring**.
 
-A focused final inferential audit is required before authoring because review of the committed specification/code exposed several claim/measurement mismatches that must be resolved without solver dispatches.
+Latest load-bearing audit commit: `3015ea6`.
+
+Authoring is now authorized. **Solver/model dispatch is still not authorized.**
 
 ## Next authorized research action
 
-Perform a **read-only Stage 0A-M inferential-consistency audit**. No solver dispatches and no production item authoring.
+Create the complete candidate Stage 0A-M production battery and prefreeze package without exposing any production item to the retrieval treatment.
 
-### 1. Null / claim alignment — load-bearing
+### Required battery
 
-`lab/stage0am.py` proves validity under the pointwise class null:
+Primary classes:
+- 25 date-anchored / time-indexed items;
+- 25 definition-anchored / definition-fixed quantity items.
 
-> retrieval does not hurt any item in this class (`delta_i >= 0` for every item).
+Negative control:
+- 15 arithmetic / deterministic items.
 
-The specification/report language currently describes a **class-average negative effect**.
+Total: 65 items.
 
-These are not automatically the same hypothesis.
+### Authoring rules
 
-Required:
-- derive exactly what null the exact conditional-binomial test controls;
-- determine whether it also controls Type-I for the broader null `mean(delta_i) >= 0` under arbitrary item heterogeneity;
-- either prove that broader validity, exactly enumerate/bound it for the planned n, or produce a counterexample;
-- if broader validity is not established, change the scientific claim/estimand or change the test before authoring.
+1. Follow `docs/EXP004_STAGE0A_M_SPECIFICATION.md` exactly.
+2. One primary class per item; no overlap.
+3. No production item may be selected, rewritten, dropped, or reclassified based on any model/search-arm outcome.
+4. Do not run the experiment, a pilot, a scout, or a retrieval dry-run on these items.
+5. Public authoritative sources may be used to create/verify keys only as **KEY-CONSTRUCTION EVIDENCE**.
+6. Store key-construction provenance separately from future **EXPERIMENTAL RETRIEVAL EVIDENCE**.
+7. Every key must be objective before freeze; no runtime judge route and no runtime re-keying.
+8. Independently verify class membership, stem interpretation, date/definition/scope, accepted-answer representation, and provenance.
+9. For date-anchored items, the target date/state must be explicit and stable enough to support an objective key.
+10. For definition-anchored items, definition/scope/unit/date/convention must be explicit enough that incompatible quantities are wrong by construction rather than merely debatable.
+11. Arithmetic controls must be exact, deterministic, and unrelated enough to the anchored mechanisms to function as a diagnostic negative control.
 
-Do not rely on the phrase “the statistic is driven by the class mean” as a proof.
+### Stress-sample discipline
 
-### 2. Retrieval treatment definition
+The battery may deliberately enrich for plausible displacement mechanisms using treatment-blind properties and public key-construction evidence.
 
-Freeze whether the retrieval arm means:
-- retrieval is merely available and the model may choose not to use it; or
-- at least one retrieval/search action is required.
+That enrichment must be documented. It does not license prevalence or semantic-class generalization.
 
-If use is optional, the estimand is an intent-to-treat effect of a retrieval-enabled procedure, not the causal effect of retrieval conditional on actual use.
+Do not use observed model behavior to improve “purity.” True harm-purity remains latent and is only a power-sensitivity parameter.
 
-The scientific claim must match the treatment actually delivered. Never exclude a trial because the model chose not to search unless that rule was part of the treatment before outcomes.
+### Create/freeze-support artifacts
 
-### 3. Negative-control metric
+Create the candidate production artifacts required by the specification, including as applicable:
+- item manifest;
+- objective keys / accepted-answer representation;
+- class assignments and subtype covariates;
+- key-construction provenance;
+- independent verification record;
+- arm templates/wrapper hashes or preflight-ready packet artifacts;
+- randomized item-order seed and resulting schedule;
+- independent within-item arm-order seed/rules;
+- report skeleton;
+- statistical/preflight metadata needed for the later freeze.
 
-The current arithmetic control reports a Clopper–Pearson upper bound on the **baseline-favouring share among discordant items**.
+The final production freeze commit must still occur only after the authored battery passes the audit below.
 
-When `D=0`, the implementation correctly returns `1.0`, but that makes a perfectly clean arithmetic control maximally uninformative.
+### Required prefreeze audit
 
-Investigate whether the control should instead bound something such as:
-- the baseline-favouring discordance rate among **all** control items (`n10 / n`);
-- paired risk difference;
-- or another exact quantity that remains informative when no discordances occur.
+Before declaring the battery ready:
 
-The negative control must have a prespecified interpretation and must not be promoted to a causal claim it cannot support.
+- verify exactly 25 + 25 + 15 items;
+- verify no duplicate or near-duplicate mechanism templates that collapse effective diversity;
+- verify one-class-per-item;
+- verify objective deterministic grading for every item;
+- verify key-construction provenance exists for every non-arithmetic item;
+- verify no experimental retrieval evidence exists;
+- independently re-check all date anchors and definition anchors;
+- run ambiguity/adversarial checks on stems and accepted-answer rules without using solver-treatment outputs;
+- verify closed/retrieval-enabled packet differences are limited to the frozen retrieval permission;
+- verify dispatch schedule interleaves primary classes and randomizes arm order;
+- verify fresh-context requirement is enforceable;
+- run full non-dispatch tests.
 
-### 4. Remove subjective Stage 0B advancement language
+### Hard stop
 
-The current spec advances a class only if query logs show “no systematic construction defect.” That phrase is not operationalized and could create post-outcome researcher discretion.
+Do **not**:
+- dispatch any solver/model call on production items;
+- run retrieval/search as an experimental arm on production items;
+- inspect how the target model answers the production items;
+- replace hard items based on predicted/observed solver difficulty from model outcomes;
+- alter a key after treatment outcomes exist;
+- begin Stage 0A-N, Stage 0B, or controller work.
 
-Either:
-- define a fully objective pre-outcome rule;
-- or remove it from the advancement gate and let Stage 0B’s fixed-query arm test query-generation failure directly.
+Key-construction web/source research is permitted; experimental treatment exposure is not.
 
-Query logs may remain diagnostic regardless.
-
-### 5. Operationalize invalidation language
-
-Review §14 phrases including:
-- “class purity below ~70%”;
-- “negative control showing harm comparable to the primary classes”;
-- “anchoring proving to suppress the effect.”
-
-For each, decide whether it is:
-- observable under this design;
-- a formal invalidation rule;
-- a power sensitivity;
-- or merely a limitation.
-
-Do not leave an unobservable latent quantity such as true harm-purity as a post-outcome invalidation gate.
-
-### 6. Null-result interpretation
-
-Define exactly what a clean null licenses.
-
-A null in Stage 0A-M must not become evidence that retrieval is harmless on unanchored/naturalistic tasks. But it should also not be called wholly “uninterpretable” if it validly says the anchored stress assay did not detect its preregistered effect.
-
-Freeze the report language now.
-
-### 7. Re-run synthetic adversarial tests
-
-Add no production data.
-
-Stress the finalized test against:
-- mixed positive/negative item effects with nonnegative class mean;
-- heterogeneous baseline difficulty;
-- low/high discordance rates;
-- negative-control `D=0` and small-D cases;
-- optional-vs-mandatory retrieval semantics where representable.
-
-If a counterexample invalidates the current claim, treat that as a successful audit result.
-
-## Hard stop
-
-Do not:
-- author production items;
-- freeze the production manifest;
-- run solver calls;
-- inspect treatment search results;
-- preserve a claim merely because code/tests are currently green.
-
-## Final gate
+## Final gate for this authoring turn
 
 Return exactly one:
 
-A. SPEC INTERNALLY CONSISTENT — AUTHORING MAY BEGIN
-B. SPEC REQUIRES NON-DISPATCH PATCHES BEFORE AUTHORING
-C. PRIMARY TEST DOES NOT SUPPORT THE CLAIM
-D. NEGATIVE CONTROL MUST BE REDESIGNED
-E. TREATMENT/ESTIMAND MUST BE REFORMULATED
+A. BATTERY AUTHORED AND PREFREEZE AUDIT CLEAN — READY FOR FINAL FREEZE/EXECUTION REVIEW
+B. BATTERY AUTHORED BUT SPECIFIC NON-DISPATCH REMEDIATIONS REQUIRED
+C. DATE-ANCHORED CLASS COULD NOT SUPPLY 25 OBJECTIVE ITEMS
+D. DEFINITION-ANCHORED CLASS COULD NOT SUPPLY 25 OBJECTIVE ITEMS
+E. NEGATIVE CONTROL DESIGN FAILED AUTHORING
+F. AUTHORING EXPOSED A NEW LOAD-BEARING DESIGN FLAW
 
-If A or B, commit/push any specification, analysis, and synthetic-test corrections that are justified, run the full non-dispatch suite, and stop before item authoring.
+Regardless of gate: **DISPATCHES must remain 0.**
+
+Return:
+
+COMMIT:
+TESTS:
+DISPATCHES: 0
+
+RESULT:
+
+BATTERY COUNTS:
+
+DATE-ANCHORED SUMMARY:
+
+DEFINITION-ANCHORED SUMMARY:
+
+NEGATIVE CONTROL SUMMARY:
+
+KEY/PROVENANCE AUDIT:
+
+DIVERSITY / DUPLICATION AUDIT:
+
+AMBIGUITY AUDIT:
+
+SCHEDULE / RANDOMIZATION:
+
+PREFLIGHT STATUS:
+
+CHANGED:
+
+OPEN:
+
+DO NOT:
 
 If a future stage requires Terry to manually install, authorize, connect, or physically configure anything, begin with the mandatory manual-setup alert defined in `docs/EXTERNAL_COGNITIVE_TOOLS_AND_TOPOLOGY_2026-08-29.md`.
