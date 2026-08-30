@@ -1,0 +1,40 @@
+{
+ "probe_id": "exp004_egress_probe_v1",
+ "dispatch_class": "screen",
+ "purpose": "Determine what retrieval surface the Stage 0A-M retrieval-enabled arm ACTUALLY receives in this environment, and whether the key-verification fetch environment is the same network/tool path as the solver arm.",
+ "frozen_before_observation": true,
+ "frozen_at": "2026-08-30",
+ "production_stems_used": "NONE. No item from batteries/anchored_v1.yaml appears in any probe prompt. No probe query or URL targets any production key source in a way that could preview a production answer.",
+ "counts_against_production_dispatches": false,
+
+ "design_rules": [
+  "The domain set and the query set are fixed in this file and committed BEFORE any probe is executed. Results may not add, drop or reorder them.",
+  "SEARCH and FETCH are probed separately, because they are distinct tools with distinct egress behaviour.",
+  "The identical probe is run twice: once from the orchestrator session, and once from inside a solver-web subagent. Only the subagent run is evidence about the solver arm; the orchestrator run is evidence about the key-verification environment. The comparison of the two is the finding.",
+  "No result of this probe may be used to drop, reweight or condition any production item. See docs/EXP004_STAGE0A_M_SPECIFICATION.md: analysis is never conditioned on reachability."
+ ],
+
+ "fetch_targets": [
+  {"url": "https://example.com/", "role": "neutral control; reachable iff egress works at all"},
+  {"url": "https://www.noaa.gov/", "role": "US .gov agency, key-source family"},
+  {"url": "https://www.bls.gov/", "role": "US .gov agency; refused during key verification on 2026-08-30"},
+  {"url": "https://en.wikipedia.org/wiki/Main_Page", "role": "encyclopaedia; refused during key verification on 2026-08-30"},
+  {"url": "https://www.ecb.europa.eu/", "role": "EU institution, key-source family"}
+ ],
+
+ "search_queries": [
+  {"q": "Python 3.12 release notes", "role": "neutral; unrelated to every battery item"},
+  {"q": "ISO 8601 date and time format specification", "role": "neutral; unrelated to every battery item"}
+ ],
+
+ "records_per_trial": ["tool", "target", "outcome", "outcome_detail"],
+ "outcome_vocabulary": ["OK", "REFUSED_BY_PROXY", "HTTP_ERROR", "TOOL_UNAVAILABLE", "OTHER_ERROR"],
+
+ "pre_registered_interpretation": {
+  "if_subagent_matches_orchestrator": "The key-verification environment and the solver retrieval environment share one egress path. Blockages observed during key verification DO transfer to the treatment claim, and the treatment must be scoped to the observed reachability set.",
+  "if_subagent_differs_from_orchestrator": "The two environments differ. Blockages observed during key verification DO NOT transfer to the treatment claim, and the treatment scope must be written from the subagent result alone.",
+  "if_search_works_and_fetch_does_not": "The treatment is degraded retrieval: search-result snippets without page retrieval. This must be named in the treatment scope and in every claim about 'retrieval-enabled', because it is a weaker intervention than unrestricted web access."
+ },
+
+ "not_a_gate": "This probe has no pass/fail threshold that blocks execution. Its output defines the SCOPE of the treatment claim, not the eligibility of the battery. A threshold was deliberately not invented for it."
+}
