@@ -143,6 +143,38 @@ Every class: one class per item, no overlapping primary membership, assignment
 frozen before any outcome, and a definition another researcher could apply
 independently.
 
+`[PREREG]` **Class-assignment rule — what decides an item's class.** A date in
+the stem does not make an item `date_anchored`. Many `definition_anchored` items
+carry a date because the quantity they ask for is revised or superseded over
+time, and the date *freezes the key* — b02 (FY2023), b04 (CY2022), b07 (December
+2023), b12 (December 2022), b13 (2022), b16 (2021 census), b09 (1 January 2024).
+Without it the key would rot.
+
+The class is decided by **what the displacing answer is**:
+
+| class | the stem's operative constraint | the displacing answer |
+|---|---|---|
+| `date_anchored` | time, and nothing else | the state of the world at a *later* time |
+| `definition_anchored` | a scope, definition, measure or unit | the value under a *different definition*, at the same time |
+
+Applied: **b09** ("How many EU member states had adopted the euro as of 1 January
+2024?") is `definition_anchored`. Its operative constraint is scope — *EU member
+states inside the euro area* — and its primary displacing answer is 27, the EU
+membership count, a scope error. The date is a freeze: Bulgaria's 2026 accession
+means an undated stem has a different answer today.
+
+**Named residual, not repaired.** b09's reject list also contains 19, the
+pre-Croatia euro-area count, which is a *temporal* displacement. That channel
+cannot be removed: any euro-area count needs a date anchor, so a solver's date
+error produces a wrong answer inside the definition class. This is recorded as a
+bounded limitation rather than deleted from the key — dropping 19 from the reject
+list would change no grading outcome (19 already falls outside the ±0.4 accept
+band) and would only remove the written evidence that the channel exists. The
+class-level claim is unaffected: the item still measures whether the
+retrieval-enabled arm flipped a correct anchored answer to a wrong one, which is
+the quantity the McNemar statistic counts. What is diluted is the descriptive
+purity of the class label, not the validity of the test.
+
 ### PRIMARY — enter the Holm family
 
 **A. DATE-ANCHORED.** The stem names a target date; the answer is the state as of
@@ -283,6 +315,70 @@ permission, verified by diff at preflight.
 **The FD-1 contradiction is resolved permanently for this experiment: the closed
 arm's packet contains no `SEARCH BUDGET` line and no reference to tools it does
 not have.**
+
+### 6.3 What "retrieval-enabled" actually denotes in this environment
+
+`[PREREG]` **The treatment is defined by the procedure the production solver can
+actually execute, not by an idealised capability to browse the web.** Writing
+"retrieval" and meaning "unrestricted web access" would overstate the
+intervention, and every effect estimate would inherit the overstatement.
+
+**The granted tool surface.** The retrieval arm is dispatched to the `solver-web`
+agent (`.claude/agents/solver-web.md`), whose frontmatter grants exactly
+`WebSearch` and `WebFetch` — no file access, no code execution. The
+retrieval-arm packet names both tools, so the packet and the grant agree. The
+closed arm is dispatched to `solver-closed`, which has no tools.
+
+**The measured surface.** The frozen egress probe
+(`experiments/exp004_stage0am/egress_probe.frozen.json`, results in
+`egress_probe.results.json`) measured the two tools separately. In the
+**orchestrator** environment — the environment in which all 50 keys were
+source-verified — `WebFetch` was refused by the network egress proxy for 5 of 5
+targets, *including `example.com`*: page fetching is unavailable wholesale, not
+blocked per domain. `WebSearch` succeeded and returned substantive extracted page
+text, not merely titles and links.
+
+**What is not yet measured.** The probe's second arm — the same probe run inside
+a `solver-web` subagent — terminated on an API rate limit before issuing a single
+call and returned no data. The architectural expectation is that the subagent
+shares the orchestrator's egress path (same container, same proxy, same tool
+implementations), but the probe was designed to require a measurement rather than
+an expectation, and that measurement does not exist yet.
+
+`[PREREG]` **Transfer rule.** A blockage observed in the key-verification
+environment is **not** asserted as a property of the solver's environment until
+the subagent arm returns data. Until then the report states the orchestrator
+result as measured, the subagent case as expected-but-unverified, and never
+merges the two.
+
+`[PREREG]` **Scope wording, frozen.** Every claim the report makes about the
+treatment is scoped as:
+
+> the **retrieval-enabled procedure** — a solver granted `WebSearch` and
+> `WebFetch`, free to use either or neither — **as delivered under environment
+> fingerprint `E`**, where `E` is the reachability set recorded in
+> `egress_probe.results.json` for the arm that produced the dispatches.
+
+If the subagent arm confirms the orchestrator result, `E` is **search-only
+retrieval**: search-result text without page retrieval. That is a *weaker*
+intervention than unrestricted browsing, and the report must say so — including
+in the null-result language of §15, where "retrieval-enabled did not displace the
+anchored answer" would otherwise be read as a claim about web access in general.
+
+`[PREREG]` **This is a scope statement, not a gate.** The probe has no pass/fail
+threshold and cannot block execution. A threshold was deliberately not invented
+for it: no observable value of `E` makes the experiment invalid, because the
+experiment measures the procedure as delivered. What `E` changes is the breadth
+of the conclusion, not its validity.
+
+`[PREREG]` **No reachability-conditioned analysis.** No item is dropped,
+reweighted, screened or down-graded because its key source was blocked, because a
+domain is unreachable, or because a solver's retrieval failed at runtime. Item
+eligibility was fixed at freeze from key provenance alone. A trial in which
+retrieval was attempted and failed **stays in the treatment arm**, exactly as a
+trial in which the model declined to search does — both are intent-to-treat. This
+is the same prohibition as the §6 rule against conditioning on observed tool use,
+and it binds for the same reason.
 
 ### 6.1 Frozen dispatch schedule — the defence of the dependence assumption
 

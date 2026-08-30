@@ -1,14 +1,15 @@
 {
  "closed_sha256_16": "6631cc8b857a0289",
- "retrieval_sha256_16": "edb8c06b16123512",
+ "retrieval_sha256_16": "4adfea921f978062",
  "differing_lines": [
   "-TOOLS: you have none. Answer from what you already know.",
-  "+TOOLS: you have web search available. You may use it if you judge it useful, and",
-  "+you may decline to use it."
+  "+TOOLS: you have web search and web page fetch available. You may use them if you",
+  "+judge it useful, and you may decline to use them."
  ],
  "differing_line_count": 3,
  "identical_apart_from_treatment": true,
  "closed_arm_phantom_budget_terms_found": [],
  "stem_placeholder_identical": true,
- "no_arm_label_visible_to_solver": true
+ "no_arm_label_visible_to_solver": true,
+ "tool_surface_named_matches_agent_definition": ".claude/agents/solver-web.md grants WebSearch and WebFetch; the retrieval packet names both."
 }

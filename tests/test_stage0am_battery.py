@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import json
 import pathlib
+import re
 
 import pytest
 import yaml
@@ -164,7 +165,7 @@ class TestProvenance:
             block = PROV.split(f"### {qid} —")[1].split("### ")[0]
             flat = block.replace("**", "")
             assert "Verified at: 2026-08-30T00:00:00Z" in flat, f"{qid}: no verification timestamp"
-            assert "pass-1" in flat or "pass-2" in flat, f"{qid}: no verifier pass recorded"
+            assert re.search(r"pass-\d", flat), f"{qid}: no verifier pass recorded"
 
 
 class TestDispatchSchedule:
@@ -223,3 +224,121 @@ class TestNoTreatmentExposure:
     def test_no_run_directory_exists_for_this_experiment(self):
         assert not (REPO / "runs" / "exp004_stage0am").exists(), \
             "a run directory implies dispatch; none may exist before execution authorisation"
+
+
+class TestPostVerificationAudit:
+    """Invariants added by the post-verification audit.
+
+    These exist because the audit found two things the earlier tests could not
+    see: fingerprints that nothing in the repository could regenerate, and a
+    numeric key whose acceptance interval, not whose stem, was doing the work of
+    disambiguating the question.
+    """
+
+    def test_manifest_fingerprints_are_reproducible_from_the_committed_files(self):
+        """A hand-edited key must not be able to keep its recorded fingerprint."""
+        from lab.stage0am_fingerprint import audit
+
+        result = audit()
+        assert result["drifted_keys"] == []
+        assert result["battery_fingerprint_matches"]
+        assert result["items_in_manifest"] == result["items_in_battery"] == 65
+
+    def test_fingerprint_lineage_records_every_stage(self):
+        lineage = MANIFEST["fingerprint_lineage"]
+        assert [s["stage"] for s in lineage] == ["authoring", "verification", "final_audited"]
+        assert lineage[-1]["fingerprint"] == MANIFEST["battery_fingerprint"]
+        assert len({s["fingerprint"] for s in lineage}) == 3, "a stage that changed nothing is not a stage"
+
+    def test_no_accept_band_reaches_halfway_to_the_value_it_must_reject(self):
+        """The frozen principle: ambiguity is removed in the question, not repaired
+        by a broad acceptance interval.
+
+        Operationalised without an invented threshold. A tolerance is a statement
+        that answers within +/-t are the same answer. If the displacing value sat
+        in a band of the same width, the two bands must still not touch --
+        otherwise the tolerance is adjudicating the definitional distinction the
+        stem is supposed to settle. That requires t < gap/2, and nothing weaker
+        follows from the principle.
+
+        This is the rule that caught b03, whose band came within 0.36 m of the
+        pre-2020 Everest elevation it exists to reject.
+        """
+        offenders = []
+        for q in Q:
+            key = KEYS[q["id"]]
+            if key["route"] != "numeric" or not key.get("rejects"):
+                continue
+            gap = min(abs(r - key["value"]) for r in key["rejects"])
+            if key["tolerance"] >= gap / 2:
+                offenders.append((q["id"], key["tolerance"], gap))
+        assert not offenders, f"accept band adjudicating the definitional gap: {offenders}"
+
+    def test_every_numeric_reject_is_outside_its_accept_band(self):
+        collisions = []
+        for q in Q:
+            key = KEYS[q["id"]]
+            if key["route"] != "numeric":
+                continue
+            lo, hi = key["value"] - key["tolerance"], key["value"] + key["tolerance"]
+            collisions += [(q["id"], r) for r in key.get("rejects", []) if lo <= r <= hi]
+        assert not collisions, f"rejected values falling inside the accept band: {collisions}"
+
+    def test_retrieval_packet_names_the_tools_the_agent_is_actually_granted(self):
+        """The arm's instruction and its actual affordances must agree: the
+        estimand is intent-to-treat over the granted surface."""
+        agent = (REPO / ".claude" / "agents" / "solver-web.md").read_text()
+        packet = (REPO / "experiments" / "exp004_stage0am"
+                  / "packet_retrieval_enabled.template.md").read_text().lower()
+        assert "WebSearch" in agent and "WebFetch" in agent
+        assert "web search" in packet and "fetch" in packet
+
+    def test_arms_still_differ_only_in_the_treatment(self):
+        assert DIFF["differing_line_count"] == 3
+        assert DIFF["identical_apart_from_treatment"]
+        assert DIFF["closed_arm_phantom_budget_terms_found"] == []
+        assert DIFF["no_arm_label_visible_to_solver"]
+
+
+class TestEgressProbeIsScreenClassAndUncontaminating:
+    PROBE = json.loads((REPO / "experiments" / "exp004_stage0am"
+                        / "egress_probe.frozen.json").read_text())
+    RESULTS = json.loads((REPO / "experiments" / "exp004_stage0am"
+                          / "egress_probe.results.json").read_text())
+
+    def test_probe_is_screen_class_and_spends_no_production_dispatch(self):
+        assert self.PROBE["dispatch_class"] == "screen"
+        assert self.PROBE["counts_against_production_dispatches"] is False
+        assert self.RESULTS["production_dispatches_consumed"] == 0
+
+    def test_no_probe_target_or_query_is_a_production_stem(self):
+        stems = {normalise(q["text"]) for q in Q}
+        for entry in self.PROBE["search_queries"]:
+            assert normalise(entry["q"]) not in stems
+        probe_text = json.dumps(self.PROBE).lower()
+        for q in Q:
+            assert normalise(q["text"]) not in normalise(probe_text)
+
+    def test_the_design_was_frozen_before_results_were_observed(self):
+        assert self.PROBE["frozen_before_observation"]
+        assert self.RESULTS["design_frozen_in_commit"]
+        targets = [t["url"] for t in self.PROBE["fetch_targets"]]
+        observed = [f["url"] for f in self.RESULTS["arm_orchestrator"]["fetch"]]
+        assert observed == targets, "results may not add, drop or reorder frozen targets"
+
+    def test_an_arm_that_returned_no_data_claims_no_finding(self):
+        """A probe arm that died before issuing a call is not evidence either way."""
+        arm = self.RESULTS["arm_solver_web_subagent"]
+        if arm["status"].startswith("INCONCLUSIVE"):
+            assert arm["fetch"] == [] and arm["search"] == []
+            assert arm["finding"].startswith("NONE")
+
+    def test_the_probe_declares_no_pass_fail_gate(self):
+        assert "not_a_gate" in self.PROBE
+        assert "threshold" in self.PROBE["not_a_gate"]
+
+    def test_analysis_is_never_conditioned_on_reachability(self):
+        assert "no_analysis_conditioning" in self.RESULTS
+        spec = (REPO / "docs" / "EXP004_STAGE0A_M_SPECIFICATION.md").read_text()
+        assert "No reachability-conditioned analysis" in spec
+        assert all(i["production_eligible"] for i in MANIFEST["items"])

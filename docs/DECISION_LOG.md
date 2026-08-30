@@ -399,3 +399,74 @@ the report must carry that set under alternative explanations.
 
 **Battery fingerprint after verification: afc208e1e8d1bd00.** Zero dispatches; no
 production item has been shown to any solver in either arm.
+
+## 2026-08-30 — Post-verification battery audit (Stage 0A-M)
+
+Audited the battery as changed by source verification, not the pre-verification
+one. Production dispatches remain 0.
+
+**b11 replaced, not repaired.** The verification pass re-keyed it to NOAA's
+57,573 km2 for Lake Michigan's surface area with a 1,500 km2 tolerance. The
+tolerance was load-bearing: published areas span roughly 57,573-58,030 km2, so
+the stem did not determine the answer and the acceptance interval was repairing
+an ambiguity that belonged in the question. Source-anchoring the stem to NOAA -
+the preferred fix, and the pattern b03, b18 and b20 already use - does not work
+here: the NOAA page gives "57,573 square kilometers or 22,300 square miles", and
+22,300 sq mi is 57,757 km2. The single named source contradicts itself by 184 km2
+for the same quantity, so no tolerance both respects it and means anything.
+Replaced with an exact-integer item on the same Michigan-Huron definitional
+split, keeping subtype, domain and mechanism.
+
+**b03 tightened — a second instance of the same defect, found by generalising
+it.** Turning the b11 lesson into a checkable rule surfaced b03, which nothing
+had flagged before: its accept band, 8,848.86 +/- 0.5 m, reached within 0.36 m of
+the pre-2020 elevation it exists to reject, so a rounding of the *displacing*
+value would have graded correct. Its stem is already survey-anchored, so the band
+was the defect; tightened to +/-0.2 m. The rule is now enforced by the suite: no
+accept band may reach halfway to the value it must reject. It is derived from the
+frozen principle rather than fitted - it flags exactly b03 across all 27 numeric
+items with rejects, and every other item clears it with margin.
+
+**b09 and b25 classifications confirmed, with a named residual.** Added the
+class-assignment rule to specification §3: a date in the stem does not make an
+item `date_anchored`; the class is decided by what the displacing answer is. b09
+is `definition_anchored` because its operative constraint is scope and its
+primary displacing answer, 27, is a scope error - the date freezes a key that
+Bulgaria's 2026 euro accession would otherwise rot. Its secondary reject 19 is a
+genuine temporal channel that cannot be removed from any dated euro-area item; it
+is recorded as a bounded limitation rather than deleted, since deleting it would
+change no grading outcome and only remove the evidence that the channel exists.
+b25 is unambiguous. b18's refinement (8,850 -> 8,851.8) was confirmed to move no
+grading boundary: both values fall identically outside [20,696, 21,696].
+
+**Fingerprints are now reproducible.** They were computed by a one-shot script
+outside the repository, so nothing committed could regenerate them and a
+hand-edited key would have kept its recorded fingerprint. `lab/stage0am_fingerprint.py`
+derives them from the committed YAML using the original algorithm, and the suite
+asserts the manifest agrees. Verified it reproduces the pre-audit fingerprint
+`afc208e1e8d1bd00` exactly before any change was made. Lineage is recorded in the
+manifest: authoring `a53d4d59856fc1db` -> verification `afc208e1e8d1bd00` ->
+final audited `1ec90754f1de2696`.
+
+**Treatment scope defined by the procedure, not by an idealised capability.**
+Pre-registered a fixed egress probe (frozen domain set, search and fetch probed
+separately, committed in 46ebdd9 before any result was observed). Orchestrator
+arm: WebFetch refused for 5 of 5 targets *including example.com* - the block is
+total, not domain-selective - while WebSearch returned substantive page text.
+This corrects the prior turn, which reported the wikipedia and bls.gov refusals in
+terms that implied a per-domain block. The probe's second arm, the same probe
+inside a solver-web subagent, died on an API rate limit before issuing a call and
+returned no data; it is recorded as INCONCLUSIVE and claims nothing in either
+direction. Under the pre-registered transfer rule, the key-verification
+environment's blockage is therefore NOT asserted as a property of the solver's
+environment. Specification §6.3 scopes every treatment claim to the granted tool
+surface under the reachability set of the arm that produced the dispatches, and
+requires the report to say plainly that a search-only environment is a weaker
+intervention than web access wherever "retrieval" appears - including in the
+null-result language of §15. The probe has no gate: no observable value makes the
+experiment invalid, and no item is ever dropped or reweighted for reachability.
+
+**Packet aligned with the grant.** `solver-web` is granted WebSearch and
+WebFetch, but the retrieval packet named only search. Since the estimand is
+intent-to-treat over the granted surface, the packet now names both. Arms still
+differ in exactly 3 lines, all inside the TOOLS block.

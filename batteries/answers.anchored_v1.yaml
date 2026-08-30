@@ -193,7 +193,7 @@ answers:
   b03:
     route: numeric
     value: 8848.86
-    tolerance: 0.5
+    tolerance: 0.2
     rejects:
     - 8848.0
   b04:
@@ -243,10 +243,10 @@ answers:
     - 9.148
   b11:
     route: numeric
-    value: 57573
-    tolerance: 1500
+    value: 4
+    tolerance: 0.4
     rejects:
-    - 117400
+    - 5
   b12:
     route: numeric
     value: 6.5

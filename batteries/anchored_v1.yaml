@@ -243,8 +243,9 @@ questions:
   class: definition_anchored
   subtype: lake_definition
   domain: geography
-  text: What is the surface area of Lake Michigan alone, excluding Lake Huron, in
-    square kilometres?
+  text: How many Great Lakes are there if Lake Michigan and Lake Huron are counted
+    as one lake, as they are hydrologically a single body connected at the Straits
+    of Mackinac?
   grading_route: numeric
 - id: b12
   class: definition_anchored

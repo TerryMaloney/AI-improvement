@@ -1,7 +1,7 @@
 {
  "experiment": "exp004_stage0am",
  "battery": "anchored_v1",
- "battery_fingerprint": "afc208e1e8d1bd00",
+ "battery_fingerprint": "1ec90754f1de2696",
  "authored_as_of": "2026-08-30",
  "status": "CANDIDATE - NOT FROZEN, NOT EXECUTED",
  "treatment_exposure": "NONE - no production item has been shown to any solver",
@@ -325,7 +325,7 @@
    "subtype": "survey_vintage",
    "domain": "geography",
    "grading_route": "numeric",
-   "key_fingerprint": "b18c88a43c33b7c9",
+   "key_fingerprint": "03cad2bbe5fd12d6",
    "verification": "VERIFIED_SOURCE_2026-08-30T00:00:00Z",
    "production_eligible": true,
    "provenance": "docs/EXP004_STAGE0A_M_KEY_PROVENANCE.md"
@@ -413,7 +413,7 @@
    "subtype": "lake_definition",
    "domain": "geography",
    "grading_route": "numeric",
-   "key_fingerprint": "d58fa89665736623",
+   "key_fingerprint": "b1c74ac5e1266d69",
    "verification": "VERIFIED_SOURCE_2026-08-30T00:00:00Z",
    "production_eligible": true,
    "provenance": "docs/EXP004_STAGE0A_M_KEY_PROVENANCE.md"
@@ -737,5 +737,26 @@
    "production_eligible": true,
    "provenance": "docs/EXP004_STAGE0A_M_KEY_PROVENANCE.md"
   }
- ]
+ ],
+ "fingerprint_lineage": [
+  {
+   "stage": "authoring",
+   "fingerprint": "a53d4d59856fc1db",
+   "commit": "4c7725f",
+   "note": "65 items authored; keys not yet source-verified."
+  },
+  {
+   "stage": "verification",
+   "fingerprint": "afc208e1e8d1bd00",
+   "commit": "a262b89",
+   "note": "All 50 primary keys source-verified. b09 and b25 replaced (IMF WEO nominal GDP retired as revisable); b11 re-keyed to NOAA; b18 reject refined to 8,851.8."
+  },
+  {
+   "stage": "final_audited",
+   "fingerprint": "1ec90754f1de2696",
+   "commit": "pending",
+   "note": "Post-verification audit. b11 replaced: no source, NOAA included, uniquely fixes a Lake Michigan surface area, so the key rested on a 1,500 km2 tolerance rather than on the stem. Replaced with an exact-integer item testing the same Michigan-Huron definitional split. b03 tolerance tightened from 0.5 to 0.2 m: its accept band reached within 0.36 m of the pre-2020 elevation it must reject, so a rounding of the displacing value would have graded as correct."
+  }
+ ],
+ "fingerprint_algorithm": "sha256(json.dumps(key, sort_keys=True))[:16] per item; battery = same over {'q': [(id, text)...], 'k': {id: key_fingerprint}}. Recomputed from the committed YAML by lab/stage0am_fingerprint.py and asserted by the test suite."
 }

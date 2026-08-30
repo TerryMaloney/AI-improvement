@@ -1,6 +1,7 @@
 # Stage 0A-M key-construction provenance
 
-All 50 primary keys are SOURCE-VERIFIED. Timestamps are offset-aware ISO-8601 (UTC).
+All 50 primary keys are SOURCE-VERIFIED. Three passes are recorded: pass-1 during authoring,
+pass-2 independent source verification, pass-3 the post-verification audit. Timestamps are offset-aware ISO-8601 (UTC).
 
 **KEY-CONSTRUCTION EVIDENCE.** Public sources consulted to establish keys before any
 dispatch. This is not EXPERIMENTAL RETRIEVAL EVIDENCE, which does not yet exist: no
@@ -312,7 +313,7 @@ Only the minimum needed to support each key is recorded; no source passages are 
 ### b03 — definition_anchored / survey_vintage (geography)
 
 - **Stem:** What is the elevation of Mount Everest above sea level in metres according to the 2020 joint China-Nepal survey?
-- **Route:** `numeric` · key fingerprint `b18c88a43c33b7c9`
+- **Route:** `numeric` · key fingerprint `03cad2bbe5fd12d6`
 - **Requested definition:** 2020 joint survey figure
 - **Known alternative definition(s):** the previously accepted 8,848 m
 - **Verification:** `VERIFIED_SOURCE_2026-08-30T00:00:00Z`
@@ -320,6 +321,7 @@ Only the minimum needed to support each key is recorded; no source passages are 
 - **Source:** Kathmandu Post 2020-12-08; CNN travel
 - **Why it supports the key:** Both sources give 8,848.86 m from the joint survey, superseding 8,848 m.
 - **Ambiguity notes:** Tolerance 0.5 m keeps the accepted and rejected values disjoint.
+- **Tolerance (audited):** Tightened at the post-verification audit from +/-0.5 m to +/-0.2 m. The 2020 survey figure and the pre-2020 figure differ by only 0.86 m, so the old band reached within 0.36 m of the value the item exists to reject: a solver answering 8,848.4 or 8,848.5 - plausible roundings of the DISPLACING figure - would have graded as correct. The stem is already survey-anchored, so the fix is the band, not the question. +/-0.2 m accepts the published 8,848.86 and its rounding to the metre, 8,849, and rejects 8,848 and every rounding of it. Found by generalising the b11 defect into a rule now enforced by the test suite: no accept band may reach halfway to the value it must reject.
 
 ### b04 — definition_anchored / annual_share (energy)
 
@@ -387,6 +389,7 @@ Only the minimum needed to support each key is recorded; no source passages are 
 - **Source:** European Central Bank; Council of the EU (Consilium); Banque de France; Deutsche Bundesbank
 - **Why it supports the key:** Croatia joined on 2023-01-01 as the twentieth euro-area member, and the euro area still had 20 members on 2024-01-01.
 - **Ambiguity notes:** REPLACED at verification. The original item asked for India's 2023 nominal GDP per the IMF WEO. That value could not be confirmed against a primary source, and IMF GDP figures are revised between WEO vintages, which makes them a poor basis for a frozen key.
+- **Classification (audited):** `definition_anchored` is correct and unambiguous under the class-assignment rule in the specification, §3. The operative constraint is scope - EU member states inside the euro area - and the primary displacing answer, 27, is a scope error. The date is a freezing device, not the tested mechanism: Bulgaria's 2026 euro accession means an undated stem would have a different answer today. Residual, named and not repaired: the secondary reject 19 is the pre-Croatia count and is a temporal displacement, a channel that cannot be removed from any dated euro-area item. It changes no grading outcome, since 19 already falls outside the ±0.4 accept band.
 
 ### b10 — definition_anchored / area_scope (geography)
 
@@ -401,15 +404,15 @@ Only the minimum needed to support each key is recorded; no source passages are 
 
 ### b11 — definition_anchored / lake_definition (geography)
 
-- **Stem:** What is the surface area of Lake Michigan alone, excluding Lake Huron, in square kilometres?
-- **Route:** `numeric` · key fingerprint `d58fa89665736623`
-- **Requested definition:** Lake Michigan alone
-- **Known alternative definition(s):** the combined Michigan-Huron body (~117,400 km2)
+- **Stem:** How many Great Lakes are there if Lake Michigan and Lake Huron are counted as one lake, as they are hydrologically a single body connected at the Straits of Mackinac?
+- **Route:** `numeric` · key fingerprint `b1c74ac5e1266d69`
+- **Requested definition:** Michigan and Huron counted as one lake
+- **Known alternative definition(s):** the conventional count of five, which lists them separately
 - **Verification:** `VERIFIED_SOURCE_2026-08-30T00:00:00Z`
-- **Verified at:** 2026-08-30T00:00:00Z · **pass:** pass-2 source verification, independent of the authoring pass
-- **Source:** NOAA Great Lakes / National Marine Ecosystem Status, Lake Michigan
-- **Why it supports the key:** NOAA gives Lake Michigan a water surface area of 57,573 km2, distinct from the combined Michigan-Huron body.
-- **Ambiguity notes:** Re-keyed at verification to NOAA's figure of 57,573 km2. Published surface areas vary by a few hundred km2 between sources (World Atlas 58,030; Wikipedia 57,757); the 1,500 km2 tolerance absorbs that measurement spread while remaining far from the Michigan-Huron combined value.
+- **Verified at:** 2026-08-30T00:00:00Z · **pass:** pass-3 post-verification audit; item replaced at audit
+- **Source:** NOAA Great Lakes Environmental Research Laboratory and USGS descriptions of Michigan-Huron as one lake, joined at the Straits of Mackinac and at a common surface elevation
+- **Why it supports the key:** Superior, Michigan-Huron, Erie and Ontario give four bodies under the requested definition; the conventional count of five separates Michigan from Huron.
+- **Ambiguity notes:** REPLACED at the post-verification audit, and the reason is worth recording because it is a class of defect, not a one-off. The verification-pass item asked for the surface area of Lake Michigan alone and was keyed to NOAA's 57,573 km2 with a 1,500 km2 tolerance. That tolerance was load-bearing rather than incidental: published areas range across roughly 57,573-58,030 km2 (Wikipedia 57,757; World Atlas 58,030), so the stem did not uniquely determine the answer and the acceptance interval was repairing an ambiguity that belonged in the question. The obvious fix - source-anchoring the stem to NOAA, as b03, b18 and b20 anchor to a named survey - does not work here: the NOAA page states the area as "57,573 square kilometers or 22,300 square miles", and 22,300 sq mi is 57,757 km2, so the single cited source contradicts itself by 184 km2 for the same quantity. No tolerance both respects a named source and is tight enough to be meaningful. The replacement keeps the subtype, the domain and the same underlying Michigan-Huron definitional split, but asks for an exact integer that no measurement spread can move.
 
 ### b12 — definition_anchored / index_basis (macroeconomics)
 
@@ -488,6 +491,7 @@ Only the minimum needed to support each key is recorded; no source passages are 
 - **Verified at:** 2026-08-30T00:00:00Z · **pass:** pass-2 source verification, independent of the authoring pass
 - **Source:** China State Administration of Cultural Heritage 2012 survey
 - **Why it supports the key:** The 2012 survey gives 21,196.18 km for all dynasties; the Ming-only Great Wall is 8,851.8 km.
+- **Refinement (audited):** The verification pass sharpened the recorded Ming-only reject from 8,850 to 8,851.8 km. Confirmed to move no grading boundary: the accept band is 21,196 ± 500 = [20,696, 21,696], and both the old and the new value fall outside it identically. The change is documentary precision only.
 
 ### b19 — definition_anchored / language_count (international/EU)
 
@@ -566,6 +570,7 @@ Only the minimum needed to support each key is recorded; no source passages are 
 - **Verified at:** 2026-08-30T00:00:00Z · **pass:** pass-2 source verification; item replaced at verification
 - **Source:** WorldAtlas 'Pacific States'; contiguous United States geography references
 - **Why it supports the key:** California, Oregon and Washington give the contiguous 48 their Pacific coastline; Alaska and Hawaii add two more when all 50 states are counted.
+- **Classification (audited):** `definition_anchored`, unambiguous. The operative constraint is geographic scope, the stem carries no date, and the displacing answer 5 is the all-50-states count. Source tier noted: WorldAtlas is a secondary aggregator, which was disqualifying for the IMF GDP items it replaced, but the disqualifying property there was revisability, not tier - which of the contiguous 48 states has Pacific coastline is not a revisable estimate and is verifiable from any map.
 - **Ambiguity notes:** REPLACED at verification. The original item asked for the UK's 2023 nominal GDP per the IMF WEO. The best available figure (3.38 trillion) differed from the authored key (3.34) and came from a secondary aggregator, and IMF GDP figures are revised between vintages.
 
 ## Arithmetic control
