@@ -1,0 +1,414 @@
+battery: anchored_v1
+note: QUARANTINED GROUND TRUTH for Stage 0A-M. Never handed to a solver. Solver agents
+  have no filesystem tools; trial packets are generated from batteries/anchored_v1.yaml,
+  which contains no keys.
+answers:
+  a01:
+    route: exact_entity
+    accept:
+    - Angela Merkel
+    - Merkel
+    rejects:
+    - Olaf Scholz
+    - Scholz
+    - Friedrich Merz
+    - Merz
+  a02:
+    route: exact_entity
+    accept:
+    - Boris Johnson
+    - Johnson
+    rejects:
+    - Liz Truss
+    - Truss
+    - Rishi Sunak
+    - Sunak
+    - Keir Starmer
+    - Starmer
+  a03:
+    route: exact_entity
+    accept:
+    - Facebook, Inc
+    - Facebook Inc
+    - Facebook
+    rejects:
+    - Meta Platforms
+    - Meta
+  a04:
+    route: exact_entity
+    accept:
+    - Twitter
+    rejects:
+    - X
+  a05:
+    route: boolean
+    expected: false
+  a06:
+    route: boolean
+    expected: false
+  a07:
+    route: exact_entity
+    accept:
+    - kuna
+    rejects:
+    - euro
+    - EUR
+  a08:
+    route: numeric
+    value: 9
+    tolerance: 0.4
+    rejects:
+    - 8
+  a09:
+    route: boolean
+    expected: true
+  a10:
+    route: exact_entity
+    accept:
+    - Ban Ki-moon
+    - Ban Ki moon
+    - Ban
+    rejects:
+    - Antonio Guterres
+    - Guterres
+  a11:
+    route: exact_entity
+    accept:
+    - Jean-Claude Juncker
+    - Juncker
+    rejects:
+    - Ursula von der Leyen
+    - von der Leyen
+  a12:
+    route: boolean
+    expected: false
+  a13:
+    route: exact_entity
+    accept:
+    - Jair Bolsonaro
+    - Bolsonaro
+    rejects:
+    - Lula
+    - Luiz Inacio
+  a14:
+    route: exact_entity
+    accept:
+    - Google Inc
+    - Google, Inc
+    - Google
+    rejects:
+    - Alphabet
+  a15:
+    route: numeric
+    value: 28
+    tolerance: 0.4
+    rejects:
+    - 27
+  a16:
+    route: exact_entity
+    accept:
+    - Roger Federer
+    - Federer
+    rejects:
+    - Novak Djokovic
+    - Djokovic
+    - Rafael Nadal
+    - Nadal
+  a17:
+    route: boolean
+    expected: false
+  a18:
+    route: exact_entity
+    accept:
+    - Republic of Macedonia
+    - Macedonia
+    rejects:
+    - North Macedonia
+  a19:
+    route: exact_entity
+    accept:
+    - Washington Football Team
+    rejects:
+    - Commanders
+    - Redskins
+  a20:
+    route: exact_entity
+    accept:
+    - Jeff Bezos
+    - Bezos
+    rejects:
+    - Andy Jassy
+    - Jassy
+  a21:
+    route: exact_entity
+    accept:
+    - Jack Dorsey
+    - Dorsey
+    rejects:
+    - Parag Agrawal
+    - Agrawal
+    - Elon Musk
+    - Musk
+    - Linda Yaccarino
+    - Yaccarino
+  a22:
+    route: exact_entity
+    accept:
+    - Law and Justice
+    - PiS
+    rejects:
+    - Civic Coalition
+    - Civic Platform
+  a23:
+    route: exact_entity
+    accept:
+    - Nicola Sturgeon
+    - Sturgeon
+    rejects:
+    - Humza Yousaf
+    - Yousaf
+    - John Swinney
+    - Swinney
+  a24:
+    route: boolean
+    expected: false
+  a25:
+    route: boolean
+    expected: true
+  b01:
+    route: numeric
+    value: 5.42
+    tolerance: 0.5
+    rejects:
+    - 14.9
+    - 13.3
+    - 16.6
+  b02:
+    route: numeric
+    value: 383.285
+    tolerance: 2.0
+    rejects:
+    - 394.328
+    - 391.0
+  b03:
+    route: numeric
+    value: 8848.86
+    tolerance: 0.5
+    rejects:
+    - 8848.0
+  b04:
+    route: numeric
+    value: 62.7
+    tolerance: 1.5
+    rejects:
+    - 70.0
+    - 69.0
+  b05:
+    route: numeric
+    value: 8
+    tolerance: 0.4
+    rejects:
+    - 9
+  b06:
+    route: numeric
+    value: 8.8
+    tolerance: 0.3
+    rejects:
+    - 14.0
+    - 0.0086
+  b07:
+    route: numeric
+    value: 3.7
+    tolerance: 0.15
+    rejects:
+    - 7.1
+  b08:
+    route: numeric
+    value: 13
+    tolerance: 0.4
+    rejects:
+    - 23
+  b09:
+    route: numeric
+    value: 3.55
+    tolerance: 0.25
+    rejects:
+    - 14.6
+    - 13.0
+  b10:
+    route: numeric
+    value: 9.834
+    tolerance: 0.15
+    rejects:
+    - 9.148
+  b11:
+    route: numeric
+    value: 58030
+    tolerance: 1500
+    rejects:
+    - 117400
+  b12:
+    route: numeric
+    value: 6.5
+    tolerance: 0.3
+    rejects:
+    - 8.0
+  b13:
+    route: numeric
+    value: 1.26
+    tolerance: 0.02
+    rejects:
+    - 1.34
+  b14:
+    route: numeric
+    value: 35
+    tolerance: 0.4
+    rejects:
+    - 38
+  b15:
+    route: numeric
+    value: 193
+    tolerance: 0.4
+    rejects:
+    - 195
+    - 2
+  b16:
+    route: numeric
+    value: 25.4
+    tolerance: 0.4
+    rejects:
+    - 27.0
+    - 26.5
+  b17:
+    route: numeric
+    value: 381
+    tolerance: 6
+    rejects:
+    - 443
+  b18:
+    route: numeric
+    value: 21196
+    tolerance: 500
+    rejects:
+    - 8850
+  b19:
+    route: numeric
+    value: 24
+    tolerance: 0.4
+    rejects:
+    - 27
+  b20:
+    route: numeric
+    value: 10994
+    tolerance: 25
+    rejects:
+    - 10911
+    - 10935
+  b21:
+    route: numeric
+    value: 7.25
+    tolerance: 0.05
+    rejects:
+    - 15.0
+    - 16.0
+  b22:
+    route: numeric
+    value: 206
+    tolerance: 0.4
+    rejects:
+    - 270
+    - 300
+  b23:
+    route: numeric
+    value: 147.1
+    tolerance: 1.0
+    rejects:
+    - 149.6
+    - 152.1
+  b24:
+    route: numeric
+    value: 42.195
+    tolerance: 0.02
+    rejects:
+    - 26.2
+  b25:
+    route: numeric
+    value: 3.34
+    tolerance: 0.2
+    rejects:
+    - 4.0
+  n01:
+    route: numeric
+    value: 42.5
+    tolerance: 0.01
+    rejects: []
+  n02:
+    route: numeric
+    value: 84.0
+    tolerance: 0.01
+    rejects: []
+  n03:
+    route: numeric
+    value: 40.0
+    tolerance: 0.01
+    rejects: []
+  n04:
+    route: numeric
+    value: 36.0
+    tolerance: 0.01
+    rejects: []
+  n05:
+    route: numeric
+    value: 450.0
+    tolerance: 0.01
+    rejects: []
+  n06:
+    route: numeric
+    value: 20.117
+    tolerance: 0.001
+    rejects: []
+  n07:
+    route: numeric
+    value: 85.8
+    tolerance: 0.01
+    rejects: []
+  n08:
+    route: numeric
+    value: 265.0
+    tolerance: 0.5
+    rejects: []
+  n09:
+    route: numeric
+    value: 0.25
+    tolerance: 0.005
+    rejects: []
+  n10:
+    route: numeric
+    value: 60.0
+    tolerance: 0.5
+    rejects: []
+  n11:
+    route: numeric
+    value: 50.0
+    tolerance: 0.5
+    rejects: []
+  n12:
+    route: numeric
+    value: 2300.0
+    tolerance: 0.01
+    rejects: []
+  n13:
+    route: numeric
+    value: 47.0
+    tolerance: 0.5
+    rejects: []
+  n14:
+    route: numeric
+    value: 300.0
+    tolerance: 0.5
+    rejects: []
+  n15:
+    route: numeric
+    value: 22.1
+    tolerance: 0.01
+    rejects: []

@@ -1,0 +1,449 @@
+id: anchored_v1
+description: Stage 0A-M anchored mechanism-assay battery. Keys are quarantined in
+  batteries/answers.anchored_v1.yaml and never appear here.
+authored_as_of: '2026-08-30'
+questions:
+- id: a01
+  class: date_anchored
+  subtype: officeholder
+  domain: politics/Germany
+  text: As of 1 March 2021, who was the Chancellor of Germany?
+  grading_route: exact_entity
+- id: a02
+  class: date_anchored
+  subtype: officeholder
+  domain: politics/UK
+  text: As of 1 June 2022, who was the Prime Minister of the United Kingdom?
+  grading_route: exact_entity
+- id: a03
+  class: date_anchored
+  subtype: entity_name
+  domain: corporate/social
+  text: As of 1 January 2021, what was the registered corporate name of the company
+    that owned and operated both Instagram and WhatsApp?
+  grading_route: exact_entity
+- id: a04
+  class: date_anchored
+  subtype: entity_name
+  domain: technology
+  text: As of 1 January 2023, what was the name of the microblogging platform whose
+    logo was a blue bird?
+  grading_route: exact_entity
+- id: a05
+  class: date_anchored
+  subtype: membership_status
+  domain: international/NATO
+  text: As of 1 January 2022, was Finland a member of NATO? Answer yes or no.
+  grading_route: boolean
+- id: a06
+  class: date_anchored
+  subtype: membership_status
+  domain: international/NATO
+  text: As of 1 January 2023, was Sweden a member of NATO? Answer yes or no.
+  grading_route: boolean
+- id: a07
+  class: date_anchored
+  subtype: currency
+  domain: economics/Croatia
+  text: As of 1 June 2022, what was the official currency of Croatia?
+  grading_route: exact_entity
+- id: a08
+  class: date_anchored
+  subtype: canonical_count
+  domain: science/astronomy
+  text: As of 1 January 2006, how many planets did the International Astronomical
+    Union recognise in the Solar System?
+  grading_route: numeric
+- id: a09
+  class: date_anchored
+  subtype: org_status
+  domain: international/EU
+  text: As of 1 January 2020, was the United Kingdom a member state of the European
+    Union? Answer yes or no.
+  grading_route: boolean
+- id: a10
+  class: date_anchored
+  subtype: officeholder
+  domain: international/UN
+  text: As of 1 January 2016, who was the Secretary-General of the United Nations?
+  grading_route: exact_entity
+- id: a11
+  class: date_anchored
+  subtype: officeholder
+  domain: international/EU
+  text: As of 1 June 2019, who was the President of the European Commission?
+  grading_route: exact_entity
+- id: a12
+  class: date_anchored
+  subtype: sovereignty_status
+  domain: geopolitics
+  text: As of 1 January 2011, was South Sudan an independent sovereign state? Answer
+    yes or no.
+  grading_route: boolean
+- id: a13
+  class: date_anchored
+  subtype: officeholder
+  domain: politics/Brazil
+  text: As of 1 June 2020, who was the President of Brazil?
+  grading_route: exact_entity
+- id: a14
+  class: date_anchored
+  subtype: corporate_structure
+  domain: corporate/technology
+  text: As of 1 June 2015, what was the name of the publicly listed company whose
+    principal product was the world's most used web search engine?
+  grading_route: exact_entity
+- id: a15
+  class: date_anchored
+  subtype: membership_count
+  domain: international/EU
+  text: As of 1 January 2019, how many member states did the European Union have?
+  grading_route: numeric
+- id: a16
+  class: date_anchored
+  subtype: sports_record
+  domain: sports/tennis
+  text: As of 1 January 2020, which male tennis player had won the most Grand Slam
+    singles titles?
+  grading_route: exact_entity
+- id: a17
+  class: date_anchored
+  subtype: diplomatic_status
+  domain: geopolitics
+  text: As of 1 January 2015, had the United States and Cuba reopened embassies in
+    each other's capitals? Answer yes or no.
+  grading_route: boolean
+- id: a18
+  class: date_anchored
+  subtype: official_name
+  domain: geopolitics
+  text: As of 1 January 2018, what was the official name of the country whose capital
+    is Skopje?
+  grading_route: exact_entity
+- id: a19
+  class: date_anchored
+  subtype: team_name
+  domain: sports/NFL
+  text: As of 1 January 2021, what was the team name of the National Football League
+    franchise based in the Washington, D.C. area?
+  grading_route: exact_entity
+- id: a20
+  class: date_anchored
+  subtype: officeholder
+  domain: corporate/retail
+  text: As of 1 June 2021, who was the Chief Executive Officer of Amazon.com, Inc.?
+  grading_route: exact_entity
+- id: a21
+  class: date_anchored
+  subtype: officeholder
+  domain: corporate/social
+  text: As of 1 January 2020, who was the Chief Executive Officer of Twitter, Inc.?
+  grading_route: exact_entity
+- id: a22
+  class: date_anchored
+  subtype: governing_party
+  domain: politics/Poland
+  text: As of 1 January 2016, which political party led the government of Poland?
+  grading_route: exact_entity
+- id: a23
+  class: date_anchored
+  subtype: officeholder
+  domain: politics/Scotland
+  text: As of 1 January 2021, who was the First Minister of Scotland?
+  grading_route: exact_entity
+- id: a24
+  class: date_anchored
+  subtype: currency_area
+  domain: economics/Lithuania
+  text: As of 1 January 2014, was Lithuania using the euro as its official currency?
+    Answer yes or no.
+  grading_route: boolean
+- id: a25
+  class: date_anchored
+  subtype: programme_status
+  domain: science/space
+  text: As of 1 January 2011, was the NASA Space Shuttle programme still conducting
+    crewed flights? Answer yes or no.
+  grading_route: boolean
+- id: b01
+  class: definition_anchored
+  subtype: reported_vs_excess
+  domain: public health
+  text: According to the World Health Organization, approximately how many deaths
+    were REPORTED as due to COVID-19 worldwide between 1 January 2020 and 31 December
+    2021? Give the figure in millions, counting only reported deaths, not excess-mortality
+    estimates.
+  grading_route: numeric
+- id: b02
+  class: definition_anchored
+  subtype: fiscal_vs_calendar
+  domain: corporate finance
+  text: What were Apple Inc.'s total net sales for its fiscal year 2023, the year
+    ended 30 September 2023, as reported in its Form 10-K? Give the figure in billions
+    of US dollars.
+  grading_route: numeric
+- id: b03
+  class: definition_anchored
+  subtype: survey_vintage
+  domain: geography
+  text: What is the elevation of Mount Everest above sea level in metres according
+    to the 2020 joint China-Nepal survey?
+  grading_route: numeric
+- id: b04
+  class: definition_anchored
+  subtype: annual_share
+  domain: energy
+  text: According to RTE, what percentage of France's electricity generation came
+    from nuclear power in calendar year 2022?
+  grading_route: numeric
+- id: b05
+  class: definition_anchored
+  subtype: planet_definition
+  domain: science/astronomy
+  text: Under the International Astronomical Union's 2006 definition of a planet,
+    how many planets are there in the Solar System?
+  grading_route: numeric
+- id: b06
+  class: definition_anchored
+  subtype: administrative_scope
+  domain: demography
+  text: What was the population of Greater London, the administrative region, at the
+    2021 United Kingdom census? Give the figure in millions.
+  grading_route: numeric
+- id: b07
+  class: definition_anchored
+  subtype: measure_definition
+  domain: labour economics
+  text: What was the United States unemployment rate for December 2023 on the U-3
+    measure, seasonally adjusted, as published by the Bureau of Labor Statistics?
+    Give the percentage.
+  grading_route: numeric
+- id: b08
+  class: definition_anchored
+  subtype: event_scope
+  domain: sports
+  text: How many Olympic gold medals did Michael Phelps win in INDIVIDUAL events only,
+    excluding relays?
+  grading_route: numeric
+- id: b09
+  class: definition_anchored
+  subtype: nominal_vs_ppp
+  domain: macroeconomics
+  text: What was India's nominal gross domestic product in calendar year 2023 in current
+    US dollars, per the IMF World Economic Outlook? Give the figure in trillions.
+  grading_route: numeric
+- id: b10
+  class: definition_anchored
+  subtype: area_scope
+  domain: geography
+  text: What is the TOTAL area of the United States including inland and coastal waters,
+    in square kilometres, per the CIA World Factbook? Give the figure in millions.
+  grading_route: numeric
+- id: b11
+  class: definition_anchored
+  subtype: lake_definition
+  domain: geography
+  text: What is the surface area of Lake Michigan alone, excluding Lake Huron, in
+    square kilometres?
+  grading_route: numeric
+- id: b12
+  class: definition_anchored
+  subtype: index_basis
+  domain: macroeconomics
+  text: What was the United States CPI-U inflation rate for December 2022 measured
+    over the twelve months to December 2022, per the Bureau of Labor Statistics? Give
+    the percentage.
+  grading_route: numeric
+- id: b13
+  class: definition_anchored
+  subtype: fertility_measure
+  domain: demography
+  text: What was Japan's total fertility rate in 2022 according to the Japanese Ministry
+    of Health, Labour and Welfare?
+  grading_route: numeric
+- id: b14
+  class: definition_anchored
+  subtype: deadline_scope
+  domain: US constitutional history
+  text: How many US states had ratified the Equal Rights Amendment by the original
+    ratification deadline of 22 March 1979?
+  grading_route: numeric
+- id: b15
+  class: definition_anchored
+  subtype: membership_definition
+  domain: international
+  text: How many member states does the United Nations have, counting full member
+    states only and excluding permanent observer states?
+  grading_route: numeric
+- id: b16
+  class: definition_anchored
+  subtype: census_vs_estimate
+  domain: demography
+  text: What was the population of Australia counted at the 2021 Census on Census
+    night, per the Australian Bureau of Statistics? Give the figure in millions.
+  grading_route: numeric
+- id: b17
+  class: definition_anchored
+  subtype: height_definition
+  domain: architecture
+  text: What is the height of the Empire State Building to its architectural top,
+    in metres, EXCLUDING the broadcast antenna?
+  grading_route: numeric
+- id: b18
+  class: definition_anchored
+  subtype: wall_survey_scope
+  domain: history/geography
+  text: What is the total length of the Great Wall of China in kilometres according
+    to the 2012 survey by China's State Administration of Cultural Heritage, counting
+    all dynasties?
+  grading_route: numeric
+- id: b19
+  class: definition_anchored
+  subtype: language_count
+  domain: international/EU
+  text: How many official languages does the European Union have?
+  grading_route: numeric
+- id: b20
+  class: definition_anchored
+  subtype: depth_survey
+  domain: oceanography
+  text: What is the depth of Challenger Deep in metres according to the 2010 US Center
+    for Coastal and Ocean Mapping sonar survey?
+  grading_route: numeric
+- id: b21
+  class: definition_anchored
+  subtype: wage_scope
+  domain: labour policy
+  text: What is the United States FEDERAL minimum wage in dollars per hour for covered
+    non-exempt employees, ignoring higher state minimums?
+  grading_route: numeric
+- id: b22
+  class: definition_anchored
+  subtype: anatomical_stage
+  domain: biology
+  text: How many bones are in the skeleton of a typical ADULT human?
+  grading_route: numeric
+- id: b23
+  class: definition_anchored
+  subtype: orbital_distance_definition
+  domain: science/astronomy
+  text: What is the distance between the Earth and the Sun at PERIHELION, the closest
+    point of Earth's orbit, in millions of kilometres?
+  grading_route: numeric
+- id: b24
+  class: definition_anchored
+  subtype: distance_unit
+  domain: sports
+  text: What is the official distance of a marathon in kilometres, as set by World
+    Athletics?
+  grading_route: numeric
+- id: b25
+  class: definition_anchored
+  subtype: gdp_year_basis
+  domain: macroeconomics
+  text: What was the nominal gross domestic product of the United Kingdom in calendar
+    year 2023 in current US dollars, per the IMF World Economic Outlook? Give the
+    figure in trillions.
+  grading_route: numeric
+- id: n01
+  class: arithmetic_control
+  subtype: percent chain
+  domain: mathematics
+  text: A shop raises the price of a $40 item by 25%, then discounts the new price
+    by 15%. What is the final price in dollars?
+  grading_route: numeric
+- id: n02
+  class: arithmetic_control
+  subtype: rate
+  domain: mathematics
+  text: A train travels 210 km in 2 hours 30 minutes. What is its average speed in
+    km per hour?
+  grading_route: numeric
+- id: n03
+  class: arithmetic_control
+  subtype: ratio to percent
+  domain: mathematics
+  text: A class has 18 boys and 12 girls. What percentage of the class are girls?
+  grading_route: numeric
+- id: n04
+  class: arithmetic_control
+  subtype: linear algebra
+  domain: mathematics
+  text: If 3x + 7 = 31, what is the value of 5x - 4?
+  grading_route: numeric
+- id: n05
+  class: arithmetic_control
+  subtype: proportion
+  domain: mathematics
+  text: A recipe uses 3 parts flour to 2 parts sugar by weight. For 750 grams of mixture,
+    how many grams of flour are needed?
+  grading_route: numeric
+- id: n06
+  class: arithmetic_control
+  subtype: unit conversion, factor given
+  domain: mathematics
+  text: One mile is exactly 1.609344 kilometres. How many kilometres are 12.5 miles?
+    Give the answer to three decimal places.
+  grading_route: numeric
+- id: n07
+  class: arithmetic_control
+  subtype: weighted average
+  domain: mathematics
+  text: A student scores 78 on a test weighted 40% and 91 on a test weighted 60%.
+    What is the weighted average score?
+  grading_route: numeric
+- id: n08
+  class: arithmetic_control
+  subtype: exact integer
+  domain: mathematics
+  text: What is 17 x 24 - 13 x 11?
+  grading_route: numeric
+- id: n09
+  class: arithmetic_control
+  subtype: probability
+  domain: mathematics
+  text: A fair six-sided die is rolled twice. What is the probability that both rolls
+    show an even number? Give the answer as a decimal.
+  grading_route: numeric
+- id: n10
+  class: arithmetic_control
+  subtype: permutations
+  domain: mathematics
+  text: How many distinct 3-letter arrangements can be made from the letters A, B,
+    C, D, E if no letter is repeated?
+  grading_route: numeric
+- id: n11
+  class: arithmetic_control
+  subtype: area difference
+  domain: mathematics
+  text: A rectangular garden measures 14 m by 9 m. A path 1 m wide runs around the
+    outside. What is the area of the path in square metres?
+  grading_route: numeric
+- id: n12
+  class: arithmetic_control
+  subtype: simple interest
+  domain: mathematics
+  text: An investment of $2,000 earns 5% simple interest per year. What is the total
+    value after 3 years, in dollars?
+  grading_route: numeric
+- id: n13
+  class: arithmetic_control
+  subtype: mean inversion
+  domain: mathematics
+  text: The average of five numbers is 42. Four of them are 30, 45, 50 and 38. What
+    is the fifth number?
+  grading_route: numeric
+- id: n14
+  class: arithmetic_control
+  subtype: fractions
+  domain: mathematics
+  text: A tank holds 480 litres. It is 3/8 full. How many more litres are needed to
+    fill it completely?
+  grading_route: numeric
+- id: n15
+  class: arithmetic_control
+  subtype: rate scaling
+  domain: mathematics
+  text: A car uses 6.5 litres of fuel per 100 km. How many litres are needed for a
+    340 km journey? Give the answer to two decimal places.
+  grading_route: numeric

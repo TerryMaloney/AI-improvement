@@ -326,3 +326,39 @@ of any shared latent state, and fails when the null holds only marginally.
 - Interpretive consequence carried: because the assumption is
   conditional-on-environment, a degraded index during the run is part of the
   alternative rather than a Type-I threat. Stage 0B's replication separates them.
+
+---
+
+## 2026-08-30 — Stage 0A-M candidate battery authored; key verification incomplete
+
+**Authored:** 25 date-anchored, 25 definition-anchored, 15 arithmetic control = 65
+items, 130 implied dispatches. Keys quarantined in
+`batteries/answers.anchored_v1.yaml`; questions carry route names only.
+
+**Seven authoring defects were caught by the battery's own tests before freeze:**
+three stems contained their own answer (the Facebook, Twitter and Google items
+named the entity in the question), two numeric items had accept/reject tolerances
+that overlapped, and two items (Burj Khalifa architectural-top vs tip, Earth
+equatorial vs mean diameter) had competing values 1.8 m and 14 km apart -- too
+close to grade numerically -- and were replaced.
+
+**One test was rescoped, not weakened.** The answer-leak check originally scanned
+the whole battery file and flagged a04's answer appearing in a21's stem. A trial
+packet carries exactly one question, so the correct invariant is per item; a
+weaker cross-item overlap check was added alongside it as a diversity signal.
+
+**Blocking gap: 32 of 50 primary keys are unverified.** 18 were confirmed against
+public sources in-session; the rest were authored from careful recollection with
+the intended source named. They are marked
+`PENDING_INDEPENDENT_VERIFICATION` and `production_eligible: false`. Freezing an
+unchecked key is the failure this lab exists to prevent, so they are labelled
+rather than assumed.
+
+**Also frozen:** dispatch schedule with recorded seeds (item order 20260830, arm
+order 8302026), classes interleaved with no class running more than four
+consecutive positions and the control spread across the run; arm packets
+differing by three lines, all inside the TOOLS block, with no phantom search
+budget in the closed arm and no solver-visible arm label; report skeleton with
+both the primary and null-result wordings; preflight checklist.
+
+**Zero dispatches. No production item has been shown to any solver in either arm.**
