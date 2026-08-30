@@ -1,6 +1,7 @@
 # Stage 0A-M preflight — to be completed immediately before the first dispatch
 
-**Status: NOT COMPLETE. The battery is a CANDIDATE. No dispatch is authorised.**
+**Status: ALL PRE-TREATMENT CHECKS COMPLETE. Remaining checks are execution-time only.
+No dispatch is authorised by this document.**
 
 | # | Check | State |
 |---|---|---|
@@ -15,7 +16,7 @@
 | 9 | Closed arm free of phantom search-budget text | **done**, tested |
 | 10 | Model and version pinned | pending at execution time |
 | 11 | Retrieval environment recorded | pending at execution time |
-| 12 | Egress probe run, reachable states recorded | **pending — requires separate authorisation** |
+| 12 | Egress probe run, reachable states recorded | **done — both arms measured**, `egress_probe.results.json` |
 | 13 | Telemetry active, verified on a dry run | pending at execution time |
 | 14 | Item-order seed and per-item arm-order seed recorded | **done** — 20260830 / 8302026 |
 | 15 | Fresh-context-per-trial verified | pending at execution time |
@@ -23,7 +24,7 @@
 | 17 | Run directory created at dispatch time | **must not exist yet**, tested |
 | 18 | Report skeleton committed | **done** |
 | 19 | Statistical analysis artifact committed and green | **done** — `lab/stage0am.py` |
-| 20 | Stop and failure rules committed | **done** — specification §7, §14 |
+| 20 | Stop and failure rules committed | **done** — §7 rewritten with the A/B taxonomy, executable in `lab/stage0am.py`, tested |
 | 21 | Dispatch budget computed from the manifest | **done** — 130 |
 
 ## No blocking item remains
@@ -37,21 +38,56 @@ Checks 1, 10, 11, 13, 15 and 17 can only be performed at dispatch: commit SHA,
 model snapshot, environment fingerprint, telemetry dry run, fresh-context
 verification, and run-directory creation.
 
-**Check 12, the egress probe, stays pending for the final execution review** —
-per the standing rule that a non-production diagnostic call needs its own
-authorisation.
+**Check 12 is now done.** The frozen probe was run in both arms — the
+orchestrator and a screen-class `solver-web` subagent — and they agree on all
+seven targets. See §"Measured retrieval environment" below.
 
-## Environment finding from key verification — relevant to the retrieval arm
+## Measured retrieval environment — `E`
 
-While verifying keys, direct page fetches to `en.wikipedia.org` and `www.bls.gov`
-were **refused by the network egress proxy**, while web *search* worked normally.
+`[MEASURED]` Both probe arms, 2026-08-30, frozen design committed at `46ebdd9`
+**before** any result was observed:
 
-This matters for the treatment, not just for authoring. If the solver's retrieval
-arm can search but cannot fetch several major authoritative domains, then
-"retrieval-enabled" in this environment means *degraded* retrieval, and any harm
-observed could reflect the retrieval environment rather than retrieval as such.
+| tool | targets | result |
+|---|---|---|
+| `WebFetch` | example.com, noaa.gov, bls.gov, en.wikipedia.org, ecb.europa.eu | **5/5 REFUSED_BY_PROXY**, including the benign control |
+| `WebSearch` | two neutral queries | **2/2 OK**, returning substantive extracted page text |
 
-`[OPEN]` The egress probe must therefore record, per domain, which of search and
-fetch actually succeed, and the report's ALTERNATIVE EXPLANATIONS section must
-carry the reachable-domain set. This does not block freezing the battery; it
-constrains how a positive result may be read.
+`E` = **search-capable, fetch-blocked.** The block is not per-domain: a trivially
+benign control domain is refused identically, so the earlier per-domain framing
+is superseded. The solver can read *about* a page through the search layer but
+cannot open one to check a number at source, and cannot resolve a conflict
+between two sources by opening either.
+
+`[MEASURED]` The solver-web arm matched the orchestrator arm on every target, so
+the key-verification environment and the solver's retrieval environment share one
+egress path. Under the probe's pre-registered rule this licenses the transfer —
+by measurement, not by architectural expectation.
+
+**What this means for the claim.** Stage 0A-M studies *retrieval-enabled under a
+search-capable, fetch-blocked environment*. That is materially **weaker** than
+unrestricted browsing, and every claim is scoped to it (specification §6.3). It
+does **not** constrain eligibility: no item is dropped, reweighted or
+reclassified because a source is unreachable, and a solver whose fetch is refused
+but which answers anyway is retained and graded (§7 case A).
+
+`[PREREG]` The report's ALTERNATIVE EXPLANATIONS section carries `E` verbatim.
+
+## Remaining at execution time — the complete list
+
+| # | Check | How to satisfy it without exposing a production stem |
+|---|---|---|
+| 1 | Freeze commit SHA | `git rev-parse HEAD` at freeze; record in the run manifest |
+| 10 | Target model/version snapshot | record the solver model id and any served-model fallback per trial |
+| 11 | Execution environment fingerprint | re-run the frozen egress probe once, screen-class; compare to `E` |
+| 13 | Telemetry dry run | use a synthetic non-production stem; never a battery item |
+| 15 | Fresh-context-per-trial verification | synthetic canary: dispatch two synthetic trials, confirm the second cannot recall the first |
+| 17 | Run directory creation | created at dispatch time; must not exist before |
+
+`[PREREG]` **Checks 13 and 15 use synthetic probes only.** Exposing a production
+stem to complete a dry run would spend treatment exposure on infrastructure
+validation, which is exactly the thing the zero-exposure invariant protects.
+
+`[PREREG]` **Split-environment rule.** If check 11 at execution time returns an
+environment differing from `E`, the run does not silently proceed: it is either
+re-scoped before dispatch or halted and reported as a split-environment run
+(specification §7). Results from two environments are never pooled.

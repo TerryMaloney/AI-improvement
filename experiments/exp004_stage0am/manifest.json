@@ -758,5 +758,14 @@
    "note": "Post-verification audit. b11 replaced: no source, NOAA included, uniquely fixes a Lake Michigan surface area, so the key rested on a 1,500 km2 tolerance rather than on the stem. Replaced with an exact-integer item testing the same Michigan-Huron definitional split. b03 tolerance tightened from 0.5 to 0.2 m: its accept band reached within 0.36 m of the pre-2020 elevation it must reject, so a rounding of the displacing value would have graded as correct."
   }
  ],
- "fingerprint_algorithm": "sha256(json.dumps(key, sort_keys=True))[:16] per item; battery = same over {'q': [(id, text)...], 'k': {id: key_fingerprint}}. Recomputed from the committed YAML by lab/stage0am_fingerprint.py and asserted by the test suite."
+ "fingerprint_algorithm": "sha256(json.dumps(key, sort_keys=True))[:16] per item; battery = same over {'q': [(id, text)...], 'k': {id: key_fingerprint}}. Recomputed from the committed YAML by lab/stage0am_fingerprint.py and asserted by the test suite.",
+ "grading_semantics": {
+  "module": "lab/anchored_grading.py",
+  "sha256_16": "10adaf1dac94ea70",
+  "version": "2026-08-30 post-verification audit",
+  "numeric_route": "Correct iff the requested value appears within tolerance. Rejects do NOT override a correct value. Every reject lies outside its accept band (separation invariant), so on this route rejects could only ever convert correct answers into incorrect ones -- which they did, arm-correlated, in the direction of the hypothesis.",
+  "exact_entity_route": "Rejects DO take precedence. An answer naming the displacing entity has not answered the question, unlike a numeric answer that names both figures.",
+  "spelled_numbers": "Integers 0-20 written as words are extracted alongside digits, uniformly. Six items have integer keys in that range; format plausibly correlates with arm.",
+  "why_recorded": "The battery fingerprint covers stems and keys, not the grader. Two runs of the same battery under different grading semantics are not comparable, so the grader is fingerprinted separately and recorded with the results."
+ }
 }

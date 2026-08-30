@@ -15,7 +15,8 @@ import re
 import pytest
 import yaml
 
-from lab.anchored_grading import grade, normalise
+from lab.anchored_grading import (NUMBER_WORDS, extract_numbers, grade,
+                                  grade_numeric, normalise)
 
 REPO = pathlib.Path(__file__).resolve().parent.parent
 BATTERY = yaml.safe_load((REPO / "batteries" / "anchored_v1.yaml").read_text())
@@ -342,3 +343,118 @@ class TestEgressProbeIsScreenClassAndUncontaminating:
         spec = (REPO / "docs" / "EXP004_STAGE0A_M_SPECIFICATION.md").read_text()
         assert "No reachability-conditioned analysis" in spec
         assert all(i["production_eligible"] for i in MANIFEST["items"])
+
+
+class TestSpelledNumbersAreGradedLikeDigits:
+    """A solver writing "four" must be graded as one writing "4".
+
+    The concern is not politeness to prose. Answer format plausibly correlates
+    with arm, so a format-sensitive grader can manufacture discordant pairs out
+    of formatting rather than correctness -- and discordant pairs are exactly
+    what the primary test counts.
+    """
+    SMALL_INT_ITEMS = [q["id"] for q in Q
+                       if KEYS[q["id"]]["route"] == "numeric"
+                       and float(KEYS[q["id"]]["value"]).is_integer()
+                       and 0 <= KEYS[q["id"]]["value"] <= 20]
+
+    def test_the_battery_still_has_items_this_protects(self):
+        assert self.SMALL_INT_ITEMS, "if this empties, re-justify the mapping"
+
+    def test_each_small_integer_item_accepts_its_key_spelled_out(self):
+        inverse = {v: k for k, v in NUMBER_WORDS.items()}
+        for qid in self.SMALL_INT_ITEMS:
+            key = KEYS[qid]
+            word = inverse[int(key["value"])]
+            assert grade_numeric(word, key["value"], key["tolerance"], key["rejects"]), \
+                f"{qid}: spelled key {word!r} graded incorrect"
+            assert grade_numeric(word.capitalize(), key["value"],
+                                      key["tolerance"], key["rejects"])
+
+    def test_each_small_integer_item_still_rejects_its_rejects_spelled_out(self):
+        inverse = {v: k for k, v in NUMBER_WORDS.items()}
+        for qid in self.SMALL_INT_ITEMS:
+            key = KEYS[qid]
+            for reject in key["rejects"]:
+                if float(reject).is_integer() and int(reject) in inverse:
+                    assert not grade_numeric(inverse[int(reject)], key["value"],
+                                                  key["tolerance"], key["rejects"]), \
+                        f"{qid}: spelled reject {reject} graded correct"
+
+    def test_no_key_or_reject_collides_with_a_frequent_prose_number(self):
+        """0, 1 and 2 carry heavy non-numeric prose senses. The mapping is only
+        safe while no key depends on them."""
+        for q in Q:
+            key = KEYS[q["id"]]
+            if key["route"] != "numeric":
+                continue
+            # Only ACCEPTED values matter: a reject cannot change a numeric
+            # verdict (see grade_numeric), and only an integer can be produced by
+            # a number word, so b06's 0.0086 cannot collide either way.
+            if float(key["value"]).is_integer():
+                assert not (0 <= key["value"] <= 2), \
+                    f"{q['id']}: value {key['value']} collides with a frequent prose word"
+
+    def test_number_words_are_matched_only_as_whole_words(self):
+        for text in ("money", "none", "atone", "sixteenth-century", "someone"):
+            assert extract_numbers(text) == [], f"{text!r} produced a number"
+
+    def test_digits_still_work_exactly_as_before(self):
+        assert extract_numbers("8,848.86 m") == [8848.86]
+        assert extract_numbers("57573") == [57573.0]
+
+
+class TestRejectsDoNotOverrideACorrectNumericAnswer:
+    """A correct answer that also names the contrasting figure must be correct.
+
+    Under the earlier rule it was not, and the false negatives were arm-correlated:
+    a solver that has just retrieved a source is likelier to state both figures,
+    so they concentrated in the retrieval-enabled arm and manufactured n10 -- a
+    false harm signal pointing the way the hypothesis predicts.
+    """
+
+    CONTRAST_ANSWERS = {
+        "b05": "8 planets; there were 9 before the 2006 definition",
+        "b08": "13 individual golds, out of 23 in total",
+        "b09": "20 of the 27 EU member states had adopted it",
+        "b15": "193 member states, excluding the 2 permanent observer states",
+        "b17": "381 m to the architectural top; 443 m including the antenna",
+        "b25": "3 of the contiguous 48; 5 counting Alaska and Hawaii",
+    }
+
+    def test_a_correct_answer_naming_the_contrast_is_graded_correct(self):
+        for qid, answer in self.CONTRAST_ANSWERS.items():
+            key = KEYS[qid]
+            assert grade_numeric(answer, key["value"], key["tolerance"], key["rejects"]), \
+                f"{qid}: correct answer naming the contrast graded incorrect: {answer!r}"
+
+    def test_a_bare_displacing_answer_is_still_graded_incorrect(self):
+        """The fix must not have made the items ungradeable."""
+        for q in Q:
+            key = KEYS[q["id"]]
+            if key["route"] != "numeric":
+                continue
+            for reject in key.get("rejects", []):
+                assert not grade_numeric(str(reject), key["value"],
+                                         key["tolerance"], key["rejects"]), \
+                    f"{q['id']}: bare displacing answer {reject} graded correct"
+
+    def test_rejects_are_redundant_for_numeric_grading_by_construction(self):
+        """Why dropping reject-precedence is safe rather than merely convenient:
+        the separation invariant puts every reject outside its accept band, so a
+        bare reject already fails on the accept test alone."""
+        for q in Q:
+            key = KEYS[q["id"]]
+            if key["route"] != "numeric":
+                continue
+            for reject in key.get("rejects", []):
+                assert abs(reject - key["value"]) > key["tolerance"], \
+                    f"{q['id']}: reject {reject} sits inside the accept band"
+
+    def test_entity_route_keeps_reject_precedence(self):
+        """The asymmetry is deliberate. An entity answer naming the displacing
+        entity has not answered; a numeric one that names both has."""
+        from lab.anchored_grading import grade_exact_entity
+        assert not grade_exact_entity("Scholz, who succeeded Merkel",
+                                      ["Angela Merkel", "Merkel"], ["Olaf Scholz", "Scholz"])
+        assert grade_exact_entity("Angela Merkel", ["Angela Merkel", "Merkel"], ["Olaf Scholz"])

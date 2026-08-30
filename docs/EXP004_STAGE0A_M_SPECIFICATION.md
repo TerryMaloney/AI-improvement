@@ -1,9 +1,13 @@
 # Stage 0A-M — objective mechanism assay of retrieval-induced displacement
 
-**Status: SPECIFICATION. Not frozen. No production items authored. No dispatches.**
+**Status: FREEZE-READY CANDIDATE. Production battery authored and audited. No dispatches.**
 
-Freezing requires the §13 preflight to pass at a named commit with a production
-item manifest that does not yet exist.
+The production item manifest exists: 65 items (25 date-anchored, 25
+definition-anchored, 15 arithmetic controls) at battery fingerprint recorded in
+`experiments/exp004_stage0am/manifest.json`, with all 50 primary keys
+source-verified. Treatment exposure is NONE and production dispatches are 0.
+Freezing requires the §13 preflight to pass at a named commit; what remains is
+execution-time only, and is listed in `docs/EXP004_STAGE0A_M_PREFLIGHT.md`.
 
 ---
 
@@ -245,8 +249,26 @@ correlation for an assumption to be wrong about.
 
 **Primary test:** exact one-sided conditional binomial (McNemar) on discordant
 pairs within each class. **Multiplicity:** Holm across K=2 preregistered class
-hypotheses. **Estimand: the class-average effect.** Within-class heterogeneity is
-explicitly not detected.
+hypotheses.
+
+`[PREREG]` **Inferential target: violation of the pointwise null** — the
+existence of at least one authored item in the class with a lower probability of
+an objectively correct answer under the retrieval-enabled procedure. The exact
+frozen wording a rejection licenses is in §1.2, and nothing here widens it.
+
+**The class-average difference is a descriptive summary, not the estimand.** An
+earlier draft of this section read "Estimand: the class-average effect", which
+contradicted §1.2's demotion of the class average to description. §1.2 governs.
+The class average is reported as a point estimate alongside its discordance
+counts and carries no inferential claim; H0_mean is **not** tested, because the
+warrant for it is weaker (proof only under Poissonization, a searched
+non-exhaustive bound in the Bernoulli model) and no valid test of it is provided
+here. Within-class heterogeneity is explicitly not detected.
+
+`[METHOD]` The power table below is a **design sensitivity**, not the licensed
+estimand. It parameterises a generative class-level effect `d` in order to size
+the battery; a class-level generative parameter used for sizing does not become a
+quantity the test licenses a claim about.
 
 `[MEASURED]` Power, baseline p=0.85, Holm at alpha/2:
 
@@ -274,7 +296,12 @@ are the useful ones.
 
 ## 5. Item-authoring protocol
 
-Authoring has not begun and is not authorized by this document.
+**Historical note — the protocol below governed authoring, which is now
+complete.** It is retained because it is the rationale the authored battery must
+be judged against, not because anything remains to be authored. The items it
+produced are in `batteries/anchored_v1.yaml`, their keys are quarantined in
+`batteries/answers.anchored_v1.yaml`, and their provenance is in
+`docs/EXP004_STAGE0A_M_KEY_PROVENANCE.md`.
 
 - No search-arm output visible during authoring. No item derived from inspecting
   prior search results.
@@ -338,18 +365,24 @@ targets, *including `example.com`*: page fetching is unavailable wholesale, not
 blocked per domain. `WebSearch` succeeded and returned substantive extracted page
 text, not merely titles and links.
 
-**What is not yet measured.** The probe's second arm — the same probe run inside
-a `solver-web` subagent — terminated on an API rate limit before issuing a single
-call and returned no data. The architectural expectation is that the subagent
-shares the orchestrator's egress path (same container, same proxy, same tool
-implementations), but the probe was designed to require a measurement rather than
-an expectation, and that measurement does not exist yet.
+`[MEASURED]` **The solver's own path, measured.** The probe's second arm — the
+identical frozen probe run inside a screen-class `solver-web` subagent — was
+re-run and completed. It returned **exactly the orchestrator's result on all
+seven targets**: `WebFetch` refused 5/5 including `example.com`, `WebSearch` 2/2
+returning substantive page text. (Its first attempt died on an API rate limit
+before issuing a call and was recorded as INCONCLUSIVE — NO DATA; the re-run used
+the identical targets, queries, order and prompt, and the design was not modified
+after any result was seen.)
 
-`[PREREG]` **Transfer rule.** A blockage observed in the key-verification
-environment is **not** asserted as a property of the solver's environment until
-the subagent arm returns data. Until then the report states the orchestrator
-result as measured, the subagent case as expected-but-unverified, and never
-merges the two.
+`[MEASURED]` **Transfer rule satisfied by measurement.** Because both arms agree,
+the key-verification environment and the solver retrieval environment share one
+egress path, and the blockage observed during key verification **does** transfer
+to the treatment claim. This was licensed by measuring the solver's path, not by
+the architectural expectation that a subagent inherits the container's proxy.
+
+`[MEASURED]` **`E` = SEARCH-CAPABLE, FETCH-BLOCKED.** The solver can read *about*
+a page through the search layer but cannot open one to verify a number at source,
+and cannot resolve a conflict between two sources by opening either.
 
 `[PREREG]` **Scope wording, frozen.** Every claim the report makes about the
 treatment is scoped as:
@@ -359,14 +392,16 @@ treatment is scoped as:
 > fingerprint `E`**, where `E` is the reachability set recorded in
 > `egress_probe.results.json` for the arm that produced the dispatches.
 
-If the subagent arm confirms the orchestrator result, `E` is **search-only
-retrieval**: search-result text without page retrieval. That is a *weaker*
-intervention than unrestricted browsing, and the report must say so — including
-in the null-result language of §15, where "retrieval-enabled did not displace the
-anchored answer" would otherwise be read as a claim about web access in general.
+`[MEASURED]` **`E` is fixed: search-capable, fetch-blocked.** That is a
+*materially weaker* intervention than unrestricted browsing, and the report must
+say so wherever the word retrieval appears — including in the null-result
+language of §15, where "retrieval-enabled did not displace the anchored answer"
+would otherwise be read as a claim about web access in general. `E` is carried
+verbatim into the report's ALTERNATIVE EXPLANATIONS section.
 
 `[PREREG]` **This is a scope statement, not a gate.** The probe has no pass/fail
-threshold and cannot block execution. A threshold was deliberately not invented
+threshold and cannot block execution. It did not gate anything: `E` came back
+degraded, and the experiment proceeds — scoped, not cancelled. A threshold was deliberately not invented
 for it: no observable value of `E` makes the experiment invalid, because the
 experiment measures the procedure as delivered. What `E` changes is the breadth
 of the conclusion, not its validity.
@@ -420,21 +455,77 @@ Tool use is logged and reported; it is never an analysis condition.
 
 ## 7. Failure and missingness
 
-**Technical failure** = the tool call did not complete (error, timeout, empty
-transport response, egress refusal). **Poor retrieval** = the call completed and
-returned unhelpful results; this is an *outcome*, not a failure, and is never
-excluded.
+`[PREREG]` **Resolved before any production outcome was visible.** An earlier
+draft defined technical failure as "the tool call did not complete (error,
+timeout, empty transport response, egress refusal)" and voided the item across
+both arms. Read literally that covered a solver whose WebFetch was refused but
+which still returned a gradeable answer — and in the measured environment
+(§6.3: fetch-blocked) that is the ordinary case, not an edge case. It also
+contradicted §6, which keeps such a trial in the retrieval-enabled arm.
 
-Red-teamed and retained: **a technical failure voids the item across all arms.**
-Voiding only the failed trial would create arm-correlated missingness, which
-biases the estimand directly. Voiding the item is the conservative choice.
+The contradiction is resolved in favour of §6, and not merely to break a tie:
 
-- Maximum tolerable void rate: **10% of items**. Above it the run is invalidated.
-- The technical-failure rate is **itself reported** as a treatment outcome.
-- If egress or source access changes mid-run, the run halts and is reported as
-  a split-environment run; results from before and after are never pooled.
+> Voiding on retrieval-tool failure is **post-treatment selection on a variable
+> only the treatment arm can exhibit.** The closed arm has no tools, so it can
+> never register a retrieval failure; the exclusion is therefore structurally
+> arm-asymmetric. It would also delete part of the phenomenon under study — a
+> model that searched, got nothing, and confabulated anyway is one of the
+> mechanisms by which retrieval can cause harm.
 
-No post-outcome improvisation.
+`[PREREG]` **The discriminating question is not which tool failed. It is: did the
+dispatch yield a gradeable final answer?**
+
+### A. Retrieval-tool outcome — RETAINED, graded, logged
+
+The retrieval tool erred, timed out, was refused by the egress proxy, returned
+nothing, returned something unhelpful, or was never called — **and the solver
+still produced a final answer.**
+
+- The trial **stays in the retrieval-enabled arm**. Intent-to-treat.
+- The final answer is **graded normally**.
+- The retrieval outcome is **logged and reported** as a treatment outcome.
+- It is **never** used to exclude, reweight or reclassify the item.
+
+Vocabulary frozen in `lab.stage0am.RETRIEVAL_TOOL_OUTCOMES`: `OK`,
+`REFUSED_BY_PROXY`, `TOOL_ERROR`, `TOOL_TIMEOUT`, `EMPTY_RESULTS`,
+`UNHELPFUL_RESULTS`, `NOT_ATTEMPTED`. **No member of this set can void anything.**
+
+### B. Dispatch-level failure — MISSING OUTCOME DATA, pair voided
+
+The dispatch itself failed and **no gradeable final answer exists**: the API call
+died, the agent terminated before answering, the transport timed out, the
+response was empty or carried no extractable answer.
+
+Vocabulary frozen in `lab.stage0am.DISPATCH_FAILURES`: `DISPATCH_ERROR`,
+`AGENT_TERMINATED`, `TRANSPORT_TIMEOUT`, `EMPTY_RESPONSE`, `UNPARSEABLE_RESPONSE`.
+
+`[PROVEN]` **A pair missing one half cannot enter a paired test at all**, so the
+item is void. That much is mechanically forced by pairing rather than chosen. The
+policy choice is only that voiding is **symmetric across arms**, retained from the
+earlier draft because dispatch mortality plausibly correlates with arm — the
+retrieval arm runs longer and makes more calls, so per-trial voiding would create
+arm-correlated missingness.
+
+- Maximum tolerable void rate: **10% of items**, and it now scopes only to case
+  B. Above it the run is invalidated.
+- `[PREREG]` The void rate is reported **broken down by which arm failed**.
+  Arm-correlated dispatch mortality is itself a finding, not a nuisance.
+- The case-A retrieval-failure rate is reported **separately**, and is never
+  added to the void rate.
+
+### Both cases
+
+If the retrieval environment materially changes mid-run, the run **halts** and is
+reported as a split-environment run; results from before and after are never
+pooled. This is the one rule under which reachability affects anything, and it
+acts on the *run*, never on an item.
+
+`[PREREG]` **No item is ever dropped, reweighted or reclassified because
+retrieval failed for it.** No post-outcome improvisation.
+
+This taxonomy is executable, not only prose: `pair_disposition` and
+`partition_pairs` in `lab/stage0am.py` implement it, and
+`tests/test_stage0am_failure_semantics.py` pins all six cases.
 
 ---
 

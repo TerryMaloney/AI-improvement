@@ -298,3 +298,126 @@ def analyse(
         primary=prim, negative_control=ctrl, alpha=alpha,
         any_primary_rejected=any(v.rejected for v in prim.values()),
     )
+
+
+# ---------------------------------------------------------------------------
+# Failure semantics: retrieval-tool outcome vs missing trial outcome
+# ---------------------------------------------------------------------------
+#
+# The specification originally defined "technical failure" as "the tool call did
+# not complete (error, timeout, empty transport response, egress refusal)" and
+# voided the item across both arms. Read literally that covers a solver whose
+# WebFetch was refused but which still returned a gradeable answer -- and that
+# reading contradicts the intent-to-treat rule in section 6, which keeps such a
+# trial in the retrieval-enabled arm.
+#
+# The contradiction is resolved in favour of section 6, and not merely to break a
+# tie. Voiding on retrieval-tool failure is post-treatment selection on a
+# variable only the treatment arm can exhibit: the closed arm has no tools, so it
+# can never register a retrieval failure, and the exclusion is therefore
+# structurally arm-asymmetric. It would also remove part of the phenomenon under
+# study -- a model that searched, got nothing, and confabulated anyway is one of
+# the mechanisms by which retrieval can cause harm.
+#
+# The discriminating question is NOT which tool failed. It is:
+#
+#     did the dispatch yield a gradeable final answer?
+#
+# If yes, the trial is data, whatever happened to its tools. If no, there is no
+# outcome to grade, and a pair missing one half cannot enter a paired test at
+# all -- so the item is void. That is mechanically forced by pairing, not a
+# policy choice; the policy choice is only that voiding is symmetric across arms,
+# which is retained because dispatch deaths plausibly correlate with arm.
+
+RETRIEVAL_TOOL_OUTCOMES = frozenset({
+    "OK",                    # retrieval ran and returned results
+    "REFUSED_BY_PROXY",      # egress refusal -- the measured state of this environment
+    "TOOL_ERROR",            # the tool raised
+    "TOOL_TIMEOUT",          # the tool did not return in time
+    "EMPTY_RESULTS",         # completed, returned nothing useful
+    "UNHELPFUL_RESULTS",     # completed, returned results that did not resolve the question
+    "NOT_ATTEMPTED",         # the model declined to retrieve; still treated, still ITT
+})
+"""Observed outcomes of the treatment. None of these voids anything."""
+
+DISPATCH_FAILURES = frozenset({
+    "DISPATCH_ERROR",        # the API call for the trial itself failed
+    "AGENT_TERMINATED",      # the solver stopped before producing a final answer
+    "TRANSPORT_TIMEOUT",     # the dispatch did not return
+    "EMPTY_RESPONSE",        # the dispatch returned nothing to grade
+    "UNPARSEABLE_RESPONSE",  # the response carried no extractable final answer
+})
+"""Missing outcome data. These void the item across both arms."""
+
+
+@dataclass
+class TrialOutcome:
+    """One dispatch. `graded` is None exactly when there is no answer to grade."""
+    item_id: str
+    arm: str                                  # "closed" | "retrieval_enabled"
+    graded: int | None                        # 1 correct, 0 incorrect, None ungradeable
+    retrieval_outcomes: tuple[str, ...] = ()  # every retrieval tool call's outcome
+    dispatch_failure: str | None = None       # a DISPATCH_FAILURES member, or None
+
+
+def trial_is_gradeable(trial: TrialOutcome) -> bool:
+    """A trial is data iff it produced a final answer that could be graded.
+
+    Explicitly independent of `retrieval_outcomes`: a trial whose every retrieval
+    call was REFUSED_BY_PROXY is still gradeable if the solver answered.
+    """
+    if trial.dispatch_failure is not None:
+        if trial.dispatch_failure not in DISPATCH_FAILURES:
+            raise ValueError(f"unknown dispatch failure: {trial.dispatch_failure!r}")
+        return False
+    return trial.graded is not None
+
+
+def pair_disposition(closed: TrialOutcome, retrieval: TrialOutcome) -> str:
+    """RETAIN iff both halves are gradeable, else VOID_PAIR."""
+    if closed.item_id != retrieval.item_id:
+        raise ValueError(f"pair spans two items: {closed.item_id} vs {retrieval.item_id}")
+    if {closed.arm, retrieval.arm} != {"closed", "retrieval_enabled"}:
+        raise ValueError(f"a pair needs one arm of each: {closed.arm}, {retrieval.arm}")
+    return "RETAIN" if trial_is_gradeable(closed) and trial_is_gradeable(retrieval) else "VOID_PAIR"
+
+
+def partition_pairs(
+    pairs: list[tuple[TrialOutcome, TrialOutcome]],
+) -> tuple[list[tuple[int, int]], list[str], dict[str, int]]:
+    """Split dispatched pairs into analysable (closed, retrieval) grades and voids.
+
+    Returns the retained grade pairs in `analyse`'s input shape, the void item ids,
+    and a per-arm count of which arm's failure caused each void -- reported because
+    arm-correlated dispatch mortality is itself a treatment outcome, and a void
+    rate that leans on one arm is a finding rather than a nuisance.
+    """
+    retained: list[tuple[int, int]] = []
+    voided: list[str] = []
+    void_cause = {"closed": 0, "retrieval_enabled": 0, "both": 0}
+    for closed, retrieval in pairs:
+        if pair_disposition(closed, retrieval) == "RETAIN":
+            retained.append((closed.graded, retrieval.graded))
+            continue
+        voided.append(closed.item_id)
+        c_bad, r_bad = not trial_is_gradeable(closed), not trial_is_gradeable(retrieval)
+        void_cause["both" if c_bad and r_bad else "closed" if c_bad else "retrieval_enabled"] += 1
+    return retained, voided, void_cause
+
+
+def retrieval_failure_rate(trials: list[TrialOutcome]) -> dict[str, float]:
+    """Reported as a treatment outcome. Never an inclusion rule."""
+    treated = [t for t in trials if t.arm == "retrieval_enabled"]
+    if not treated:
+        return {"n_treated": 0}
+    attempted = [t for t in treated if any(o != "NOT_ATTEMPTED" for o in t.retrieval_outcomes)]
+    failed = [t for t in attempted
+              if all(o in {"REFUSED_BY_PROXY", "TOOL_ERROR", "TOOL_TIMEOUT"}
+                     for o in t.retrieval_outcomes if o != "NOT_ATTEMPTED")]
+    return {
+        "n_treated": len(treated),
+        "declined_retrieval": len(treated) - len(attempted),
+        "attempted_retrieval": len(attempted),
+        "all_retrieval_calls_failed": len(failed),
+        "rate_all_failed_given_attempted": len(failed) / len(attempted) if attempted else 0.0,
+    }

@@ -141,7 +141,7 @@ Do not leave them in an ambiguous middle state.
 
 **Decision:** Stop trying to prove controller value in one large Stage-0 experiment.
 
-**Reason:** The class-stratified exact test can validly establish a negative class-level mean retrieval effect, but it cannot distinguish a trivial class rule from a general controller, cannot detect within-class sign heterogeneity, and says nothing about naturalistic prevalence.
+**Reason:** [SUPERSEDED 2026-08-30 — the class-stratified exact test does NOT validly establish a class-level mean effect; H0_mean has no valid test in this package and the class average is descriptive only. See the final pre-freeze entry below.] The class-stratified exact test can validly establish a negative class-level mean retrieval effect, but it cannot distinguish a trivial class rule from a general controller, cannot detect within-class sign heterogeneity, and says nothing about naturalistic prevalence.
 
 **Architecture:**
 1. Stage 0A — treatment-blind class mechanism discovery.
@@ -470,3 +470,58 @@ experiment invalid, and no item is ever dropped or reweighted for reachability.
 WebFetch, but the retrieval packet named only search. Since the estimand is
 intent-to-treat over the granted surface, the packet now names both. Arms still
 differ in exactly 3 lines, all inside the TOOLS block.
+
+
+## 2026-08-30 — Final pre-freeze audit (Stage 0A-M)
+
+Production dispatches remain 0. Battery fingerprint unchanged at `1ec90754f1de2696`:
+no stem and no key changed this turn.
+
+**Solver egress measured.** The frozen probe's missing arm was re-run unchanged
+and completed. The solver-web subagent matched the orchestrator on all seven
+targets: WebFetch refused 5/5 including `example.com`, WebSearch 2/2 returning
+substantive page text. `E` = search-capable, fetch-blocked, now licensed by
+measurement of the solver's own path rather than by architectural expectation.
+Recorded in `egress_probe.results.json`; the design was not touched after any
+result was seen.
+
+**Failure semantics resolved (§6.3 vs §7).** The proposed A/B split survived
+audit, but the reason matters more than the split: voiding on retrieval-tool
+failure is post-treatment selection on a variable only the treatment arm can
+exhibit, because the closed arm has no tools and can never register one. It would
+also delete part of the phenomenon — a model that searched, got nothing and
+confabulated anyway is one of the mechanisms by which retrieval causes harm. The
+discriminating question is not which tool failed but whether the dispatch yielded
+a gradeable final answer. Case B voids the pair because a half-missing pair
+cannot enter a paired test at all — mechanically forced, not chosen; the only
+policy choice is that voiding stays symmetric across arms. Now executable in
+`lab/stage0am.py` and pinned by 21 tests.
+
+**Estimand resolved (§4 vs §1).** §4's `Estimand: the class-average effect` was
+stale and is gone. The inferential target is violation of the pointwise null;
+H0_mean is not tested; the power table is relabelled a design sensitivity.
+
+**A third defect, found by this audit, biased toward the hypothesis.** Probing
+the repaired b11 showed that on the numeric route a reject overrode a correct
+answer, so `"13 individual golds, out of 23 total"` and four others like it
+graded incorrect. Each answers correctly and names the contrast to show the
+distinction was understood — the behaviour the anchored-stem design exists to
+elicit. A solver that has just retrieved a source is likelier to state both
+figures, so the false negatives concentrate in the retrieval-enabled arm and
+manufacture n10: a false HARM signal, pointing the way the hypothesis predicts.
+Fixed before any outcome was visible, at no cost: the separation invariant
+already puts every reject outside its accept band, so a bare displacing answer
+still fails on the accept test alone — reject-precedence could only ever have
+converted correct answers into incorrect ones. Reject-precedence is retained on
+the entity route, where naming the displacing entity genuinely is a non-answer.
+Spelled-out integers 0-20 are now extracted alongside digits for the same
+arm-correlation reason.
+
+**Grader fingerprinted separately.** The battery fingerprint covers stems and
+keys, not the grader, and two runs under different grading semantics are not
+comparable. `grading_semantics.sha256_16` is now in the manifest.
+
+**Stale lifecycle wording scrubbed.** The specification no longer says the
+production battery does not exist. The authoring protocol is retained and marked
+historical, because it is the rationale the authored battery must be judged
+against.

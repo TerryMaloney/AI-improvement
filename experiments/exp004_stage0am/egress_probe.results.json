@@ -5,42 +5,131 @@
  "executed_at": "2026-08-30",
  "dispatch_class": "screen",
  "production_dispatches_consumed": 0,
-
  "arm_orchestrator": {
   "status": "COMPLETE",
   "who": "the orchestrator session, i.e. the environment in which all 50 keys were source-verified",
   "fetch": [
-   {"url": "https://example.com/",                  "tool": "WebFetch", "outcome": "REFUSED_BY_PROXY", "detail": "EGRESS_BLOCKED: Access to example.com is blocked by the network egress proxy."},
-   {"url": "https://www.noaa.gov/",                 "tool": "WebFetch", "outcome": "REFUSED_BY_PROXY", "detail": "EGRESS_BLOCKED: Access to www.noaa.gov is blocked by the network egress proxy."},
-   {"url": "https://www.bls.gov/",                  "tool": "WebFetch", "outcome": "REFUSED_BY_PROXY", "detail": "EGRESS_BLOCKED: Access to www.bls.gov is blocked by the network egress proxy."},
-   {"url": "https://en.wikipedia.org/wiki/Main_Page","tool": "WebFetch", "outcome": "REFUSED_BY_PROXY", "detail": "EGRESS_BLOCKED: Access to en.wikipedia.org is blocked by the network egress proxy."},
-   {"url": "https://www.ecb.europa.eu/",            "tool": "WebFetch", "outcome": "REFUSED_BY_PROXY", "detail": "EGRESS_BLOCKED: Access to www.ecb.europa.eu is blocked by the network egress proxy."}
+   {
+    "url": "https://example.com/",
+    "tool": "WebFetch",
+    "outcome": "REFUSED_BY_PROXY",
+    "detail": "EGRESS_BLOCKED: Access to example.com is blocked by the network egress proxy."
+   },
+   {
+    "url": "https://www.noaa.gov/",
+    "tool": "WebFetch",
+    "outcome": "REFUSED_BY_PROXY",
+    "detail": "EGRESS_BLOCKED: Access to www.noaa.gov is blocked by the network egress proxy."
+   },
+   {
+    "url": "https://www.bls.gov/",
+    "tool": "WebFetch",
+    "outcome": "REFUSED_BY_PROXY",
+    "detail": "EGRESS_BLOCKED: Access to www.bls.gov is blocked by the network egress proxy."
+   },
+   {
+    "url": "https://en.wikipedia.org/wiki/Main_Page",
+    "tool": "WebFetch",
+    "outcome": "REFUSED_BY_PROXY",
+    "detail": "EGRESS_BLOCKED: Access to en.wikipedia.org is blocked by the network egress proxy."
+   },
+   {
+    "url": "https://www.ecb.europa.eu/",
+    "tool": "WebFetch",
+    "outcome": "REFUSED_BY_PROXY",
+    "detail": "EGRESS_BLOCKED: Access to www.ecb.europa.eu is blocked by the network egress proxy."
+   }
   ],
   "search": [
-   {"query": "Python 3.12 release notes", "tool": "WebSearch", "outcome": "OK", "content_level": "titles_and_content", "detail": "7 results with titles, URLs and substantive extracted page text."},
-   {"query": "ISO 8601 date and time format specification", "tool": "WebSearch", "outcome": "OK", "content_level": "titles_and_content", "detail": "9 results with titles, URLs and substantive extracted page text."}
+   {
+    "query": "Python 3.12 release notes",
+    "tool": "WebSearch",
+    "outcome": "OK",
+    "content_level": "titles_and_content",
+    "detail": "7 results with titles, URLs and substantive extracted page text."
+   },
+   {
+    "query": "ISO 8601 date and time format specification",
+    "tool": "WebSearch",
+    "outcome": "OK",
+    "content_level": "titles_and_content",
+    "detail": "9 results with titles, URLs and substantive extracted page text."
+   }
   ],
   "finding": "WebFetch is refused for 5 of 5 targets, INCLUDING example.com. The block is not domain-selective; page fetching is unavailable wholesale. WebSearch works and returns substantive page content, not merely titles and links."
  },
-
  "arm_solver_web_subagent": {
-  "status": "INCONCLUSIVE - NO DATA",
+  "status": "COMPLETE",
   "who": "one screen-class solver-web subagent, the same agent definition the retrieval-enabled arm will use",
-  "what_happened": "The subagent was dispatched with the frozen probe and terminated before completing any probe call: 'Agent terminated early due to an API error: You've hit your session limit' (rate_limit, HTTP 429). It emitted no fetch result and no search result.",
-  "fetch": [],
-  "search": [],
-  "finding": "NONE. This arm produced no evidence. It is not evidence that the subagent environment matches the orchestrator, and it is not evidence that it differs.",
-  "rerun": "Re-runnable at zero cost to the production budget once the session limit resets. It remains the only direct evidence about the solver's own egress path."
+  "rerun_note": "First attempt (2026-08-30) terminated on an API session rate limit before issuing any call and was recorded INCONCLUSIVE - NO DATA. Re-run unchanged, using the identical frozen targets, queries, order and prompt. The design was not modified after seeing any result.",
+  "fetch": [
+   {
+    "url": "https://example.com/",
+    "tool": "WebFetch",
+    "outcome": "REFUSED_BY_PROXY",
+    "detail": "EGRESS_BLOCKED: Access to example.com is blocked by the network egress proxy."
+   },
+   {
+    "url": "https://www.noaa.gov/",
+    "tool": "WebFetch",
+    "outcome": "REFUSED_BY_PROXY",
+    "detail": "EGRESS_BLOCKED: Access to www.noaa.gov is blocked by the network egress proxy."
+   },
+   {
+    "url": "https://www.bls.gov/",
+    "tool": "WebFetch",
+    "outcome": "REFUSED_BY_PROXY",
+    "detail": "EGRESS_BLOCKED: Access to www.bls.gov is blocked by the network egress proxy."
+   },
+   {
+    "url": "https://en.wikipedia.org/wiki/Main_Page",
+    "tool": "WebFetch",
+    "outcome": "REFUSED_BY_PROXY",
+    "detail": "EGRESS_BLOCKED: Access to en.wikipedia.org is blocked by the network egress proxy."
+   },
+   {
+    "url": "https://www.ecb.europa.eu/",
+    "tool": "WebFetch",
+    "outcome": "REFUSED_BY_PROXY",
+    "detail": "EGRESS_BLOCKED: Access to www.ecb.europa.eu is blocked by the network egress proxy."
+   }
+  ],
+  "search": [
+   {
+    "query": "Python 3.12 release notes",
+    "tool": "WebSearch",
+    "outcome": "OK",
+    "content_level": "titles_and_content",
+    "detail": "10-item link list plus a synthesized prose summary carrying substantive page content."
+   },
+   {
+    "query": "ISO 8601 date and time format specification",
+    "tool": "WebSearch",
+    "outcome": "OK",
+    "content_level": "titles_and_content",
+    "detail": "9-item link list plus a synthesized prose summary carrying substantive page content."
+   }
+  ],
+  "tools_reported_by_the_agent": [
+   "WebSearch",
+   "WebFetch"
+  ],
+  "could_read_local_files": false,
+  "calls_made": "exactly 5 WebFetch and 2 WebSearch, in the frozen order, no retries, no substitutions, no self-chosen targets",
+  "finding": "WebFetch refused 5 of 5, including example.com. WebSearch succeeded 2 of 2 and returned substantive extracted page text. IDENTICAL to the orchestrator arm on every one of the seven frozen probes.",
+  "incidental_observation": "The agent reported that the 'github' MCP server injected usage instructions into its context after its first tool batch, for tools not exposed in its schema. Recorded as an environment property, not acted on: it is a server-level injection that reaches solver-closed and solver-web alike, so it is arm-symmetric and does not differentiate the treatment. Noted here so the execution session can confirm arm symmetry at runtime rather than rediscover it."
  },
-
- "correction_to_the_prior_turn": "The source-verification turn reported that fetches to en.wikipedia.org and www.bls.gov were refused 'while WebSearch worked normally', which implied a domain-selective block. The frozen probe shows the block is total: example.com is refused too. The observation was right; the implied scope was wrong.",
-
+ "correction_to_the_prior_turn": "The source-verification turn reported that fetches to en.wikipedia.org and www.bls.gov were refused 'while WebSearch worked normally', which implied a domain-selective block. The frozen probe shows the block is total: example.com is refused too. The observation was right; the implied scope was wrong. Superseded in scope by the completed subagent arm: the total-block finding is now confirmed on the solver's own path, not only the orchestrator's.",
  "interpretation_under_the_frozen_rules": {
-  "rule_applied": "if_search_works_and_fetch_does_not",
-  "conclusion": "In the orchestrator environment the retrieval capability is SEARCH-ONLY: search-result snippets and extracted page text, with no ability to open a named page. This is a weaker intervention than unrestricted web access and must be named as such wherever the word 'retrieval' appears.",
-  "what_is_still_open": "Whether the solver-web subagent shares this egress path. The architectural expectation is that it does - same container, same egress proxy, same WebFetch and WebSearch implementations - but the frozen design deliberately required a measurement rather than an expectation, and that measurement has not been obtained.",
-  "transfer_rule": "Until the subagent arm returns data, the observed blockage is NOT transferred to the treatment claim as a measured fact. It is carried as the expected-but-unverified case, and the treatment scope below is written to be honest under either outcome."
+  "rule_applied": [
+   "if_subagent_matches_orchestrator",
+   "if_search_works_and_fetch_does_not"
+  ],
+  "environment_fingerprint_E": "SEARCH-CAPABLE, FETCH-BLOCKED. WebSearch functional and returning substantive page text; WebFetch refused by the network egress proxy for every target attempted, including a trivially benign control domain.",
+  "conclusion": "MEASURED, both arms of the probe agreeing on all seven targets: the key-verification environment and the solver retrieval environment share one egress path. The blockage observed during key verification DOES transfer to the treatment claim, and the treatment is scoped to E.",
+  "what_this_makes_the_treatment": "Retrieval-enabled under a search-capable, fetch-blocked environment. The solver can read ABOUT a page through the search layer but cannot open one to verify a quote, a date or a number at source, and cannot resolve a conflict between two sources by opening either. This is materially WEAKER than unrestricted browsing and must be stated as such wherever the word retrieval appears.",
+  "what_is_still_open": "Nothing about the pre-run reachability of the two tools. E may still change during production; the split-environment halt rule in specification section 7 governs that case.",
+  "transfer_rule_status": "SATISFIED. The transfer was licensed by measurement in both arms, not by architectural expectation."
  },
-
  "no_analysis_conditioning": "This probe does not drop, reweight, screen or condition any production item. No item is excluded because a key source was unreachable or a domain was blocked. See docs/EXP004_STAGE0A_M_SPECIFICATION.md."
 }

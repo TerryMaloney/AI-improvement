@@ -45,9 +45,24 @@ tercile, by arm-order assignment, and by class. **Very low power at D around 13.
 Diagnostics only — they never exclude an item, a class or a run, and there is no
 "dependence passed" gate.
 
-## 6. TECHNICAL FAILURES / MISSINGNESS
-Technical-failure rate as a treatment outcome. Voided items (a technical failure
-voids the item across all arms). Run invalid above 10% voided.
+## 6. FAILURE AND MISSINGNESS — TWO SEPARATE TABLES, NEVER SUMMED
+
+**6a. Retrieval-tool outcomes (case A — retained, graded).** Counts by outcome
+across the retrieval-enabled arm: `OK`, `REFUSED_BY_PROXY`, `TOOL_ERROR`,
+`TOOL_TIMEOUT`, `EMPTY_RESULTS`, `UNHELPFUL_RESULTS`, `NOT_ATTEMPTED`; plus the
+rate at which every retrieval call in a trial failed, given that retrieval was
+attempted. **These are treatment outcomes. No item was excluded for any of
+them.** In the measured environment (`E` = search-capable, fetch-blocked) a
+non-zero `REFUSED_BY_PROXY` count is expected and is not a defect.
+
+**6b. Dispatch-level failures (case B — voided).** Voided items with the frozen
+cause, **broken down by which arm failed**: closed / retrieval-enabled / both.
+Arm-correlated dispatch mortality is reported as a finding. Run invalid above
+10% of items voided — a ceiling that scopes to 6b only.
+
+State explicitly: *the 6a rate and the 6b rate are never added together, and 6a
+never contributes to the 10% ceiling.*
+
 
 ## 7. COST / LATENCY
 Observed tool calls, tokens, wall-clock. Observed telemetry is authoritative over
