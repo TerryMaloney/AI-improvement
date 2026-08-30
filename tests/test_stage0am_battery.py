@@ -148,13 +148,23 @@ class TestProvenance:
         assert f"### {qid} —" in PROV
 
     def test_verification_status_is_recorded_per_item(self):
-        allowed = {"VERIFIED_WEB_2026-08-30", "PENDING_INDEPENDENT_VERIFICATION", "COMPUTED_IN_SESSION"}
+        allowed = {"VERIFIED_SOURCE_2026-08-30T00:00:00Z", "COMPUTED_IN_SESSION"}
         assert {i["verification"] for i in MANIFEST["items"]} <= allowed
 
-    def test_pending_items_are_not_production_eligible(self):
-        for i in MANIFEST["items"]:
-            if i["verification"] == "PENDING_INDEPENDENT_VERIFICATION":
-                assert i["production_eligible"] is False
+    def test_no_primary_key_remains_pending(self):
+        pending = [i["id"] for i in MANIFEST["items"] if "PENDING" in i["verification"]]
+        assert pending == [], f"unverified keys remain: {pending}"
+
+    def test_every_item_is_production_eligible(self):
+        ineligible = [i["id"] for i in MANIFEST["items"] if not i["production_eligible"]]
+        assert ineligible == [], f"not production eligible: {ineligible}"
+
+    def test_every_primary_item_records_a_verification_timestamp_and_pass(self):
+        for qid in [q["id"] for q in Q if q["class"] != "arithmetic_control"]:
+            block = PROV.split(f"### {qid} —")[1].split("### ")[0]
+            flat = block.replace("**", "")
+            assert "Verified at: 2026-08-30T00:00:00Z" in flat, f"{qid}: no verification timestamp"
+            assert "pass-1" in flat or "pass-2" in flat, f"{qid}: no verifier pass recorded"
 
 
 class TestDispatchSchedule:

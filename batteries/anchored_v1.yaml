@@ -227,10 +227,10 @@ questions:
   grading_route: numeric
 - id: b09
   class: definition_anchored
-  subtype: nominal_vs_ppp
-  domain: macroeconomics
-  text: What was India's nominal gross domestic product in calendar year 2023 in current
-    US dollars, per the IMF World Economic Outlook? Give the figure in trillions.
+  subtype: currency_union_scope
+  domain: economics/EU
+  text: How many European Union member states had adopted the euro as their official
+    currency as of 1 January 2024?
   grading_route: numeric
 - id: b10
   class: definition_anchored
@@ -339,11 +339,10 @@ questions:
   grading_route: numeric
 - id: b25
   class: definition_anchored
-  subtype: gdp_year_basis
-  domain: macroeconomics
-  text: What was the nominal gross domestic product of the United Kingdom in calendar
-    year 2023 in current US dollars, per the IMF World Economic Outlook? Give the
-    figure in trillions.
+  subtype: geographic_scope
+  domain: geography/US
+  text: How many states of the United States border the Pacific Ocean, counting only
+    the 48 contiguous states?
   grading_route: numeric
 - id: n01
   class: arithmetic_control

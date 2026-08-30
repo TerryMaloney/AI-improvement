@@ -9,7 +9,7 @@
 | 3 | Class assignments frozen, one class per item | **done**, tested |
 | 4 | Key fingerprints recorded | **done**, per item in the manifest |
 | 5 | Key provenance stored separately from trials | **done** — `docs/EXP004_STAGE0A_M_KEY_PROVENANCE.md` |
-| 6 | **Independent key verification for all primary items** | **INCOMPLETE — 18 of 50 verified** |
+| 6 | **Independent key verification for all primary items** | **done — 50 of 50 source-verified** |
 | 7 | Grading route declared per item, no runtime escalation | **done**, tested |
 | 8 | Arm packet hashes and diff | **done** — `arm_packet_diff.json`, 3 differing lines |
 | 9 | Closed arm free of phantom search-budget text | **done**, tested |
@@ -26,13 +26,32 @@
 | 20 | Stop and failure rules committed | **done** — specification §7, §14 |
 | 21 | Dispatch budget computed from the manifest | **done** — 130 |
 
-## Blocking item
+## No blocking item remains
 
-**Check 6.** 32 of 50 primary keys carry `PENDING_INDEPENDENT_VERIFICATION` and are
-marked `production_eligible: false` in the manifest. They were authored from
-careful recollection with the intended source named, but not confirmed against it
-in-session. Freezing a key that has not been checked is exactly the failure this
-lab exists to prevent, so they are labelled rather than assumed.
+All 50 primary keys are source-verified and all 65 items are
+`production_eligible: true`. What remains is execution-time only.
 
-The egress probe (check 12) is left pending rather than improvised, per the
-standing rule that a non-production diagnostic call needs its own authorisation.
+## Remaining execution-time checks
+
+Checks 1, 10, 11, 13, 15 and 17 can only be performed at dispatch: commit SHA,
+model snapshot, environment fingerprint, telemetry dry run, fresh-context
+verification, and run-directory creation.
+
+**Check 12, the egress probe, stays pending for the final execution review** —
+per the standing rule that a non-production diagnostic call needs its own
+authorisation.
+
+## Environment finding from key verification — relevant to the retrieval arm
+
+While verifying keys, direct page fetches to `en.wikipedia.org` and `www.bls.gov`
+were **refused by the network egress proxy**, while web *search* worked normally.
+
+This matters for the treatment, not just for authoring. If the solver's retrieval
+arm can search but cannot fetch several major authoritative domains, then
+"retrieval-enabled" in this environment means *degraded* retrieval, and any harm
+observed could reflect the retrieval environment rather than retrieval as such.
+
+`[OPEN]` The egress probe must therefore record, per domain, which of search and
+fetch actually succeed, and the report's ALTERNATIVE EXPLANATIONS section must
+carry the reachable-domain set. This does not block freezing the battery; it
+constrains how a positive result may be read.

@@ -362,3 +362,40 @@ budget in the closed arm and no solver-visible arm label; report skeleton with
 both the primary and null-result wordings; preflight checklist.
 
 **Zero dispatches. No production item has been shown to any solver in either arm.**
+
+---
+
+## 2026-08-30 — Stage 0A-M: all 50 primary keys source-verified
+
+**Result: 50/50 primary keys verified, 65/65 items production-eligible.** The 12
+pending date-anchored and 20 pending definition-anchored keys were each checked
+against source evidence rather than re-read from the authoring note.
+
+**Two items were replaced at verification, not patched.** b09 asked for India's
+2023 nominal GDP per the IMF WEO; that value could not be confirmed against a
+primary source. b25 asked for the UK's, and the best available figure (3.38
+trillion) differed from the authored key (3.34) and came from a secondary
+aggregator. The common cause is that IMF GDP figures are revised between WEO
+vintages, which makes them a poor basis for a frozen key. Both were replaced with
+euro-area membership scope (20 EU states, verified against ECB and Council of the
+EU) and Pacific-coast state count (3 contiguous vs 5 including Alaska and Hawaii).
+
+**One key was corrected.** b11's Lake Michigan surface area was re-keyed from
+58,030 to NOAA's 57,573 km2. Published figures vary by a few hundred km2 between
+sources; the 1,500 km2 tolerance absorbs that spread and remains far from the
+Michigan-Huron combined value.
+
+**One provenance defect was repaired.** The 18 items verified during authoring
+carried no verification timestamp or verifier-pass marker. They are now recorded
+as pass-1 with an offset-aware UTC timestamp, alongside the 32 pass-2 records.
+
+**Environment finding with experimental consequences.** Direct page fetches to
+en.wikipedia.org and www.bls.gov were refused by the network egress proxy while
+web search worked normally. If the retrieval arm can search but not fetch major
+authoritative domains, "retrieval-enabled" here means degraded retrieval, and a
+positive result could reflect the retrieval environment rather than retrieval as
+such. The egress probe must record per-domain search and fetch reachability, and
+the report must carry that set under alternative explanations.
+
+**Battery fingerprint after verification: afc208e1e8d1bd00.** Zero dispatches; no
+production item has been shown to any solver in either arm.

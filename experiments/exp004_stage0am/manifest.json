@@ -1,7 +1,7 @@
 {
  "experiment": "exp004_stage0am",
  "battery": "anchored_v1",
- "battery_fingerprint": "a53d4d59856fc1db",
+ "battery_fingerprint": "afc208e1e8d1bd00",
  "authored_as_of": "2026-08-30",
  "status": "CANDIDATE - NOT FROZEN, NOT EXECUTED",
  "treatment_exposure": "NONE - no production item has been shown to any solver",
@@ -29,7 +29,7 @@
    "domain": "politics/Germany",
    "grading_route": "exact_entity",
    "key_fingerprint": "94e3f06e33f514e9",
-   "verification": "VERIFIED_WEB_2026-08-30",
+   "verification": "VERIFIED_SOURCE_2026-08-30T00:00:00Z",
    "production_eligible": true,
    "provenance": "docs/EXP004_STAGE0A_M_KEY_PROVENANCE.md"
   },
@@ -40,7 +40,7 @@
    "domain": "politics/UK",
    "grading_route": "exact_entity",
    "key_fingerprint": "acc16650d202ec1f",
-   "verification": "VERIFIED_WEB_2026-08-30",
+   "verification": "VERIFIED_SOURCE_2026-08-30T00:00:00Z",
    "production_eligible": true,
    "provenance": "docs/EXP004_STAGE0A_M_KEY_PROVENANCE.md"
   },
@@ -51,7 +51,7 @@
    "domain": "corporate/social",
    "grading_route": "exact_entity",
    "key_fingerprint": "62cf353120fa7af8",
-   "verification": "VERIFIED_WEB_2026-08-30",
+   "verification": "VERIFIED_SOURCE_2026-08-30T00:00:00Z",
    "production_eligible": true,
    "provenance": "docs/EXP004_STAGE0A_M_KEY_PROVENANCE.md"
   },
@@ -62,7 +62,7 @@
    "domain": "technology",
    "grading_route": "exact_entity",
    "key_fingerprint": "41e52ca42a2dc39f",
-   "verification": "VERIFIED_WEB_2026-08-30",
+   "verification": "VERIFIED_SOURCE_2026-08-30T00:00:00Z",
    "production_eligible": true,
    "provenance": "docs/EXP004_STAGE0A_M_KEY_PROVENANCE.md"
   },
@@ -73,7 +73,7 @@
    "domain": "international/NATO",
    "grading_route": "boolean",
    "key_fingerprint": "0a8a56fc733acdc6",
-   "verification": "VERIFIED_WEB_2026-08-30",
+   "verification": "VERIFIED_SOURCE_2026-08-30T00:00:00Z",
    "production_eligible": true,
    "provenance": "docs/EXP004_STAGE0A_M_KEY_PROVENANCE.md"
   },
@@ -84,7 +84,7 @@
    "domain": "international/NATO",
    "grading_route": "boolean",
    "key_fingerprint": "0a8a56fc733acdc6",
-   "verification": "VERIFIED_WEB_2026-08-30",
+   "verification": "VERIFIED_SOURCE_2026-08-30T00:00:00Z",
    "production_eligible": true,
    "provenance": "docs/EXP004_STAGE0A_M_KEY_PROVENANCE.md"
   },
@@ -95,7 +95,7 @@
    "domain": "economics/Croatia",
    "grading_route": "exact_entity",
    "key_fingerprint": "49d452fefdd29973",
-   "verification": "VERIFIED_WEB_2026-08-30",
+   "verification": "VERIFIED_SOURCE_2026-08-30T00:00:00Z",
    "production_eligible": true,
    "provenance": "docs/EXP004_STAGE0A_M_KEY_PROVENANCE.md"
   },
@@ -106,7 +106,7 @@
    "domain": "science/astronomy",
    "grading_route": "numeric",
    "key_fingerprint": "858c4fb30396f6b5",
-   "verification": "VERIFIED_WEB_2026-08-30",
+   "verification": "VERIFIED_SOURCE_2026-08-30T00:00:00Z",
    "production_eligible": true,
    "provenance": "docs/EXP004_STAGE0A_M_KEY_PROVENANCE.md"
   },
@@ -117,7 +117,7 @@
    "domain": "international/EU",
    "grading_route": "boolean",
    "key_fingerprint": "a76bdac6d0d3cd20",
-   "verification": "VERIFIED_WEB_2026-08-30",
+   "verification": "VERIFIED_SOURCE_2026-08-30T00:00:00Z",
    "production_eligible": true,
    "provenance": "docs/EXP004_STAGE0A_M_KEY_PROVENANCE.md"
   },
@@ -128,7 +128,7 @@
    "domain": "international/UN",
    "grading_route": "exact_entity",
    "key_fingerprint": "f3e14211791ba26c",
-   "verification": "VERIFIED_WEB_2026-08-30",
+   "verification": "VERIFIED_SOURCE_2026-08-30T00:00:00Z",
    "production_eligible": true,
    "provenance": "docs/EXP004_STAGE0A_M_KEY_PROVENANCE.md"
   },
@@ -139,8 +139,8 @@
    "domain": "international/EU",
    "grading_route": "exact_entity",
    "key_fingerprint": "6d6b45b2897aecea",
-   "verification": "PENDING_INDEPENDENT_VERIFICATION",
-   "production_eligible": false,
+   "verification": "VERIFIED_SOURCE_2026-08-30T00:00:00Z",
+   "production_eligible": true,
    "provenance": "docs/EXP004_STAGE0A_M_KEY_PROVENANCE.md"
   },
   {
@@ -150,8 +150,8 @@
    "domain": "geopolitics",
    "grading_route": "boolean",
    "key_fingerprint": "0a8a56fc733acdc6",
-   "verification": "PENDING_INDEPENDENT_VERIFICATION",
-   "production_eligible": false,
+   "verification": "VERIFIED_SOURCE_2026-08-30T00:00:00Z",
+   "production_eligible": true,
    "provenance": "docs/EXP004_STAGE0A_M_KEY_PROVENANCE.md"
   },
   {
@@ -161,8 +161,8 @@
    "domain": "politics/Brazil",
    "grading_route": "exact_entity",
    "key_fingerprint": "236d31ba973f8962",
-   "verification": "PENDING_INDEPENDENT_VERIFICATION",
-   "production_eligible": false,
+   "verification": "VERIFIED_SOURCE_2026-08-30T00:00:00Z",
+   "production_eligible": true,
    "provenance": "docs/EXP004_STAGE0A_M_KEY_PROVENANCE.md"
   },
   {
@@ -172,8 +172,8 @@
    "domain": "corporate/technology",
    "grading_route": "exact_entity",
    "key_fingerprint": "bd3aa6c9697ca94b",
-   "verification": "PENDING_INDEPENDENT_VERIFICATION",
-   "production_eligible": false,
+   "verification": "VERIFIED_SOURCE_2026-08-30T00:00:00Z",
+   "production_eligible": true,
    "provenance": "docs/EXP004_STAGE0A_M_KEY_PROVENANCE.md"
   },
   {
@@ -183,7 +183,7 @@
    "domain": "international/EU",
    "grading_route": "numeric",
    "key_fingerprint": "58cb76d5e1ca1380",
-   "verification": "VERIFIED_WEB_2026-08-30",
+   "verification": "VERIFIED_SOURCE_2026-08-30T00:00:00Z",
    "production_eligible": true,
    "provenance": "docs/EXP004_STAGE0A_M_KEY_PROVENANCE.md"
   },
@@ -194,8 +194,8 @@
    "domain": "sports/tennis",
    "grading_route": "exact_entity",
    "key_fingerprint": "987d72ac4e9bd0c3",
-   "verification": "PENDING_INDEPENDENT_VERIFICATION",
-   "production_eligible": false,
+   "verification": "VERIFIED_SOURCE_2026-08-30T00:00:00Z",
+   "production_eligible": true,
    "provenance": "docs/EXP004_STAGE0A_M_KEY_PROVENANCE.md"
   },
   {
@@ -205,8 +205,8 @@
    "domain": "geopolitics",
    "grading_route": "boolean",
    "key_fingerprint": "0a8a56fc733acdc6",
-   "verification": "PENDING_INDEPENDENT_VERIFICATION",
-   "production_eligible": false,
+   "verification": "VERIFIED_SOURCE_2026-08-30T00:00:00Z",
+   "production_eligible": true,
    "provenance": "docs/EXP004_STAGE0A_M_KEY_PROVENANCE.md"
   },
   {
@@ -216,8 +216,8 @@
    "domain": "geopolitics",
    "grading_route": "exact_entity",
    "key_fingerprint": "e8cc3fb0019e2127",
-   "verification": "PENDING_INDEPENDENT_VERIFICATION",
-   "production_eligible": false,
+   "verification": "VERIFIED_SOURCE_2026-08-30T00:00:00Z",
+   "production_eligible": true,
    "provenance": "docs/EXP004_STAGE0A_M_KEY_PROVENANCE.md"
   },
   {
@@ -227,8 +227,8 @@
    "domain": "sports/NFL",
    "grading_route": "exact_entity",
    "key_fingerprint": "2c927e4f6c45e3ab",
-   "verification": "PENDING_INDEPENDENT_VERIFICATION",
-   "production_eligible": false,
+   "verification": "VERIFIED_SOURCE_2026-08-30T00:00:00Z",
+   "production_eligible": true,
    "provenance": "docs/EXP004_STAGE0A_M_KEY_PROVENANCE.md"
   },
   {
@@ -238,7 +238,7 @@
    "domain": "corporate/retail",
    "grading_route": "exact_entity",
    "key_fingerprint": "030e8d0d894c7542",
-   "verification": "VERIFIED_WEB_2026-08-30",
+   "verification": "VERIFIED_SOURCE_2026-08-30T00:00:00Z",
    "production_eligible": true,
    "provenance": "docs/EXP004_STAGE0A_M_KEY_PROVENANCE.md"
   },
@@ -249,7 +249,7 @@
    "domain": "corporate/social",
    "grading_route": "exact_entity",
    "key_fingerprint": "0136ce9e85843bc8",
-   "verification": "VERIFIED_WEB_2026-08-30",
+   "verification": "VERIFIED_SOURCE_2026-08-30T00:00:00Z",
    "production_eligible": true,
    "provenance": "docs/EXP004_STAGE0A_M_KEY_PROVENANCE.md"
   },
@@ -260,8 +260,8 @@
    "domain": "politics/Poland",
    "grading_route": "exact_entity",
    "key_fingerprint": "0cecb761edbb5f25",
-   "verification": "PENDING_INDEPENDENT_VERIFICATION",
-   "production_eligible": false,
+   "verification": "VERIFIED_SOURCE_2026-08-30T00:00:00Z",
+   "production_eligible": true,
    "provenance": "docs/EXP004_STAGE0A_M_KEY_PROVENANCE.md"
   },
   {
@@ -271,8 +271,8 @@
    "domain": "politics/Scotland",
    "grading_route": "exact_entity",
    "key_fingerprint": "63a04511ad3d90f3",
-   "verification": "PENDING_INDEPENDENT_VERIFICATION",
-   "production_eligible": false,
+   "verification": "VERIFIED_SOURCE_2026-08-30T00:00:00Z",
+   "production_eligible": true,
    "provenance": "docs/EXP004_STAGE0A_M_KEY_PROVENANCE.md"
   },
   {
@@ -282,8 +282,8 @@
    "domain": "economics/Lithuania",
    "grading_route": "boolean",
    "key_fingerprint": "0a8a56fc733acdc6",
-   "verification": "PENDING_INDEPENDENT_VERIFICATION",
-   "production_eligible": false,
+   "verification": "VERIFIED_SOURCE_2026-08-30T00:00:00Z",
+   "production_eligible": true,
    "provenance": "docs/EXP004_STAGE0A_M_KEY_PROVENANCE.md"
   },
   {
@@ -293,8 +293,8 @@
    "domain": "science/space",
    "grading_route": "boolean",
    "key_fingerprint": "a76bdac6d0d3cd20",
-   "verification": "PENDING_INDEPENDENT_VERIFICATION",
-   "production_eligible": false,
+   "verification": "VERIFIED_SOURCE_2026-08-30T00:00:00Z",
+   "production_eligible": true,
    "provenance": "docs/EXP004_STAGE0A_M_KEY_PROVENANCE.md"
   },
   {
@@ -304,7 +304,7 @@
    "domain": "public health",
    "grading_route": "numeric",
    "key_fingerprint": "3f1f73062bd91668",
-   "verification": "VERIFIED_WEB_2026-08-30",
+   "verification": "VERIFIED_SOURCE_2026-08-30T00:00:00Z",
    "production_eligible": true,
    "provenance": "docs/EXP004_STAGE0A_M_KEY_PROVENANCE.md"
   },
@@ -315,7 +315,7 @@
    "domain": "corporate finance",
    "grading_route": "numeric",
    "key_fingerprint": "16e514ef72494df2",
-   "verification": "VERIFIED_WEB_2026-08-30",
+   "verification": "VERIFIED_SOURCE_2026-08-30T00:00:00Z",
    "production_eligible": true,
    "provenance": "docs/EXP004_STAGE0A_M_KEY_PROVENANCE.md"
   },
@@ -326,7 +326,7 @@
    "domain": "geography",
    "grading_route": "numeric",
    "key_fingerprint": "b18c88a43c33b7c9",
-   "verification": "VERIFIED_WEB_2026-08-30",
+   "verification": "VERIFIED_SOURCE_2026-08-30T00:00:00Z",
    "production_eligible": true,
    "provenance": "docs/EXP004_STAGE0A_M_KEY_PROVENANCE.md"
   },
@@ -337,7 +337,7 @@
    "domain": "energy",
    "grading_route": "numeric",
    "key_fingerprint": "4898acb9df7b6595",
-   "verification": "VERIFIED_WEB_2026-08-30",
+   "verification": "VERIFIED_SOURCE_2026-08-30T00:00:00Z",
    "production_eligible": true,
    "provenance": "docs/EXP004_STAGE0A_M_KEY_PROVENANCE.md"
   },
@@ -348,7 +348,7 @@
    "domain": "science/astronomy",
    "grading_route": "numeric",
    "key_fingerprint": "6157a11c047a9ca4",
-   "verification": "VERIFIED_WEB_2026-08-30",
+   "verification": "VERIFIED_SOURCE_2026-08-30T00:00:00Z",
    "production_eligible": true,
    "provenance": "docs/EXP004_STAGE0A_M_KEY_PROVENANCE.md"
   },
@@ -359,8 +359,8 @@
    "domain": "demography",
    "grading_route": "numeric",
    "key_fingerprint": "ffb207f6eb4aa61d",
-   "verification": "PENDING_INDEPENDENT_VERIFICATION",
-   "production_eligible": false,
+   "verification": "VERIFIED_SOURCE_2026-08-30T00:00:00Z",
+   "production_eligible": true,
    "provenance": "docs/EXP004_STAGE0A_M_KEY_PROVENANCE.md"
   },
   {
@@ -370,8 +370,8 @@
    "domain": "labour economics",
    "grading_route": "numeric",
    "key_fingerprint": "ebeb1f1a1b18453a",
-   "verification": "PENDING_INDEPENDENT_VERIFICATION",
-   "production_eligible": false,
+   "verification": "VERIFIED_SOURCE_2026-08-30T00:00:00Z",
+   "production_eligible": true,
    "provenance": "docs/EXP004_STAGE0A_M_KEY_PROVENANCE.md"
   },
   {
@@ -381,19 +381,19 @@
    "domain": "sports",
    "grading_route": "numeric",
    "key_fingerprint": "356b62780123d70c",
-   "verification": "PENDING_INDEPENDENT_VERIFICATION",
-   "production_eligible": false,
+   "verification": "VERIFIED_SOURCE_2026-08-30T00:00:00Z",
+   "production_eligible": true,
    "provenance": "docs/EXP004_STAGE0A_M_KEY_PROVENANCE.md"
   },
   {
    "id": "b09",
    "class": "definition_anchored",
-   "subtype": "nominal_vs_ppp",
-   "domain": "macroeconomics",
+   "subtype": "currency_union_scope",
+   "domain": "economics/EU",
    "grading_route": "numeric",
-   "key_fingerprint": "db9dc63238932105",
-   "verification": "PENDING_INDEPENDENT_VERIFICATION",
-   "production_eligible": false,
+   "key_fingerprint": "babd9c14b5c679d4",
+   "verification": "VERIFIED_SOURCE_2026-08-30T00:00:00Z",
+   "production_eligible": true,
    "provenance": "docs/EXP004_STAGE0A_M_KEY_PROVENANCE.md"
   },
   {
@@ -403,8 +403,8 @@
    "domain": "geography",
    "grading_route": "numeric",
    "key_fingerprint": "328bbdf37b033b82",
-   "verification": "PENDING_INDEPENDENT_VERIFICATION",
-   "production_eligible": false,
+   "verification": "VERIFIED_SOURCE_2026-08-30T00:00:00Z",
+   "production_eligible": true,
    "provenance": "docs/EXP004_STAGE0A_M_KEY_PROVENANCE.md"
   },
   {
@@ -413,9 +413,9 @@
    "subtype": "lake_definition",
    "domain": "geography",
    "grading_route": "numeric",
-   "key_fingerprint": "70dd2217522b0efc",
-   "verification": "PENDING_INDEPENDENT_VERIFICATION",
-   "production_eligible": false,
+   "key_fingerprint": "d58fa89665736623",
+   "verification": "VERIFIED_SOURCE_2026-08-30T00:00:00Z",
+   "production_eligible": true,
    "provenance": "docs/EXP004_STAGE0A_M_KEY_PROVENANCE.md"
   },
   {
@@ -425,8 +425,8 @@
    "domain": "macroeconomics",
    "grading_route": "numeric",
    "key_fingerprint": "6e2f7f52e433afbe",
-   "verification": "PENDING_INDEPENDENT_VERIFICATION",
-   "production_eligible": false,
+   "verification": "VERIFIED_SOURCE_2026-08-30T00:00:00Z",
+   "production_eligible": true,
    "provenance": "docs/EXP004_STAGE0A_M_KEY_PROVENANCE.md"
   },
   {
@@ -436,8 +436,8 @@
    "domain": "demography",
    "grading_route": "numeric",
    "key_fingerprint": "82e4db3298ecfa78",
-   "verification": "PENDING_INDEPENDENT_VERIFICATION",
-   "production_eligible": false,
+   "verification": "VERIFIED_SOURCE_2026-08-30T00:00:00Z",
+   "production_eligible": true,
    "provenance": "docs/EXP004_STAGE0A_M_KEY_PROVENANCE.md"
   },
   {
@@ -447,8 +447,8 @@
    "domain": "US constitutional history",
    "grading_route": "numeric",
    "key_fingerprint": "6754b70768d5a94c",
-   "verification": "PENDING_INDEPENDENT_VERIFICATION",
-   "production_eligible": false,
+   "verification": "VERIFIED_SOURCE_2026-08-30T00:00:00Z",
+   "production_eligible": true,
    "provenance": "docs/EXP004_STAGE0A_M_KEY_PROVENANCE.md"
   },
   {
@@ -458,8 +458,8 @@
    "domain": "international",
    "grading_route": "numeric",
    "key_fingerprint": "06aa70295807b214",
-   "verification": "PENDING_INDEPENDENT_VERIFICATION",
-   "production_eligible": false,
+   "verification": "VERIFIED_SOURCE_2026-08-30T00:00:00Z",
+   "production_eligible": true,
    "provenance": "docs/EXP004_STAGE0A_M_KEY_PROVENANCE.md"
   },
   {
@@ -469,8 +469,8 @@
    "domain": "demography",
    "grading_route": "numeric",
    "key_fingerprint": "477ae37024339b74",
-   "verification": "PENDING_INDEPENDENT_VERIFICATION",
-   "production_eligible": false,
+   "verification": "VERIFIED_SOURCE_2026-08-30T00:00:00Z",
+   "production_eligible": true,
    "provenance": "docs/EXP004_STAGE0A_M_KEY_PROVENANCE.md"
   },
   {
@@ -480,8 +480,8 @@
    "domain": "architecture",
    "grading_route": "numeric",
    "key_fingerprint": "85bbb1b043f4fdea",
-   "verification": "PENDING_INDEPENDENT_VERIFICATION",
-   "production_eligible": false,
+   "verification": "VERIFIED_SOURCE_2026-08-30T00:00:00Z",
+   "production_eligible": true,
    "provenance": "docs/EXP004_STAGE0A_M_KEY_PROVENANCE.md"
   },
   {
@@ -490,9 +490,9 @@
    "subtype": "wall_survey_scope",
    "domain": "history/geography",
    "grading_route": "numeric",
-   "key_fingerprint": "c2f264c5cab42858",
-   "verification": "PENDING_INDEPENDENT_VERIFICATION",
-   "production_eligible": false,
+   "key_fingerprint": "f76c5ad30a4ef8c1",
+   "verification": "VERIFIED_SOURCE_2026-08-30T00:00:00Z",
+   "production_eligible": true,
    "provenance": "docs/EXP004_STAGE0A_M_KEY_PROVENANCE.md"
   },
   {
@@ -502,8 +502,8 @@
    "domain": "international/EU",
    "grading_route": "numeric",
    "key_fingerprint": "8eff7d1f1cc4d9f6",
-   "verification": "PENDING_INDEPENDENT_VERIFICATION",
-   "production_eligible": false,
+   "verification": "VERIFIED_SOURCE_2026-08-30T00:00:00Z",
+   "production_eligible": true,
    "provenance": "docs/EXP004_STAGE0A_M_KEY_PROVENANCE.md"
   },
   {
@@ -513,8 +513,8 @@
    "domain": "oceanography",
    "grading_route": "numeric",
    "key_fingerprint": "a51741d26dd847a9",
-   "verification": "PENDING_INDEPENDENT_VERIFICATION",
-   "production_eligible": false,
+   "verification": "VERIFIED_SOURCE_2026-08-30T00:00:00Z",
+   "production_eligible": true,
    "provenance": "docs/EXP004_STAGE0A_M_KEY_PROVENANCE.md"
   },
   {
@@ -524,8 +524,8 @@
    "domain": "labour policy",
    "grading_route": "numeric",
    "key_fingerprint": "44c32954e08d74e8",
-   "verification": "PENDING_INDEPENDENT_VERIFICATION",
-   "production_eligible": false,
+   "verification": "VERIFIED_SOURCE_2026-08-30T00:00:00Z",
+   "production_eligible": true,
    "provenance": "docs/EXP004_STAGE0A_M_KEY_PROVENANCE.md"
   },
   {
@@ -535,8 +535,8 @@
    "domain": "biology",
    "grading_route": "numeric",
    "key_fingerprint": "a27fe3ff6f734971",
-   "verification": "PENDING_INDEPENDENT_VERIFICATION",
-   "production_eligible": false,
+   "verification": "VERIFIED_SOURCE_2026-08-30T00:00:00Z",
+   "production_eligible": true,
    "provenance": "docs/EXP004_STAGE0A_M_KEY_PROVENANCE.md"
   },
   {
@@ -546,8 +546,8 @@
    "domain": "science/astronomy",
    "grading_route": "numeric",
    "key_fingerprint": "f6e30e4e93752fae",
-   "verification": "PENDING_INDEPENDENT_VERIFICATION",
-   "production_eligible": false,
+   "verification": "VERIFIED_SOURCE_2026-08-30T00:00:00Z",
+   "production_eligible": true,
    "provenance": "docs/EXP004_STAGE0A_M_KEY_PROVENANCE.md"
   },
   {
@@ -557,19 +557,19 @@
    "domain": "sports",
    "grading_route": "numeric",
    "key_fingerprint": "e1426f26d501d9b1",
-   "verification": "PENDING_INDEPENDENT_VERIFICATION",
-   "production_eligible": false,
+   "verification": "VERIFIED_SOURCE_2026-08-30T00:00:00Z",
+   "production_eligible": true,
    "provenance": "docs/EXP004_STAGE0A_M_KEY_PROVENANCE.md"
   },
   {
    "id": "b25",
    "class": "definition_anchored",
-   "subtype": "gdp_year_basis",
-   "domain": "macroeconomics",
+   "subtype": "geographic_scope",
+   "domain": "geography/US",
    "grading_route": "numeric",
-   "key_fingerprint": "afe8477548d944af",
-   "verification": "PENDING_INDEPENDENT_VERIFICATION",
-   "production_eligible": false,
+   "key_fingerprint": "fcba0f2a2a49ed56",
+   "verification": "VERIFIED_SOURCE_2026-08-30T00:00:00Z",
+   "production_eligible": true,
    "provenance": "docs/EXP004_STAGE0A_M_KEY_PROVENANCE.md"
   },
   {
