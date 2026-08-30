@@ -1,15 +1,16 @@
 {
- "closed_sha256_16": "6631cc8b857a0289",
- "retrieval_sha256_16": "4adfea921f978062",
+ "closed_sha256_16": "1d47dc05e460a07b",
+ "retrieval_sha256_16": "4ad32bd810a1b542",
  "differing_lines": [
-  "-TOOLS: you have none. Answer from what you already know.",
-  "+TOOLS: you have web search and web page fetch available. You may use them if you",
-  "+judge it useful, and you may decline to use them."
+  "-TOOLS: you have no external-information tools. Answer from what you already know.",
+  "+TOOLS: you have WebSearch and WebFetch as external-information tools. You may use",
+  "+them if you judge it useful, and you may decline to use them."
  ],
  "differing_line_count": 3,
  "identical_apart_from_treatment": true,
  "closed_arm_phantom_budget_terms_found": [],
  "stem_placeholder_identical": true,
  "no_arm_label_visible_to_solver": true,
- "tool_surface_named_matches_agent_definition": ".claude/agents/solver-web.md grants WebSearch and WebFetch; the retrieval packet names both."
+ "tool_surface_named_matches_agent_definition": ".claude/agents/stage0am-solver-web.md grants TodoWrite, WebSearch and WebFetch; .claude/agents/stage0am-solver-closed.md grants TodoWrite. The retrieval-only difference is WebSearch + WebFetch.",
+ "agent_symmetry_record": "experiments/exp004_stage0am/agent_symmetry.candidate.json"
 }

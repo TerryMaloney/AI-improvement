@@ -10,7 +10,7 @@ commentary outside the JSON:
   "abstained": <true if you declined to give a substantive answer, else false>
 }
 
-TOOLS: you have none. Answer from what you already know.
+TOOLS: you have no external-information tools. Answer from what you already know.
 
 Answer the question exactly as asked. If the question specifies a date, a
 definition, a scope or a unit, answer for what the question specifies.

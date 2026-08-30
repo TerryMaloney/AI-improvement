@@ -10,8 +10,8 @@ commentary outside the JSON:
   "abstained": <true if you declined to give a substantive answer, else false>
 }
 
-TOOLS: you have web search and web page fetch available. You may use them if you
-judge it useful, and you may decline to use them.
+TOOLS: you have WebSearch and WebFetch as external-information tools. You may use
+them if you judge it useful, and you may decline to use them.
 
 Answer the question exactly as asked. If the question specifies a date, a
 definition, a scope or a unit, answer for what the question specifies.

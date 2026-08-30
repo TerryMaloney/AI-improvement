@@ -1,0 +1,45 @@
+{
+  "status": "CANDIDATE_REPAIR_PENDING_FULL_SUITE_AND_SYNTHETIC_CANARIES",
+  "discovered_before_production": true,
+  "production_dispatches_seen": 0,
+  "supersedes_stage0am_agent_assignment": {
+    "closed": ".claude/agents/solver-closed.md",
+    "retrieval_enabled": ".claude/agents/solver-web.md"
+  },
+  "required_stage0am_agents": {
+    "closed": ".claude/agents/stage0am-solver-closed.md",
+    "retrieval_enabled": ".claude/agents/stage0am-solver-web.md"
+  },
+  "common_body_sha256_16": "60a61de44f7837fe",
+  "agent_file_sha256_16": {
+    "closed": "0acdce6151bdcdc1",
+    "retrieval_enabled": "233b797412d3ee7f"
+  },
+  "tool_allowlists": {
+    "closed": [
+      "TodoWrite"
+    ],
+    "retrieval_enabled": [
+      "TodoWrite",
+      "WebSearch",
+      "WebFetch"
+    ]
+  },
+  "tool_set_difference": [
+    "WebSearch",
+    "WebFetch"
+  ],
+  "model": "inherit",
+  "packet_sha256_16": {
+    "closed": "1d47dc05e460a07b",
+    "retrieval_enabled": "4ad32bd810a1b542"
+  },
+  "invariants": [
+    "Markdown bodies below YAML frontmatter are byte-identical.",
+    "Both arms inherit the same model from the pinned parent execution session.",
+    "Both arms retain the same non-informational TodoWrite tool.",
+    "The retrieval-enabled arm differs in tool access only by WebSearch and WebFetch.",
+    "No arm-specific premise checking, date handling, source independence, confidence, or abstention instruction appears in the agent body.",
+    "Arm packets differ only in the TOOLS block and state the same date/definition/scope/unit instruction."
+  ]
+}
