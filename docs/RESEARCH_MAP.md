@@ -28,6 +28,7 @@ Related research branches:
 - [`docs/REFLEXIVE_ERROR_CORRECTION_RESEARCH_MAP_2026-08-30.md`](REFLEXIVE_ERROR_CORRECTION_RESEARCH_MAP_2026-08-30.md)
 - [`docs/EXTERNAL_COGNITIVE_TOOLS_AND_TOPOLOGY_2026-08-29.md`](EXTERNAL_COGNITIVE_TOOLS_AND_TOPOLOGY_2026-08-29.md)
 - [`docs/PRIOR_ART_AND_DESIGN_SIGNALS_2026-08-29.md`](PRIOR_ART_AND_DESIGN_SIGNALS_2026-08-29.md)
+- [`docs/FABLE_5_1_RESEARCH_DISCOVERY_2026-09-01.md`](FABLE_5_1_RESEARCH_DISCOVERY_2026-09-01.md) — failure taxonomy (G1–G7, two roots), EGP-perturbation compression of the six states, ranked portfolio, kill/merge list, novelty-engine proposal. **Proposal pending review; changes no frozen artifact.**
 
 The reflexive error-correction branch adds six state families that future architecture should avoid collapsing:
 - world epistemic state;

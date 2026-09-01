@@ -64,6 +64,11 @@ The previous frozen probe established on the old shared solver-web path:
 
 Because Stage 0A-M now uses a dedicated web agent, execution-time preflight must re-run the same neutral environment check through `stage0am-solver-web`. Reachability is expected to match but must be measured, not assumed.
 
+## 2026-09-01 note
+
+- The dedicated `stage0am-solver-closed` / `stage0am-solver-web` agents became registered in the original session after a context reload landed on a later turn; the runtime gates in `docs/NEXT.md` can now be run from that session or a fresh one. No gate has been run yet.
+- A research-discovery memo (`docs/FABLE_5_1_RESEARCH_DISCOVERY_2026-09-01.md`) proposes pre-registering Stage 0A-M *secondary* analyses before outcomes and three zero-design-change freeze-record additions (`effort_level`, live agent list, grader golden corpus). These are proposals; nothing frozen changed.
+
 ## Still prohibited
 
 Until the candidate repair passes the full non-production suite and synthetic Claude canaries:
