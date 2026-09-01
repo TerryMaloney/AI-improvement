@@ -287,12 +287,14 @@ class TestPostVerificationAudit:
 
     def test_retrieval_packet_names_the_tools_the_agent_is_actually_granted(self):
         """The arm's instruction and its actual affordances must agree: the
-        estimand is intent-to-treat over the granted surface."""
-        agent = (REPO / ".claude" / "agents" / "solver-web.md").read_text()
+        estimand is intent-to-treat over the granted surface. Checked against
+        the DEDICATED Stage 0A-M agent, by tool name, not by paraphrase."""
+        fm = (REPO / ".claude" / "agents" / "stage0am-solver-web.md").read_text().split("---\n", 2)[1]
+        granted = {t.strip() for t in yaml.safe_load(fm)["tools"].split(",")}
         packet = (REPO / "experiments" / "exp004_stage0am"
-                  / "packet_retrieval_enabled.template.md").read_text().lower()
-        assert "WebSearch" in agent and "WebFetch" in agent
-        assert "web search" in packet and "fetch" in packet
+                  / "packet_retrieval_enabled.template.md").read_text()
+        for tool in granted - {"TodoWrite"}:
+            assert tool in packet, f"granted tool {tool} not named in the retrieval packet"
 
     def test_arms_still_differ_only_in_the_treatment(self):
         assert DIFF["differing_line_count"] == 3

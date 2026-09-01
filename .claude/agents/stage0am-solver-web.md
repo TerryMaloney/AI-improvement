@@ -1,6 +1,6 @@
 ---
 name: stage0am-solver-web
-description: Stage 0A-M controlled-evaluation solver for the retrieval-enabled arm.
+description: Stage 0A-M controlled-evaluation solver. Tool permissions are set by the arm; the body is identical across arms.
 tools: TodoWrite, WebSearch, WebFetch
 model: inherit
 ---

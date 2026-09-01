@@ -1,5 +1,5 @@
 {
-  "status": "CANDIDATE_REPAIR_PENDING_FULL_SUITE_AND_SYNTHETIC_CANARIES",
+  "status": "STATIC_INVARIANTS_VALIDATED_2026-09-01; RUNTIME_CANARIES_PENDING_FRESH_SESSION",
   "discovered_before_production": true,
   "production_dispatches_seen": 0,
   "supersedes_stage0am_agent_assignment": {
@@ -10,10 +10,10 @@
     "closed": ".claude/agents/stage0am-solver-closed.md",
     "retrieval_enabled": ".claude/agents/stage0am-solver-web.md"
   },
-  "common_body_sha256_16": "60a61de44f7837fe",
+  "common_body_sha256_16": "2e1fb5851b784b90",
   "agent_file_sha256_16": {
-    "closed": "0acdce6151bdcdc1",
-    "retrieval_enabled": "233b797412d3ee7f"
+    "closed": "f7423c6ecedd4568",
+    "retrieval_enabled": "770ebdc2adcc3c00"
   },
   "tool_allowlists": {
     "closed": [
@@ -40,6 +40,10 @@
     "Both arms retain the same non-informational TodoWrite tool.",
     "The retrieval-enabled arm differs in tool access only by WebSearch and WebFetch.",
     "No arm-specific premise checking, date handling, source independence, confidence, or abstention instruction appears in the agent body.",
-    "Arm packets differ only in the TOOLS block and state the same date/definition/scope/unit instruction."
-  ]
+    "Arm packets differ only in the TOOLS block and state the same date/definition/scope/unit instruction.",
+    "Agent description metadata is identical across arms and carries no arm label."
+  ],
+  "description_identical_across_arms": true,
+  "hash_method": "sha256(text.encode()).hexdigest()[:16]; body = text.split('---\\n', 2)[2]",
+  "record_repair_note": "Body hash in the 0fb8a7f record (60a61de44f7837fe) was computed by a different method than the test uses; file hashes matched, bodies were byte-identical, so this was a bookkeeping mismatch, not an asymmetry. Recomputed here with the test's own method."
 }

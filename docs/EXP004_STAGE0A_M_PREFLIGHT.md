@@ -1,6 +1,7 @@
 # Stage 0A-M preflight — to be completed immediately before the first dispatch
 
-**Status: ALL PRE-TREATMENT CHECKS COMPLETE. Remaining checks are execution-time only.
+**Status: ALL STATIC CHECKS COMPLETE, INCLUDING AGENT SYMMETRY. Runtime canaries are BLOCKED
+in the current session (agent registry frozen at session start) and require a fresh session.
 No dispatch is authorised by this document.**
 
 | # | Check | State |
@@ -91,3 +92,23 @@ validation, which is exactly the thing the zero-exposure invariant protects.
 environment differing from `E`, the run does not silently proceed: it is either
 re-scoped before dispatch or halted and reported as a split-environment run
 (specification §7). Results from two environments are never pooled.
+
+## 2026-09-01 — agent-symmetry validation, static part
+
+| check | state |
+|---|---|
+| dedicated agent bodies byte-identical | **done** — `2e1fb5851b784b90` |
+| descriptions identical, no arm label | **done** (repaired this turn) |
+| tool difference exactly {WebSearch, WebFetch} | **done** |
+| packets differ only in TOOLS block (3 lines) | **done** |
+| no user-scope shadow of the dedicated agents | **done** — user scope holds only the shared solvers |
+| no hooks | **done** |
+| full suite | **green** |
+| freeze record with recomputable hashes | **done** — `experiments/exp004_stage0am/freeze_record.json`, tested |
+| closed canary · retrieval canary · fresh-context canary · egress probe via dedicated agent | **BLOCKED** — need a session started after `0fb8a7f` |
+
+`[MEASURED]` The Agent tool in this session reports `stage0am-solver-closed` and
+`stage0am-solver-web` as not found, before and after a context-reload request.
+Claude Code registers `.claude/agents` at session start; this session predates
+the agents. No safe substitute exists in-session: the generic agents can read
+the answer key, and the shared solvers carry the asymmetric prompts.

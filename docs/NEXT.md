@@ -1,92 +1,22 @@
-# Next action — validate Stage 0A-M agent-symmetry repair, then freeze
+# Next action — start a FRESH session, then validate and (if affordable) run Stage 0A-M
 
-**Do NOT run production yet.**
+**Why a fresh session:** Claude Code registers `.claude/agents` at session start. The session that did the 2026-09-01 audit began 2026-08-27 and cannot see `stage0am-solver-closed` / `stage0am-solver-web`; a context-reload did not help. Every runtime gate needs those agents. A fresh session also cuts per-dispatch orchestration overhead by ~5× (see the cost ledger), which is what makes the run affordable at all.
 
-A pre-production audit found that the shared `solver-web` and `solver-closed` Claude agents had different epistemic system prompts. The Stage 0A-M contrast therefore would have changed prompting as well as retrieval access.
+Check out `claude/ai-testing-lab-setup-b4t7qr` at the commit named in `experiments/exp004_stage0am/freeze_record.json` or later.
 
-Candidate remediation commit:
-`0fb8a7f7b856337d26116378b0d6c399c0ffc061`
+## In the fresh session, in this order
 
-Read first:
-1. `docs/EXP004_STAGE0A_M_AGENT_SYMMETRY_REMEDIATION.md`
-2. `experiments/exp004_stage0am/agent_symmetry.candidate.json`
-3. `.claude/agents/stage0am-solver-closed.md`
-4. `.claude/agents/stage0am-solver-web.md`
-5. `tests/test_stage0am_agent_symmetry.py`
-6. `docs/EXP004_STAGE0A_M_SPECIFICATION.md`
-7. `docs/EXP004_STAGE0A_M_PREFLIGHT.md`
+1. `python -m pytest tests/` — all green, including `test_stage0am_agent_symmetry.py` and `test_stage0am_freeze_record.py`.
+2. Closed canary: `stage0am-solver-closed`, the closed packet template with a synthetic stem. Require launch + gradeable JSON. Record `subagent_tokens` and the `get_session` cost delta.
+3. Retrieval canary: `stage0am-solver-web`, neutral synthetic stem. Same requirements; confirm the WebSearch/WebFetch surface; same served model as (2) via `get_session`.
+4. Fresh-context canary: two `stage0am-solver-closed` dispatches; trial 1 carries a synthetic token in its stem, trial 2 asks what token the previous trial contained. Trial 2 must not recover it. **If it does, STOP.**
+5. Egress probe through `stage0am-solver-web` using `egress_probe.frozen.json` verbatim. Compare with `E` = search-capable, fetch-blocked. If different, re-scope per specification §6.3/§7 before any production outcome.
+6. Set `freeze_commit` in `freeze_record.json`, mark `runtime_validation.all_gates_passed: true` with the canary evidence, commit, push.
+7. **Budget-start rule:** from the canary costs, project 130 dispatches + overhead + $5 margin. If it does not fit the remaining budget, STOP after freeze and report the shortfall. No partial sample.
+8. Only then: create the run directory and execute `schedule.json` exactly — adjacent arms, per-item randomized arm order, fresh context per trial, raw responses saved before grading, served model and retrieval outcomes recorded per trial.
 
-## Required validation before freeze
+## Traps already closed — do not reopen
 
-Use the candidate dedicated Stage 0A-M agents, not the shared agents.
-
-1. Run the complete non-production test suite.
-   - Require all tests green.
-   - Confirm `tests/test_stage0am_agent_symmetry.py` passes.
-   - Do not weaken a scientific invariant to restore green.
-
-2. Run a synthetic closed-agent canary.
-   - `stage0am-solver-closed`
-   - no production stem
-   - confirm successful launch and gradeable JSON
-   - record exact served model/model id.
-
-3. Run a synthetic retrieval-agent canary.
-   - `stage0am-solver-web`
-   - neutral non-production question
-   - confirm successful launch and gradeable JSON
-   - record exact served model/model id.
-   - require the same model snapshot as the closed arm.
-
-4. Re-run the already-frozen neutral retrieval-environment probe through `stage0am-solver-web`.
-   - do not change probe targets or queries after seeing results;
-   - record WebSearch/WebFetch reachability;
-   - compare with prior `E = search-capable, fetch-blocked`;
-   - if different, re-scope the environment BEFORE any production outcome.
-
-5. Verify the committed symmetry record.
-   - common agent body hash: `60a61de44f7837fe`
-   - closed candidate agent file hash: `0acdce6151bdcdc1`
-   - retrieval candidate agent file hash: `233b797412d3ee7f`
-   - packet hashes: closed `1d47dc05e460a07b`, retrieval `4ad32bd810a1b542`
-   - retrieval-only tool difference: `WebSearch`, `WebFetch`.
-
-6. Record the validated agent/packet hashes in the final execution manifest or freeze record and mark `agent_symmetry.candidate.json` as validated/frozen.
-
-7. Record the final freeze commit SHA.
-
-8. Only after steps 1–7 pass, create the production run directory and execute the frozen 130-dispatch schedule.
-
-## Scientific state that must not change
-
-- battery fingerprint `1ec90754f1de2696`;
-- grader fingerprint `10adaf1dac94ea70`;
-- 25 date + 25 definition + 15 arithmetic items;
-- R=1;
-- 130 production dispatches;
-- pointwise-null / finite-authored-set primary claim;
-- ITT analysis;
-- existing schedule/randomization;
-- no reachability-conditioned item selection;
-- no production re-keying/reclassification.
-
-## Execution traps
-
-- Use `stage0am-solver-closed` / `stage0am-solver-web`, NOT the shared `solver-closed` / `solver-web`.
-- A retrieval-tool failure with a gradeable answer is retained and graded.
-- Only a dispatch-level failure with no gradeable answer pair-voids.
-- Do not claim a class-average inferential effect.
-- Do not drop items for unreachable sources.
-- Do not pool across different environments.
-- Never expose a production stem in a dry run/canary.
-
-## Current authorization boundary
-
-Authorized now:
-- non-dispatch tests;
-- neutral synthetic agent canaries;
-- neutral environment probe;
-- final freeze bookkeeping if all checks pass.
-
-Not authorized until those checks pass:
-- any of the 130 production Stage 0A-M dispatches.
+- Use `stage0am-solver-*`, never the shared `solver-*` (asymmetric prompts) and never `general-purpose`/`claude` (can read the answer key).
+- Case A retrieval-tool outcome with a gradeable answer → retain and grade. Case B dispatch death → pair-void, report by arm. 10% ceiling is case B only.
+- No class-average inferential claim; §1.2 wording verbatim. No reachability-conditioned item selection. No pooling across environments. No re-keying after exposure.

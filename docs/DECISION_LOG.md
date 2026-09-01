@@ -525,3 +525,23 @@ comparable. `grading_semantics.sha256_16` is now in the manifest.
 production battery does not exist. The authoring protocol is retained and marked
 historical, because it is the rationale the authored battery must be judged
 against.
+
+
+## 2026-09-01 — Red-team of the agent-symmetry remediation; runtime validation blocked
+
+Production dispatches remain 0. The remediation (0fb8a7f) survived audit on every
+load-bearing point: bodies byte-identical, `model: inherit` both arms, tool
+difference exactly {WebSearch, WebFetch}, packets differing only in TOOLS. Three
+bounded repairs: arm labels removed from agent `description` metadata; the
+symmetry record's body hash recomputed with the test's own method (it had been a
+bookkeeping mismatch, not an asymmetry); one brittle string-matching test replaced
+with a check of the actual invariant against the dedicated agent. The GPT
+session's TOOLS rewording was accepted — "you have none" had been false.
+
+Found: `.claude/agents` is loaded at session start, so this session (begun
+2026-08-27) cannot dispatch the dedicated agents. Every runtime gate is therefore
+blocked here. No workaround was taken, deliberately: the generic agents can read
+the answer key, the shared solvers are the confound, and a spawned child session
+would run validation and 130 dispatches unsupervised on a budget the ledger shows
+is marginal. Freeze record with recomputable hashes committed; a fresh session
+performs the runtime gates and, if the measured per-trial cost fits, the run.

@@ -4,19 +4,26 @@
 
 ## Current phase
 
-**Stage 0A-M is NOT YET FROZEN. A pre-production execution audit found and repaired a load-bearing arm-symmetry confound; the repair candidate now requires full-suite and synthetic Claude validation before execution.**
+**Stage 0A-M: agent-symmetry repair passes every static check and the full suite. Runtime validation (canaries, fresh-context, egress probe via the dedicated agent) is BLOCKED in the current session because Claude Code loads `.claude/agents` at session start and this session predates the dedicated agents. A fresh session is required. Production dispatches 0; treatment exposure NONE.**
 
-Latest candidate remediation commit: `0fb8a7f7b856337d26116378b0d6c399c0ffc061`.
+Scientific state preserved and re-verified 2026-09-01:
+- 25 / 25 / 15 = 65 items, 130 planned dispatches, R=1;
+- battery fingerprint `1ec90754f1de2696`; grader fingerprint `10adaf1dac94ea70`;
+- common agent body `2e1fb5851b784b90`; agent files `f7423c6ecedd4568` / `770ebdc2adcc3c00`;
+- packets `1d47dc05e460a07b` / `4ad32bd810a1b542`, 3 differing lines, all in TOOLS;
+- full suite green (see freeze record and `tests/test_stage0am_freeze_record.py`).
 
-Scientific state preserved:
-- 25 date-anchored / 25 definition-anchored / 15 arithmetic controls = 65 items;
-- 130 planned production dispatches;
-- 50/50 primary keys source-verified; 65/65 production-eligible;
-- battery fingerprint `1ec90754f1de2696`;
-- grader fingerprint `10adaf1dac94ea70`;
-- **production dispatches 0; treatment exposure NONE**.
+## Red-team of the remediation (2026-09-01)
 
-The last fully executed non-production suite before this remediation was **1324 passed, 0 failed** at `9c57635`. The new remediation has focused static checks authored but the complete repository suite has NOT been run in the GPT environment and must be re-run before freeze.
+Survived: bodies byte-identical; `model: inherit` on both; tool difference exactly {WebSearch, WebFetch}; TodoWrite symmetric and non-informational; packets differ only in the TOOLS block; no hooks; no user-scope shadow of the dedicated agents (user scope holds only the shared `solver-*` agents, which is why they appeared twice in the agent list — harmless, but recorded).
+
+Repaired: the two `description` fields carried arm labels ("closed arm" / "retrieval-enabled arm"). Bounded, not load-bearing — the packet already reveals tool availability — but metadata should not name the treatment; now identical. The symmetry record's body hash had been computed by a different method than the test uses (file hashes matched, bodies were identical); recomputed. One earlier test string-matched a paraphrase ("web search") and broke when the GPT session reworded the TOOLS block to name the tools; it now checks the actual invariant against the dedicated agent.
+
+Accepted as improvements: the GPT session's TOOLS rewording — the closed arm's old "you have none" was literally false with TodoWrite present.
+
+## Budget
+
+See `experiments/exp004_stage0am/cost_ledger.md`. Production is **not affordable from this session** (~$49 projected at its ~200K-token context) and only marginally so from a fresh one (~$24–38). The budget-start rule requires a measured per-trial cost from the canaries before any production dispatch.
 
 ## Newly found arm-symmetry confound
 

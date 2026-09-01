@@ -1,0 +1,74 @@
+{
+ "experiment": "exp004_stage0am",
+ "status": "FREEZE-READY \u2014 STATIC VALIDATION COMPLETE; RUNTIME CANARIES BLOCKED BY SESSION AGENT REGISTRY",
+ "recorded_at_utc": "2026-09-01T23:34:02+00:00",
+ "production_dispatches": 0,
+ "treatment_exposure": "NONE",
+ "git_sha_at_record": "651013c921b5e7743d2853b69f890a8e7a10d6ea",
+ "freeze_commit": "to be set by the executing session at freeze: the commit this record is pushed in, or its successor if execution-time bookkeeping is added",
+ "hashes": {
+  "common_agent_body_sha256_16": "2e1fb5851b784b90",
+  "closed_agent_file_sha256_16": "f7423c6ecedd4568",
+  "retrieval_agent_file_sha256_16": "770ebdc2adcc3c00",
+  "closed_packet_sha256_16": "1d47dc05e460a07b",
+  "retrieval_packet_sha256_16": "4ad32bd810a1b542",
+  "battery_fingerprint": "1ec90754f1de2696",
+  "grader_sha256_16": "10adaf1dac94ea70",
+  "schedule_sha256_16": "321c3a2397958c30"
+ },
+ "model": {
+  "session_configured_model": "claude-fable-5",
+  "session_switched_model": "claude-fable-5-1",
+  "session_last_served_model": "claude-fable-5-1",
+  "agent_model_setting": "inherit (both arms)",
+  "how_measured": "get_session on the orchestrator session, 2026-09-01. Subagents declare model: inherit, so both arms take the parent's served model. This is [MEASURED] at the session and [ASSUME] per subagent until a runtime canary confirms it; a per-turn served-model fallback would apply to both arms equally but must still be recorded per trial."
+ },
+ "environment": {
+  "claude_code_version": "2.1.248",
+  "environment_id": "env_01N5MJFEeY4NWrHqDMCp62hG",
+  "environment_kind": "anthropic_cloud",
+  "E_last_measured": "search-capable, fetch-blocked (2026-08-30, both probe arms, via the SHARED solver-web agent)",
+  "E_via_dedicated_agent": "NOT YET MEASURED \u2014 requires a session in which stage0am-solver-web is registered"
+ },
+ "tool_surface": {
+  "closed": [
+   "TodoWrite"
+  ],
+  "retrieval_enabled": [
+   "TodoWrite",
+   "WebSearch",
+   "WebFetch"
+  ],
+  "difference": [
+   "WebSearch",
+   "WebFetch"
+  ],
+  "note": "TodoWrite is non-informational: it writes a private task list and cannot read files or the network. Both arms carry it so the tool-definition scaffolding differs only by the two retrieval tools."
+ },
+ "static_symmetry_validation": {
+  "agent_bodies_byte_identical": true,
+  "agent_descriptions_identical_no_arm_label": true,
+  "agent_model_identical": true,
+  "packets_differ_only_in_tools_block": true,
+  "packet_differing_lines": 3,
+  "no_duplicate_stage0am_agent_at_user_scope": true,
+  "shared_agents_duplicated_at_user_scope": [
+   "solver-closed",
+   "solver-web",
+   "grader-judge"
+  ],
+  "hooks_configured": false,
+  "full_suite": "green"
+ },
+ "runtime_validation": {
+  "status": "BLOCKED",
+  "reason": "Claude Code loads .claude/agents at session start. This session began 2026-08-27, before stage0am-solver-closed and stage0am-solver-web existed; the Agent tool reports them 'not found' and a context-reload request did not register them. Every runtime gate (closed canary, retrieval canary, fresh-context canary, egress probe via the dedicated agent) needs a session started after commit 0fb8a7f.",
+  "why_no_workaround_was_taken": "The generic 'claude'/'general-purpose' agents have Read/Bash and could open the answer key; the shared solver-closed/solver-web agents carry the asymmetric epistemic prompts the remediation exists to remove; a spawned child session would run the full validation and 130 dispatches unsupervised on a marginal budget.",
+  "pending_gates": [
+   "closed canary: launch + gradeable JSON + served model",
+   "retrieval canary: launch + gradeable JSON + WebSearch/WebFetch surface + same served model",
+   "fresh-context canary: synthetic token in trial 1 must be unrecoverable in trial 2",
+   "frozen egress probe through stage0am-solver-web; compare with E"
+  ]
+ }
+}
