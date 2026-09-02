@@ -1,0 +1,127 @@
+{
+ "_wall_s": 6.69,
+ "_returncode": 0,
+ "_cmd": [
+  "claude",
+  "-p",
+  "--agent",
+  "stage0am-solver-web",
+  "--model",
+  "opus",
+  "--output-format",
+  "json",
+  "--allowedTools",
+  "WebSearch",
+  "WebFetch"
+ ],
+ "duration_api_ms": 3226,
+ "stop_reason": "end_turn",
+ "session_id": "da90f8ac-94a6-5327-8f35-a039a241c696",
+ "total_cost_usd": 0.013157,
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 830,
+  "cache_read_input_tokens": 1048,
+  "output_tokens": 124,
+  "output_tokens_details": {
+   "thinking_tokens": 0
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 830,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "not_available",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 124,
+    "cache_read_input_tokens": 1048,
+    "cache_creation_input_tokens": 830,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 830
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "modelUsage": {
+  "claude-haiku-4-5-20251001": {
+   "inputTokens": 1118,
+   "outputTokens": 21,
+   "cacheReadInputTokens": 0,
+   "cacheCreationInputTokens": 0,
+   "webSearchRequests": 0,
+   "costUSD": 0.0012230000000000001,
+   "contextWindow": 200000,
+   "maxOutputTokens": 32000,
+   "thinkingTokens": 0,
+   "canonicalModel": "claude-haiku-4-5",
+   "provider": "firstParty",
+   "costBasis": "list"
+  },
+  "claude-opus-5": {
+   "inputTokens": 2,
+   "outputTokens": 124,
+   "cacheReadInputTokens": 1048,
+   "cacheCreationInputTokens": 830,
+   "webSearchRequests": 0,
+   "costUSD": 0.011934,
+   "contextWindow": 1000000,
+   "maxOutputTokens": 64000,
+   "thinkingTokens": 0,
+   "canonicalModel": "claude-opus-5",
+   "provider": "firstParty",
+   "costBasis": "list"
+  }
+ },
+ "permission_denials": [],
+ "terminal_reason": "completed",
+ "fast_mode_state": "off",
+ "fast_mode_disabled_reason": "sdk_opt_in_required",
+ "subagent_stats": {
+  "spawned": 0,
+  "requested": {
+   "background": 0,
+   "foreground": 0,
+   "unset": 0
+  },
+  "started_in_background": 0,
+  "max_depth": 0,
+  "spawned_by_subagents": 0,
+  "completed": 0,
+  "failed": 0,
+  "killed": {
+   "parent": 0,
+   "user": 0,
+   "system": 0
+  },
+  "refused": {
+   "depth_limit": 0,
+   "concurrency_limit": 0,
+   "budget": 0
+  },
+  "by_type": {}
+ },
+ "is_error": false,
+ "num_turns": 1,
+ "subtype": "success",
+ "api_error_status": null,
+ "result": "{\"answer\": \"Nicola Sturgeon. As of 1 January 2021, Nicola Sturgeon (leader of the Scottish National Party) was First Minister of Scotland \u2014 a post she held from 20 November 2014 until her resignation took effect on 28 March 2023, when Humza Yousaf succeeded her.\", \"confidence\": \"high\", \"abstained\": false}",
+ "ttft_ms": 2700,
+ "type": "result",
+ "duration_ms": 4054,
+ "uuid": "051cf2b4-cc1d-4d9c-ac29-7812600ea2e9",
+ "ttft_stream_ms": 1220,
+ "time_to_request_ms": 436,
+ "time_to_request_from_spawn_ms": 574518,
+ "warm_spare_claimed": false,
+ "time_origin_ms": 1788356400539.8635,
+ "queued_turn_count": 0
+}

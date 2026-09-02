@@ -1,0 +1,127 @@
+{
+ "_wall_s": 17.16,
+ "_returncode": 0,
+ "_cmd": [
+  "claude",
+  "-p",
+  "--agent",
+  "stage0am-solver-web",
+  "--model",
+  "opus",
+  "--output-format",
+  "json",
+  "--allowedTools",
+  "WebSearch",
+  "WebFetch"
+ ],
+ "duration_api_ms": 19359,
+ "stop_reason": "end_turn",
+ "session_id": "da90f8ac-94a6-5327-8f35-a039a241c696",
+ "total_cost_usd": 0.0902425,
+ "usage": {
+  "input_tokens": 4,
+  "cache_creation_input_tokens": 3142,
+  "cache_read_input_tokens": 2915,
+  "output_tokens": 483,
+  "output_tokens_details": {
+   "thinking_tokens": 101
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 3142,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "not_available",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 255,
+    "cache_read_input_tokens": 1867,
+    "cache_creation_input_tokens": 2323,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 2323
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "modelUsage": {
+  "claude-haiku-4-5-20251001": {
+   "inputTokens": 21885,
+   "outputTokens": 677,
+   "cacheReadInputTokens": 0,
+   "cacheCreationInputTokens": 0,
+   "webSearchRequests": 2,
+   "costUSD": 0.045270000000000005,
+   "contextWindow": 200000,
+   "maxOutputTokens": 32000,
+   "thinkingTokens": 0,
+   "canonicalModel": "claude-haiku-4-5",
+   "provider": "firstParty",
+   "costBasis": "list"
+  },
+  "claude-opus-5": {
+   "inputTokens": 4,
+   "outputTokens": 483,
+   "cacheReadInputTokens": 2915,
+   "cacheCreationInputTokens": 3142,
+   "webSearchRequests": 0,
+   "costUSD": 0.0449725,
+   "contextWindow": 1000000,
+   "maxOutputTokens": 64000,
+   "thinkingTokens": 101,
+   "canonicalModel": "claude-opus-5",
+   "provider": "firstParty",
+   "costBasis": "list"
+  }
+ },
+ "permission_denials": [],
+ "terminal_reason": "completed",
+ "fast_mode_state": "off",
+ "fast_mode_disabled_reason": "sdk_opt_in_required",
+ "subagent_stats": {
+  "spawned": 0,
+  "requested": {
+   "background": 0,
+   "foreground": 0,
+   "unset": 0
+  },
+  "started_in_background": 0,
+  "max_depth": 0,
+  "spawned_by_subagents": 0,
+  "completed": 0,
+  "failed": 0,
+  "killed": {
+   "parent": 0,
+   "user": 0,
+   "system": 0
+  },
+  "refused": {
+   "depth_limit": 0,
+   "concurrency_limit": 0,
+   "budget": 0
+  },
+  "by_type": {}
+ },
+ "is_error": false,
+ "num_turns": 3,
+ "subtype": "success",
+ "api_error_status": null,
+ "result": "{\"answer\": \"The European Union currently has 24 official languages. They are: Bulgarian, Croatian, Czech, Danish, Dutch, English, Estonian, Finnish, French, German, Greek, Hungarian, Irish, Italian, Latvian, Lithuanian, Maltese, Polish, Portuguese, Romanian, Slovak, Slovenian, Spanish and Swedish. The most recent addition was Croatian, when Croatia joined in 2013. (Spain has been pushing to add Catalan, Basque and Galician, but as of September 2026 that change has not been agreed \u2014 it would require unanimity among member states. In practice, English, French and German serve as the main working languages of the EU institutions.)\", \"confidence\": \"high\", \"abstained\": false}",
+ "ttft_ms": 3297,
+ "type": "result",
+ "duration_ms": 14962,
+ "uuid": "9c1a9e32-d755-43f3-ac1c-9cf82366b80f",
+ "ttft_stream_ms": 1005,
+ "time_to_request_ms": 227,
+ "time_to_request_from_spawn_ms": 597740,
+ "warm_spare_claimed": false,
+ "time_origin_ms": 1788356423886.0425,
+ "queued_turn_count": 0
+}

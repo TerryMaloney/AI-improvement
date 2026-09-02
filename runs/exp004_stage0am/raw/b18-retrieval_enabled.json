@@ -1,0 +1,127 @@
+{
+ "_wall_s": 9.01,
+ "_returncode": 0,
+ "_cmd": [
+  "claude",
+  "-p",
+  "--agent",
+  "stage0am-solver-web",
+  "--model",
+  "opus",
+  "--output-format",
+  "json",
+  "--allowedTools",
+  "WebSearch",
+  "WebFetch"
+ ],
+ "duration_api_ms": 7155,
+ "stop_reason": "end_turn",
+ "session_id": "da90f8ac-94a6-5327-8f35-a039a241c696",
+ "total_cost_usd": 0.015709,
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 860,
+  "cache_read_input_tokens": 1048,
+  "output_tokens": 214,
+  "output_tokens_details": {
+   "thinking_tokens": 19
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 860,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "not_available",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 214,
+    "cache_read_input_tokens": 1048,
+    "cache_creation_input_tokens": 860,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 860
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "modelUsage": {
+  "claude-haiku-4-5-20251001": {
+   "inputTokens": 1135,
+   "outputTokens": 18,
+   "cacheReadInputTokens": 0,
+   "cacheCreationInputTokens": 0,
+   "webSearchRequests": 0,
+   "costUSD": 0.001225,
+   "contextWindow": 200000,
+   "maxOutputTokens": 32000,
+   "thinkingTokens": 0,
+   "canonicalModel": "claude-haiku-4-5",
+   "provider": "firstParty",
+   "costBasis": "list"
+  },
+  "claude-opus-5": {
+   "inputTokens": 2,
+   "outputTokens": 214,
+   "cacheReadInputTokens": 1048,
+   "cacheCreationInputTokens": 860,
+   "webSearchRequests": 0,
+   "costUSD": 0.014484,
+   "contextWindow": 1000000,
+   "maxOutputTokens": 64000,
+   "thinkingTokens": 19,
+   "canonicalModel": "claude-opus-5",
+   "provider": "firstParty",
+   "costBasis": "list"
+  }
+ },
+ "permission_denials": [],
+ "terminal_reason": "completed",
+ "fast_mode_state": "off",
+ "fast_mode_disabled_reason": "sdk_opt_in_required",
+ "subagent_stats": {
+  "spawned": 0,
+  "requested": {
+   "background": 0,
+   "foreground": 0,
+   "unset": 0
+  },
+  "started_in_background": 0,
+  "max_depth": 0,
+  "spawned_by_subagents": 0,
+  "completed": 0,
+  "failed": 0,
+  "killed": {
+   "parent": 0,
+   "user": 0,
+   "system": 0
+  },
+  "refused": {
+   "depth_limit": 0,
+   "concurrency_limit": 0,
+   "budget": 0
+  },
+  "by_type": {}
+ },
+ "is_error": false,
+ "num_turns": 1,
+ "subtype": "success",
+ "api_error_status": null,
+ "result": "{\"answer\": \"According to the archaeological survey published by China's State Administration of Cultural Heritage in June 2012, the Great Wall \u2014 counting all sections built across all dynasties (Qin, Han, Ming and others) and including walls, trenches, natural defensive barriers, and associated structures such as beacon towers, fortresses and passes \u2014 has a total length of 21,196.18 kilometres (about 13,170 miles). This figure superseded the 2009 preliminary result of 8,851.8 km, which covered only the Ming dynasty wall.\", \"confidence\": \"high\", \"abstained\": false}",
+ "ttft_ms": 2392,
+ "type": "result",
+ "duration_ms": 6754,
+ "uuid": "3b446652-d9e9-40fa-b0fa-8f8e5a9cf50d",
+ "ttft_stream_ms": 2042,
+ "time_to_request_ms": 183,
+ "time_to_request_from_spawn_ms": 781714,
+ "warm_spare_claimed": false,
+ "time_origin_ms": 1788356607764.704,
+ "queued_turn_count": 0
+}

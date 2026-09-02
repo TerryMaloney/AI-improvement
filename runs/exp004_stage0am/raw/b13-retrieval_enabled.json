@@ -1,0 +1,127 @@
+{
+ "_wall_s": 8.33,
+ "_returncode": 0,
+ "_cmd": [
+  "claude",
+  "-p",
+  "--agent",
+  "stage0am-solver-web",
+  "--model",
+  "opus",
+  "--output-format",
+  "json",
+  "--allowedTools",
+  "WebSearch",
+  "WebFetch"
+ ],
+ "duration_api_ms": 5973,
+ "stop_reason": "end_turn",
+ "session_id": "da90f8ac-94a6-5327-8f35-a039a241c696",
+ "total_cost_usd": 0.018334000000000003,
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 848,
+  "cache_read_input_tokens": 1048,
+  "output_tokens": 325,
+  "output_tokens_details": {
+   "thinking_tokens": 138
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 848,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "not_available",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 325,
+    "cache_read_input_tokens": 1048,
+    "cache_creation_input_tokens": 848,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 848
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "modelUsage": {
+  "claude-haiku-4-5-20251001": {
+   "inputTokens": 1125,
+   "outputTokens": 14,
+   "cacheReadInputTokens": 0,
+   "cacheCreationInputTokens": 0,
+   "webSearchRequests": 0,
+   "costUSD": 0.0011949999999999999,
+   "contextWindow": 200000,
+   "maxOutputTokens": 32000,
+   "thinkingTokens": 0,
+   "canonicalModel": "claude-haiku-4-5",
+   "provider": "firstParty",
+   "costBasis": "list"
+  },
+  "claude-opus-5": {
+   "inputTokens": 2,
+   "outputTokens": 325,
+   "cacheReadInputTokens": 1048,
+   "cacheCreationInputTokens": 848,
+   "webSearchRequests": 0,
+   "costUSD": 0.017139,
+   "contextWindow": 1000000,
+   "maxOutputTokens": 64000,
+   "thinkingTokens": 138,
+   "canonicalModel": "claude-opus-5",
+   "provider": "firstParty",
+   "costBasis": "list"
+  }
+ },
+ "permission_denials": [],
+ "terminal_reason": "completed",
+ "fast_mode_state": "off",
+ "fast_mode_disabled_reason": "sdk_opt_in_required",
+ "subagent_stats": {
+  "spawned": 0,
+  "requested": {
+   "background": 0,
+   "foreground": 0,
+   "unset": 0
+  },
+  "started_in_background": 0,
+  "max_depth": 0,
+  "spawned_by_subagents": 0,
+  "completed": 0,
+  "failed": 0,
+  "killed": {
+   "parent": 0,
+   "user": 0,
+   "system": 0
+  },
+  "refused": {
+   "depth_limit": 0,
+   "concurrency_limit": 0,
+   "budget": 0
+  },
+  "by_type": {}
+ },
+ "is_error": false,
+ "num_turns": 1,
+ "subtype": "success",
+ "api_error_status": null,
+ "result": "{\"answer\": \"Japan's total fertility rate (TFR) in 2022 was 1.26, according to the Ministry of Health, Labour and Welfare's Vital Statistics. This was a record low at the time (down from 1.30 in 2021), and it came alongside a record-low number of births \u2014 about 770,747 Japanese births in 2022, the first time the annual total fell below 800,000. (The record was subsequently broken again, with the TFR falling to about 1.20 in 2023 and 1.15 in 2024.)\", \"confidence\": \"high\", \"abstained\": false}",
+ "ttft_ms": 3058,
+ "type": "result",
+ "duration_ms": 6254,
+ "uuid": "d4b5d612-eb42-456b-b150-74687748e9f1",
+ "ttft_stream_ms": 915,
+ "time_to_request_ms": 145,
+ "time_to_request_from_spawn_ms": 684446,
+ "warm_spare_claimed": false,
+ "time_origin_ms": 1788356510549.0354,
+ "queued_turn_count": 0
+}
