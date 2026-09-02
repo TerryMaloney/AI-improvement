@@ -1,0 +1,127 @@
+{
+ "_wall_s": 8.67,
+ "_returncode": 0,
+ "_cmd": [
+  "claude",
+  "-p",
+  "--agent",
+  "stage0am-solver-web",
+  "--model",
+  "opus",
+  "--output-format",
+  "json",
+  "--allowedTools",
+  "WebSearch",
+  "WebFetch"
+ ],
+ "duration_api_ms": 5421,
+ "stop_reason": "end_turn",
+ "session_id": "da90f8ac-94a6-5327-8f35-a039a241c696",
+ "total_cost_usd": 0.015196000000000001,
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 871,
+  "cache_read_input_tokens": 1048,
+  "output_tokens": 189,
+  "output_tokens_details": {
+   "thinking_tokens": 30
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 871,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "not_available",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 189,
+    "cache_read_input_tokens": 1048,
+    "cache_creation_input_tokens": 871,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 871
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "modelUsage": {
+  "claude-haiku-4-5-20251001": {
+   "inputTokens": 1147,
+   "outputTokens": 16,
+   "cacheReadInputTokens": 0,
+   "cacheCreationInputTokens": 0,
+   "webSearchRequests": 0,
+   "costUSD": 0.001227,
+   "contextWindow": 200000,
+   "maxOutputTokens": 32000,
+   "thinkingTokens": 0,
+   "canonicalModel": "claude-haiku-4-5",
+   "provider": "firstParty",
+   "costBasis": "list"
+  },
+  "claude-opus-5": {
+   "inputTokens": 2,
+   "outputTokens": 189,
+   "cacheReadInputTokens": 1048,
+   "cacheCreationInputTokens": 871,
+   "webSearchRequests": 0,
+   "costUSD": 0.013969,
+   "contextWindow": 1000000,
+   "maxOutputTokens": 64000,
+   "thinkingTokens": 30,
+   "canonicalModel": "claude-opus-5",
+   "provider": "firstParty",
+   "costBasis": "list"
+  }
+ },
+ "permission_denials": [],
+ "terminal_reason": "completed",
+ "fast_mode_state": "off",
+ "fast_mode_disabled_reason": "sdk_opt_in_required",
+ "subagent_stats": {
+  "spawned": 0,
+  "requested": {
+   "background": 0,
+   "foreground": 0,
+   "unset": 0
+  },
+  "started_in_background": 0,
+  "max_depth": 0,
+  "spawned_by_subagents": 0,
+  "completed": 0,
+  "failed": 0,
+  "killed": {
+   "parent": 0,
+   "user": 0,
+   "system": 0
+  },
+  "refused": {
+   "depth_limit": 0,
+   "concurrency_limit": 0,
+   "budget": 0
+  },
+  "by_type": {}
+ },
+ "is_error": false,
+ "num_turns": 1,
+ "subtype": "success",
+ "api_error_status": null,
+ "result": "{\"answer\": \"Apple Inc. reported total net sales of $383,285 million \u2014 approximately $383.3 billion \u2014 for fiscal year 2023 (the 52-week year ended September 30, 2023), as stated in its Form 10-K. This comprised roughly $298.1 billion of products net sales and $85.2 billion of services net sales, and represented a decline of about 3% from the $394.3 billion reported in fiscal 2022.\", \"confidence\": \"high\", \"abstained\": false}",
+ "ttft_ms": 3207,
+ "type": "result",
+ "duration_ms": 6469,
+ "uuid": "4626510c-79da-4c23-8b40-3799becf0a03",
+ "ttft_stream_ms": 2337,
+ "time_to_request_ms": 231,
+ "time_to_request_from_spawn_ms": 1206795,
+ "warm_spare_claimed": false,
+ "time_origin_ms": 1788357032919.503,
+ "queued_turn_count": 0
+}

@@ -1,0 +1,127 @@
+{
+ "_wall_s": 5.95,
+ "_returncode": 0,
+ "_cmd": [
+  "claude",
+  "-p",
+  "--agent",
+  "stage0am-solver-web",
+  "--model",
+  "opus",
+  "--output-format",
+  "json",
+  "--allowedTools",
+  "WebSearch",
+  "WebFetch"
+ ],
+ "duration_api_ms": 3517,
+ "stop_reason": "end_turn",
+ "session_id": "da90f8ac-94a6-5327-8f35-a039a241c696",
+ "total_cost_usd": 0.014288,
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 852,
+  "cache_read_input_tokens": 1048,
+  "output_tokens": 161,
+  "output_tokens_details": {
+   "thinking_tokens": 0
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 852,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "not_available",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 161,
+    "cache_read_input_tokens": 1048,
+    "cache_creation_input_tokens": 852,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 852
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "modelUsage": {
+  "claude-haiku-4-5-20251001": {
+   "inputTokens": 1129,
+   "outputTokens": 16,
+   "cacheReadInputTokens": 0,
+   "cacheCreationInputTokens": 0,
+   "webSearchRequests": 0,
+   "costUSD": 0.001209,
+   "contextWindow": 200000,
+   "maxOutputTokens": 32000,
+   "thinkingTokens": 0,
+   "canonicalModel": "claude-haiku-4-5",
+   "provider": "firstParty",
+   "costBasis": "list"
+  },
+  "claude-opus-5": {
+   "inputTokens": 2,
+   "outputTokens": 161,
+   "cacheReadInputTokens": 1048,
+   "cacheCreationInputTokens": 852,
+   "webSearchRequests": 0,
+   "costUSD": 0.013079,
+   "contextWindow": 1000000,
+   "maxOutputTokens": 64000,
+   "thinkingTokens": 0,
+   "canonicalModel": "claude-opus-5",
+   "provider": "firstParty",
+   "costBasis": "list"
+  }
+ },
+ "permission_denials": [],
+ "terminal_reason": "completed",
+ "fast_mode_state": "off",
+ "fast_mode_disabled_reason": "sdk_opt_in_required",
+ "subagent_stats": {
+  "spawned": 0,
+  "requested": {
+   "background": 0,
+   "foreground": 0,
+   "unset": 0
+  },
+  "started_in_background": 0,
+  "max_depth": 0,
+  "spawned_by_subagents": 0,
+  "completed": 0,
+  "failed": 0,
+  "killed": {
+   "parent": 0,
+   "user": 0,
+   "system": 0
+  },
+  "refused": {
+   "depth_limit": 0,
+   "concurrency_limit": 0,
+   "budget": 0
+  },
+  "by_type": {}
+ },
+ "is_error": false,
+ "num_turns": 1,
+ "subtype": "success",
+ "api_error_status": null,
+ "result": "{\"answer\": \"About 147.1 million kilometres (roughly 147,100,000 km, or ~0.983 AU). Earth reaches perihelion in early January each year; the exact value varies slightly from year to year, typically around 147.09\u2013147.10 million km. For comparison, aphelion (the farthest point, in early July) is about 152.1 million km, and the mean Earth\u2013Sun distance is about 149.6 million km (1 AU).\", \"confidence\": \"high\", \"abstained\": false}",
+ "ttft_ms": 2898,
+ "type": "result",
+ "duration_ms": 4118,
+ "uuid": "8ff0270f-c4a6-4c96-b7e8-58fd36845c19",
+ "ttft_stream_ms": 964,
+ "time_to_request_ms": 153,
+ "time_to_request_from_spawn_ms": 1310442,
+ "warm_spare_claimed": false,
+ "time_origin_ms": 1788357136664.5134,
+ "queued_turn_count": 0
+}

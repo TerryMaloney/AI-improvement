@@ -1,0 +1,127 @@
+{
+ "_wall_s": 7.5,
+ "_returncode": 0,
+ "_cmd": [
+  "claude",
+  "-p",
+  "--agent",
+  "stage0am-solver-web",
+  "--model",
+  "opus",
+  "--output-format",
+  "json",
+  "--allowedTools",
+  "WebSearch",
+  "WebFetch"
+ ],
+ "duration_api_ms": 5421,
+ "stop_reason": "end_turn",
+ "session_id": "da90f8ac-94a6-5327-8f35-a039a241c696",
+ "total_cost_usd": 0.015968,
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 828,
+  "cache_read_input_tokens": 1048,
+  "output_tokens": 239,
+  "output_tokens_details": {
+   "thinking_tokens": 0
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 828,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "not_available",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 239,
+    "cache_read_input_tokens": 1048,
+    "cache_creation_input_tokens": 828,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 828
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "modelUsage": {
+  "claude-haiku-4-5-20251001": {
+   "inputTokens": 1114,
+   "outputTokens": 13,
+   "cacheReadInputTokens": 0,
+   "cacheCreationInputTokens": 0,
+   "webSearchRequests": 0,
+   "costUSD": 0.001179,
+   "contextWindow": 200000,
+   "maxOutputTokens": 32000,
+   "thinkingTokens": 0,
+   "canonicalModel": "claude-haiku-4-5",
+   "provider": "firstParty",
+   "costBasis": "list"
+  },
+  "claude-opus-5": {
+   "inputTokens": 2,
+   "outputTokens": 239,
+   "cacheReadInputTokens": 1048,
+   "cacheCreationInputTokens": 828,
+   "webSearchRequests": 0,
+   "costUSD": 0.014789,
+   "contextWindow": 1000000,
+   "maxOutputTokens": 64000,
+   "thinkingTokens": 0,
+   "canonicalModel": "claude-opus-5",
+   "provider": "firstParty",
+   "costBasis": "list"
+  }
+ },
+ "permission_denials": [],
+ "terminal_reason": "completed",
+ "fast_mode_state": "off",
+ "fast_mode_disabled_reason": "sdk_opt_in_required",
+ "subagent_stats": {
+  "spawned": 0,
+  "requested": {
+   "background": 0,
+   "foreground": 0,
+   "unset": 0
+  },
+  "started_in_background": 0,
+  "max_depth": 0,
+  "spawned_by_subagents": 0,
+  "completed": 0,
+  "failed": 0,
+  "killed": {
+   "parent": 0,
+   "user": 0,
+   "system": 0
+  },
+  "refused": {
+   "depth_limit": 0,
+   "concurrency_limit": 0,
+   "budget": 0
+  },
+  "by_type": {}
+ },
+ "is_error": false,
+ "num_turns": 1,
+ "subtype": "success",
+ "api_error_status": null,
+ "result": "{\"answer\": \"A typical adult human skeleton has 206 bones. (Babies are born with around 270 bones; many of these fuse together during growth \u2014 for example the sacrum, coccyx, and the bones of the skull \u2014 leaving the standard adult count of 206.) The count is divided into the axial skeleton (~80 bones: skull, ossicles, hyoid, vertebral column, ribs and sternum) and the appendicular skeleton (~126 bones: limbs, shoulder girdle and pelvic girdle). The number can vary slightly between individuals due to normal anatomical variation, such as extra (sesamoid) bones, cervical ribs, or extra vertebrae.\", \"confidence\": \"high\", \"abstained\": false}",
+ "ttft_ms": 4171,
+ "type": "result",
+ "duration_ms": 5558,
+ "uuid": "5da72a06-7d03-4889-a4ba-c27a96d8202a",
+ "ttft_stream_ms": 1062,
+ "time_to_request_ms": 163,
+ "time_to_request_from_spawn_ms": 1562969,
+ "warm_spare_claimed": false,
+ "time_origin_ms": 1788357389159.9934,
+ "queued_turn_count": 0
+}

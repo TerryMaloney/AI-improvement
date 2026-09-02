@@ -598,3 +598,33 @@ churn rival at n=1; the component was named in advance, the mechanism was not.
 
 **Unchanged:** battery `1ec90754f1de2696`, grader `10adaf1dac94ea70`, schedule,
 keys, hypothesis, inference, R. Production dispatches 0; treatment exposure NONE.
+
+
+## 2026-09-02 — Stage 0A-M executed: null at low realized sensitivity
+
+**Executed** 130/130 dispatches under freeze `a1f4efb`, all on `claude-opus-5`,
+0 voids, 0 dispatch failures. Neither primary class rejected (date_anchored
+D=2 p=0.750; definition_anchored D=0 p=1.000). Arithmetic control 15/15.
+
+**Decision: report the null as nearly uninformative rather than as evidence
+retrieval is safe.** Only 2 of 65 items were discordant. Definition-anchored and
+arithmetic sat at a complete ceiling; date-anchored difficulty was largely an
+instrument artifact, with 28 of 50 trials naming the correct anchored entity yet
+graded incorrect under entity-route reject-precedence. Both discordant pairs are
+that same artifact.
+
+**Decision: do NOT repair the grader after outcome visibility.** The entity-route
+reject rule is defective — it cannot separate "X, who succeeded Y" from "Y, who
+was succeeded by X" — but it was frozen and the run is scored under it. The fix
+is specified for Stage 0B, to be frozen before any Stage 0B outcome.
+
+**Decision: dispatch repair was mechanism-only.** Identical command lines per
+arm; agent frontmatter left unedited because an empty `tools:` value risks
+"inherit all tools" and would break key quarantine. TodoWrite recorded as inert.
+
+**Decision: a live runtime correspondence gate is now mandatory before
+production.** Static frontmatter tests could not see that the closed arm was
+undispatchable while 1,397 tests passed.
+
+**Prediction scoring:** P2 no fallback; P3 no effect at near-zero power; P4 not
+supported (realized effort near-identical, closed marginally higher).

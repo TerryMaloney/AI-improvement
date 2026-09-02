@@ -1,0 +1,71 @@
+{
+ "grader_sha256_16": "10adaf1dac94ea70",
+ "primary": {
+  "date_anchored": {
+   "n00": 14,
+   "n01": 1,
+   "n10": 1,
+   "n11": 9,
+   "D": 2,
+   "n": 25,
+   "raw_p": 0.75,
+   "holm_rejected": false,
+   "paired_risk_difference": 0.0,
+   "harm_rate_upper_95": 0.176120710604518,
+   "voided": [],
+   "void_cause": {
+    "closed": 0,
+    "retrieval_enabled": 0,
+    "both": 0
+   }
+  },
+  "definition_anchored": {
+   "n00": 0,
+   "n01": 0,
+   "n10": 0,
+   "n11": 25,
+   "D": 0,
+   "n": 25,
+   "raw_p": 1.0,
+   "holm_rejected": false,
+   "paired_risk_difference": 0.0,
+   "harm_rate_upper_95": 0.11292814500684317,
+   "voided": [],
+   "void_cause": {
+    "closed": 0,
+    "retrieval_enabled": 0,
+    "both": 0
+   }
+  }
+ },
+ "negative_control": {
+  "arithmetic_control": {
+   "n00": 0,
+   "n01": 0,
+   "n10": 0,
+   "n11": 15,
+   "D": 0,
+   "n": 15,
+   "raw_p": 1.0,
+   "harm_rate_upper_95": 0.1810362725220846,
+   "paired_risk_difference": 0.0,
+   "voided": [],
+   "void_cause": {
+    "closed": 0,
+    "retrieval_enabled": 0,
+    "both": 0
+   }
+  }
+ },
+ "alpha": 0.05,
+ "any_primary_rejected": false,
+ "total_voided_items": 0,
+ "void_rate": 0.0,
+ "retrieval_failure_rate": {
+  "n_treated": 65,
+  "declined_retrieval": 65,
+  "attempted_retrieval": 0,
+  "all_retrieval_calls_failed": 0,
+  "rate_all_failed_given_attempted": 0.0
+ }
+}

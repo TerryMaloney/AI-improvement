@@ -1,0 +1,127 @@
+{
+ "_wall_s": 17.24,
+ "_returncode": 0,
+ "_cmd": [
+  "claude",
+  "-p",
+  "--agent",
+  "stage0am-solver-web",
+  "--model",
+  "opus",
+  "--output-format",
+  "json",
+  "--allowedTools",
+  "WebSearch",
+  "WebFetch"
+ ],
+ "duration_api_ms": 14711,
+ "stop_reason": "end_turn",
+ "session_id": "da90f8ac-94a6-5327-8f35-a039a241c696",
+ "total_cost_usd": 0.057561,
+ "usage": {
+  "input_tokens": 4,
+  "cache_creation_input_tokens": 1856,
+  "cache_read_input_tokens": 2962,
+  "output_tokens": 601,
+  "output_tokens_details": {
+   "thinking_tokens": 253
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 1856,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "not_available",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 328,
+    "cache_read_input_tokens": 1914,
+    "cache_creation_input_tokens": 990,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 990
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "modelUsage": {
+  "claude-haiku-4-5-20251001": {
+   "inputTokens": 11500,
+   "outputTokens": 195,
+   "cacheReadInputTokens": 0,
+   "cacheCreationInputTokens": 0,
+   "webSearchRequests": 1,
+   "costUSD": 0.022475,
+   "contextWindow": 200000,
+   "maxOutputTokens": 32000,
+   "thinkingTokens": 0,
+   "canonicalModel": "claude-haiku-4-5",
+   "provider": "firstParty",
+   "costBasis": "list"
+  },
+  "claude-opus-5": {
+   "inputTokens": 4,
+   "outputTokens": 601,
+   "cacheReadInputTokens": 2962,
+   "cacheCreationInputTokens": 1856,
+   "webSearchRequests": 0,
+   "costUSD": 0.035086000000000006,
+   "contextWindow": 1000000,
+   "maxOutputTokens": 64000,
+   "thinkingTokens": 253,
+   "canonicalModel": "claude-opus-5",
+   "provider": "firstParty",
+   "costBasis": "list"
+  }
+ },
+ "permission_denials": [],
+ "terminal_reason": "completed",
+ "fast_mode_state": "off",
+ "fast_mode_disabled_reason": "sdk_opt_in_required",
+ "subagent_stats": {
+  "spawned": 0,
+  "requested": {
+   "background": 0,
+   "foreground": 0,
+   "unset": 0
+  },
+  "started_in_background": 0,
+  "max_depth": 0,
+  "spawned_by_subagents": 0,
+  "completed": 0,
+  "failed": 0,
+  "killed": {
+   "parent": 0,
+   "user": 0,
+   "system": 0
+  },
+  "refused": {
+   "depth_limit": 0,
+   "concurrency_limit": 0,
+   "budget": 0
+  },
+  "by_type": {}
+ },
+ "is_error": false,
+ "num_turns": 3,
+ "subtype": "success",
+ "api_error_status": null,
+ "result": "{\"answer\": \"3.7 percent. In the BLS Employment Situation report released January 5, 2024, the U-3 unemployment rate (seasonally adjusted) for December 2023 was 3.7%, unchanged from November 2023, with about 6.3 million unemployed persons. (Later annual seasonal-adjustment revisions can shift such figures by roughly a tenth of a point, but the published December 2023 rate is 3.7%.)\", \"confidence\": \"high\", \"abstained\": false}",
+ "ttft_ms": 2450,
+ "type": "result",
+ "duration_ms": 14675,
+ "uuid": "c1f5b525-255a-45ef-af5e-0077e7e1e1fa",
+ "ttft_stream_ms": 1021,
+ "time_to_request_ms": 177,
+ "time_to_request_from_spawn_ms": 930322,
+ "warm_spare_claimed": false,
+ "time_origin_ms": 1788356756314.1257,
+ "queued_turn_count": 0
+}

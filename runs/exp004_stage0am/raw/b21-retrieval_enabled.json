@@ -1,0 +1,127 @@
+{
+ "_wall_s": 14.99,
+ "_returncode": 0,
+ "_cmd": [
+  "claude",
+  "-p",
+  "--agent",
+  "stage0am-solver-web",
+  "--model",
+  "opus",
+  "--output-format",
+  "json",
+  "--allowedTools",
+  "WebSearch",
+  "WebFetch"
+ ],
+ "duration_api_ms": 12506,
+ "stop_reason": "end_turn",
+ "session_id": "da90f8ac-94a6-5327-8f35-a039a241c696",
+ "total_cost_usd": 0.055666999999999994,
+ "usage": {
+  "input_tokens": 4,
+  "cache_creation_input_tokens": 1870,
+  "cache_read_input_tokens": 2948,
+  "output_tokens": 505,
+  "output_tokens_details": {
+   "thinking_tokens": 56
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 1870,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "not_available",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 272,
+    "cache_read_input_tokens": 1900,
+    "cache_creation_input_tokens": 1018,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 1018
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "modelUsage": {
+  "claude-haiku-4-5-20251001": {
+   "inputTokens": 11618,
+   "outputTokens": 246,
+   "cacheReadInputTokens": 0,
+   "cacheCreationInputTokens": 0,
+   "webSearchRequests": 1,
+   "costUSD": 0.022848,
+   "contextWindow": 200000,
+   "maxOutputTokens": 32000,
+   "thinkingTokens": 0,
+   "canonicalModel": "claude-haiku-4-5",
+   "provider": "firstParty",
+   "costBasis": "list"
+  },
+  "claude-opus-5": {
+   "inputTokens": 4,
+   "outputTokens": 505,
+   "cacheReadInputTokens": 2948,
+   "cacheCreationInputTokens": 1870,
+   "webSearchRequests": 0,
+   "costUSD": 0.032819,
+   "contextWindow": 1000000,
+   "maxOutputTokens": 64000,
+   "thinkingTokens": 56,
+   "canonicalModel": "claude-opus-5",
+   "provider": "firstParty",
+   "costBasis": "list"
+  }
+ },
+ "permission_denials": [],
+ "terminal_reason": "completed",
+ "fast_mode_state": "off",
+ "fast_mode_disabled_reason": "sdk_opt_in_required",
+ "subagent_stats": {
+  "spawned": 0,
+  "requested": {
+   "background": 0,
+   "foreground": 0,
+   "unset": 0
+  },
+  "started_in_background": 0,
+  "max_depth": 0,
+  "spawned_by_subagents": 0,
+  "completed": 0,
+  "failed": 0,
+  "killed": {
+   "parent": 0,
+   "user": 0,
+   "system": 0
+  },
+  "refused": {
+   "depth_limit": 0,
+   "concurrency_limit": 0,
+   "budget": 0
+  },
+  "by_type": {}
+ },
+ "is_error": false,
+ "num_turns": 3,
+ "subtype": "success",
+ "api_error_status": null,
+ "result": "{\"answer\": \"The federal minimum wage in the United States is $7.25 per hour for covered, non-exempt employees. This rate has been in effect since July 24, 2009, under the Fair Labor Standards Act (FLSA), and remains unchanged as of September 2026. Notes: (1) Tipped employees may be paid a cash wage as low as $2.13/hour, provided tips bring total earnings to at least $7.25/hour (the employer must make up any shortfall). (2) Many states and localities set higher minimums, and where they do, the higher rate applies \u2014 but the question asks for the federal floor, which is $7.25/hour. (3) A separate, higher minimum applies to workers on certain federal contracts under Executive Order 14026, but that is not the general FLSA rate.\", \"confidence\": \"high\", \"abstained\": false}",
+ "ttft_ms": 2112,
+ "type": "result",
+ "duration_ms": 12573,
+ "uuid": "7ee8d893-24db-4685-a3a6-abca653d9ae4",
+ "ttft_stream_ms": 1179,
+ "time_to_request_ms": 179,
+ "time_to_request_from_spawn_ms": 1507551,
+ "warm_spare_claimed": false,
+ "time_origin_ms": 1788357333530.02,
+ "queued_turn_count": 0
+}

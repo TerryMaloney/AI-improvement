@@ -64,7 +64,24 @@ The previous frozen probe established on the old shared solver-web path:
 
 Because Stage 0A-M now uses a dedicated web agent, execution-time preflight must re-run the same neutral environment check through `stage0am-solver-web`. Reachability is expected to match but must be measured, not assumed.
 
-## 2026-09-02 — EXECUTION ATTEMPT BLOCKED AT RUNTIME PREFLIGHT
+## 2026-09-02 — STAGE 0A-M EXECUTED AND COMPLETE
+
+**130/130 dispatches, 0 voids, 0 dispatch failures, all on `claude-opus-5` under freeze `a1f4efb`.** Report: `runs/exp004_stage0am/EXP004_STAGE0AM_REPORT.md`.
+
+**Result: NULL at a realized sensitivity far below plan.** Neither primary class rejected. `date_anchored` n00=14 n01=1 n10=1 n11=9, D=2, p=0.750. `definition_anchored` n11=25, D=0, p=1.000. Arithmetic control 15/15, D=0. Licensed claim: no claim that any authored item is harmed by the retrieval-enabled procedure.
+
+**Why the null is nearly uninformative — two independent power failures:**
+- `definition_anchored` (25/25) and arithmetic (15/15) sat at a **complete ceiling** in both arms; zero discordance is possible there.
+- `date_anchored` scored 10/25 in both arms mostly through a **grading artifact**: 28 of 50 trials named the correct anchored entity but were graded incorrect because the frozen `exact_entity` rule gives rejects precedence and Opus 5 supplies temporal context naming the successor.
+- **Both discordant pairs are the same artifact.** In all four trials the solver named the correct entity; only whether it also mentioned the successor differed. The lone "harm" and lone "help" are elaboration style, not displacement.
+
+**The grader was not changed after outcomes.** The defect is reported, not repaired.
+
+**Retrieval was barely exercised:** attempted in 8/65 treated trials, declined in 57. Among the 8 that retrieved, 8/8 correct and their closed partners 8/8 — zero discordance. Realized effort near-identical across arms (P4 not supported); no served-model fallback (P2); availability-without-use showed no effect at near-zero power (P3).
+
+**Dispatch repair that made execution possible:** identical command line per arm, `claude -p --agent <agent> --model opus --allowedTools WebSearch WebFetch`; realized surfaces closed `[]` / retrieval `[WebSearch, WebFetch]`; agent frontmatter deliberately unedited (an empty `tools:` risks "inherit all tools" and would break key quarantine). A **live** runtime correspondence gate now blocks production if realized surfaces drift — the static tests could not see this class of failure.
+
+## 2026-09-02 — execution attempt blocked at runtime preflight (superseded)
 
 **Stage 0A-M did not run. Production dispatches 0; treatment exposure NONE.** Three screen-class synthetic dispatches; no production stem shown to any model.
 

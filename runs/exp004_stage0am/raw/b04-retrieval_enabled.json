@@ -1,0 +1,127 @@
+{
+ "_wall_s": 16.05,
+ "_returncode": 0,
+ "_cmd": [
+  "claude",
+  "-p",
+  "--agent",
+  "stage0am-solver-web",
+  "--model",
+  "opus",
+  "--output-format",
+  "json",
+  "--allowedTools",
+  "WebSearch",
+  "WebFetch"
+ ],
+ "duration_api_ms": 17600,
+ "stop_reason": "end_turn",
+ "session_id": "da90f8ac-94a6-5327-8f35-a039a241c696",
+ "total_cost_usd": 0.09233949999999999,
+ "usage": {
+  "input_tokens": 4,
+  "cache_creation_input_tokens": 3030,
+  "cache_read_input_tokens": 2937,
+  "output_tokens": 578,
+  "output_tokens_details": {
+   "thinking_tokens": 132
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 3030,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "not_available",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 297,
+    "cache_read_input_tokens": 1889,
+    "cache_creation_input_tokens": 2189,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 2189
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "modelUsage": {
+  "claude-haiku-4-5-20251001": {
+   "inputTokens": 23141,
+   "outputTokens": 592,
+   "cacheReadInputTokens": 0,
+   "cacheCreationInputTokens": 0,
+   "webSearchRequests": 2,
+   "costUSD": 0.046101,
+   "contextWindow": 200000,
+   "maxOutputTokens": 32000,
+   "thinkingTokens": 0,
+   "canonicalModel": "claude-haiku-4-5",
+   "provider": "firstParty",
+   "costBasis": "list"
+  },
+  "claude-opus-5": {
+   "inputTokens": 4,
+   "outputTokens": 578,
+   "cacheReadInputTokens": 2937,
+   "cacheCreationInputTokens": 3030,
+   "webSearchRequests": 0,
+   "costUSD": 0.046238499999999995,
+   "contextWindow": 1000000,
+   "maxOutputTokens": 64000,
+   "thinkingTokens": 132,
+   "canonicalModel": "claude-opus-5",
+   "provider": "firstParty",
+   "costBasis": "list"
+  }
+ },
+ "permission_denials": [],
+ "terminal_reason": "completed",
+ "fast_mode_state": "off",
+ "fast_mode_disabled_reason": "sdk_opt_in_required",
+ "subagent_stats": {
+  "spawned": 0,
+  "requested": {
+   "background": 0,
+   "foreground": 0,
+   "unset": 0
+  },
+  "started_in_background": 0,
+  "max_depth": 0,
+  "spawned_by_subagents": 0,
+  "completed": 0,
+  "failed": 0,
+  "killed": {
+   "parent": 0,
+   "user": 0,
+   "system": 0
+  },
+  "refused": {
+   "depth_limit": 0,
+   "concurrency_limit": 0,
+   "budget": 0
+  },
+  "by_type": {}
+ },
+ "is_error": false,
+ "num_turns": 3,
+ "subtype": "success",
+ "api_error_status": null,
+ "result": "{\"answer\": \"According to RTE's Bilan \u00e9lectrique 2022 (French Annual Electricity Review), nuclear power accounted for about 62.7% of France's electricity generation in calendar year 2022 \u2014 roughly 279 TWh of nuclear output out of about 445 TWh of total domestic generation. This was an unusually low share and volume by French standards (nuclear output was 360.7 TWh in 2021 and 379.5 TWh in 2019), driven by extended reactor outages for maintenance and stress-corrosion-cracking inspections.\\n\\nSources:\\n- https://www.rte-france.com/actualites/bilan-electrique-2022\\n- https://analysesetdonnees.rte-france.com/bilan-electrique-production\\n- https://analysesetdonnees.rte-france.com/en/electricity-review-keyfindings\", \"confidence\": \"high\", \"abstained\": false}",
+ "ttft_ms": 3141,
+ "type": "result",
+ "duration_ms": 13889,
+ "uuid": "6f058829-d08b-4f3b-8adc-55e849e57461",
+ "ttft_stream_ms": 902,
+ "time_to_request_ms": 149,
+ "time_to_request_from_spawn_ms": 979383,
+ "warm_spare_claimed": false,
+ "time_origin_ms": 1788356805509.6807,
+ "queued_turn_count": 0
+}

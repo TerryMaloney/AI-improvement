@@ -1,0 +1,127 @@
+{
+ "_wall_s": 6.3,
+ "_returncode": 0,
+ "_cmd": [
+  "claude",
+  "-p",
+  "--agent",
+  "stage0am-solver-web",
+  "--model",
+  "opus",
+  "--output-format",
+  "json",
+  "--allowedTools",
+  "WebSearch",
+  "WebFetch"
+ ],
+ "duration_api_ms": 3629,
+ "stop_reason": "end_turn",
+ "session_id": "da90f8ac-94a6-5327-8f35-a039a241c696",
+ "total_cost_usd": 0.013075000000000002,
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 833,
+  "cache_read_input_tokens": 1048,
+  "output_tokens": 120,
+  "output_tokens_details": {
+   "thinking_tokens": 0
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 833,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "not_available",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 120,
+    "cache_read_input_tokens": 1048,
+    "cache_creation_input_tokens": 833,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 833
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "modelUsage": {
+  "claude-haiku-4-5-20251001": {
+   "inputTokens": 1121,
+   "outputTokens": 18,
+   "cacheReadInputTokens": 0,
+   "cacheCreationInputTokens": 0,
+   "webSearchRequests": 0,
+   "costUSD": 0.001211,
+   "contextWindow": 200000,
+   "maxOutputTokens": 32000,
+   "thinkingTokens": 0,
+   "canonicalModel": "claude-haiku-4-5",
+   "provider": "firstParty",
+   "costBasis": "list"
+  },
+  "claude-opus-5": {
+   "inputTokens": 2,
+   "outputTokens": 120,
+   "cacheReadInputTokens": 1048,
+   "cacheCreationInputTokens": 833,
+   "webSearchRequests": 0,
+   "costUSD": 0.011864000000000001,
+   "contextWindow": 1000000,
+   "maxOutputTokens": 64000,
+   "thinkingTokens": 0,
+   "canonicalModel": "claude-opus-5",
+   "provider": "firstParty",
+   "costBasis": "list"
+  }
+ },
+ "permission_denials": [],
+ "terminal_reason": "completed",
+ "fast_mode_state": "off",
+ "fast_mode_disabled_reason": "sdk_opt_in_required",
+ "subagent_stats": {
+  "spawned": 0,
+  "requested": {
+   "background": 0,
+   "foreground": 0,
+   "unset": 0
+  },
+  "started_in_background": 0,
+  "max_depth": 0,
+  "spawned_by_subagents": 0,
+  "completed": 0,
+  "failed": 0,
+  "killed": {
+   "parent": 0,
+   "user": 0,
+   "system": 0
+  },
+  "refused": {
+   "depth_limit": 0,
+   "concurrency_limit": 0,
+   "budget": 0
+  },
+  "by_type": {}
+ },
+ "is_error": false,
+ "num_turns": 1,
+ "subtype": "success",
+ "api_error_status": null,
+ "result": "{\"answer\": \"Ban Ki-moon of South Korea. He served as the eighth UN Secretary-General from 1 January 2007 to 31 December 2016, so on 1 January 2016 he was in office (in the final year of his second five-year term). He was succeeded by Ant\u00f3nio Guterres on 1 January 2017.\", \"confidence\": \"high\", \"abstained\": false}",
+ "ttft_ms": 2803,
+ "type": "result",
+ "duration_ms": 4069,
+ "uuid": "0a315941-e638-4cca-97ee-4f3a362fed39",
+ "ttft_stream_ms": 1128,
+ "time_to_request_ms": 140,
+ "time_to_request_from_spawn_ms": 1297308,
+ "warm_spare_claimed": false,
+ "time_origin_ms": 1788357123498.217,
+ "queued_turn_count": 0
+}

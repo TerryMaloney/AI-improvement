@@ -1,0 +1,127 @@
+{
+ "_wall_s": 10.86,
+ "_returncode": 0,
+ "_cmd": [
+  "claude",
+  "-p",
+  "--agent",
+  "stage0am-solver-web",
+  "--model",
+  "opus",
+  "--output-format",
+  "json",
+  "--allowedTools",
+  "WebSearch",
+  "WebFetch"
+ ],
+ "duration_api_ms": 8592,
+ "stop_reason": "end_turn",
+ "session_id": "da90f8ac-94a6-5327-8f35-a039a241c696",
+ "total_cost_usd": 0.022879999999999998,
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 835,
+  "cache_read_input_tokens": 1048,
+  "output_tokens": 511,
+  "output_tokens_details": {
+   "thinking_tokens": 131
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 835,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "not_available",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 511,
+    "cache_read_input_tokens": 1048,
+    "cache_creation_input_tokens": 835,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 835
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "modelUsage": {
+  "claude-haiku-4-5-20251001": {
+   "inputTokens": 1126,
+   "outputTokens": 19,
+   "cacheReadInputTokens": 0,
+   "cacheCreationInputTokens": 0,
+   "webSearchRequests": 0,
+   "costUSD": 0.001221,
+   "contextWindow": 200000,
+   "maxOutputTokens": 32000,
+   "thinkingTokens": 0,
+   "canonicalModel": "claude-haiku-4-5",
+   "provider": "firstParty",
+   "costBasis": "list"
+  },
+  "claude-opus-5": {
+   "inputTokens": 2,
+   "outputTokens": 511,
+   "cacheReadInputTokens": 1048,
+   "cacheCreationInputTokens": 835,
+   "webSearchRequests": 0,
+   "costUSD": 0.021658999999999998,
+   "contextWindow": 1000000,
+   "maxOutputTokens": 64000,
+   "thinkingTokens": 131,
+   "canonicalModel": "claude-opus-5",
+   "provider": "firstParty",
+   "costBasis": "list"
+  }
+ },
+ "permission_denials": [],
+ "terminal_reason": "completed",
+ "fast_mode_state": "off",
+ "fast_mode_disabled_reason": "sdk_opt_in_required",
+ "subagent_stats": {
+  "spawned": 0,
+  "requested": {
+   "background": 0,
+   "foreground": 0,
+   "unset": 0
+  },
+  "started_in_background": 0,
+  "max_depth": 0,
+  "spawned_by_subagents": 0,
+  "completed": 0,
+  "failed": 0,
+  "killed": {
+   "parent": 0,
+   "user": 0,
+   "system": 0
+  },
+  "refused": {
+   "depth_limit": 0,
+   "concurrency_limit": 0,
+   "budget": 0
+  },
+  "by_type": {}
+ },
+ "is_error": false,
+ "num_turns": 1,
+ "subtype": "success",
+ "api_error_status": null,
+ "result": "{\"answer\": \"As of 1 January 2018, the country whose capital is Skopje was officially the **Republic of Macedonia** (Macedonian: \u0420\u0435\u043f\u0443\u0431\u043b\u0438\u043a\u0430 \u041c\u0430\u043a\u0435\u0434\u043e\u043d\u0438\u0458\u0430 / Republika Makedonija) \u2014 that was its constitutional name at the time.\\n\\nA caveat on \\\"official\\\": because of the long-running naming dispute with Greece, the country was admitted to and referred to within the United Nations and many international bodies (NATO, EU, IOC, etc.) under the provisional reference **\\\"the former Yugoslav Republic of Macedonia\\\" (FYROM)**, per UN Security Council Resolution 817 (1993). So on 1 January 2018 both designations were in use: \\\"Republic of Macedonia\\\" domestically and in bilateral relations with the many states that recognised it under that name, and \\\"the former Yugoslav Republic of Macedonia\\\" in UN contexts.\\n\\nThe name \\\"Republic of North Macedonia\\\" only came later: the Prespa Agreement was signed in June 2018, and the constitutional change took effect in February 2019 \u2014 so it was not the country's name on 1 January 2018.\", \"confidence\": \"high\", \"abstained\": false}",
+ "ttft_ms": 3811,
+ "type": "result",
+ "duration_ms": 8944,
+ "uuid": "b2a37654-4e99-42af-9f5b-1c6f04ae2d61",
+ "ttft_stream_ms": 1542,
+ "time_to_request_ms": 143,
+ "time_to_request_from_spawn_ms": 1361970,
+ "warm_spare_claimed": false,
+ "time_origin_ms": 1788357188184.531,
+ "queued_turn_count": 0
+}

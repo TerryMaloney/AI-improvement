@@ -1,0 +1,127 @@
+{
+ "_wall_s": 6.95,
+ "_returncode": 0,
+ "_cmd": [
+  "claude",
+  "-p",
+  "--agent",
+  "stage0am-solver-web",
+  "--model",
+  "opus",
+  "--output-format",
+  "json",
+  "--allowedTools",
+  "WebSearch",
+  "WebFetch"
+ ],
+ "duration_api_ms": 4193,
+ "stop_reason": "end_turn",
+ "session_id": "da90f8ac-94a6-5327-8f35-a039a241c696",
+ "total_cost_usd": 0.014528,
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 828,
+  "cache_read_input_tokens": 1048,
+  "output_tokens": 180,
+  "output_tokens_details": {
+   "thinking_tokens": 0
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 828,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "not_available",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 180,
+    "cache_read_input_tokens": 1048,
+    "cache_creation_input_tokens": 828,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 828
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "modelUsage": {
+  "claude-haiku-4-5-20251001": {
+   "inputTokens": 1119,
+   "outputTokens": 19,
+   "cacheReadInputTokens": 0,
+   "cacheCreationInputTokens": 0,
+   "webSearchRequests": 0,
+   "costUSD": 0.001214,
+   "contextWindow": 200000,
+   "maxOutputTokens": 32000,
+   "thinkingTokens": 0,
+   "canonicalModel": "claude-haiku-4-5",
+   "provider": "firstParty",
+   "costBasis": "list"
+  },
+  "claude-opus-5": {
+   "inputTokens": 2,
+   "outputTokens": 180,
+   "cacheReadInputTokens": 1048,
+   "cacheCreationInputTokens": 828,
+   "webSearchRequests": 0,
+   "costUSD": 0.013314,
+   "contextWindow": 1000000,
+   "maxOutputTokens": 64000,
+   "thinkingTokens": 0,
+   "canonicalModel": "claude-opus-5",
+   "provider": "firstParty",
+   "costBasis": "list"
+  }
+ },
+ "permission_denials": [],
+ "terminal_reason": "completed",
+ "fast_mode_state": "off",
+ "fast_mode_disabled_reason": "sdk_opt_in_required",
+ "subagent_stats": {
+  "spawned": 0,
+  "requested": {
+   "background": 0,
+   "foreground": 0,
+   "unset": 0
+  },
+  "started_in_background": 0,
+  "max_depth": 0,
+  "spawned_by_subagents": 0,
+  "completed": 0,
+  "failed": 0,
+  "killed": {
+   "parent": 0,
+   "user": 0,
+   "system": 0
+  },
+  "refused": {
+   "depth_limit": 0,
+   "concurrency_limit": 0,
+   "budget": 0
+  },
+  "by_type": {}
+ },
+ "is_error": false,
+ "num_turns": 1,
+ "subtype": "success",
+ "api_error_status": null,
+ "result": "{\"answer\": \"Law and Justice (Prawo i Sprawiedliwo\u015b\u0107, PiS). Following its victory in the October 2015 parliamentary election, PiS formed a majority government under Prime Minister Beata Szyd\u0142o, sworn in on 16 November 2015. So on 1 January 2016 the Polish government was led by PiS (with party leader Jaros\u0142aw Kaczy\u0144ski as the dominant political figure behind it), and the presidency was also held by PiS-aligned Andrzej Duda.\", \"confidence\": \"high\", \"abstained\": false}",
+ "ttft_ms": 3331,
+ "type": "result",
+ "duration_ms": 4931,
+ "uuid": "902c3d2e-bd0c-4e83-b5ee-294fc547c285",
+ "ttft_stream_ms": 946,
+ "time_to_request_ms": 131,
+ "time_to_request_from_spawn_ms": 1193064,
+ "warm_spare_claimed": false,
+ "time_origin_ms": 1788357019231.9111,
+ "queued_turn_count": 0
+}

@@ -1,0 +1,127 @@
+{
+ "_wall_s": 8.91,
+ "_returncode": 0,
+ "_cmd": [
+  "claude",
+  "-p",
+  "--agent",
+  "stage0am-solver-web",
+  "--model",
+  "opus",
+  "--output-format",
+  "json",
+  "--allowedTools",
+  "WebSearch",
+  "WebFetch"
+ ],
+ "duration_api_ms": 6333,
+ "stop_reason": "end_turn",
+ "session_id": "da90f8ac-94a6-5327-8f35-a039a241c696",
+ "total_cost_usd": 0.018732,
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 846,
+  "cache_read_input_tokens": 1048,
+  "output_tokens": 342,
+  "output_tokens_details": {
+   "thinking_tokens": 200
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 846,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "not_available",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 342,
+    "cache_read_input_tokens": 1048,
+    "cache_creation_input_tokens": 846,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 846
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "modelUsage": {
+  "claude-haiku-4-5-20251001": {
+   "inputTokens": 1123,
+   "outputTokens": 13,
+   "cacheReadInputTokens": 0,
+   "cacheCreationInputTokens": 0,
+   "webSearchRequests": 0,
+   "costUSD": 0.001188,
+   "contextWindow": 200000,
+   "maxOutputTokens": 32000,
+   "thinkingTokens": 0,
+   "canonicalModel": "claude-haiku-4-5",
+   "provider": "firstParty",
+   "costBasis": "list"
+  },
+  "claude-opus-5": {
+   "inputTokens": 2,
+   "outputTokens": 342,
+   "cacheReadInputTokens": 1048,
+   "cacheCreationInputTokens": 846,
+   "webSearchRequests": 0,
+   "costUSD": 0.017543999999999997,
+   "contextWindow": 1000000,
+   "maxOutputTokens": 64000,
+   "thinkingTokens": 200,
+   "canonicalModel": "claude-opus-5",
+   "provider": "firstParty",
+   "costBasis": "list"
+  }
+ },
+ "permission_denials": [],
+ "terminal_reason": "completed",
+ "fast_mode_state": "off",
+ "fast_mode_disabled_reason": "sdk_opt_in_required",
+ "subagent_stats": {
+  "spawned": 0,
+  "requested": {
+   "background": 0,
+   "foreground": 0,
+   "unset": 0
+  },
+  "started_in_background": 0,
+  "max_depth": 0,
+  "spawned_by_subagents": 0,
+  "completed": 0,
+  "failed": 0,
+  "killed": {
+   "parent": 0,
+   "user": 0,
+   "system": 0
+  },
+  "refused": {
+   "depth_limit": 0,
+   "concurrency_limit": 0,
+   "budget": 0
+  },
+  "by_type": {}
+ },
+ "is_error": false,
+ "num_turns": 1,
+ "subtype": "success",
+ "api_error_status": null,
+ "result": "{\"answer\": \"381 metres (1,250 feet). That is the Empire State Building's architectural height \u2014 measured to the top of the building's mast/spire at the 102nd-floor level, excluding the broadcast antenna added later. Including the antenna, the tip height is about 443.2 m (1,454 ft), and the highest occupied floor is roughly 373 m (1,224 ft).\", \"confidence\": \"high\", \"abstained\": false}",
+ "ttft_ms": 4203,
+ "type": "result",
+ "duration_ms": 6709,
+ "uuid": "f17da3a7-33e8-40f8-b98d-eca7e0251822",
+ "ttft_stream_ms": 1167,
+ "time_to_request_ms": 164,
+ "time_to_request_from_spawn_ms": 1066229,
+ "warm_spare_claimed": false,
+ "time_origin_ms": 1788356892402.159,
+ "queued_turn_count": 0
+}

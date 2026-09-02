@@ -1,0 +1,127 @@
+{
+ "_wall_s": 5.87,
+ "_returncode": 0,
+ "_cmd": [
+  "claude",
+  "-p",
+  "--agent",
+  "stage0am-solver-closed",
+  "--model",
+  "opus",
+  "--output-format",
+  "json",
+  "--allowedTools",
+  "WebSearch",
+  "WebFetch"
+ ],
+ "duration_api_ms": 3396,
+ "stop_reason": "end_turn",
+ "session_id": "da90f8ac-94a6-5327-8f35-a039a241c696",
+ "total_cost_usd": 0.013619000000000001,
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 963,
+  "cache_read_input_tokens": 0,
+  "output_tokens": 113,
+  "output_tokens_details": {
+   "thinking_tokens": 0
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 963,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "not_available",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 113,
+    "cache_read_input_tokens": 0,
+    "cache_creation_input_tokens": 963,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 963
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "modelUsage": {
+  "claude-haiku-4-5-20251001": {
+   "inputTokens": 1099,
+   "outputTokens": 11,
+   "cacheReadInputTokens": 0,
+   "cacheCreationInputTokens": 0,
+   "webSearchRequests": 0,
+   "costUSD": 0.0011539999999999999,
+   "contextWindow": 200000,
+   "maxOutputTokens": 32000,
+   "thinkingTokens": 0,
+   "canonicalModel": "claude-haiku-4-5",
+   "provider": "firstParty",
+   "costBasis": "list"
+  },
+  "claude-opus-5": {
+   "inputTokens": 2,
+   "outputTokens": 113,
+   "cacheReadInputTokens": 0,
+   "cacheCreationInputTokens": 963,
+   "webSearchRequests": 0,
+   "costUSD": 0.012465,
+   "contextWindow": 1000000,
+   "maxOutputTokens": 64000,
+   "thinkingTokens": 0,
+   "canonicalModel": "claude-opus-5",
+   "provider": "firstParty",
+   "costBasis": "list"
+  }
+ },
+ "permission_denials": [],
+ "terminal_reason": "completed",
+ "fast_mode_state": "off",
+ "fast_mode_disabled_reason": "sdk_opt_in_required",
+ "subagent_stats": {
+  "spawned": 0,
+  "requested": {
+   "background": 0,
+   "foreground": 0,
+   "unset": 0
+  },
+  "started_in_background": 0,
+  "max_depth": 0,
+  "spawned_by_subagents": 0,
+  "completed": 0,
+  "failed": 0,
+  "killed": {
+   "parent": 0,
+   "user": 0,
+   "system": 0
+  },
+  "refused": {
+   "depth_limit": 0,
+   "concurrency_limit": 0,
+   "budget": 0
+  },
+  "by_type": {}
+ },
+ "is_error": false,
+ "num_turns": 1,
+ "subtype": "success",
+ "api_error_status": null,
+ "result": "{\"answer\": \"The official marathon distance is 42.195 kilometres (equivalent to 26 miles 385 yards, or about 26.219 miles). This standard was fixed by the IAAF (now World Athletics) in 1921, based on the course used at the 1908 London Olympic Games.\", \"confidence\": \"high\", \"abstained\": false}",
+ "ttft_ms": 2518,
+ "type": "result",
+ "duration_ms": 3858,
+ "uuid": "658a3ad4-c66c-46ce-a29f-8fde59271a9a",
+ "ttft_stream_ms": 1021,
+ "time_to_request_ms": 161,
+ "time_to_request_from_spawn_ms": 1273671,
+ "warm_spare_claimed": false,
+ "time_origin_ms": 1788357099727.643,
+ "queued_turn_count": 0
+}

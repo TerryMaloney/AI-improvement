@@ -1,0 +1,127 @@
+{
+ "_wall_s": 6.67,
+ "_returncode": 0,
+ "_cmd": [
+  "claude",
+  "-p",
+  "--agent",
+  "stage0am-solver-web",
+  "--model",
+  "opus",
+  "--output-format",
+  "json",
+  "--allowedTools",
+  "WebSearch",
+  "WebFetch"
+ ],
+ "duration_api_ms": 3710,
+ "stop_reason": "end_turn",
+ "session_id": "da90f8ac-94a6-5327-8f35-a039a241c696",
+ "total_cost_usd": 0.012725,
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 852,
+  "cache_read_input_tokens": 1048,
+  "output_tokens": 99,
+  "output_tokens_details": {
+   "thinking_tokens": 31
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 852,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "not_available",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 99,
+    "cache_read_input_tokens": 1048,
+    "cache_creation_input_tokens": 852,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 852
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "modelUsage": {
+  "claude-haiku-4-5-20251001": {
+   "inputTokens": 1131,
+   "outputTokens": 13,
+   "cacheReadInputTokens": 0,
+   "cacheCreationInputTokens": 0,
+   "webSearchRequests": 0,
+   "costUSD": 0.001196,
+   "contextWindow": 200000,
+   "maxOutputTokens": 32000,
+   "thinkingTokens": 0,
+   "canonicalModel": "claude-haiku-4-5",
+   "provider": "firstParty",
+   "costBasis": "list"
+  },
+  "claude-opus-5": {
+   "inputTokens": 2,
+   "outputTokens": 99,
+   "cacheReadInputTokens": 1048,
+   "cacheCreationInputTokens": 852,
+   "webSearchRequests": 0,
+   "costUSD": 0.011529,
+   "contextWindow": 1000000,
+   "maxOutputTokens": 64000,
+   "thinkingTokens": 31,
+   "canonicalModel": "claude-opus-5",
+   "provider": "firstParty",
+   "costBasis": "list"
+  }
+ },
+ "permission_denials": [],
+ "terminal_reason": "completed",
+ "fast_mode_state": "off",
+ "fast_mode_disabled_reason": "sdk_opt_in_required",
+ "subagent_stats": {
+  "spawned": 0,
+  "requested": {
+   "background": 0,
+   "foreground": 0,
+   "unset": 0
+  },
+  "started_in_background": 0,
+  "max_depth": 0,
+  "spawned_by_subagents": 0,
+  "completed": 0,
+  "failed": 0,
+  "killed": {
+   "parent": 0,
+   "user": 0,
+   "system": 0
+  },
+  "refused": {
+   "depth_limit": 0,
+   "concurrency_limit": 0,
+   "budget": 0
+  },
+  "by_type": {}
+ },
+ "is_error": false,
+ "num_turns": 1,
+ "subtype": "success",
+ "api_error_status": null,
+ "result": "{\"answer\": \"12.5 miles \u00d7 1.609344 km/mile = 20.1168 km, which to three decimal places is 20.117 kilometres.\", \"confidence\": \"high\", \"abstained\": false}",
+ "ttft_ms": 2283,
+ "type": "result",
+ "duration_ms": 4475,
+ "uuid": "efd4a625-37c3-4d44-bde6-3bc9fab6d3f8",
+ "ttft_stream_ms": 1449,
+ "time_to_request_ms": 279,
+ "time_to_request_from_spawn_ms": 1478992,
+ "warm_spare_claimed": false,
+ "time_origin_ms": 1788357305049.5867,
+ "queued_turn_count": 0
+}

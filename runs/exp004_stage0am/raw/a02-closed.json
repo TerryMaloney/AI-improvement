@@ -1,0 +1,127 @@
+{
+ "_wall_s": 6.99,
+ "_returncode": 0,
+ "_cmd": [
+  "claude",
+  "-p",
+  "--agent",
+  "stage0am-solver-closed",
+  "--model",
+  "opus",
+  "--output-format",
+  "json",
+  "--allowedTools",
+  "WebSearch",
+  "WebFetch"
+ ],
+ "duration_api_ms": 3608,
+ "stop_reason": "end_turn",
+ "session_id": "da90f8ac-94a6-5327-8f35-a039a241c696",
+ "total_cost_usd": 0.014847,
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 965,
+  "cache_read_input_tokens": 0,
+  "output_tokens": 160,
+  "output_tokens_details": {
+   "thinking_tokens": 0
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 965,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "not_available",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 160,
+    "cache_read_input_tokens": 0,
+    "cache_creation_input_tokens": 965,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 965
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "modelUsage": {
+  "claude-haiku-4-5-20251001": {
+   "inputTokens": 1102,
+   "outputTokens": 17,
+   "cacheReadInputTokens": 0,
+   "cacheCreationInputTokens": 0,
+   "webSearchRequests": 0,
+   "costUSD": 0.001187,
+   "contextWindow": 200000,
+   "maxOutputTokens": 32000,
+   "thinkingTokens": 0,
+   "canonicalModel": "claude-haiku-4-5",
+   "provider": "firstParty",
+   "costBasis": "list"
+  },
+  "claude-opus-5": {
+   "inputTokens": 2,
+   "outputTokens": 160,
+   "cacheReadInputTokens": 0,
+   "cacheCreationInputTokens": 965,
+   "webSearchRequests": 0,
+   "costUSD": 0.01366,
+   "contextWindow": 1000000,
+   "maxOutputTokens": 64000,
+   "thinkingTokens": 0,
+   "canonicalModel": "claude-opus-5",
+   "provider": "firstParty",
+   "costBasis": "list"
+  }
+ },
+ "permission_denials": [],
+ "terminal_reason": "completed",
+ "fast_mode_state": "off",
+ "fast_mode_disabled_reason": "sdk_opt_in_required",
+ "subagent_stats": {
+  "spawned": 0,
+  "requested": {
+   "background": 0,
+   "foreground": 0,
+   "unset": 0
+  },
+  "started_in_background": 0,
+  "max_depth": 0,
+  "spawned_by_subagents": 0,
+  "completed": 0,
+  "failed": 0,
+  "killed": {
+   "parent": 0,
+   "user": 0,
+   "system": 0
+  },
+  "refused": {
+   "depth_limit": 0,
+   "concurrency_limit": 0,
+   "budget": 0
+  },
+  "by_type": {}
+ },
+ "is_error": false,
+ "num_turns": 1,
+ "subtype": "success",
+ "api_error_status": null,
+ "result": "{\"answer\": \"As of 1 June 2022, the Prime Minister of the United Kingdom was Boris Johnson. He had been in office since 24 July 2019 and remained PM until 6 September 2022, when he was succeeded by Liz Truss. (At the time, in early June 2022, he was facing the fallout from the \\\"Partygate\\\" scandal and survived a Conservative Party vote of confidence on 6 June 2022.)\", \"confidence\": \"high\", \"abstained\": false}",
+ "ttft_ms": 3039,
+ "type": "result",
+ "duration_ms": 4773,
+ "uuid": "edb7c9da-8d07-48b8-9e99-3ed87e077b97",
+ "ttft_stream_ms": 929,
+ "time_to_request_ms": 185,
+ "time_to_request_from_spawn_ms": 1589065,
+ "warm_spare_claimed": false,
+ "time_origin_ms": 1788357415146.1042,
+ "queued_turn_count": 0
+}

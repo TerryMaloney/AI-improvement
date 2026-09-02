@@ -1,0 +1,127 @@
+{
+ "_wall_s": 7.41,
+ "_returncode": 0,
+ "_cmd": [
+  "claude",
+  "-p",
+  "--agent",
+  "stage0am-solver-closed",
+  "--model",
+  "opus",
+  "--output-format",
+  "json",
+  "--allowedTools",
+  "WebSearch",
+  "WebFetch"
+ ],
+ "duration_api_ms": 4434,
+ "stop_reason": "end_turn",
+ "session_id": "da90f8ac-94a6-5327-8f35-a039a241c696",
+ "total_cost_usd": 0.017958000000000002,
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 973,
+  "cache_read_input_tokens": 0,
+  "output_tokens": 281,
+  "output_tokens_details": {
+   "thinking_tokens": 0
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 973,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "not_available",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 281,
+    "cache_read_input_tokens": 0,
+    "cache_creation_input_tokens": 973,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 973
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "modelUsage": {
+  "claude-haiku-4-5-20251001": {
+   "inputTokens": 1108,
+   "outputTokens": 17,
+   "cacheReadInputTokens": 0,
+   "cacheCreationInputTokens": 0,
+   "webSearchRequests": 0,
+   "costUSD": 0.001193,
+   "contextWindow": 200000,
+   "maxOutputTokens": 32000,
+   "thinkingTokens": 0,
+   "canonicalModel": "claude-haiku-4-5",
+   "provider": "firstParty",
+   "costBasis": "list"
+  },
+  "claude-opus-5": {
+   "inputTokens": 2,
+   "outputTokens": 281,
+   "cacheReadInputTokens": 0,
+   "cacheCreationInputTokens": 973,
+   "webSearchRequests": 0,
+   "costUSD": 0.016765000000000002,
+   "contextWindow": 1000000,
+   "maxOutputTokens": 64000,
+   "thinkingTokens": 0,
+   "canonicalModel": "claude-opus-5",
+   "provider": "firstParty",
+   "costBasis": "list"
+  }
+ },
+ "permission_denials": [],
+ "terminal_reason": "completed",
+ "fast_mode_state": "off",
+ "fast_mode_disabled_reason": "sdk_opt_in_required",
+ "subagent_stats": {
+  "spawned": 0,
+  "requested": {
+   "background": 0,
+   "foreground": 0,
+   "unset": 0
+  },
+  "started_in_background": 0,
+  "max_depth": 0,
+  "spawned_by_subagents": 0,
+  "completed": 0,
+  "failed": 0,
+  "killed": {
+   "parent": 0,
+   "user": 0,
+   "system": 0
+  },
+  "refused": {
+   "depth_limit": 0,
+   "concurrency_limit": 0,
+   "budget": 0
+  },
+  "by_type": {}
+ },
+ "is_error": false,
+ "num_turns": 1,
+ "subtype": "success",
+ "api_error_status": null,
+ "result": "{\"answer\": \"Eight. Under the IAU's 2006 definition (Resolution B5, adopted 24 August 2006 in Prague), a planet in the Solar System is a celestial body that (a) is in orbit around the Sun, (b) has sufficient mass for its self-gravity to overcome rigid body forces so that it assumes a hydrostatic equilibrium (nearly round) shape, and (c) has cleared the neighbourhood around its orbit. The eight bodies meeting all three criteria are Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, and Neptune. Pluto fails the third criterion and was reclassified as a 'dwarf planet' \u2014 a separate category that also includes Ceres, Eris, Haumea, and Makemake.\", \"confidence\": \"high\", \"abstained\": false}",
+ "ttft_ms": 3813,
+ "type": "result",
+ "duration_ms": 5249,
+ "uuid": "5af381d3-f98c-4bc0-84cc-b405481c7b63",
+ "ttft_stream_ms": 933,
+ "time_to_request_ms": 158,
+ "time_to_request_from_spawn_ms": 1604171,
+ "warm_spare_claimed": false,
+ "time_origin_ms": 1788357430274.1443,
+ "queued_turn_count": 0
+}

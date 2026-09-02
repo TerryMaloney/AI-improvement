@@ -1,0 +1,127 @@
+{
+ "_wall_s": 16.7,
+ "_returncode": 0,
+ "_cmd": [
+  "claude",
+  "-p",
+  "--agent",
+  "stage0am-solver-web",
+  "--model",
+  "opus",
+  "--output-format",
+  "json",
+  "--allowedTools",
+  "WebSearch",
+  "WebFetch"
+ ],
+ "duration_api_ms": 13737,
+ "stop_reason": "end_turn",
+ "session_id": "da90f8ac-94a6-5327-8f35-a039a241c696",
+ "total_cost_usd": 0.056168499999999996,
+ "usage": {
+  "input_tokens": 4,
+  "cache_creation_input_tokens": 1849,
+  "cache_read_input_tokens": 2953,
+  "output_tokens": 595,
+  "output_tokens_details": {
+   "thinking_tokens": 219
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 1849,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "not_available",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 294,
+    "cache_read_input_tokens": 1905,
+    "cache_creation_input_tokens": 992,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 992
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "modelUsage": {
+  "claude-haiku-4-5-20251001": {
+   "inputTokens": 10407,
+   "outputTokens": 180,
+   "cacheReadInputTokens": 0,
+   "cacheCreationInputTokens": 0,
+   "webSearchRequests": 1,
+   "costUSD": 0.021307,
+   "contextWindow": 200000,
+   "maxOutputTokens": 32000,
+   "thinkingTokens": 0,
+   "canonicalModel": "claude-haiku-4-5",
+   "provider": "firstParty",
+   "costBasis": "list"
+  },
+  "claude-opus-5": {
+   "inputTokens": 4,
+   "outputTokens": 595,
+   "cacheReadInputTokens": 2953,
+   "cacheCreationInputTokens": 1849,
+   "webSearchRequests": 0,
+   "costUSD": 0.0348615,
+   "contextWindow": 1000000,
+   "maxOutputTokens": 64000,
+   "thinkingTokens": 219,
+   "canonicalModel": "claude-opus-5",
+   "provider": "firstParty",
+   "costBasis": "list"
+  }
+ },
+ "permission_denials": [],
+ "terminal_reason": "completed",
+ "fast_mode_state": "off",
+ "fast_mode_disabled_reason": "sdk_opt_in_required",
+ "subagent_stats": {
+  "spawned": 0,
+  "requested": {
+   "background": 0,
+   "foreground": 0,
+   "unset": 0
+  },
+  "started_in_background": 0,
+  "max_depth": 0,
+  "spawned_by_subagents": 0,
+  "completed": 0,
+  "failed": 0,
+  "killed": {
+   "parent": 0,
+   "user": 0,
+   "system": 0
+  },
+  "refused": {
+   "depth_limit": 0,
+   "concurrency_limit": 0,
+   "budget": 0
+  },
+  "by_type": {}
+ },
+ "is_error": false,
+ "num_turns": 3,
+ "subtype": "success",
+ "api_error_status": null,
+ "result": "{\"answer\": \"About 9.83 million square kilometres \u2014 specifically 9,833,517 sq km, per the CIA World Factbook's entry for the United States. That total is the sum of land (9,147,593 sq km) and water (685,924 sq km), the water component covering inland waters, coastal waters, and the U.S. portion of the Great Lakes' territorial waters. The Factbook notes this figure covers only the 50 states and the District of Columbia, excluding overseas territories.\", \"confidence\": \"high\", \"abstained\": false}",
+ "ttft_ms": 3711,
+ "type": "result",
+ "duration_ms": 14648,
+ "uuid": "41c3f67f-1338-477e-97dc-4f49e4055b80",
+ "ttft_stream_ms": 1579,
+ "time_to_request_ms": 164,
+ "time_to_request_from_spawn_ms": 1462243,
+ "warm_spare_claimed": false,
+ "time_origin_ms": 1788357288347.5908,
+ "queued_turn_count": 0
+}

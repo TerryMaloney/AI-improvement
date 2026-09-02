@@ -1,0 +1,127 @@
+{
+ "_wall_s": 6.91,
+ "_returncode": 0,
+ "_cmd": [
+  "claude",
+  "-p",
+  "--agent",
+  "stage0am-solver-closed",
+  "--model",
+  "opus",
+  "--output-format",
+  "json",
+  "--allowedTools",
+  "WebSearch",
+  "WebFetch"
+ ],
+ "duration_api_ms": 5157,
+ "stop_reason": "end_turn",
+ "session_id": "da90f8ac-94a6-5327-8f35-a039a241c696",
+ "total_cost_usd": 0.016544999999999997,
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 970,
+  "cache_read_input_tokens": 0,
+  "output_tokens": 226,
+  "output_tokens_details": {
+   "thinking_tokens": 44
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 970,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "not_available",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 226,
+    "cache_read_input_tokens": 0,
+    "cache_creation_input_tokens": 970,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 970
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "modelUsage": {
+  "claude-haiku-4-5-20251001": {
+   "inputTokens": 1105,
+   "outputTokens": 16,
+   "cacheReadInputTokens": 0,
+   "cacheCreationInputTokens": 0,
+   "webSearchRequests": 0,
+   "costUSD": 0.001185,
+   "contextWindow": 200000,
+   "maxOutputTokens": 32000,
+   "thinkingTokens": 0,
+   "canonicalModel": "claude-haiku-4-5",
+   "provider": "firstParty",
+   "costBasis": "list"
+  },
+  "claude-opus-5": {
+   "inputTokens": 2,
+   "outputTokens": 226,
+   "cacheReadInputTokens": 0,
+   "cacheCreationInputTokens": 970,
+   "webSearchRequests": 0,
+   "costUSD": 0.015359999999999999,
+   "contextWindow": 1000000,
+   "maxOutputTokens": 64000,
+   "thinkingTokens": 44,
+   "canonicalModel": "claude-opus-5",
+   "provider": "firstParty",
+   "costBasis": "list"
+  }
+ },
+ "permission_denials": [],
+ "terminal_reason": "completed",
+ "fast_mode_state": "off",
+ "fast_mode_disabled_reason": "sdk_opt_in_required",
+ "subagent_stats": {
+  "spawned": 0,
+  "requested": {
+   "background": 0,
+   "foreground": 0,
+   "unset": 0
+  },
+  "started_in_background": 0,
+  "max_depth": 0,
+  "spawned_by_subagents": 0,
+  "completed": 0,
+  "failed": 0,
+  "killed": {
+   "parent": 0,
+   "user": 0,
+   "system": 0
+  },
+  "refused": {
+   "depth_limit": 0,
+   "concurrency_limit": 0,
+   "budget": 0
+  },
+  "by_type": {}
+ },
+ "is_error": false,
+ "num_turns": 1,
+ "subtype": "success",
+ "api_error_status": null,
+ "result": "{\"answer\": \"No. South Sudan was not an independent sovereign state on 1 January 2011. At that date it was still the semi-autonomous region of Southern Sudan within the Republic of Sudan, governed under the terms of the 2005 Comprehensive Peace Agreement. The independence referendum was held from 9\u201315 January 2011 (with roughly 98.8% voting for secession), and South Sudan formally declared independence on 9 July 2011, joining the United Nations on 14 July 2011.\", \"confidence\": \"high\", \"abstained\": false}",
+ "ttft_ms": 1606,
+ "type": "result",
+ "duration_ms": 4649,
+ "uuid": "5de5064b-4386-46fa-82a4-f1bab03e6552",
+ "ttft_stream_ms": 892,
+ "time_to_request_ms": 178,
+ "time_to_request_from_spawn_ms": 972445,
+ "warm_spare_claimed": false,
+ "time_origin_ms": 1788356798599.5754,
+ "queued_turn_count": 0
+}

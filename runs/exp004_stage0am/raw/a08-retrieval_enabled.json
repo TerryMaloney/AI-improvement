@@ -1,0 +1,127 @@
+{
+ "_wall_s": 11.29,
+ "_returncode": 0,
+ "_cmd": [
+  "claude",
+  "-p",
+  "--agent",
+  "stage0am-solver-web",
+  "--model",
+  "opus",
+  "--output-format",
+  "json",
+  "--allowedTools",
+  "WebSearch",
+  "WebFetch"
+ ],
+ "duration_api_ms": 8165,
+ "stop_reason": "end_turn",
+ "session_id": "da90f8ac-94a6-5327-8f35-a039a241c696",
+ "total_cost_usd": 0.022394999999999998,
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 841,
+  "cache_read_input_tokens": 1048,
+  "output_tokens": 490,
+  "output_tokens_details": {
+   "thinking_tokens": 190
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 841,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "not_available",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 490,
+    "cache_read_input_tokens": 1048,
+    "cache_creation_input_tokens": 841,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 841
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "modelUsage": {
+  "claude-haiku-4-5-20251001": {
+   "inputTokens": 1126,
+   "outputTokens": 15,
+   "cacheReadInputTokens": 0,
+   "cacheCreationInputTokens": 0,
+   "webSearchRequests": 0,
+   "costUSD": 0.001201,
+   "contextWindow": 200000,
+   "maxOutputTokens": 32000,
+   "thinkingTokens": 0,
+   "canonicalModel": "claude-haiku-4-5",
+   "provider": "firstParty",
+   "costBasis": "list"
+  },
+  "claude-opus-5": {
+   "inputTokens": 2,
+   "outputTokens": 490,
+   "cacheReadInputTokens": 1048,
+   "cacheCreationInputTokens": 841,
+   "webSearchRequests": 0,
+   "costUSD": 0.021193999999999998,
+   "contextWindow": 1000000,
+   "maxOutputTokens": 64000,
+   "thinkingTokens": 190,
+   "canonicalModel": "claude-opus-5",
+   "provider": "firstParty",
+   "costBasis": "list"
+  }
+ },
+ "permission_denials": [],
+ "terminal_reason": "completed",
+ "fast_mode_state": "off",
+ "fast_mode_disabled_reason": "sdk_opt_in_required",
+ "subagent_stats": {
+  "spawned": 0,
+  "requested": {
+   "background": 0,
+   "foreground": 0,
+   "unset": 0
+  },
+  "started_in_background": 0,
+  "max_depth": 0,
+  "spawned_by_subagents": 0,
+  "completed": 0,
+  "failed": 0,
+  "killed": {
+   "parent": 0,
+   "user": 0,
+   "system": 0
+  },
+  "refused": {
+   "depth_limit": 0,
+   "concurrency_limit": 0,
+   "budget": 0
+  },
+  "by_type": {}
+ },
+ "is_error": false,
+ "num_turns": 1,
+ "subtype": "success",
+ "api_error_status": null,
+ "result": "{\"answer\": \"Nine. On 1 January 2006 the IAU still worked with the traditional list of nine planets \u2014 Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune and Pluto. Two caveats worth noting: (1) the IAU had no formal, written definition of 'planet' at that date, so the count of nine was inherited convention rather than a codified ruling; and (2) the recently announced 2003 UB313 (later named Eris), discovered in 2005 and touted by some as a 'tenth planet', had not been granted planetary status by the IAU. The formal definition \u2014 which created the 'dwarf planet' category, reclassified Pluto and Eris into it, and left eight planets \u2014 was adopted only later that year, by IAU Resolution 5A at the General Assembly in Prague on 24 August 2006.\", \"confidence\": \"high\", \"abstained\": false}",
+ "ttft_ms": 3980,
+ "type": "result",
+ "duration_ms": 8902,
+ "uuid": "738b451b-70cc-46a7-9c4b-bb6d6da7d967",
+ "ttft_stream_ms": 1189,
+ "time_to_request_ms": 334,
+ "time_to_request_from_spawn_ms": 1544175,
+ "warm_spare_claimed": false,
+ "time_origin_ms": 1788357370204.6362,
+ "queued_turn_count": 0
+}

@@ -1,0 +1,127 @@
+{
+ "_wall_s": 9.55,
+ "_returncode": 0,
+ "_cmd": [
+  "claude",
+  "-p",
+  "--agent",
+  "stage0am-solver-closed",
+  "--model",
+  "opus",
+  "--output-format",
+  "json",
+  "--allowedTools",
+  "WebSearch",
+  "WebFetch"
+ ],
+ "duration_api_ms": 6474,
+ "stop_reason": "end_turn",
+ "session_id": "da90f8ac-94a6-5327-8f35-a039a241c696",
+ "total_cost_usd": 0.018843000000000002,
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 965,
+  "cache_read_input_tokens": 0,
+  "output_tokens": 320,
+  "output_tokens_details": {
+   "thinking_tokens": 83
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 965,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "not_available",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 320,
+    "cache_read_input_tokens": 0,
+    "cache_creation_input_tokens": 965,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 965
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "modelUsage": {
+  "claude-haiku-4-5-20251001": {
+   "inputTokens": 1108,
+   "outputTokens": 15,
+   "cacheReadInputTokens": 0,
+   "cacheCreationInputTokens": 0,
+   "webSearchRequests": 0,
+   "costUSD": 0.001183,
+   "contextWindow": 200000,
+   "maxOutputTokens": 32000,
+   "thinkingTokens": 0,
+   "canonicalModel": "claude-haiku-4-5",
+   "provider": "firstParty",
+   "costBasis": "list"
+  },
+  "claude-opus-5": {
+   "inputTokens": 2,
+   "outputTokens": 320,
+   "cacheReadInputTokens": 0,
+   "cacheCreationInputTokens": 965,
+   "webSearchRequests": 0,
+   "costUSD": 0.017660000000000002,
+   "contextWindow": 1000000,
+   "maxOutputTokens": 64000,
+   "thinkingTokens": 83,
+   "canonicalModel": "claude-opus-5",
+   "provider": "firstParty",
+   "costBasis": "list"
+  }
+ },
+ "permission_denials": [],
+ "terminal_reason": "completed",
+ "fast_mode_state": "off",
+ "fast_mode_disabled_reason": "sdk_opt_in_required",
+ "subagent_stats": {
+  "spawned": 0,
+  "requested": {
+   "background": 0,
+   "foreground": 0,
+   "unset": 0
+  },
+  "started_in_background": 0,
+  "max_depth": 0,
+  "spawned_by_subagents": 0,
+  "completed": 0,
+  "failed": 0,
+  "killed": {
+   "parent": 0,
+   "user": 0,
+   "system": 0
+  },
+  "refused": {
+   "depth_limit": 0,
+   "concurrency_limit": 0,
+   "budget": 0
+  },
+  "by_type": {}
+ },
+ "is_error": false,
+ "num_turns": 1,
+ "subtype": "success",
+ "api_error_status": null,
+ "result": "{\"answer\": \"As of 1 January 2018, the country whose capital is Skopje was officially named the **Republic of Macedonia** (Macedonian: \u0420\u0435\u043f\u0443\u0431\u043b\u0438\u043a\u0430 \u041c\u0430\u043a\u0435\u0434\u043e\u043d\u0438\u0458\u0430 / Republika Makedonija) under its own constitution. Because of the long-running naming dispute with Greece, it was at that time still admitted to and referred to within the United Nations and several other international organisations under the provisional reference \\\"the former Yugoslav Republic of Macedonia\\\" (FYROM). The change to \\\"Republic of North Macedonia\\\" came later: the Prespa Agreement was signed in June 2018 and the new name took effect in February 2019, so it was not yet in force on 1 January 2018.\", \"confidence\": \"high\", \"abstained\": false}",
+ "ttft_ms": 3125,
+ "type": "result",
+ "duration_ms": 7196,
+ "uuid": "051539d7-3e86-4be1-9964-6c6b3ae50356",
+ "ttft_stream_ms": 1511,
+ "time_to_request_ms": 230,
+ "time_to_request_from_spawn_ms": 1352674,
+ "warm_spare_claimed": false,
+ "time_origin_ms": 1788357178632.834,
+ "queued_turn_count": 0
+}

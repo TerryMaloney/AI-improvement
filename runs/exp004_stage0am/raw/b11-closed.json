@@ -1,0 +1,127 @@
+{
+ "_wall_s": 9.54,
+ "_returncode": 0,
+ "_cmd": [
+  "claude",
+  "-p",
+  "--agent",
+  "stage0am-solver-closed",
+  "--model",
+  "opus",
+  "--output-format",
+  "json",
+  "--allowedTools",
+  "WebSearch",
+  "WebFetch"
+ ],
+ "duration_api_ms": 6827,
+ "stop_reason": "end_turn",
+ "session_id": "da90f8ac-94a6-5327-8f35-a039a241c696",
+ "total_cost_usd": 0.019673,
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 995,
+  "cache_read_input_tokens": 0,
+  "output_tokens": 340,
+  "output_tokens_details": {
+   "thinking_tokens": 52
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 995,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "not_available",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 340,
+    "cache_read_input_tokens": 0,
+    "cache_creation_input_tokens": 995,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 995
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "modelUsage": {
+  "claude-haiku-4-5-20251001": {
+   "inputTokens": 1123,
+   "outputTokens": 18,
+   "cacheReadInputTokens": 0,
+   "cacheCreationInputTokens": 0,
+   "webSearchRequests": 0,
+   "costUSD": 0.001213,
+   "contextWindow": 200000,
+   "maxOutputTokens": 32000,
+   "thinkingTokens": 0,
+   "canonicalModel": "claude-haiku-4-5",
+   "provider": "firstParty",
+   "costBasis": "list"
+  },
+  "claude-opus-5": {
+   "inputTokens": 2,
+   "outputTokens": 340,
+   "cacheReadInputTokens": 0,
+   "cacheCreationInputTokens": 995,
+   "webSearchRequests": 0,
+   "costUSD": 0.01846,
+   "contextWindow": 1000000,
+   "maxOutputTokens": 64000,
+   "thinkingTokens": 52,
+   "canonicalModel": "claude-opus-5",
+   "provider": "firstParty",
+   "costBasis": "list"
+  }
+ },
+ "permission_denials": [],
+ "terminal_reason": "completed",
+ "fast_mode_state": "off",
+ "fast_mode_disabled_reason": "sdk_opt_in_required",
+ "subagent_stats": {
+  "spawned": 0,
+  "requested": {
+   "background": 0,
+   "foreground": 0,
+   "unset": 0
+  },
+  "started_in_background": 0,
+  "max_depth": 0,
+  "spawned_by_subagents": 0,
+  "completed": 0,
+  "failed": 0,
+  "killed": {
+   "parent": 0,
+   "user": 0,
+   "system": 0
+  },
+  "refused": {
+   "depth_limit": 0,
+   "concurrency_limit": 0,
+   "budget": 0
+  },
+  "by_type": {}
+ },
+ "is_error": false,
+ "num_turns": 1,
+ "subtype": "success",
+ "api_error_status": null,
+ "result": "{\"answer\": \"Four. The five conventionally named Great Lakes are Superior, Michigan, Huron, Erie, and Ontario. Because Lake Michigan and Lake Huron are joined at the Straits of Mackinac \u2014 a wide (about 5 miles/8 km), deep channel with no appreciable drop in elevation \u2014 they share the same surface level (about 577 ft / 176 m) and behave hydrologically as a single lake, often called 'Lake Michigan\u2013Huron.' Treating that combined basin as one lake leaves four: Superior, Michigan\u2013Huron, Erie, and Ontario. Incidentally, Lake Michigan\u2013Huron so defined is the largest freshwater lake in the world by surface area (roughly 45,000 sq mi / 117,000 km\u00b2), exceeding Lake Superior.\", \"confidence\": \"high\", \"abstained\": false}",
+ "ttft_ms": 2559,
+ "type": "result",
+ "duration_ms": 7223,
+ "uuid": "bdbbceab-33c0-4186-b762-0a6bed8b20b8",
+ "ttft_stream_ms": 1719,
+ "time_to_request_ms": 152,
+ "time_to_request_from_spawn_ms": 1372858,
+ "warm_spare_claimed": false,
+ "time_origin_ms": 1788357199041.836,
+ "queued_turn_count": 0
+}

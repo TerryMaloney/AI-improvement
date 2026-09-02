@@ -1,0 +1,127 @@
+{
+ "_wall_s": 7.29,
+ "_returncode": 0,
+ "_cmd": [
+  "claude",
+  "-p",
+  "--agent",
+  "stage0am-solver-closed",
+  "--model",
+  "opus",
+  "--output-format",
+  "json",
+  "--allowedTools",
+  "WebSearch",
+  "WebFetch"
+ ],
+ "duration_api_ms": 4442,
+ "stop_reason": "end_turn",
+ "session_id": "da90f8ac-94a6-5327-8f35-a039a241c696",
+ "total_cost_usd": 0.017564,
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 1021,
+  "cache_read_input_tokens": 0,
+  "output_tokens": 244,
+  "output_tokens_details": {
+   "thinking_tokens": 77
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 1021,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "not_available",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 244,
+    "cache_read_input_tokens": 0,
+    "cache_creation_input_tokens": 1021,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 1021
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "modelUsage": {
+  "claude-haiku-4-5-20251001": {
+   "inputTokens": 1139,
+   "outputTokens": 21,
+   "cacheReadInputTokens": 0,
+   "cacheCreationInputTokens": 0,
+   "webSearchRequests": 0,
+   "costUSD": 0.001244,
+   "contextWindow": 200000,
+   "maxOutputTokens": 32000,
+   "thinkingTokens": 0,
+   "canonicalModel": "claude-haiku-4-5",
+   "provider": "firstParty",
+   "costBasis": "list"
+  },
+  "claude-opus-5": {
+   "inputTokens": 2,
+   "outputTokens": 244,
+   "cacheReadInputTokens": 0,
+   "cacheCreationInputTokens": 1021,
+   "webSearchRequests": 0,
+   "costUSD": 0.01632,
+   "contextWindow": 1000000,
+   "maxOutputTokens": 64000,
+   "thinkingTokens": 77,
+   "canonicalModel": "claude-opus-5",
+   "provider": "firstParty",
+   "costBasis": "list"
+  }
+ },
+ "permission_denials": [],
+ "terminal_reason": "completed",
+ "fast_mode_state": "off",
+ "fast_mode_disabled_reason": "sdk_opt_in_required",
+ "subagent_stats": {
+  "spawned": 0,
+  "requested": {
+   "background": 0,
+   "foreground": 0,
+   "unset": 0
+  },
+  "started_in_background": 0,
+  "max_depth": 0,
+  "spawned_by_subagents": 0,
+  "completed": 0,
+  "failed": 0,
+  "killed": {
+   "parent": 0,
+   "user": 0,
+   "system": 0
+  },
+  "refused": {
+   "depth_limit": 0,
+   "concurrency_limit": 0,
+   "budget": 0
+  },
+  "by_type": {}
+ },
+ "is_error": false,
+ "num_turns": 1,
+ "subtype": "success",
+ "api_error_status": null,
+ "result": "{\"answer\": \"About 5.4 million reported COVID-19 deaths worldwide for the two-year period 1 January 2020 \u2013 31 December 2021. This is the figure WHO cited in its May 2022 excess-mortality assessment, where it contrasted the ~5.4 million officially reported COVID-19 deaths with its estimate of ~14.9 million excess deaths (range 13.3\u201316.6 million) associated with the pandemic over the same period.\", \"confidence\": \"high\", \"abstained\": false}",
+ "ttft_ms": 2249,
+ "type": "result",
+ "duration_ms": 5256,
+ "uuid": "0773245a-da52-4761-95ef-127f933e6d46",
+ "ttft_stream_ms": 800,
+ "time_to_request_ms": 118,
+ "time_to_request_from_spawn_ms": 1111410,
+ "warm_spare_claimed": false,
+ "time_origin_ms": 1788356937585.243,
+ "queued_turn_count": 0
+}

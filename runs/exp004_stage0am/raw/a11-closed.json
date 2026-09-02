@@ -1,0 +1,127 @@
+{
+ "_wall_s": 6.55,
+ "_returncode": 0,
+ "_cmd": [
+  "claude",
+  "-p",
+  "--agent",
+  "stage0am-solver-closed",
+  "--model",
+  "opus",
+  "--output-format",
+  "json",
+  "--allowedTools",
+  "WebSearch",
+  "WebFetch"
+ ],
+ "duration_api_ms": 3832,
+ "stop_reason": "end_turn",
+ "session_id": "da90f8ac-94a6-5327-8f35-a039a241c696",
+ "total_cost_usd": 0.014616,
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 958,
+  "cache_read_input_tokens": 0,
+  "output_tokens": 154,
+  "output_tokens_details": {
+   "thinking_tokens": 0
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 958,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "not_available",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 154,
+    "cache_read_input_tokens": 0,
+    "cache_creation_input_tokens": 958,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 958
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "modelUsage": {
+  "claude-haiku-4-5-20251001": {
+   "inputTokens": 1101,
+   "outputTokens": 15,
+   "cacheReadInputTokens": 0,
+   "cacheCreationInputTokens": 0,
+   "webSearchRequests": 0,
+   "costUSD": 0.001176,
+   "contextWindow": 200000,
+   "maxOutputTokens": 32000,
+   "thinkingTokens": 0,
+   "canonicalModel": "claude-haiku-4-5",
+   "provider": "firstParty",
+   "costBasis": "list"
+  },
+  "claude-opus-5": {
+   "inputTokens": 2,
+   "outputTokens": 154,
+   "cacheReadInputTokens": 0,
+   "cacheCreationInputTokens": 958,
+   "webSearchRequests": 0,
+   "costUSD": 0.01344,
+   "contextWindow": 1000000,
+   "maxOutputTokens": 64000,
+   "thinkingTokens": 0,
+   "canonicalModel": "claude-opus-5",
+   "provider": "firstParty",
+   "costBasis": "list"
+  }
+ },
+ "permission_denials": [],
+ "terminal_reason": "completed",
+ "fast_mode_state": "off",
+ "fast_mode_disabled_reason": "sdk_opt_in_required",
+ "subagent_stats": {
+  "spawned": 0,
+  "requested": {
+   "background": 0,
+   "foreground": 0,
+   "unset": 0
+  },
+  "started_in_background": 0,
+  "max_depth": 0,
+  "spawned_by_subagents": 0,
+  "completed": 0,
+  "failed": 0,
+  "killed": {
+   "parent": 0,
+   "user": 0,
+   "system": 0
+  },
+  "refused": {
+   "depth_limit": 0,
+   "concurrency_limit": 0,
+   "budget": 0
+  },
+  "by_type": {}
+ },
+ "is_error": false,
+ "num_turns": 1,
+ "subtype": "success",
+ "api_error_status": null,
+ "result": "{\"answer\": \"As of 1 June 2019, the President of the European Commission was Jean-Claude Juncker of Luxembourg. He served as President from 1 November 2014 until 30 November 2019, when he was succeeded by Ursula von der Leyen. Although the European Parliament elections had just taken place in late May 2019, the process of selecting his successor was still ongoing at that point, so Juncker remained in office.\", \"confidence\": \"high\", \"abstained\": false}",
+ "ttft_ms": 2969,
+ "type": "result",
+ "duration_ms": 4308,
+ "uuid": "a7f9d2b1-03ea-41ef-9523-a86a952b82b0",
+ "ttft_stream_ms": 976,
+ "time_to_request_ms": 153,
+ "time_to_request_from_spawn_ms": 1260533,
+ "warm_spare_claimed": false,
+ "time_origin_ms": 1788357086680.8833,
+ "queued_turn_count": 0
+}
