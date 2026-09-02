@@ -1,0 +1,68 @@
+# Stage 0B causal contract -- DRAFT. Stage 0B is the fresh-item confirmation and
+# query-construction challenge named in DECISION_LOG (2026-08-29). Its design is
+# NOT frozen; this file records which causal assumptions it will have to earn,
+# with [OPEN] where the design is not yet fixed. It authorizes nothing.
+experiment: exp004_stage0b
+status: draft
+nodes: [treatment, model, served_model, system_instructions, tool_definitions, tool_use,
+        environment, item, evaluator, selection, outcome, missingness, cost_effort, shared_latent]
+required_edges:
+  - [treatment, tool_definitions]        # retrieval-enabled arm grants WebSearch/WebFetch
+  - [tool_definitions, tool_use]
+  - [tool_use, outcome]                  # ITT: the whole procedure's effect
+  - [treatment, cost_effort]             # REALIZED effort is a mediator/outcome, not a confound
+assumed_absent_edges:
+  - edge: [treatment, system_instructions]
+    check: {type: byte_identity, artifact: "[OPEN]", test: "[OPEN]",
+            note: "Stage 0B agents not yet created; must reuse the byte-identical-body pattern"}
+  - edge: [treatment, evaluator]
+    check: {type: deterministic_route, artifact: lab/anchored_grading.py,
+            test: tests/test_stage0am_grader_golden_corpus.py::test_current_grader_matches_golden_corpus,
+            note: "grader reused as frozen; any change re-fingerprints"}
+  - edge: [selection, outcome]           # no post-treatment or reversal-based item selection
+    check: {type: design, artifact: docs/DECISION_LOG.md#2026-08-29,
+            note: "reversal prevalence is an outcome, never a selection criterion"}
+  - edge: [shared_latent, outcome]       # pairs independent enough for the exact test
+    check: {type: proof_or_rule, artifact: lab/stage0am.py,
+            note: "R=1; arm order randomised per item; sequential conditional inequality"}
+  - edge: [environment, treatment]       # env symmetric across arms; E measured via dedicated agent
+    check: {type: live_probe, artifact: "[OPEN]",
+            note: "run the frozen egress probe through the Stage 0B retrieval agent before dispatch"}
+  - edge: [cost_effort, treatment]       # CONFIGURED effort/budget symmetric (pre-treatment invariant)
+    check: {type: recorded_value, artifact: "[OPEN]",
+            note: "freeze record must carry effort_level / max_tokens / timeout, identical across arms"}
+  - edge: [served_model, treatment]      # both arms take the same served model
+    check: {type: recorded_value, artifact: "[OPEN]",
+            note: "per-trial served-model log; arm-blocked fallbacks reported"}
+bindings:
+  - construct: retrieval_enabled_treatment
+    claim: docs/EXP004_STAGE0A_M_SPECIFICATION.md#6
+    implementation: "[OPEN]"
+    fingerprint: "[OPEN]"
+    correspondence_test: "[OPEN]"
+  - construct: fixed_query_arm            # the Stage 0B addition: query-construction challenge
+    claim: docs/DECISION_LOG.md#2026-08-29
+    implementation: "[OPEN]"
+    fingerprint: "[OPEN]"
+    correspondence_test: "[OPEN]"
+  - construct: primary_null_pointwise
+    claim: docs/EXP004_STAGE0A_M_SPECIFICATION.md#1.2
+    implementation: lab/stage0am.py:exact_one_sided_p
+    fingerprint: "[OPEN]"
+    correspondence_test: tests/test_stage0am_failure_semantics.py::TestSpecificationMatchesTheCode
+  - construct: failure_semantics_case_A_B
+    claim: docs/EXP004_STAGE0A_M_SPECIFICATION.md#7
+    implementation: lab/stage0am.py:partition_pairs
+    fingerprint: "[OPEN]"
+    correspondence_test: tests/test_stage0am_failure_semantics.py::TestTheSixRequiredCases
+  - construct: grading_semantics
+    claim: docs/EXP004_STAGE0A_M_SPECIFICATION.md#5
+    implementation: lab/anchored_grading.py
+    fingerprint: experiments/exp004_stage0am/manifest.json:grading_semantics.sha256_16
+    correspondence_test: tests/test_stage0am_grader_golden_corpus.py::test_current_grader_matches_golden_corpus
+open_fields:
+  - Stage 0B item set (fresh, treatment-blind) and its authoring protocol
+  - Stage 0B agent files (byte-identical bodies) and their hashes
+  - fixed-query arm implementation and packet
+  - execution environment probe via the Stage 0B retrieval agent
+  - configured effort / resource settings and served-model log

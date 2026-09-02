@@ -64,6 +64,14 @@ The previous frozen probe established on the old shared solver-web path:
 
 Because Stage 0A-M now uses a dedicated web agent, execution-time preflight must re-run the same neutral environment check through `stage0am-solver-web`. Reachability is expected to match but must be measured, not assumed.
 
+## 2026-09-02 — last pre-results pass (zero dispatches)
+
+- **Causal contract implemented** (`lab/causal_contract.py`, tests, example, Stage 0B draft, Stage 0A-M retrospective fixture). Prospective rule for future families; not a Stage 0A-M gate.
+- **Grader golden corpus** (`tests/golden/…`, 51 hand-derived cases): the frozen grader passed **unchanged**; corpus pinned to grader sha `10adaf1dac94ea70`.
+- **R1′/R2′ prospective table frozen** at `experiments/meta_r1r2/` (fingerprint in `FINGERPRINT.txt`, churn mechanical from git). Scored at the next independent audit; nothing from this pass counts.
+- **Robust-EVOI wording corrected** (no optimistic max; lower bound over the plausible set + bounded calibration budget). **Configured vs realized effort** separated: configured = symmetry invariant; realized = mediator/outcome, never equalised.
+- **Zero-dispatch tests:** P1 NOT TESTABLE (no dual-route cohort); P7 NOT TESTABLE mechanically; **M2 downgraded** — the memo's "no budget line in verified_flat" premise was false. R1′/R2′ **unchanged**. See `docs/results/`.
+
 ## 2026-09-01 note
 
 - The dedicated `stage0am-solver-closed` / `stage0am-solver-web` agents became registered in the original session after a context reload landed on a later turn; the runtime gates in `docs/NEXT.md` can now be run from that session or a fresh one. No gate has been run yet.

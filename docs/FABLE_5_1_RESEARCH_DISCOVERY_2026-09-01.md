@@ -222,8 +222,15 @@ with search [MEASURED, exp002].**
   the model reconstructs from salient (successful) calls.
 - Competitor: *motivated report* — the budget instruction pressures reports to
   ≤ budget.
-- **Already discriminated:** `verified_flat` removed the budget line and the
-  undercount persisted at 2.06× [MEASURED]. Motivated report is disfavoured.
+- ~~**Already discriminated:** `verified_flat` removed the budget line and the
+  undercount persisted at 2.06× [MEASURED]. Motivated report is disfavoured.~~
+  **CORRECTION 2026-09-02:** false premise. `verified_flat` packets carry
+  `SEARCH BUDGET: 3 searches`; the manipulation raised the ceiling 2→3 and
+  reworded it. Every search condition had a visible budget cue, and the
+  self-reported count never exceeded it. The data do **not** disfavour a
+  ceiling-anchored account. See `docs/results/CAUSAL_INTROSPECTION_M2.md`.
+  This sentence was an unverified recollection that passed into two memos —
+  a G7 instance inside the memo that named G7.
   Next discriminator: report-after-each-call vs report-at-end; reconstruction
   predicts the per-call log is accurate and the end-of-task total is not.
   This is the cheapest causal-introspection result the program owns and should

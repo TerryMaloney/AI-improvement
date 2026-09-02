@@ -1,0 +1,221 @@
+title: Prospective R1'/R2' vs churn component table -- Stage 0A-M harness
+frozen_at_commit: 37ac525f0b0cb7c82245ea4520518aa1a66f066a
+frozen_on: '2026-09-02'
+purpose: Committed BEFORE the next independent audit so the classification cannot be reconstructed after a defect location
+  is known.
+churn_definition: Number of commits on branch claude/ai-testing-lab-setup-b4t7qr whose diff touches the artifact path, as
+  reported by `git log --oneline -- <path>` at frozen_at_commit. Components with no artifact have churn 0 by definition.
+r1_prime: Defects found by later independent review concentrate in components that are treatment-asymmetric (or of unknown
+  symmetry) AND lack an executed invariance check.
+r2_prime: Drift between two representations of one construct occurs only where no correspondence test binds them.
+churn_rival: Defects concentrate where artifacts were edited most, regardless of causal role.
+discriminating_cells:
+  r1_high_churn_low:
+  - configured_effort
+  - live_agent_registry
+  - served_model_per_trial
+  r1_low_churn_high:
+  - manifest
+  - specification
+  - analysis_null
+  note: A defect in the first group supports R1' over churn; a defect in the second supports churn over R1'.
+what_future_observations_mean:
+  SUPPORT_R1_PRIME: next load-bearing defect found in configured_effort / live_agent_registry / served_model_per_trial, or
+    in any other unchecked component
+  SUPPORT_CHURN: next load-bearing defect found in manifest / specification / analysis_null / packet_retrieval (high-churn,
+    checked)
+  HURT_BOTH: next load-bearing defect found in a low-churn, checked, symmetric component (e.g. schedule, keys) -- neither
+    theory predicts it
+  NON_DISCRIMINATING: defect found in packet_retrieval by a NON-invariance route (e.g. wording semantics) -- both theories
+    can claim it; or defects in prose-only spec sections that are both high-churn and unbound
+exclusions: The live_agent_registry failure on 2026-09-01 and every defect logged in FABLE_5_1_RESEARCH_DISCOVERY_2026-09-01.md
+  were used to CONSTRUCT R1'/R2' and do not count as prospective confirmation.
+components:
+- component_id: agent_body_closed
+  artifact: .claude/agents/stage0am-solver-closed.md
+  treatment_asymmetric: no (body symmetric by byte test)
+  invariance_check_exists: true
+  check_executed: true
+  load_bearing: true
+  churn_commits: 2
+  churn_predicted_risk: medium
+  r1_prime_predicted_risk: low (checked)
+  r2_prime_binding: bound+tested
+  notes: frontmatter differs only in tools/name
+- component_id: agent_body_web
+  artifact: .claude/agents/stage0am-solver-web.md
+  treatment_asymmetric: no (body symmetric by byte test)
+  invariance_check_exists: true
+  check_executed: true
+  load_bearing: true
+  churn_commits: 2
+  churn_predicted_risk: medium
+  r1_prime_predicted_risk: low (checked)
+  r2_prime_binding: bound+tested
+  notes: ''
+- component_id: agent_tool_grant
+  artifact: .claude/agents/stage0am-solver-web.md
+  treatment_asymmetric: by-design (treatment)
+  invariance_check_exists: true
+  check_executed: true
+  load_bearing: true
+  churn_commits: 2
+  churn_predicted_risk: medium
+  r1_prime_predicted_risk: low (required edge, checked)
+  r2_prime_binding: bound+tested
+  notes: required edge, not assumed-absent
+- component_id: packet_closed
+  artifact: experiments/exp004_stage0am/packet_closed.template.md
+  treatment_asymmetric: by-design (TOOLS block only)
+  invariance_check_exists: true
+  check_executed: true
+  load_bearing: true
+  churn_commits: 2
+  churn_predicted_risk: medium
+  r1_prime_predicted_risk: low (required edge, checked)
+  r2_prime_binding: bound+tested
+  notes: hash + 3-line diff test
+- component_id: packet_retrieval
+  artifact: experiments/exp004_stage0am/packet_retrieval_enabled.template.md
+  treatment_asymmetric: by-design (TOOLS block only)
+  invariance_check_exists: true
+  check_executed: true
+  load_bearing: true
+  churn_commits: 3
+  churn_predicted_risk: medium
+  r1_prime_predicted_risk: low (required edge, checked)
+  r2_prime_binding: bound+tested
+  notes: edited 3x incl. after a 'final' audit; hash-checked each time
+- component_id: grader
+  artifact: lab/anchored_grading.py
+  treatment_asymmetric: 'no'
+  invariance_check_exists: true
+  check_executed: true
+  load_bearing: true
+  churn_commits: 2
+  churn_predicted_risk: medium
+  r1_prime_predicted_risk: low (checked)
+  r2_prime_binding: bound (fingerprint) + golden corpus (added 2026-09-02)
+  notes: changed at freeze gate; fingerprinted
+- component_id: analysis_null
+  artifact: lab/stage0am.py
+  treatment_asymmetric: 'no'
+  invariance_check_exists: true
+  check_executed: true
+  load_bearing: true
+  churn_commits: 4
+  churn_predicted_risk: HIGH
+  r1_prime_predicted_risk: low (checked)
+  r2_prime_binding: bound+tested (spec<->code test)
+  notes: ''
+- component_id: keys
+  artifact: batteries/answers.anchored_v1.yaml
+  treatment_asymmetric: 'no'
+  invariance_check_exists: true
+  check_executed: true
+  load_bearing: true
+  churn_commits: 3
+  churn_predicted_risk: medium
+  r1_prime_predicted_risk: low (checked)
+  r2_prime_binding: bound (fingerprint)+tested
+  notes: ''
+- component_id: battery_stems
+  artifact: batteries/anchored_v1.yaml
+  treatment_asymmetric: 'no'
+  invariance_check_exists: true
+  check_executed: true
+  load_bearing: true
+  churn_commits: 3
+  churn_predicted_risk: medium
+  r1_prime_predicted_risk: low (checked)
+  r2_prime_binding: bound (fingerprint)+tested
+  notes: ''
+- component_id: schedule
+  artifact: experiments/exp004_stage0am/schedule.json
+  treatment_asymmetric: 'no'
+  invariance_check_exists: true
+  check_executed: true
+  load_bearing: true
+  churn_commits: 1
+  churn_predicted_risk: low
+  r1_prime_predicted_risk: low (checked)
+  r2_prime_binding: bound (hash in freeze record)
+  notes: arm order randomised per item
+- component_id: manifest
+  artifact: experiments/exp004_stage0am/manifest.json
+  treatment_asymmetric: 'no'
+  invariance_check_exists: true
+  check_executed: true
+  load_bearing: true
+  churn_commits: 4
+  churn_predicted_risk: HIGH
+  r1_prime_predicted_risk: low (checked)
+  r2_prime_binding: bound+tested (fingerprint audit)
+  notes: highest-churn checked artifact
+- component_id: specification
+  artifact: docs/EXP004_STAGE0A_M_SPECIFICATION.md
+  treatment_asymmetric: n/a (prose)
+  invariance_check_exists: true
+  check_executed: true
+  load_bearing: true
+  churn_commits: 5
+  churn_predicted_risk: HIGH
+  r1_prime_predicted_risk: low (checked)
+  r2_prime_binding: partially bound (claim/null/failure semantics tested; others prose-only)
+  notes: highest churn overall
+- component_id: egress_env_E
+  artifact: experiments/exp004_stage0am/egress_probe.results.json
+  treatment_asymmetric: no (both arms measured equal)
+  invariance_check_exists: true
+  check_executed: true
+  load_bearing: true
+  churn_commits: 2
+  churn_predicted_risk: medium
+  r1_prime_predicted_risk: low (checked)
+  r2_prime_binding: bound (probe results)
+  notes: measured via SHARED agent, not yet via dedicated agent
+- component_id: configured_effort
+  artifact: null
+  treatment_asymmetric: unknown
+  invariance_check_exists: false
+  check_executed: false
+  load_bearing: true
+  churn_commits: 0
+  churn_predicted_risk: low
+  r1_prime_predicted_risk: HIGH (unchecked)
+  r2_prime_binding: unbound (no artifact)
+  notes: 'DISCRIMINATOR: zero churn, unchecked, asymmetry unknown'
+- component_id: live_agent_registry
+  artifact: null
+  treatment_asymmetric: unknown
+  invariance_check_exists: false
+  check_executed: false
+  load_bearing: true
+  churn_commits: 0
+  churn_predicted_risk: low
+  r1_prime_predicted_risk: HIGH (unchecked)
+  r2_prime_binding: unbound (repo file vs live session)
+  notes: 'DISCRIMINATOR: zero churn, unchecked; one instance already observed 2026-09-01 (counts as construction evidence,
+    not prospective)'
+- component_id: served_model_per_trial
+  artifact: null
+  treatment_asymmetric: unknown
+  invariance_check_exists: false
+  check_executed: false
+  load_bearing: true
+  churn_commits: 0
+  churn_predicted_risk: low
+  r1_prime_predicted_risk: HIGH (unchecked)
+  r2_prime_binding: unbound (planned per-trial log)
+  notes: zero churn, unchecked
+- component_id: todowrite_grant
+  artifact: .claude/agents/stage0am-solver-closed.md
+  treatment_asymmetric: no (both arms)
+  invariance_check_exists: true
+  check_executed: true
+  load_bearing: false
+  churn_commits: 2
+  churn_predicted_risk: medium
+  r1_prime_predicted_risk: low (checked)
+  r2_prime_binding: bound+tested
+  notes: non-informational tool

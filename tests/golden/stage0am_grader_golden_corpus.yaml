@@ -1,0 +1,73 @@
+# Synthetic behavioural golden corpus for the FROZEN Stage 0A-M grader
+# (lab/anchored_grading.py, manifest grading_semantics sha 10adaf1dac94ea70).
+#
+# Expected verdicts were derived by hand from the frozen semantics as written in
+# the module docstrings and the specification -- NOT by running the grader and
+# recording its output. All keys are synthetic; no production stem or key appears.
+#
+# Semantics relied on:
+#   numeric      correct iff some extracted number is within tolerance (<=) of value;
+#                rejects do NOT override a present correct value; digits and spelled
+#                integers zero..twenty are extracted; unrelated numbers are harmless.
+#   exact_entity word-boundary phrase containment on normalised text; a reject
+#                present anywhere fails the answer (reject precedence).
+#   boolean      negation phrases take precedence; a positive phrase without a
+#                negation grades True for expected=True; nothing recognised -> False.
+version: 1
+cases:
+  # ---------------- numeric: value 100, tolerance 2, reject 150
+  - {id: n01, route: numeric, key: {value: 100, tolerance: 2, rejects: [150]}, answer: "100", expect: true, why: "exact"}
+  - {id: n02, route: numeric, key: {value: 100, tolerance: 2, rejects: [150]}, answer: "101.9", expect: true, why: "just inside"}
+  - {id: n03, route: numeric, key: {value: 100, tolerance: 2, rejects: [150]}, answer: "102", expect: true, why: "boundary is inclusive (<=)"}
+  - {id: n04, route: numeric, key: {value: 100, tolerance: 2, rejects: [150]}, answer: "102.1", expect: false, why: "just outside"}
+  - {id: n05, route: numeric, key: {value: 100, tolerance: 2, rejects: [150]}, answer: "150", expect: false, why: "bare displacing value"}
+  - {id: n06, route: numeric, key: {value: 100, tolerance: 2, rejects: [150]}, answer: "The answer is 100, not 150.", expect: true, why: "correct value present; rejects do not override"}
+  - {id: n07, route: numeric, key: {value: 100, tolerance: 2, rejects: [150]}, answer: "It was 150 under the old definition but is 100 under the requested one.", expect: true, why: "correct plus displacing in prose"}
+  - {id: n08, route: numeric, key: {value: 100, tolerance: 2, rejects: [150]}, answer: "As of 1999 the figure was 100.", expect: true, why: "unrelated number harmless"}
+  - {id: n09, route: numeric, key: {value: 100, tolerance: 2, rejects: [150]}, answer: "I do not know.", expect: false, why: "no number"}
+  - {id: n10, route: numeric, key: {value: 100, tolerance: 2, rejects: [150]}, answer: "about 98", expect: true, why: "lower boundary inclusive"}
+  - {id: n11, route: numeric, key: {value: 100, tolerance: 2, rejects: [150]}, answer: "97.99", expect: false, why: "just below lower boundary"}
+  # ---------------- numeric: spelled integers (value 4, tol 0.4, reject 5)
+  - {id: n12, route: numeric, key: {value: 4, tolerance: 0.4, rejects: [5]}, answer: "four", expect: true, why: "spelled integer supported"}
+  - {id: n13, route: numeric, key: {value: 4, tolerance: 0.4, rejects: [5]}, answer: "Four bodies of water.", expect: true, why: "capitalised spelled integer"}
+  - {id: n14, route: numeric, key: {value: 4, tolerance: 0.4, rejects: [5]}, answer: "five", expect: false, why: "spelled displacing value"}
+  - {id: n15, route: numeric, key: {value: 4, tolerance: 0.4, rejects: [5]}, answer: "one of four", expect: true, why: "'one' extracts 1, harmless"}
+  - {id: n16, route: numeric, key: {value: 4, tolerance: 0.4, rejects: [5]}, answer: "4.5", expect: false, why: "outside 0.4 band"}
+  - {id: n17, route: numeric, key: {value: 25, tolerance: 0.4, rejects: [30]}, answer: "twenty-five", expect: false, why: "spelled numbers above twenty are NOT supported by design (extracts 20 and 5)"}
+  # ---------------- numeric: formatting
+  - {id: n18, route: numeric, key: {value: 57573, tolerance: 100, rejects: [117400]}, answer: "57,573 km2", expect: true, why: "thousands separator"}
+  - {id: n19, route: numeric, key: {value: 57573, tolerance: 100, rejects: [117400]}, answer: "57.573 km2", expect: false, why: "decimal point parses as 57.573 (unit confusion is not rescued)"}
+  - {id: n20, route: numeric, key: {value: 6.5, tolerance: 0.3, rejects: [8.0]}, answer: "6.5%", expect: true, why: "percent sign ignored"}
+  - {id: n21, route: numeric, key: {value: 6.5, tolerance: 0.3, rejects: [8.0]}, answer: "6.2", expect: true, why: "boundary inclusive"}
+  - {id: n22, route: numeric, key: {value: 6.5, tolerance: 0.3, rejects: [8.0]}, answer: "8.0", expect: false, why: "bare displacing"}
+  - {id: n23, route: numeric, key: {value: -5, tolerance: 0.5, rejects: [5]}, answer: "-5", expect: true, why: "negative sign parsed"}
+  - {id: n24, route: numeric, key: {value: -5, tolerance: 0.5, rejects: [5]}, answer: "5", expect: false, why: "sign matters"}
+  - {id: n25, route: numeric, key: {value: 8, tolerance: 0.4, rejects: [9]}, answer: "18", expect: false, why: "18 is not 8 (regex captures whole token)"}
+  # ---------------- exact_entity: accept [Angela Merkel, Merkel]; reject [Olaf Scholz, Scholz]  (synthetic reuse of a public name; no production stem)
+  - {id: e01, route: exact_entity, key: {accept: ["Angela Merkel", "Merkel"], rejects: ["Olaf Scholz", "Scholz"]}, answer: "Angela Merkel", expect: true, why: "accepted alone"}
+  - {id: e02, route: exact_entity, key: {accept: ["Angela Merkel", "Merkel"], rejects: ["Olaf Scholz", "Scholz"]}, answer: "angela merkel", expect: true, why: "casefold"}
+  - {id: e03, route: exact_entity, key: {accept: ["Angela Merkel", "Merkel"], rejects: ["Olaf Scholz", "Scholz"]}, answer: "MERKEL.", expect: true, why: "punctuation stripped"}
+  - {id: e04, route: exact_entity, key: {accept: ["Angela Merkel", "Merkel"], rejects: ["Olaf Scholz", "Scholz"]}, answer: "The chancellor at that date was Merkel.", expect: true, why: "accepted in prose"}
+  - {id: e05, route: exact_entity, key: {accept: ["Angela Merkel", "Merkel"], rejects: ["Olaf Scholz", "Scholz"]}, answer: "Scholz", expect: false, why: "displacing alone"}
+  - {id: e06, route: exact_entity, key: {accept: ["Angela Merkel", "Merkel"], rejects: ["Olaf Scholz", "Scholz"]}, answer: "Merkel, who was later succeeded by Scholz", expect: false, why: "reject precedence on the entity route"}
+  - {id: e07, route: exact_entity, key: {accept: ["Angela Merkel", "Merkel"], rejects: ["Olaf Scholz", "Scholz"]}, answer: "Scholz, who succeeded Merkel", expect: false, why: "reject precedence"}
+  - {id: e08, route: exact_entity, key: {accept: ["Angela Merkel", "Merkel"], rejects: ["Olaf Scholz", "Scholz"]}, answer: "Helmut Kohl", expect: false, why: "unrelated entity"}
+  - {id: e09, route: exact_entity, key: {accept: ["Angela Merkel", "Merkel"], rejects: ["Olaf Scholz", "Scholz"]}, answer: "Merkelian policy continued.", expect: false, why: "word boundary -- 'merkelian' is not 'merkel'"}
+  - {id: e10, route: exact_entity, key: {accept: ["Angela Merkel", "Merkel"], rejects: ["Olaf Scholz", "Scholz"]}, answer: "Merkel's government", expect: true, why: "apostrophe stripped leaves 'merkel s'"}
+  - {id: e11, route: exact_entity, key: {accept: ["José Mourinho"], rejects: []}, answer: "Jose Mourinho", expect: true, why: "accents stripped both sides"}
+  - {id: e12, route: exact_entity, key: {accept: ["Angela Merkel", "Merkel"], rejects: ["Olaf Scholz", "Scholz"]}, answer: "", expect: false, why: "empty"}
+  # ---------------- boolean
+  - {id: b01, route: boolean, key: {expected: true}, answer: "Yes", expect: true, why: "clear yes"}
+  - {id: b02, route: boolean, key: {expected: true}, answer: "Yes.", expect: true, why: "punctuation"}
+  - {id: b03, route: boolean, key: {expected: true}, answer: "Yes, it was a member.", expect: true, why: "positive phrases"}
+  - {id: b04, route: boolean, key: {expected: true}, answer: "No", expect: false, why: "clear opposite"}
+  - {id: b05, route: boolean, key: {expected: true}, answer: "It was not a member at that date.", expect: false, why: "negation"}
+  - {id: b06, route: boolean, key: {expected: true}, answer: "Yes, although it had not yet ratified the treaty.", expect: false, why: "negation precedence -- by design, mixed answers fail"}
+  - {id: b07, route: boolean, key: {expected: true}, answer: "I am not certain.", expect: false, why: "ungradeable form -> false (no yes/no phrase; 'not certain' is not a listed negation)"}
+  - {id: b08, route: boolean, key: {expected: false}, answer: "No", expect: true, why: "clear no"}
+  - {id: b09, route: boolean, key: {expected: false}, answer: "It was not.", expect: true, why: "negation phrase"}
+  - {id: b10, route: boolean, key: {expected: false}, answer: "Yes", expect: false, why: "opposite"}
+  - {id: b11, route: boolean, key: {expected: false}, answer: "no, it had not joined yet", expect: true, why: "negation"}
+  - {id: b12, route: boolean, key: {expected: false}, answer: "Unclear.", expect: false, why: "ungradeable -> false even when expected is false"}
+  - {id: b13, route: boolean, key: {expected: true}, answer: "It had.", expect: true, why: "'had' is a listed positive"}
+  - {id: b14, route: boolean, key: {expected: true}, answer: "It had not.", expect: false, why: "'had not' negation wins over 'had'"}

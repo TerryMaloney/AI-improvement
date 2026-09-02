@@ -545,3 +545,27 @@ the answer key, the shared solvers are the confound, and a spawned child session
 would run validation and 130 dispatches unsupervised on a budget the ledger shows
 is marginal. Freeze record with recomputable hashes committed; a fresh session
 performs the runtime gates and, if the measured per-trial cost fits, the run.
+
+
+## 2026-09-02 — Last pre-results pass: safeguards implemented, one memo claim retracted
+
+**Decisions:**
+- Adopt `EXPERIMENT_CAUSAL_CONTRACT` prospectively for every future experiment
+  family (`docs/EXPERIMENT_CAUSAL_CONTRACT.md`). Stage 0A-M is mapped only as a
+  documentation fixture; the rule is not applied to it retroactively.
+- Robust EVOI: reject the optimistic-max wording; use ordinary EVOI where an
+  instrument's reliability is measured, and a lower bound over the plausible
+  reliability set plus a bounded, pre-declared calibration budget where it is not.
+- Configured effort is a pre-treatment symmetry invariant to be recorded in
+  freeze records; realized effort is a per-trial mediator/outcome and is never
+  equalised across arms.
+- Freeze the R1′/R2′ prospective component table before any further audit;
+  churn is defined mechanically from git; the table may not be edited to fit.
+
+**Retraction:** the 2026-09-01 memos claimed `verified_flat` had no visible
+budget line. The packets show `SEARCH BUDGET: 3 searches`. The M2 claim is
+downgraded (`docs/results/CAUSAL_INTROSPECTION_M2.md`); the original text is
+struck through, not deleted.
+
+**Unchanged:** Stage 0A-M battery, keys, grader, schedule, treatment, inference.
+Production dispatches 0. Grader golden corpus (51 cases) passed unchanged.

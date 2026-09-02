@@ -1,0 +1,3 @@
+commits scanned 25 | claim-lines naming a path: 2 | supported 2 | unsupported 0
+handoff-commit claims: supported 0 unsupported 0 | non-handoff: supported 2 unsupported 0
+UNSUPPORTED (artifact absent at that commit):

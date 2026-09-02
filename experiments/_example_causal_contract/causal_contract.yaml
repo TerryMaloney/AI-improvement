@@ -1,0 +1,30 @@
+# Minimal EXPERIMENT_CAUSAL_CONTRACT example. Every reference is a real artifact
+# so the example validates as freeze_ready. It describes no real experiment.
+experiment: _example
+status: freeze_ready
+nodes: [treatment, system_instructions, tool_definitions, evaluator, outcome, cost_effort]
+required_edges:
+  - [treatment, tool_definitions]
+  - [tool_definitions, outcome]
+assumed_absent_edges:
+  - edge: [treatment, system_instructions]
+    check:
+      type: byte_identity
+      artifact: .claude/agents/stage0am-solver-closed.md
+      test: tests/test_stage0am_agent_symmetry.py::test_stage0am_agent_bodies_are_byte_identical
+  - edge: [treatment, evaluator]
+    check:
+      type: deterministic_route
+      artifact: lab/anchored_grading.py
+      test: tests/test_stage0am_battery.py::TestRejectsDoNotOverrideACorrectNumericAnswer
+  - edge: [cost_effort, treatment]
+    check:
+      type: design
+      artifact: docs/EXP004_STAGE0A_M_SPECIFICATION.md#6
+      note: example only
+bindings:
+  - construct: example_treatment
+    claim: docs/EXP004_STAGE0A_M_SPECIFICATION.md#6
+    implementation: .claude/agents/stage0am-solver-web.md
+    fingerprint: experiments/exp004_stage0am/freeze_record.json:hashes.retrieval_agent_file_sha256_16
+    correspondence_test: tests/test_stage0am_agent_symmetry.py::test_agent_tool_difference_is_exactly_retrieval

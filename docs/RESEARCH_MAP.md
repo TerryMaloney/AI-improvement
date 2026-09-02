@@ -30,6 +30,8 @@ Related research branches:
 - [`docs/PRIOR_ART_AND_DESIGN_SIGNALS_2026-08-29.md`](PRIOR_ART_AND_DESIGN_SIGNALS_2026-08-29.md)
 - [`docs/FABLE_5_1_RESEARCH_DISCOVERY_2026-09-01.md`](FABLE_5_1_RESEARCH_DISCOVERY_2026-09-01.md) — failure taxonomy (G1–G7, two roots), EGP-perturbation compression of the six states, ranked portfolio, kill/merge list, novelty-engine proposal. **Proposal pending review; changes no frozen artifact.**
 - [`docs/EGP_AND_PREDICTION_FRONTIER_SYNTHESIS_2026-09-01.md`](EGP_AND_PREDICTION_FRONTIER_SYNTHESIS_2026-09-01.md) — red-team of the EGP synthesis (count ceiling REJECTED; robust-EVOI-with-reliability-learning adopted, not new); R1/R2 narrowed to falsifiable R1′/R2′ with a churn rival and a frozen forward prediction (P4); `EXPERIMENT_CAUSAL_CONTRACT` template for future families; NOVELTY-ENGINE-003 (prediction-frontier expansion: KNOWN theory, EXTENSION as generation objective) with a ≈280-call kill test; reviewed kill/merge list (nothing deleted). **Proposal; changes no frozen artifact.**
+- [`docs/EXPERIMENT_CAUSAL_CONTRACT.md`](EXPERIMENT_CAUSAL_CONTRACT.md) — **implemented** (validator, tests, Stage 0B draft). Prospective rule for future families.
+- [`docs/results/ZERO_DISPATCH_TESTS_2026-09-02.md`](results/ZERO_DISPATCH_TESTS_2026-09-02.md) — P1 not testable, P7 not testable mechanically, M2 downgraded after a false premise was found; R1′/R2′ unchanged, prospective table frozen at `experiments/meta_r1r2/`.
 
 The reflexive error-correction branch adds six state families that future architecture should avoid collapsing:
 - world epistemic state;

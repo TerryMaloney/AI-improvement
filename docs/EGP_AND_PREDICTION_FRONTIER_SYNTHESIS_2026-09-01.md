@@ -43,7 +43,7 @@ reliability of the intervention itself are both accounted for.**
 
 | | A. EGP count | B. Diversity / correlation | C. EIG per cost | D. Robust EVOI with reliability learning |
 |---|---|---|---|---|
-| **Precise claim** | Detectable-error set grows with the number of causally distinct EGPs | Marginal value of an EGP = its detection power × (1 − dependence with EGPs already used) | Value of intervention = expected reduction in uncertainty about the load-bearing claim ÷ cost, under a joint likelihood that encodes dependence | Value = expected improvement of the *decision* the claim feeds, ÷ cost, maximised over a *set* of plausible EGP-reliability models, with a reserved budget for interventions whose payoff is learning those reliabilities |
+| **Precise claim** | Detectable-error set grows with the number of causally distinct EGPs | Marginal value of an EGP = its detection power × (1 − dependence with EGPs already used) | Value of intervention = expected reduction in uncertainty about the load-bearing claim ÷ cost, under a joint likelihood that encodes dependence | Value = expected improvement of the *decision* the claim feeds, ÷ cost, evaluated as a **lower bound over the plausible set** of EGP-reliability models (see §2.1 for the corrected criterion), with a bounded budget for interventions whose payoff is learning those reliabilities |
 | **Assumptions** | Equal diagnosticity; binary independence | Pairwise dependence suffices; detection power known | A calibrated likelihood P(EGP output ∣ claim true/false) exists for every EGP | Only that the set of plausible reliability models contains the truth, and that calibration interventions (seeded defects, blind spikes) are available |
 | **Counterexample** | One execution test beats ten LLM critics; ten critics with a shared blind spot add zero | Three EGPs pairwise uncorrelated can share a higher-order blind spot; also *negatively* correlated EGPs can exceed independent ones — B handles the second, not the first | The likelihood is exactly what this project did not have: judge reliability was assumed, and an EIG rule with a confident-but-wrong judge likelihood would have chosen *more judging* | If every plausible reliability model is wrong in the same direction (a shared prior about the instrument), D still fails — but it fails *observably*, because the calibration arm disagrees with the model |
 | **Observable variables** | Count of EGP types used | Pairwise error correlation on a labelled set (CAPA) | Posterior over the claim before/after; cost | Decision change; cost; calibration-arm outcomes; reliability-model spread |
@@ -53,7 +53,43 @@ reliability of the intervention itself are both accounted for.**
 
 **Verdict: adopt D as the working formulation; it is not new.** It is
 standard decision theory plus the observation that the instrument's
-reliability must itself be learned. Two consequences matter for us:
+reliability must itself be learned.
+
+### 2.1 Correction (2026-09-02): "maximised over a set of reliability models" was wrong
+
+The first draft of D said the value was *maximised* over the plausible
+reliability models. Taking the maximum is **optimistic**, not robust: it
+scores an intervention by the reliability model under which it looks best.
+Corrected criterion, chosen from the options below without a new survey:
+
+| criterion | needs | verdict |
+|---|---|---|
+| A. optimistic max over models | nothing | **rejected** — assumes the best case |
+| B. model-averaged EVOI | justified probabilities over reliability models | correct when available; **we usually do not have them** for LLM instruments |
+| C. worst-case / lower-bound EVOI over the plausible set | only a plausible set | **adopted for exploitation decisions** — conservative, estimable, no invented probabilities |
+| D. minimax regret | a plausible set + regret table | defensible, but the regret table is another quantity we cannot estimate; reserved for cases where C is degenerate (all interventions have zero lower bound) |
+
+**Two regimes, kept distinct:**
+
+1. *Reliability calibrated* (a deterministic route, an execution test, an
+   instrument with a measured miss/false-alarm rate): use B — ordinary EVOI per
+   cost with the measured reliability.
+2. *Reliability uncertain* (a judge, a self-report, a probe never run in this
+   environment): use C — act on interventions whose decision value stays
+   positive under every reliability model in the plausible set; **spend a
+   bounded calibration budget** where the reliability uncertainty itself
+   changes a decision (blind spikes, seeded defects, execution outcomes,
+   independent-source checks); update the plausible set from those
+   observations; move the instrument to regime 1 once its reliability is
+   measured.
+
+The calibration budget is bounded and pre-declared, not derived from a formula
+we cannot estimate. [OPEN]: how to size it beyond "a fixed fraction of the
+verification budget"; and whether the plausible set should be an interval on
+miss rate and false-alarm rate or something richer — an interval is what we
+can actually write down today.
+
+Two consequences matter for us:
 
 1. **"Load-bearing" means decision-relevant.** EVOI, not EIG. An intervention
    on a claim that changes no decision has zero value however much it reduces
@@ -121,6 +157,30 @@ hash-checked) vs a zero-churn, asymmetric, unchecked one (thinking `effort`:
 never edited, never recorded). Churn predicts the next defect in the former;
 R1′ predicts the latter. **This is a genuine, cheap, forward prediction.**
 
+### 3.2b Correction (2026-09-02): configured vs realized effort
+
+The first draft of P4 risked treating "effort loads on one arm" as a confound
+to be controlled. Two different quantities were being conflated:
+
+- **Configured effort** — effort setting, reasoning-budget ceiling, timeout,
+  max tokens, any runtime configuration fixed *before* the arm runs. This is a
+  **pre-treatment symmetry invariant**: it must be identical across arms unless
+  it is deliberately part of the treatment. A configured difference is a
+  design defect (the R1′ cell).
+- **Realized effort** — actual thinking tokens, output tokens, wall-clock
+  reasoning, tool-processing volume. Retrieval availability may *cause* this to
+  change, which makes it a **mediator, mechanism indicator, or cost outcome —
+  not a confound.** It is never controlled away from the primary ITT effect,
+  and Stage 0A-M is not modified to equalise it.
+
+Prospective formulation: *configured effort/budget is a pre-treatment symmetry
+invariant recorded in the freeze record; realized effort is an observed
+treatment mediator/outcome logged per trial. Under equal configured limits,
+Stage 0A-M predicts retrieval-enabled trials may consume more realized effort
+and may therefore show arm-correlated dispatch failure if a shared resource
+ceiling binds.* The Stage 0B contract carries the configured-effort edge as
+`assumed_absent` with a `recorded_value` check.
+
 ### 3.3 P1–P7 reclassified
 
 | | Class | Cheapest valid test | Counts against R1′/R2′ if | Competing explanation |
@@ -128,7 +188,7 @@ R1′ predicts the latter. **This is a genuine, cheap, forward prediction.**
 | P1 judge-route × treatment | genuine but **weak** for R1′: derivable from known verbosity bias + measured length gap alone | SQL over `grades.method` × `trials.condition`, 0 calls | nothing decisive either way | verbosity bias as a standalone artifact |
 | P2 served-model clustering | **weak implication** — an infrastructure conjecture, not derived from R1′ | per-trial served-model log in Stage 0A-M | n/a | load-dependent routing |
 | P3 availability-without-use | **genuine**, derived from R1′ (tool definitions asymmetric, unchecked for outcome effect) | Stage 0A-M `NOT_ATTEMPTED` vs closed, pre-registered secondary | if the effect is *absent*, R1′ loses a predicted-cell defect | tool-distraction literature explains it without R1′ |
-| P4 effort loads on one arm | **genuine**, the cleanest R1′-vs-churn discriminator (asymmetric, unchecked, zero churn) | record `effort_level`; output tokens by arm | if no asymmetry, R1′ weakened *and* churn unhurt | none needed — it is the discriminator |
+| P4 configured vs realized effort | **genuine**, the cleanest R1′-vs-churn discriminator — but only for *configured* effort (asymmetric?, unchecked, zero churn); see the correction below | record configured effort/budget in the freeze record (symmetry invariant); log realized effort per trial (mediator/outcome) | if a *configured* asymmetry is found, R1′ supported; if none, R1′ weakened and churn unhurt | none needed for configured; realized asymmetry is predicted by *both* theories and by the treatment itself, so it is non-discriminating |
 | P5 committed-but-not-live recurs | **genuine**, from R2′ (repo file and live session are two representations without a correspondence test) | dump live agent list at freeze and diff | if the live/repo diff is empty across three future sessions | infrastructure flakiness |
 | P6 silent grader verdict flip | **genuine**, from R2′; has a clean negative form | commit a golden corpus, then make one "harmless" edit | if a golden corpus exists and a flip still escapes | none |
 | P7 narrative outruns ledger at boundaries | **genuine**, from R2′ | grep STATUS/NEXT completion claims against `git log` | if false claims appear equally away from boundaries | compaction loses detail (a memory mechanism, not a binding failure) — discriminated by whether the false claim predates compaction |
@@ -332,10 +392,13 @@ below a preset threshold for two consecutive rounds, or at budget.
 - Internal 1 — M1: retrieval harm on f07/f15. Incumbents: source-salience
   dominance; attentional displacement; query-construction failure. E: {stub
   tool always failing; irrelevant results; fixed high-quality query; closed}.
-- Internal 2 — M2: one-directional 2× tool-call under-report surviving budget
-  removal. Incumbents: reconstructive report; motivated report (already
-  disfavoured [MEASURED]). E: {per-call logging; end-of-task only; budget line
-  present/absent}.
+- Internal 2 — M2: one-directional 2× tool-call under-report that never exceeds
+  the stated ceiling. Incumbents: reconstructive report; ceiling-anchored
+  report; harness over-count. **Correction 2026-09-02:** the earlier note that
+  motivated report was "already disfavoured" rested on a false premise (the
+  budget line was present in every search condition); see
+  `docs/results/CAUSAL_INTROSPECTION_M2.md`. E: {per-call logging; end-of-task
+  only; a genuinely ceiling-free arm; request-id deduplication}.
 - External 1 — "when does retrieval hurt a correct parametric answer",
   incumbents from the 2024 knowledge-conflict literature, with 2025–26
   resolutions available for time-split validity.

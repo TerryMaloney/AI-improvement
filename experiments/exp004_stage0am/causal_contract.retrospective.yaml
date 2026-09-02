@@ -1,0 +1,58 @@
+# RETROSPECTIVE mapping of the frozen Stage 0A-M design onto the causal-contract
+# schema. Documentation fixture only: it is NOT a production gate for Stage 0A-M
+# (the rule begins prospectively with Stage 0B). It is deliberately declared
+# draft because two assumed-absent edges have no recorded artifact yet:
+# configured effort and the live agent registry. Those are the P4/P5 gaps.
+experiment: exp004_stage0am
+status: draft
+nodes: [treatment, model, served_model, system_instructions, tool_definitions, tool_use,
+        environment, item, evaluator, selection, outcome, missingness, cost_effort, shared_latent]
+required_edges:
+  - [treatment, tool_definitions]
+  - [tool_definitions, tool_use]
+  - [tool_use, outcome]
+  - [treatment, cost_effort]
+assumed_absent_edges:
+  - edge: [treatment, system_instructions]
+    check: {type: byte_identity, artifact: .claude/agents/stage0am-solver-closed.md,
+            test: tests/test_stage0am_agent_symmetry.py::test_stage0am_agent_bodies_are_byte_identical}
+  - edge: [treatment, evaluator]
+    check: {type: deterministic_route, artifact: lab/anchored_grading.py,
+            test: tests/test_stage0am_grader_golden_corpus.py::test_current_grader_matches_golden_corpus}
+  - edge: [selection, outcome]
+    check: {type: proof_or_rule, artifact: lab/stage0am.py:partition_pairs,
+            test: tests/test_stage0am_failure_semantics.py::TestTheRuleIsNotConditionedOnToolSuccess}
+  - edge: [shared_latent, outcome]
+    check: {type: design, artifact: docs/EXP004_STAGE0A_M_SPECIFICATION.md#1.5}
+  - edge: [environment, treatment]
+    check: {type: live_probe, artifact: experiments/exp004_stage0am/egress_probe.results.json}
+  - edge: [cost_effort, treatment]
+    check: {type: recorded_value, artifact: "[OPEN]",
+            note: "GAP (P4): configured effort not recorded in freeze_record.json"}
+  - edge: [model, treatment]
+    check: {type: recorded_value, artifact: "[OPEN]",
+            note: "GAP (P5): live agent registry not captured; model: inherit assumed"}
+bindings:
+  - construct: retrieval_enabled_treatment
+    claim: docs/EXP004_STAGE0A_M_SPECIFICATION.md#6
+    implementation: .claude/agents/stage0am-solver-web.md
+    fingerprint: experiments/exp004_stage0am/freeze_record.json:hashes.retrieval_agent_file_sha256_16
+    correspondence_test: tests/test_stage0am_agent_symmetry.py::test_agent_tool_difference_is_exactly_retrieval
+  - construct: primary_null_pointwise
+    claim: docs/EXP004_STAGE0A_M_SPECIFICATION.md#1.2
+    implementation: lab/stage0am.py:exact_one_sided_p
+    fingerprint: experiments/exp004_stage0am/manifest.json:grading_semantics.sha256_16
+    correspondence_test: tests/test_stage0am_failure_semantics.py::TestSpecificationMatchesTheCode
+  - construct: grading_semantics
+    claim: docs/EXP004_STAGE0A_M_SPECIFICATION.md#5
+    implementation: lab/anchored_grading.py
+    fingerprint: experiments/exp004_stage0am/manifest.json:grading_semantics.sha256_16
+    correspondence_test: tests/test_stage0am_grader_golden_corpus.py::test_current_grader_matches_golden_corpus
+  - construct: battery_and_keys
+    claim: docs/EXP004_STAGE0A_M_KEY_PROVENANCE.md
+    implementation: batteries/answers.anchored_v1.yaml
+    fingerprint: experiments/exp004_stage0am/manifest.json:battery_fingerprint
+    correspondence_test: tests/test_stage0am_battery.py::TestPostVerificationAudit
+open_fields:
+  - configured effort / resource settings (P4)
+  - live agent registry at freeze (P5)
