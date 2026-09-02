@@ -1,0 +1,50 @@
+{
+ "gate": "stage0am_runtime_correspondence",
+ "dispatch_mode": "claude -p --agent <agent> --model opus --output-format json --allowedTools WebSearch WebFetch  (identical for both arms)",
+ "why_allowedtools_is_passed_to_both": "so the permission grant cannot be an arm difference; the closed agent's own allowlist is empty, verified inert at runtime",
+ "expected_informational_difference": [
+  "WebFetch",
+  "WebSearch"
+ ],
+ "arms": {
+  "closed": {
+   "arm": "closed",
+   "declared_tools": [
+    "TodoWrite"
+   ],
+   "realized_tools": [],
+   "can_read_files": false,
+   "marker_seen": "NONE",
+   "models_used": [
+    "claude-haiku-4-5-20251001",
+    "claude-opus-5"
+   ],
+   "permission_denials": [],
+   "is_error": false,
+   "raw_result": "{\"tools\":[],\"can_read_files\":false,\"marker_seen\":\"NONE\"}"
+  },
+  "retrieval_enabled": {
+   "arm": "retrieval_enabled",
+   "declared_tools": [
+    "TodoWrite",
+    "WebFetch",
+    "WebSearch"
+   ],
+   "realized_tools": [
+    "WebFetch",
+    "WebSearch"
+   ],
+   "can_read_files": false,
+   "marker_seen": "NONE",
+   "models_used": [
+    "claude-haiku-4-5-20251001",
+    "claude-opus-5"
+   ],
+   "permission_denials": [],
+   "is_error": false,
+   "raw_result": "{\"tools\":[\"WebSearch\",\"WebFetch\"],\"can_read_files\":false,\"marker_seen\":\"NONE\"}"
+  }
+ },
+ "errors": [],
+ "status": "PASS"
+}

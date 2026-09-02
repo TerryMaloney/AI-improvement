@@ -1,6 +1,6 @@
 {
  "experiment": "exp004_stage0am",
- "status": "RUNTIME PREFLIGHT FAILED 2026-09-02 \u2014 CLOSED ARM UNSPAWNABLE; NO PRODUCTION",
+ "status": "FINAL PRE-PRODUCTION FREEZE 2026-09-02 \u2014 DISPATCH REPAIRED, ALL RUNTIME GATES PASS",
  "recorded_at_utc": "2026-09-01T23:34:02+00:00",
  "production_dispatches": 0,
  "treatment_exposure": "NONE",
@@ -62,21 +62,46 @@
   "full_suite": "green"
  },
  "runtime_validation": {
-  "status": "BLOCKED",
-  "attempted_at": "2026-09-02",
-  "detail": "experiments/exp004_stage0am/runtime_validation_2026-09-02.json",
-  "report": "docs/results/STAGE0AM_RUNTIME_BLOCKER_2026-09-02.md",
-  "closed_arm_spawnable": false,
+  "status": "PASS",
+  "validated_at": "2026-09-02T13:38:27+00:00",
+  "commit_at_validation": "a1cff562c18f129787302dc9979b17fbb734aeef",
+  "dispatch_mode": "claude -p --agent <agent> --model opus --output-format json --allowedTools WebSearch WebFetch  (identical for both arms)",
+  "runtime_correspondence_gate": "PASS",
+  "closed_canary": "PASS - launched, gradeable JSON, realized tools []",
+  "retrieval_canary": "PASS - launched, gradeable JSON, realized tools [WebSearch, WebFetch]",
+  "fresh_context_canary": "PASS - token ZEPHYR-LATTICE-70413 planted in trial A was not recoverable in trial B (answer NONE)",
+  "served_model": "claude-opus-5 (both arms); claude-haiku-4-5-20251001 also appears in modelUsage for both arms, symmetric harness background work, not the solver",
+  "configured_effort": "session effort_level=high; identical CLI flags for both arms; no per-agent effort setting",
+  "E_current": "search-capable, fetch-blocked \u2014 MATCHES the previously recorded E",
+  "egress_probe": "WebFetch 5/5 REFUSED_BY_PROXY incl. example.com; WebSearch 2/2 OK titles_and_content",
+  "claude_code_cli_version": "2.1.258",
+  "container_cc_version": "2.1.248",
+  "context_audit": "CLI --agent sessions load NO repo context, NO CLAUDE.md, NO MCP server instructions (probed and confirmed for the closed arm). This is cleaner than the in-session Agent path, where the github MCP server injected instructions. WebSearch results still carry an embedded citation reminder; that arrives only after retrieval and is therefore part of the retrieval treatment, not stripped.",
+  "production_dispatches": 0,
+  "all_gates_passed": true
+ },
+ "dispatch_repair_2026_09_02": {
+  "problem": "The in-session Agent tool refused to launch stage0am-solver-closed because its allowlist resolved to zero tools (TodoWrite unrecognized in this Claude Code build).",
+  "repair": "Change the DISPATCH MECHANISM, not the agent definitions or the science. Both arms now run through the identical command line: claude -p --agent <agent> --model opus --output-format json --allowedTools WebSearch WebFetch",
+  "why_minimal": "The agent files already produce the intended realized surfaces on this path (closed=[], retrieval=[WebSearch,WebFetch]), verified live. Editing the frontmatter was rejected as riskier: an empty `tools:` value could parse as 'inherit all tools', which would hand the closed solver file access and destroy key quarantine. Instead the declared/realized gap is made explicit and gated at runtime.",
+  "todowrite_status": "INERT. TodoWrite is unrecognized and resolves to nothing in both arms. It is no longer claimed to provide symmetric scaffolding. If a future build recognizes it, the runtime gate fails and production is blocked.",
+  "allowedtools_rationale": "Passed identically to BOTH arms so the permission grant cannot itself be an arm difference. Inert for the closed agent, verified at runtime.",
   "realized_tool_surface": {
    "closed": [],
    "retrieval_enabled": [
-    "WebSearch",
-    "WebFetch"
+    "WebFetch",
+    "WebSearch"
+   ],
+   "informational_difference": [
+    "WebFetch",
+    "WebSearch"
    ]
   },
-  "E_current": "search-capable, fetch-blocked (matches E)",
-  "served_model_retrieval_arm": "claude-opus-5",
-  "served_model_closed_arm": null,
-  "production_dispatches": 0
+  "declared_vs_realized_recorded_in": "experiments/exp004_stage0am/runtime_correspondence.json",
+  "estimand_unchanged": true,
+  "battery_unchanged": true,
+  "grader_unchanged": true,
+  "schedule_unchanged": true,
+  "R_unchanged": true
  }
 }
