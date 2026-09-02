@@ -27,6 +27,7 @@ Related research branches:
 - [`docs/PERSISTENT_SELF_IDENTITY_RESEARCH_MAP_2026-08-29.md`](PERSISTENT_SELF_IDENTITY_RESEARCH_MAP_2026-08-29.md)
 - [`docs/REFLEXIVE_ERROR_CORRECTION_RESEARCH_MAP_2026-08-30.md`](REFLEXIVE_ERROR_CORRECTION_RESEARCH_MAP_2026-08-30.md)
 - [`docs/EXTERNAL_COGNITIVE_TOOLS_AND_TOPOLOGY_2026-08-29.md`](EXTERNAL_COGNITIVE_TOOLS_AND_TOPOLOGY_2026-08-29.md)
+- [`docs/MACHINE_COMMUNICATION_AND_LATENT_REPRESENTATION_RESEARCH_MAP_2026-09-02.md`](MACHINE_COMMUNICATION_AND_LATENT_REPRESENTATION_RESEARCH_MAP_2026-09-02.md) — machine-optimized inter-agent communication ladder: natural language → human-designed structure → agent-designed symbolic interlingua → learned continuous representations → true latent/activation communication. Enters at the multi-agent/interactions junction, with protocol evolution delayed until automated discovery/recursive-improvement stages. **Program-level hypothesis branch; does not alter Stage 0B.**
 - [`docs/PRIOR_ART_AND_DESIGN_SIGNALS_2026-08-29.md`](PRIOR_ART_AND_DESIGN_SIGNALS_2026-08-29.md)
 - [`docs/FABLE_5_1_RESEARCH_DISCOVERY_2026-09-01.md`](FABLE_5_1_RESEARCH_DISCOVERY_2026-09-01.md) — failure taxonomy (G1–G7, two roots), EGP-perturbation compression of the six states, ranked portfolio, kill/merge list, novelty-engine proposal. **Proposal pending review; changes no frozen artifact.**
 - [`docs/EGP_AND_PREDICTION_FRONTIER_SYNTHESIS_2026-09-01.md`](EGP_AND_PREDICTION_FRONTIER_SYNTHESIS_2026-09-01.md) — red-team of the EGP synthesis (count ceiling REJECTED; robust-EVOI-with-reliability-learning adopted, not new); R1/R2 narrowed to falsifiable R1′/R2′ with a churn rival and a frozen forward prediction (P4); `EXPERIMENT_CAUSAL_CONTRACT` template for future families; NOVELTY-ENGINE-003 (prediction-frontier expansion: KNOWN theory, EXTENSION as generation objective) with a ≈280-call kill test; reviewed kill/merge list (nothing deleted). **Proposal; changes no frozen artifact.**
@@ -40,6 +41,8 @@ The reflexive error-correction branch adds six state families that future archit
 - objective / preference state;
 - evaluator state;
 - lineage / independence state.
+
+The machine-communication branch adds a separate experimental axis: **communication representation**. A symbolic machine shorthand is still token communication; true latent communication requires access to hidden states/activations. Any claimed gain must be tested against communication cost, error propagation, provenance/independence, external outcomes, and simpler compression baselines.
 
 These are program-level hypotheses. They do not alter frozen experiment-specific artifacts.
 
@@ -85,6 +88,8 @@ Compare at minimum:
 - model + human-designed validated procedure
 - later: model + automatically discovered procedure
 
+Once a stable multi-agent execution task and provenance baseline exist, Stage 3 also supplies the external outcome criterion needed for the first symbolic machine-communication experiments. Machine-language compression should not be promoted from judge preference alone.
+
 ### Stage 4 — Generalization
 Freeze procedures, then evaluate on tasks/repositories not used to discover them.
 
@@ -103,6 +108,8 @@ Candidates do not replace the champion until they pass the same experimental and
 
 Automated search must treat evaluator quality as part of the experiment. Improving the exposed score is not sufficient evidence of improving the underlying capability.
 
+This is the earliest stage at which an agent-designed communication protocol may be **automatically mutated/evolved** rather than merely authored and compared. Protocol search inherits the same champion/holdout/lineage rules as every other procedure search.
+
 ### Stage 6 — Recursive procedure improvement
 Loop:
 
@@ -116,7 +123,8 @@ Additional recursive risks:
 - correlated critic blind spots;
 - environmental limitations misread as model traits;
 - a prediction about the agent changing the agent once revealed;
-- objective/incentive distortion of information seeking.
+- objective/incentive distortion of information seeking;
+- communication protocols compressing away provenance, uncertainty, or dissent because those signals are rarely rewarded on the development set.
 
 Recursive descendants inherit artifacts and lineage, not validated capability claims. Claims must be re-earned against external evidence.
 
@@ -141,7 +149,8 @@ Additional experimentally earned inputs/actions may eventually include:
 - objective/incentive state;
 - anomaly / model-break escalation;
 - independent critic selection;
-- stronger external-verifier escalation.
+- stronger external-verifier escalation;
+- communication protocol / representation for multi-agent work, including a latent channel only if separately validated on infrastructure that exposes it.
 
 The product is the empirically validated procedure/control layer, not necessarily a new model.
 
@@ -187,6 +196,11 @@ Do not commercialize first. Use the system internally on useful work and generat
 - Structured output formats may alter the cognition being measured; when format
   compliance could interact with the arm, a structured field is a robustness
   check, never the primary route.
+- A machine-unreadable or human-opaque symbolic protocol is not thereby a latent
+  representation. Name the actual communication surface precisely.
+- Communication efficiency is not an unqualified capability gain. Measure what
+  compression does to provenance, uncertainty, dissent, independence, seeded-error
+  propagation, and externally checked task success.
 - GitHub is canonical project memory; chat sessions are working contexts.
 - Frozen artifacts are never silently changed after outcome visibility.
 - Re-grades are not replications.
