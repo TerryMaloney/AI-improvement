@@ -1,0 +1,80 @@
+{
+ "session": "execution attempt 2026-09-02",
+ "commit_at_validation": "888746e",
+ "result": "BLOCKED - RUNTIME PREFLIGHT FAILED AT PHASE 2/3. NO PRODUCTION DISPATCH.",
+ "production_dispatches": 0,
+ "treatment_exposure": "NONE - no production item was shown to any solver",
+ "screen_dispatches_this_session": 3,
+
+ "phase_1_static_suite": {"result": "PASS", "tests": 1397, "failures": 0},
+
+ "phase_2_live_agent_registry": {
+  "result": "FAIL",
+  "both_agents_registered": true,
+  "defect": "stage0am-solver-closed cannot be spawned. The harness refused: 'Agent stage0am-solver-closed would be spawned with zero tools - refusing. Its tools list resolved to nothing: unrecognized [TodoWrite].' TodoWrite is not a recognized subagent tool name in this runtime (Claude Code 2.1.248), so the closed arm's declared tool list resolves to the empty set and the harness will not launch a zero-tool agent.",
+  "declared_vs_realized": {
+   "closed_declared": ["TodoWrite"],
+   "closed_realized": [],
+   "closed_spawnable": false,
+   "retrieval_declared": ["TodoWrite", "WebSearch", "WebFetch"],
+   "retrieval_realized": ["WebSearch", "WebFetch"],
+   "retrieval_spawnable": true,
+   "note": "TodoWrite is silently dropped from the retrieval arm too. The realized informational-tool difference is still exactly {WebSearch, WebFetch}; the blocker is the harness guard against a zero-tool agent, not the scientific contrast."
+  },
+  "artifacts_that_assert_the_false_surface": [
+   "experiments/exp004_stage0am/freeze_record.json:tool_surface",
+   "experiments/exp004_stage0am/agent_symmetry.candidate.json:tool_allowlists",
+   "docs/EXP004_STAGE0A_M_AGENT_SYMMETRY_REMEDIATION.md",
+   "tests/test_stage0am_agent_symmetry.py::test_agent_tool_difference_is_exactly_retrieval"
+  ],
+  "why_the_tests_passed": "Every check reads the frontmatter of the committed file. None binds the DECLARED tool list to the REALIZED runtime surface. This is the R2' drift class: one construct, two representations, no correspondence test."
+ },
+
+ "phase_3_closed_canary": {"result": "NOT RUN - agent could not be spawned", "served_model": null},
+
+ "phase_4_retrieval_canary": {
+  "result": "PASS",
+  "agent": "stage0am-solver-web",
+  "launched": true,
+  "gradeable_json": true,
+  "served_model_self_reported": "claude-opus-5",
+  "tools_self_reported": ["WebSearch", "WebFetch"],
+  "configured_effort_exposed_to_agent": false,
+  "synthetic_question": "year ISO 8601 first published (non-production)",
+  "answer_summary": "1988, with revision history; confidence high; abstained false"
+ },
+
+ "phase_5_fresh_context": {"result": "NOT RUN - requires the closed agent"},
+
+ "phase_6_environment": {
+  "result": "PASS - E_current MATCHES the previously recorded E",
+  "probe": "experiments/exp004_stage0am/egress_probe.frozen.json, run verbatim through stage0am-solver-web",
+  "E_current": "search-capable, fetch-blocked",
+  "fetch": "5/5 REFUSED_BY_PROXY (EGRESS_BLOCKED), including example.com - blanket deny, not per-domain",
+  "search": "2/2 OK, titles_and_content",
+  "served_model_self_reported": "claude-opus-5",
+  "incidental": "The github MCP server injects usage instructions into the solver's context mid-run. Arm-symmetric (it reaches any subagent), so it does not differentiate the treatment, but it is context the packet does not control. Also: WebSearch tool output embeds a 'REMINDER: you MUST cite sources' instruction inside the result payload; the probe agent correctly treated it as injected text rather than an operator directive."
+ },
+
+ "session_facts": {
+  "session_context_model": "claude-opus-5",
+  "last_served_model": "claude-opus-5",
+  "configured_model_field": "claude-fable-5 (stale creation-time value; the session was switched to claude-opus-5)",
+  "effort_level": "high",
+  "permission_mode": "auto",
+  "claude_code_version": "2.1.248",
+  "environment_id": "env_01N5MJFEeY4NWrHqDMCp62hG",
+  "environment_kind": "anthropic_cloud",
+  "configured_effort_symmetry": "Both agents declare model: inherit and carry no per-agent effort setting, so configured effort is inherited identically. NOT independently verifiable for the closed arm because it never ran."
+ },
+
+ "model_symmetry_verdict": "UNVERIFIED. The retrieval arm reported claude-opus-5. The closed arm never ran, so the two-arm model-symmetry gate cannot be closed.",
+
+ "frozen_scientific_state_untouched": {
+  "battery_fingerprint": "1ec90754f1de2696",
+  "grader_sha256_16": "10adaf1dac94ea70",
+  "counts": "25 date_anchored / 25 definition_anchored / 15 arithmetic_control = 65",
+  "dispatches_planned": 130,
+  "last_material_change": "9c57635"
+ }
+}

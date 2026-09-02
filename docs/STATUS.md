@@ -64,6 +64,20 @@ The previous frozen probe established on the old shared solver-web path:
 
 Because Stage 0A-M now uses a dedicated web agent, execution-time preflight must re-run the same neutral environment check through `stage0am-solver-web`. Reachability is expected to match but must be measured, not assumed.
 
+## 2026-09-02 — EXECUTION ATTEMPT BLOCKED AT RUNTIME PREFLIGHT
+
+**Stage 0A-M did not run. Production dispatches 0; treatment exposure NONE.** Three screen-class synthetic dispatches; no production stem shown to any model.
+
+**Blocker:** `stage0am-solver-closed` cannot be spawned — `TodoWrite` is unrecognized in Claude Code 2.1.248, so the closed arm's tool list resolves to empty and the harness refuses a zero-tool agent. Realized surfaces: closed `[]`, retrieval `[WebSearch, WebFetch]`. The informational difference is still exactly the two retrieval tools, but the recorded "both arms carry TodoWrite" symmetry justification is **false at runtime**, and 1,397 green tests missed it because every check reads the file, none the runtime.
+
+**Not repaired here:** every fix changes the treatment definition (tool surface of both arms) and no safe recognized non-informational tool was identified. Options and a recommendation are in `docs/results/STAGE0AM_RUNTIME_BLOCKER_2026-09-02.md`.
+
+**Passed:** static suite 1,397/0; environment `E_current` = search-capable, fetch-blocked, **matching E exactly** (WebFetch 5/5 refused incl. example.com; WebSearch 2/2 OK); retrieval canary launched and returned gradeable JSON on `claude-opus-5`.
+
+**Open:** arm model symmetry UNVERIFIED (closed arm never ran); fresh-context isolation UNTESTED.
+
+**Prospective prediction scored:** the defect landed in a pre-declared R1′-high / churn-low cell (`live_agent_registry`). SUPPORTS R1′ over churn, n=1 — `experiments/meta_r1r2/observation_2026-09-02.md`.
+
 ## 2026-09-02 — last pre-results pass (zero dispatches)
 
 - **Causal contract implemented** (`lab/causal_contract.py`, tests, example, Stage 0B draft, Stage 0A-M retrospective fixture). Prospective rule for future families; not a Stage 0A-M gate.

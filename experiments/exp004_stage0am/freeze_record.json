@@ -1,6 +1,6 @@
 {
  "experiment": "exp004_stage0am",
- "status": "FREEZE-READY \u2014 STATIC VALIDATION COMPLETE; RUNTIME CANARIES BLOCKED BY SESSION AGENT REGISTRY",
+ "status": "RUNTIME PREFLIGHT FAILED 2026-09-02 \u2014 CLOSED ARM UNSPAWNABLE; NO PRODUCTION",
  "recorded_at_utc": "2026-09-01T23:34:02+00:00",
  "production_dispatches": 0,
  "treatment_exposure": "NONE",
@@ -43,7 +43,8 @@
    "WebSearch",
    "WebFetch"
   ],
-  "note": "TodoWrite is non-informational: it writes a private task list and cannot read files or the network. Both arms carry it so the tool-definition scaffolding differs only by the two retrieval tools."
+  "note": "TodoWrite is non-informational: it writes a private task list and cannot read files or the network. Both arms carry it so the tool-definition scaffolding differs only by the two retrieval tools.",
+  "RUNTIME_CORRECTION_2026-09-02": "The declared surface below is NOT the realized surface. TodoWrite is unrecognized in Claude Code 2.1.248 and is dropped from both arms; the closed arm therefore resolves to zero tools and cannot be spawned. Realized: closed=[], retrieval=[WebSearch, WebFetch]. The informational difference is unchanged, but the 'both arms carry TodoWrite' justification is false at runtime."
  },
  "static_symmetry_validation": {
   "agent_bodies_byte_identical": true,
@@ -62,13 +63,20 @@
  },
  "runtime_validation": {
   "status": "BLOCKED",
-  "reason": "Claude Code loads .claude/agents at session start. This session began 2026-08-27, before stage0am-solver-closed and stage0am-solver-web existed; the Agent tool reports them 'not found' and a context-reload request did not register them. Every runtime gate (closed canary, retrieval canary, fresh-context canary, egress probe via the dedicated agent) needs a session started after commit 0fb8a7f.",
-  "why_no_workaround_was_taken": "The generic 'claude'/'general-purpose' agents have Read/Bash and could open the answer key; the shared solver-closed/solver-web agents carry the asymmetric epistemic prompts the remediation exists to remove; a spawned child session would run the full validation and 130 dispatches unsupervised on a marginal budget.",
-  "pending_gates": [
-   "closed canary: launch + gradeable JSON + served model",
-   "retrieval canary: launch + gradeable JSON + WebSearch/WebFetch surface + same served model",
-   "fresh-context canary: synthetic token in trial 1 must be unrecoverable in trial 2",
-   "frozen egress probe through stage0am-solver-web; compare with E"
-  ]
+  "attempted_at": "2026-09-02",
+  "detail": "experiments/exp004_stage0am/runtime_validation_2026-09-02.json",
+  "report": "docs/results/STAGE0AM_RUNTIME_BLOCKER_2026-09-02.md",
+  "closed_arm_spawnable": false,
+  "realized_tool_surface": {
+   "closed": [],
+   "retrieval_enabled": [
+    "WebSearch",
+    "WebFetch"
+   ]
+  },
+  "E_current": "search-capable, fetch-blocked (matches E)",
+  "served_model_retrieval_arm": "claude-opus-5",
+  "served_model_closed_arm": null,
+  "production_dispatches": 0
  }
 }

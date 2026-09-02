@@ -569,3 +569,32 @@ struck through, not deleted.
 
 **Unchanged:** Stage 0A-M battery, keys, grader, schedule, treatment, inference.
 Production dispatches 0. Grader golden corpus (51 cases) passed unchanged.
+
+
+## 2026-09-02 — Stage 0A-M execution attempt blocked; closed arm unspawnable
+
+**Observation:** with the production model set to Opus 5, `stage0am-solver-closed`
+could not be launched. `TodoWrite` is not a recognized subagent tool in Claude
+Code 2.1.248; the closed arm's declared tool list resolves to the empty set and
+the harness refuses a zero-tool agent. The retrieval arm launched with realized
+tools `{WebSearch, WebFetch}` — `TodoWrite` dropped there too.
+
+**Decision:** STOP before production. Do not repair the tool surface in an
+execution session. Every available fix changes the treatment definition, and no
+recognized non-informational tool safe for both arms (key quarantine intact) was
+identified. Recorded, not resolved.
+
+**Decision:** the realized-vs-declared tool surface needs a correspondence check.
+Every existing symmetry check reads the committed frontmatter; none binds it to
+the runtime. 1,397 tests passed while the closed arm was undispatchable.
+
+**Measured and unchanged:** `E_current` = search-capable, fetch-blocked, matching
+the previously recorded `E` (WebFetch 5/5 refused including `example.com`;
+WebSearch 2/2 OK). No split-environment problem.
+
+**Prospective prediction scored:** the defect fell in the pre-declared
+`live_agent_registry` cell — R1′ high risk, churn low. SUPPORTS R1′ over the
+churn rival at n=1; the component was named in advance, the mechanism was not.
+
+**Unchanged:** battery `1ec90754f1de2696`, grader `10adaf1dac94ea70`, schedule,
+keys, hypothesis, inference, R. Production dispatches 0; treatment exposure NONE.
