@@ -1,0 +1,210 @@
+# SEMANTIC golden corpus for the Stage 0B CANDIDATE grader (lab/grading_v2.py).
+#
+# Authored BEFORE any Stage 0B production battery exists and before any Stage 0B
+# outcome. Expected verdicts were derived BY HAND from the semantics stated in
+# the module docstring -- not by running the grader and recording what it said.
+#
+# It is a SEMANTIC corpus, not a string corpus: the cases are built around the
+# distinction the Stage 0A-M grader could not draw, namely
+#
+#     "<accept> was X, and was later succeeded by <reject>"   -> CORRECT
+#     "<reject> was X"                                        -> INCORRECT
+#     "<reject>, who succeeded <accept>, was X"               -> INCORRECT
+#
+# All names, values and dates are SYNTHETIC. No production stem, key or answer
+# from any battery appears here, so the corpus can never leak an answer.
+#
+# Semantics relied on:
+#   span      the leading direct answer: first sentence, capped at 240 chars.
+#             A period ending a known abbreviation closes the span only when the
+#             next non-space character is a capital or a digit.
+#   entity    an accepted alias must appear in the SPAN, with no reject alias
+#             before it in the span. Rejects outside the span are elaboration.
+#   boolean   the FIRST polarity token (yes/no/not/never) in the span decides.
+#   numeric   a number within tolerance must appear in the SPAN; rejects never
+#             override a present correct value.
+#   abstain   an explicit declination is ABSTAIN, never INCORRECT.
+version: 1
+grader: lab/grading_v2.py
+cases:
+
+  # ================= entity: the load-bearing displacement distinction ========
+  - id: e01
+    route: exact_entity
+    key: {accept: [Marla Okonjo, Okonjo], rejects: [Piet Vandermeer, Vandermeer]}
+    answer: "Marla Okonjo. She held the office from 2011 until 2019, when Piet Vandermeer succeeded her."
+    expect: CORRECT
+    why: "accept leads the span; the successor is named only in a later sentence"
+  - id: e02
+    route: exact_entity
+    key: {accept: [Marla Okonjo, Okonjo], rejects: [Piet Vandermeer, Vandermeer]}
+    answer: "Piet Vandermeer. He held the office from 2019."
+    expect: INCORRECT
+    why: "the displacing entity is the direct answer"
+  - id: e03
+    route: exact_entity
+    key: {accept: [Marla Okonjo, Okonjo], rejects: [Piet Vandermeer, Vandermeer]}
+    answer: "Piet Vandermeer, who succeeded Marla Okonjo, held the post."
+    expect: INCORRECT
+    why: "both in the span, but the reject comes first -- this is the displaced answer"
+  - id: e04
+    route: exact_entity
+    key: {accept: [Marla Okonjo, Okonjo], rejects: [Piet Vandermeer, Vandermeer]}
+    answer: "Marla Okonjo, who was later succeeded by Piet Vandermeer, held the post."
+    expect: CORRECT
+    why: "both in the span, accept first -- a correct answer with its own context"
+  - id: e05
+    route: exact_entity
+    key: {accept: [Marla Okonjo, Okonjo], rejects: [Piet Vandermeer, Vandermeer]}
+    answer: "The office was held by Okonjo on that date."
+    expect: CORRECT
+    why: "short alias, no reject anywhere"
+  - id: e06
+    route: exact_entity
+    key: {accept: [Marla Okonjo, Okonjo], rejects: [Piet Vandermeer, Vandermeer]}
+    answer: "Not Piet Vandermeer -- Marla Okonjo held the office then."
+    expect: INCORRECT
+    why: "KNOWN LIMITATION, recorded deliberately: the span rule is positional, not
+          semantic, so a leading contrastive negation reads as a displaced answer.
+          Stage 0B's packet requires the direct answer first, which makes this
+          phrasing a protocol deviation rather than a silent misgrade."
+  - id: e07
+    route: exact_entity
+    key: {accept: [Marla Okonjo, Okonjo], rejects: [Piet Vandermeer, Vandermeer]}
+    answer: "I cannot determine who held the office on that date."
+    expect: ABSTAIN
+    why: "explicit declination is not an error"
+  - id: e08
+    route: exact_entity
+    key: {accept: [Zelbex Corp, Zelbex], rejects: [Quorvane Holdings, Quorvane]}
+    answer: "Zelbex Corp. The company was renamed Quorvane Holdings two years later."
+    expect: CORRECT
+    why: "'Corp.' is a known abbreviation but 'The' capitalises, so the span ends at it"
+  - id: e09
+    route: exact_entity
+    key: {accept: [Zelbex Corp, Zelbex], rejects: [Quorvane Holdings, Quorvane]}
+    answer: "Zelbex Corp. reported the filing, not Quorvane Holdings."
+    expect: CORRECT
+    why: "'reported' is lowercase, so the abbreviation does not end the span; accept still leads"
+  - id: e10
+    route: exact_entity
+    key: {accept: [Marla Okonjo, Okonjo], rejects: [Piet Vandermeer, Vandermeer]}
+    answer: "The post was vacant."
+    expect: INCORRECT
+    why: "no accepted alias anywhere in the span"
+
+  # ================= boolean: negation as context, not as answer ==============
+  - id: b01
+    route: boolean
+    key: {expected: true}
+    answer: "Yes. It was still a member on that date; it was no longer a member after the following March."
+    expect: CORRECT
+    why: "the first polarity token is 'yes'; the later 'no longer' is elaboration --
+          this is exactly the Stage 0A-M boolean false negative"
+  - id: b02
+    route: boolean
+    key: {expected: false}
+    answer: "No. It did not join until three years later."
+    expect: CORRECT
+    why: "first token 'no', expected false"
+  - id: b03
+    route: boolean
+    key: {expected: true}
+    answer: "No. It had already withdrawn by then."
+    expect: INCORRECT
+    why: "first token 'no', expected true"
+  - id: b04
+    route: boolean
+    key: {expected: false}
+    answer: "Yes, although the treaty was not ratified until later."
+    expect: INCORRECT
+    why: "first token 'yes', expected false; the later negation does not rescue it"
+  - id: b05
+    route: boolean
+    key: {expected: false}
+    answer: "It was never a member."
+    expect: CORRECT
+    why: "'never' is a polarity token and is first in the span"
+  - id: b06
+    route: boolean
+    key: {expected: true}
+    answer: "It was a member throughout that period."
+    expect: INCORRECT
+    why: "KNOWN LIMITATION: no polarity token in the span. Stage 0B's packet requires
+          an explicit yes/no, so this is a protocol deviation, recorded not guessed."
+  - id: b07
+    route: boolean
+    key: {expected: true}
+    answer: "I do not know whether it was a member on that date."
+    expect: ABSTAIN
+    why: "declination, not an error"
+  - id: b08
+    route: boolean
+    key: {expected: false}
+    answer: "Not on that date. Membership began the following year."
+    expect: CORRECT
+    why: "'not' is the first polarity token; expected false"
+
+  # ================= numeric: span-scoped, rejects never override ============
+  - id: n01
+    route: numeric
+    key: {value: 412, tolerance: 5, rejects: [178]}
+    answer: "412. An earlier survey using a narrower definition gave 178."
+    expect: CORRECT
+    why: "correct value leads the span; the contrast figure is elaboration"
+  - id: n02
+    route: numeric
+    key: {value: 412, tolerance: 5, rejects: [178]}
+    answer: "178 under the published figure."
+    expect: INCORRECT
+    why: "only the displacing value is present"
+  - id: n03
+    route: numeric
+    key: {value: 412, tolerance: 5, rejects: [178]}
+    answer: "412, not 178."
+    expect: CORRECT
+    why: "rejects do not override a present correct value -- preserved from Stage 0A-M"
+  - id: n04
+    route: numeric
+    key: {value: 412, tolerance: 5, rejects: [178]}
+    answer: "The figure was 178. The requested definition instead gives 412."
+    expect: INCORRECT
+    why: "SPAN-SCOPED: the correct value is outside the leading answer, so it does not
+          rescue a displaced direct answer. This is the intended tightening."
+  - id: n05
+    route: numeric
+    key: {value: 412, tolerance: 5, rejects: [178]}
+    answer: "417"
+    expect: CORRECT
+    why: "tolerance boundary is inclusive"
+  - id: n06
+    route: numeric
+    key: {value: 412, tolerance: 5, rejects: [178]}
+    answer: "417.1"
+    expect: INCORRECT
+    why: "just outside tolerance"
+  - id: n07
+    route: numeric
+    key: {value: 7, tolerance: 0.4, rejects: [8]}
+    answer: "Seven."
+    expect: CORRECT
+    why: "spelled small integers are extracted"
+  - id: n08
+    route: numeric
+    key: {value: 7, tolerance: 0.4, rejects: [8]}
+    answer: "I have no way to know that figure."
+    expect: ABSTAIN
+    why: "declination"
+  - id: n09
+    route: numeric
+    key: {value: 412, tolerance: 5, rejects: [178]}
+    answer: "There is no agreed figure."
+    expect: INCORRECT
+    why: "no number in the span, and it is not a declination phrase"
+  - id: n10
+    route: numeric
+    key: {value: 383.285, tolerance: 2.0, rejects: [394.328]}
+    answer: "Vex Inc. reported 383.3 for the period, down from 394.3 a year earlier."
+    expect: CORRECT
+    why: "the abbreviation does not end the span ('reported' is lowercase), so the
+          correct value is inside it; the reject does not override"

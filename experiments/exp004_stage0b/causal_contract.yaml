@@ -1,68 +1,199 @@
-# Stage 0B causal contract -- DRAFT. Stage 0B is the fresh-item confirmation and
-# query-construction challenge named in DECISION_LOG (2026-08-29). Its design is
-# NOT frozen; this file records which causal assumptions it will have to earn,
-# with [OPEN] where the design is not yet fixed. It authorizes nothing.
+# Stage 0B causal contract -- DRAFT, updated 2026-09-02 from the independent
+# post-result review of Stage 0A-M
+# (docs/EXP004_STAGE0AM_INDEPENDENT_REVIEW_2026-09-02.md).
+#
+# Stage 0B is the first genuine PROSPECTIVE use of EXPERIMENT_CAUSAL_CONTRACT.
+# The design is NOT frozen; this file records which causal assumptions Stage 0B
+# must earn, with [OPEN] where the design is not yet fixed. It authorizes nothing.
+#
+# WHAT CHANGED IN THIS PASS
+#   - the treatment is renamed: Stage 0B does not study "retrieval availability"
+#     (Stage 0A-M measured that: 8/65 uptake, 0/25 in the class with variance).
+#     It studies SEARCH-SNIPPET EXPOSURE with uptake forced to 1.0 by harness
+#     construction, plus the query-quality contrast;
+#   - `evaluator` is no longer assumed benign. The frozen Stage 0A-M grader
+#     mis-scored 30 of 130 production trials in two independent ways while every
+#     pre-production check passed, so the grader edge now carries a semantic
+#     golden corpus AND a measured repair assertion against real answers;
+#   - `selection -> outcome` is upgraded from a design promise to a written rule
+#     with three disjoint pools and a hard wall;
+#   - new bindings the three-arm design forces: fixed-query construction, the
+#     searcher's verbatim return, the answer-first packet instruction, forced
+#     uptake, result-relevance measurement, and the freeze/grade/analyse driver.
 experiment: exp004_stage0b
 status: draft
 nodes: [treatment, model, served_model, system_instructions, tool_definitions, tool_use,
         environment, item, evaluator, selection, outcome, missingness, cost_effort, shared_latent]
+
 required_edges:
-  - [treatment, tool_definitions]        # retrieval-enabled arm grants WebSearch/WebFetch
-  - [tool_definitions, tool_use]
-  - [tool_use, outcome]                  # ITT: the whole procedure's effect
-  - [treatment, cost_effort]             # REALIZED effort is a mediator/outcome, not a confound
+  - [treatment, tool_use]                # arms C and D execute a search by construction
+  - [tool_use, item]                     # the retrieved block is injected into the item packet
+  - [item, outcome]                      # the answering dispatch reads stem + injected block
+  - [treatment, cost_effort]             # REALIZED effort is a mediator/outcome, never equalised
+  - [selection, item]                    # the frozen selection rule determines the item set
+
 assumed_absent_edges:
+
+  # ---- arm symmetry -------------------------------------------------------
   - edge: [treatment, system_instructions]
     check: {type: byte_identity, artifact: "[OPEN]", test: "[OPEN]",
-            note: "Stage 0B agents not yet created; must reuse the byte-identical-body pattern"}
-  - edge: [treatment, evaluator]
-    check: {type: deterministic_route, artifact: lab/anchored_grading.py,
-            test: tests/test_stage0am_grader_golden_corpus.py::test_current_grader_matches_golden_corpus,
-            note: "grader reused as frozen; any change re-fingerprints"}
-  - edge: [selection, outcome]           # no post-treatment or reversal-based item selection
-    check: {type: design, artifact: docs/DECISION_LOG.md#2026-08-29,
-            note: "reversal prevalence is an outcome, never a selection criterion"}
-  - edge: [shared_latent, outcome]       # pairs independent enough for the exact test
-    check: {type: proof_or_rule, artifact: lab/stage0am.py,
-            note: "R=1; arm order randomised per item; sequential conditional inequality"}
-  - edge: [environment, treatment]       # env symmetric across arms; E measured via dedicated agent
+            note: "Stage 0B agents do not exist. The answering packet must be byte-identical
+                   across A, C and D except the injected results block, and the diff must be
+                   asserted, not described. Stage 0A-M's packet diff was 3 lines and asserted."}
+  - edge: [treatment, served_model]
+    check: {type: recorded_value, artifact: "[OPEN]",
+            note: "per-DISPATCH served-model log. Stage 0A-M logged one model per trial;
+                   a Stage 0B trial is up to three dispatches (query-writer, searcher,
+                   answerer) and each needs its own record."}
+  - edge: [cost_effort, treatment]       # CONFIGURED effort symmetric (pre-treatment invariant)
+    check: {type: recorded_value, artifact: "[OPEN]",
+            note: "freeze record must carry effort_level / max_tokens / timeout, identical
+                   across arms. Realized effort is NOT equalised: Stage 0A-M measured 506 vs
+                   161 median output tokens between searching and declining trials."}
+  - edge: [environment, treatment]
     check: {type: live_probe, artifact: "[OPEN]",
-            note: "run the frozen egress probe through the Stage 0B retrieval agent before dispatch"}
-  - edge: [cost_effort, treatment]       # CONFIGURED effort/budget symmetric (pre-treatment invariant)
-    check: {type: recorded_value, artifact: "[OPEN]",
-            note: "freeze record must carry effort_level / max_tokens / timeout, identical across arms"}
-  - edge: [served_model, treatment]      # both arms take the same served model
-    check: {type: recorded_value, artifact: "[OPEN]",
-            note: "per-trial served-model log; arm-blocked fallbacks reported"}
+            note: "E is search-capable, fetch-blocked. Re-probe through the Stage 0B agents
+                   before dispatch. No pooling across environments; the treatment is named
+                   search_snippet_exposure, never unrestricted web retrieval."}
+
+  # ---- the evaluator, which is where Stage 0A-M actually failed ------------
+  - edge: [treatment, evaluator]
+    check: {type: deterministic_route, artifact: lab/grading_v2.py,
+            test: tests/test_stage0b_grading_v2.py::test_candidate_grader_matches_hand_derived_semantics,
+            note: "No judge, no runtime escalation. The candidate grader is span-scoped so
+                   trailing elaboration cannot change a verdict -- elaboration length
+                   plausibly correlates with arm, which is how Stage 0A-M's only two
+                   discordant pairs were manufactured."}
+  - edge: [evaluator, outcome]           # the grader must not create outcomes of its own
+    check: {type: correspondence_test, artifact: tests/golden/stage0b_grader_semantic_corpus.yaml,
+            test: tests/test_stage0b_grading_v2.py::test_the_full_verdict_delta_against_the_frozen_grader_is_exactly_known,
+            note: "MEASURED against real answers: the candidate repairs all 30 Stage 0A-M
+                   false negatives, introduces zero new ones, and its two residual failures
+                   are enumerated. A verdict change nobody enumerated is the failure mode."}
+
+  # ---- selection ----------------------------------------------------------
+  - edge: [selection, outcome]
+    check: {type: design, artifact: docs/EXP004_STAGE0B_BATTERY_AUTHORING_PROTOCOL.md,
+            note: "Three disjoint pools with a hard wall: no item whose closed-book outcome
+                   has been observed may enter production. The divergence probe dispatches no
+                   solver and generates no answer. Reversal prevalence is an outcome and is
+                   never a selection criterion. Estimand is explicitly finite-selected-set."}
+  - edge: [outcome, item]                # no re-keying after exposure
+    check: {type: design, artifact: docs/ANSWER_KEY_CORRECTION_PROCESS.md,
+            note: "keys frozen with provenance before dispatch; no post-exposure re-keying"}
+
+  # ---- inference ----------------------------------------------------------
+  - edge: [shared_latent, outcome]
+    check: {type: proof_or_rule, artifact: lab/stage0am.py,
+            note: "R=1; randomised arm order within item; arms adjacent in time; fresh context
+                   per dispatch. The sequential conditional inequality is procedural, not
+                   statistical -- see lab/stage0am.py's module docstring on how badly
+                   cross-item dependence breaks this test."}
+  - edge: [missingness, treatment]       # dispatch mortality must not lean on an arm
+    check: {type: schema_equality, artifact: lab/stage0am.py,
+            test: tests/test_stage0am_failure_semantics.py::TestTheSixRequiredCases,
+            note: "Case A (retrieval-tool outcome, gradeable answer) is retained and graded;
+                   Case B (dispatch death) voids the pair symmetrically. Voiding on a
+                   treatment-arm-only variable is post-treatment selection. A three-dispatch
+                   trial has three ways to die and the rule must cover all of them: [OPEN]."}
+
 bindings:
-  - construct: retrieval_enabled_treatment
-    claim: docs/EXP004_STAGE0A_M_SPECIFICATION.md#6
+
+  - construct: search_snippet_exposure_treatment
+    claim: docs/EXP004_STAGE0B_DESIGN_DRAFT.md#4
     implementation: "[OPEN]"
     fingerprint: "[OPEN]"
     correspondence_test: "[OPEN]"
-  - construct: fixed_query_arm            # the Stage 0B addition: query-construction challenge
-    claim: docs/DECISION_LOG.md#2026-08-29
+
+  - construct: retrieval_uptake_forced_to_one
+    claim: docs/EXP004_STAGE0B_DESIGN_DRAFT.md#4.2
     implementation: "[OPEN]"
     fingerprint: "[OPEN]"
     correspondence_test: "[OPEN]"
+    # Stage 0A-M realized 8/65 uptake and 0/25 where it mattered. The dose is made
+    # structural (harness-executed search, results injected) rather than requested,
+    # so "the model declined" ceases to be a possible outcome.
+
+  - construct: fixed_query_construction
+    claim: docs/EXP004_STAGE0B_DESIGN_DRAFT.md#5
+    implementation: "[OPEN]"
+    fingerprint: "[OPEN]"
+    correspondence_test: "[OPEN]"
+    # Mechanical rule, derivable from the stem alone by a third party, frozen before
+    # production. Deliberately not further optimised: an optimised query would
+    # confound query quality with query effort.
+
+  - construct: searcher_verbatim_return
+    claim: docs/EXP004_STAGE0B_DESIGN_DRAFT.md#4.3
+    implementation: "[OPEN]"
+    fingerprint: "[OPEN]"
+    correspondence_test: "[OPEN]"
+    # A model sits between the query and the recorded content. Byte-identical agent
+    # body across C and D; a fixed synthetic query whose block must be reproduced
+    # verbatim; raw searcher output persisted per trial so summarisation is visible.
+
+  - construct: answer_first_packet_instruction
+    claim: docs/EXP004_STAGE0B_DESIGN_DRAFT.md#3.4
+    implementation: lab/grading_v2.py
+    fingerprint: "[OPEN]"
+    correspondence_test: tests/test_stage0b_grading_v2.py::test_span_rule_properties
+    # The span rule is only sound if the direct answer leads. The instruction is
+    # identical in every arm, so it cannot be an arm difference -- but it is part of
+    # the grader, not a prompt detail.
+
+  - construct: result_relevance_measurement
+    claim: docs/EXP004_STAGE0B_DESIGN_DRAFT.md#5
+    implementation: "[OPEN]"
+    fingerprint: "[OPEN]"
+    correspondence_test: "[OPEN]"
+    # Deterministic flags over the injected block: accept present / reject present /
+    # both / neither. Stage 0A-M could not compute this at all: the raw records carry
+    # no tool transcript and no query text.
+
+  - construct: item_selection_rule
+    claim: docs/EXP004_STAGE0B_BATTERY_AUTHORING_PROTOCOL.md#4
+    implementation: "[OPEN]"
+    fingerprint: "[OPEN]"
+    correspondence_test: "[OPEN]"
+
+  - construct: freeze_grade_analyse_driver
+    claim: docs/EXP004_STAGE0AM_INDEPENDENT_REVIEW_2026-09-02.md#1.1
+    implementation: "[OPEN]"
+    fingerprint: "[OPEN]"
+    correspondence_test: "[OPEN]"
+    # Stage 0A-M's driver was first committed in the same commit that first persisted
+    # raw outcomes, with 33 of 130 answers already on disk. The grading rule and test
+    # statistic were both frozen well before that, so the freeze holds -- but the
+    # driver is itself load-bearing and must be committed before the first dispatch.
+
   - construct: primary_null_pointwise
     claim: docs/EXP004_STAGE0A_M_SPECIFICATION.md#1.2
     implementation: lab/stage0am.py:exact_one_sided_p
     fingerprint: "[OPEN]"
     correspondence_test: tests/test_stage0am_failure_semantics.py::TestSpecificationMatchesTheCode
+
+  - construct: expected_discordance_sizing
+    claim: docs/EXP004_STAGE0B_DESIGN_DRAFT.md#7
+    implementation: lab/stage0b_power.py
+    fingerprint: runs/exp004_stage0b_design/power_simulation.json
+    correspondence_test: tests/test_stage0b_power.py::test_recommended_design_is_powered_where_it_claims_to_be
+    # Sized on E[D], not on n. Stage 0A-M realized D=2, where the smallest attainable
+    # p is 1/4: it could not have rejected at any orientation of its own data.
+
   - construct: failure_semantics_case_A_B
     claim: docs/EXP004_STAGE0A_M_SPECIFICATION.md#7
     implementation: lab/stage0am.py:partition_pairs
     fingerprint: "[OPEN]"
     correspondence_test: tests/test_stage0am_failure_semantics.py::TestTheSixRequiredCases
-  - construct: grading_semantics
-    claim: docs/EXP004_STAGE0A_M_SPECIFICATION.md#5
-    implementation: lab/anchored_grading.py
-    fingerprint: experiments/exp004_stage0am/manifest.json:grading_semantics.sha256_16
-    correspondence_test: tests/test_stage0am_grader_golden_corpus.py::test_current_grader_matches_golden_corpus
+
 open_fields:
-  - Stage 0B item set (fresh, treatment-blind) and its authoring protocol
+  - searcher agent and the results-injection harness (unbuilt; the largest gap)
+  - retrieval-divergence probe implementation
+  - calibration bank -- authored, dispatched, and its accuracy band measured
+  - grader freeze, which must wait until the calibration bank has exercised the span parser
+  - power re-derived from measured p and c_disp rather than assumed values
   - Stage 0B agent files (byte-identical bodies) and their hashes
-  - fixed-query arm implementation and packet
-  - execution environment probe via the Stage 0B retrieval agent
-  - configured effort / resource settings and served-model log
+  - per-dispatch served-model and configured-effort logging for a three-dispatch trial
+  - Case-B failure semantics extended to a three-dispatch trial
+  - execution-environment probe through the Stage 0B agents
+  - production items (NOT to be authored until the recipe is validated)

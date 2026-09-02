@@ -162,6 +162,31 @@ Do not commercialize first. Use the system internally on useful work and generat
 
 ## Permanent guardrails
 
+- A paired exact test spends DISCORDANT PAIRS, not sample size. Size on expected
+  discordance and record, before dispatch, the discordant count below which
+  rejection is arithmetically impossible.
+- Retrieval AVAILABILITY, retrieval USE, and QUERY QUALITY are three different
+  treatments. A result about one licenses nothing about the others.
+- A deterministic, fingerprinted, golden-corpus-tested evaluator is not thereby a
+  correct one. Every check that reads only the rule and never a realized output
+  can pass while the rule mis-scores the run.
+- An evaluator whose verdict can be changed by trailing elaboration is an
+  arm-correlated instrument, because elaboration length plausibly correlates with
+  the treatment.
+- Ceiling in BOTH arms is a measurement of the effect, not an absence of
+  measurement. Ceiling in the BASELINE arm alone is a favourable condition, not a
+  defect.
+- Harder items do not automatically buy power. In a one-sided paired test,
+  genuine repairs cancel genuine harms.
+- Prefer repairing the instrument over increasing n, and demonstrate the
+  preference by computing both.
+- A reported quantity computed from a field that was never populated is not a
+  measurement, however plausible its value looks.
+- The freeze/grade/analyse driver is itself a load-bearing construct and belongs
+  in the pre-dispatch freeze.
+- Structured output formats may alter the cognition being measured; when format
+  compliance could interact with the arm, a structured field is a robustness
+  check, never the primary route.
 - GitHub is canonical project memory; chat sessions are working contexts.
 - Frozen artifacts are never silently changed after outcome visibility.
 - Re-grades are not replications.

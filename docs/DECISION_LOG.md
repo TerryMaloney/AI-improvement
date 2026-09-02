@@ -628,3 +628,124 @@ undispatchable while 1,397 tests passed.
 
 **Prediction scoring:** P2 no fallback; P3 no effect at near-zero power; P4 not
 supported (realized effort near-identical, closed marginally higher).
+
+
+## 2026-09-02 — Independent review of Stage 0A-M: the null was structurally impossible to avoid
+
+**Reviewed by a separate session from the persisted artifacts only.** Execution
+validity was confirmed without qualification and the primary result was
+reconstructed exactly (`date_anchored` D=2, p = 3/4 exact; `definition_anchored`
+D=0). Reproduce: `python -m lab.stage0am_review`.
+
+**Decision: record that Stage 0A-M could not have rejected, and treat that as the
+finding.** The exact test spends discordant pairs; at D=2 the smallest attainable
+p is 1/4, against thresholds of 0.05 and 0.025. This is stronger than "low
+power": no orientation of the observed data reaches any threshold. Every future
+design in this program is sized on **expected discordance**, not on n.
+
+**Decision: the `anchored_v1` battery is RETIRED, not merely noted as easy.**
+Under a first-mention / first-polarity-token rule the run scores **130/130** with
+D=0 in every class. All 30 incorrect grades were instrument artifacts — 28 on the
+entity route, 2 on a previously unreported boolean-route defect. The battery
+contains zero items Opus 5 answers incorrectly. Production-exposed and at ceiling,
+`date_anchored` and `definition_anchored` are retired for confirmation;
+`date_anchored` survives only as a grader regression corpus. The arithmetic
+control is reused, plus 5 fresh items so an exposure effect would be visible.
+
+**Decision: correct the report's ceiling reasoning, without changing its numbers.**
+"Zero discordance is possible at a ceiling, so those classes contributed no
+information whatsoever" is wrong in its stated mechanism. The specification's own
+power model says a *closed-arm* ceiling is the most favourable condition. What
+produced D=0 was that the retrieval arm was also 25/25 — a measurement of the
+effect, not an absence of one, and the run's tightest harm bound (≤0.113).
+
+**Decision: the distinction that governs all future claims is AVAILABILITY vs
+CONSUMPTION.** Retrieval was attempted in 8/65 treated trials, **all 8 in the
+class at 100% accuracy in both arms, and 0/25 in `date_anchored`** — the only
+class with outcome variance. Both discordant retrieval-arm trials issued zero
+searches, so the two discordant pairs are provably grading artifacts. Stage 0A-M
+measured availability. The entire evidential basis about retrieved content is 8
+trials, bound ≤0.312.
+
+**Decision: `analysis.json`'s `retrieval_failure_rate` is a defective field and
+must not be cited.** `analyse_run` constructs every `TrialOutcome` with empty
+`retrieval_outcomes`, so it reports `attempted_retrieval: 0` by construction. The
+primary result does not depend on it. Future analyses bind retrieval fields to
+values actually recorded per trial.
+
+**Decision: the freeze/grade/analyse driver is itself load-bearing and must be
+committed before the first dispatch.** Stage 0A-M's was first committed in the
+same commit that first persisted outcomes, with 33 of 130 answers on disk. The
+freeze holds — the grading rule and test statistic were frozen at `9c57635`, well
+before any outcome, and are byte-identical from the freeze commit to HEAD — but
+the window is real and is closed prospectively rather than argued away.
+
+**R1′ scored again, n=2.** The grader was deterministic, fingerprinted, and
+covered by a 51-case golden corpus, and it mis-scored 30 of 130 production trials
+in two independent ways while 1,397 tests passed. As with the 2026-09-02
+`live_agent_registry` defect, every check read the rule and none read a realized
+output. SUPPORTS R1′ over the churn rival.
+
+**Unchanged:** Stage 0A-M raw outcomes, graded ledger, frozen grader
+`10adaf1dac94ea70`, official primary result, battery `1ec90754f1de2696`, schedule.
+
+
+## 2026-09-02 — Stage 0B design: fix the instrument, force the dose, do not author yet
+
+**Decision: Stage 0B studies retrieved CONTENT, with uptake forced to 1.0 by
+harness construction.** Objective: whether the content returned by an
+actually-executed search can displace an otherwise-correct anchored answer, and
+whether displacement is caused by the content or by the query that fetched it.
+Instructing a model to search is what Stage 0A-M effectively did; the dose is now
+structural — the harness executes the search and injects the results.
+
+**Decision: arms A (closed) + C (required, model-written query) + D (required,
+fixed query). ARM B (optional retrieval) is dropped.** Not for budget: at Stage
+0A-M's realized uptake an optional arm is unpowered at every n ≤ 120, and the
+question it answers is already answered. A vs C identifies the total effect;
+C vs D decomposes it into query-construction and content components. Dropping D
+would leave a null in C uninterpretable.
+
+**Decision: the construct changes, and it is renamed rather than smuggled.** This
+is `search_snippet_exposure`, not agentic retrieval and not unrestricted web
+retrieval. `E` is search-capable and fetch-blocked; a fetch-capable replication is
+a named follow-on and no result may be pooled across environments.
+
+**Decision: direct-answer-first span grading, not a structured answer field.**
+Three candidates were compared. Whole-answer parsing is rejected — it demonstrably
+cannot separate "Bolsonaro… later succeeded by Lula" from "Lula was president". A
+structured JSON field is the most parseable but changes the task the model
+performs, and format compliance can interact with the arm; that is a
+treatment-correlated instrument risk of exactly the kind that destroyed Stage
+0A-M, so it is a robustness replication, never primary. The span rule costs
+nothing behaviourally: 32/32 entity and 14/14 boolean Stage 0A-M answers already
+led with the direct answer. Implemented at `lab/grading_v2.py` with a hand-derived
+semantic corpus; it repairs all 30 false negatives, introduces none, and its two
+residual failures are enumerated and pinned by test.
+
+**Decision: pre-treatment difficulty calibration with three disjoint pools and a
+hard wall.** A calibration bank ≥3× production size that may NEVER enter
+production; a held-out production pool no solver sees before dispatch; a frozen
+selection rule; and a scripted retrieval-divergence probe that dispatches no
+solver and generates no outcome. Estimand is explicitly finite-selected-set.
+**Target closed-book accuracy 0.90–1.00, not a middling band** — at baseline ≤0.65
+the design is unreachable at n ≤ 120, because genuine repairs cancel harms in a
+one-sided paired test.
+
+**Decision: prefer fixing the instrument over increasing n — as a computed result.**
+At Stage 0A-M's measured grader false-negative rates the design is unpowered at
+every n up to 120. A 20-point symmetric rate costs 14 items; an 8-point asymmetric
+rate costs 33. Symmetric and asymmetric grader error are modelled separately
+because they fail differently: symmetric silently deletes at-risk items,
+asymmetric manufactures discordance — and Stage 0A-M's entire discordant sample
+was the latter.
+
+**Sizing:** n=50 primary items, K=1 primary family (A vs C) at α=0.05, C vs D as a
+preregistered secondary in its own family, 15 control items, E[D]=7.1,
+power 0.858, MDE δ=0.30, 390 dispatches, ≈$15.
+
+**DECISION: B — MORE DESIGN WORK REQUIRED. Battery authoring is NOT authorized.**
+The searcher and injection harness are unbuilt, so the divergence probe cannot
+run, so the calibration bank cannot run, so the recipe is unvalidated. A is not
+available, and choosing it to show progress is how a second uninformative null
+gets funded.

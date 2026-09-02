@@ -4,14 +4,27 @@
 
 ## Current phase
 
-**Stage 0A-M: agent-symmetry repair passes every static check and the full suite. Runtime validation (canaries, fresh-context, egress probe via the dedicated agent) is BLOCKED in the current session because Claude Code loads `.claude/agents` at session start and this session predates the dedicated agents. A fresh session is required. Production dispatches 0; treatment exposure NONE.**
+**Stage 0A-M is EXECUTED, COMPLETE and INDEPENDENTLY REVIEWED. Result: a null that
+could not have been anything else — at the realized discordant count D=2, the
+smallest attainable exact p is 1/4. Stage 0B is DESIGNED but NOT AUTHORIZED:
+decision B, more design work required. No Stage 0B dispatch has occurred and none
+is permitted.**
 
-Scientific state preserved and re-verified 2026-09-01:
-- 25 / 25 / 15 = 65 items, 130 planned dispatches, R=1;
-- battery fingerprint `1ec90754f1de2696`; grader fingerprint `10adaf1dac94ea70`;
-- common agent body `2e1fb5851b784b90`; agent files `f7423c6ecedd4568` / `770ebdc2adcc3c00`;
-- packets `1d47dc05e460a07b` / `4ad32bd810a1b542`, 3 differing lines, all in TOOLS;
-- full suite green (see freeze record and `tests/test_stage0am_freeze_record.py`).
+- Stage 0A-M: 130/130 dispatches under freeze `a1f4efb`, all `claude-opus-5`,
+  0 voids. Neither primary class rejected. Report:
+  `runs/exp004_stage0am/EXP004_STAGE0AM_REPORT.md`.
+- Independent review (2026-09-02, separate session):
+  `docs/EXP004_STAGE0AM_INDEPENDENT_REVIEW_2026-09-02.md`. Execution valid;
+  primary reconstruction exact; the null uninformative for reasons partly
+  different from those the report gives.
+- The `anchored_v1` battery is at **complete** ceiling for Opus 5 (130/130 under
+  a repaired grader) and is retired for confirmation.
+- Stage 0B design: `docs/EXP004_STAGE0B_DESIGN_DRAFT.md`; authoring protocol
+  `docs/EXP004_STAGE0B_BATTERY_AUTHORING_PROTOCOL.md`; contract
+  `experiments/exp004_stage0b/causal_contract.yaml` (draft, [OPEN] fields).
+- Frozen fingerprints, unchanged: battery `1ec90754f1de2696`, Stage 0A-M grader
+  `10adaf1dac94ea70`, schedule `321c3a2397958c30`.
+- Full suite: 1466 passing.
 
 ## Red-team of the remediation (2026-09-01)
 
@@ -63,6 +76,72 @@ The previous frozen probe established on the old shared solver-web path:
 `E` was therefore search-capable, fetch-blocked.
 
 Because Stage 0A-M now uses a dedicated web agent, execution-time preflight must re-run the same neutral environment check through `stage0am-solver-web`. Reachability is expected to match but must be measured, not assumed.
+
+## 2026-09-02 — INDEPENDENT POST-RESULT REVIEW OF STAGE 0A-M + STAGE 0B DESIGN
+
+**Independent review by a separate session.** Full verdict table:
+`docs/EXP004_STAGE0AM_INDEPENDENT_REVIEW_2026-09-02.md`. Reproduce with
+`python -m lab.stage0am_review`. **Nothing frozen was altered.**
+
+**EXECUTION VALIDITY: clean, no qualification.** 130 raw files ≡ 130 ledger rows
+≡ 130 graded rows; 65 complete pairs; one freeze commit `a1f4efb` across all
+trials; 0 voids, 0 dispatch failures, 0 permission denials, 0 harness errors;
+schedule compliance errors 0/65; all freeze hashes recomputed and matched.
+
+**PRIMARY RECONSTRUCTION: reproduces the official result exactly.** Re-running the
+frozen grader on the frozen answers gives all 130 grades with 0 mismatches.
+`date_anchored` 14/1/1/9, D=2, p = **3/4** in exact rationals; `definition_anchored`
+D=0 p=1; control 15/15. Every field of `analysis.json` agrees. No material
+disagreement on the result — the disagreements are about its interpretation.
+
+**Four findings that go beyond the Stage 0A-M report:**
+
+1. **The run could not have rejected.** At D=2 the smallest attainable exact p is
+   **1/4**. Rejection needs D≥5 at α=0.05, D≥6 at the Holm first step. Stage 0A-M
+   was incapable of rejecting before a single grade was read.
+2. **A second, unreported grading artifact, on the boolean route.** `a09` opened
+   with "Yes." in *both* arms and was graded incorrect in both, because `no`
+   matches inside "no longer a member state" 409 characters later. The rule is
+   polarity-asymmetric: only `expected=True` items are exposed, and 6 of 7 boolean
+   items expected False, which hid it.
+3. **The battery is at COMPLETE ceiling, not mostly.** All 32 entity trials named
+   the correct entity; in all 28 graded-incorrect cases it appeared *strictly
+   before* the reject. Under a repaired grader the run scores **130/130** with D=0
+   in every class. All 30 incorrect grades in the experiment are instrument
+   artifacts. `anchored_v1` contains zero items Opus 5 gets wrong.
+4. **All 8 retrieval attempts landed in the ceiling class.** `definition_anchored`
+   8/25; **`date_anchored` 0/25**; control 0/15. The only class with outcome
+   variance received zero doses of the mechanism. Both discordant retrieval-arm
+   trials issued **zero searches**, so the two discordant pairs are provably
+   grading artifacts, not inferred ones.
+
+**Corrections to the report's reasoning, not its numbers:** "ceiling ⇒ no
+information" is wrong — the spec's own power model says a *closed-arm* ceiling is
+the most favourable condition, and `definition_anchored` produced the run's
+tightest harm bound (≤0.113 availability; ≤0.312 restricted to the 8 trials that
+actually retrieved). And `analysis.json`'s `retrieval_failure_rate`
+(`attempted_retrieval: 0`) is **vacuous** — `analyse_run` fed it empty tuples;
+it must not be cited. The primary result does not depend on it.
+
+**STAGE 0B DESIGNED, NOT AUTHORIZED.** `docs/EXP004_STAGE0B_DESIGN_DRAFT.md`.
+Objective: whether **retrieved content** can displace an otherwise-correct
+anchored answer, and whether displacement comes from the content or the query —
+with uptake forced to 1.0 by harness construction rather than requested.
+Arms **A (closed) + C (required, model query) + D (required, fixed query)**;
+**B dropped**, because an optional arm at Stage 0A-M's uptake is unpowered at
+every n≤120. Grader repaired (`lab/grading_v2.py`, span-scoped, three verdicts):
+repairs all 30 false negatives, adds none, two enumerated residuals. Power sized
+on **expected discordance** (`lab/stage0b_power.py`): n=50 primary, K=1, α=0.05,
+E[D]=7.1, power 0.858, MDE δ=0.30, ≈$15. Battery: `date_anchored` and
+`definition_anchored` **RETIRED**, arithmetic control **REUSED** plus 5 fresh items.
+Environment scoped as `search_snippet_exposure`, fetch-blocked, replication planned.
+
+**DECISION: B — MORE DESIGN WORK REQUIRED.** The searcher and results-injection
+harness are unbuilt, so the divergence probe cannot run, so the calibration bank
+cannot run, so the item recipe is unvalidated. Authoring against an unvalidated
+recipe would repeat Stage 0A-M's actual mistake.
+
+**Tests:** 1466 passing (was 1404).
 
 ## 2026-09-02 — STAGE 0A-M EXECUTED AND COMPLETE
 
