@@ -1,0 +1,127 @@
+{
+ "_wall_s": 7.7,
+ "_returncode": 0,
+ "_cmd": [
+  "claude",
+  "-p",
+  "--agent",
+  "stage0am-solver-closed",
+  "--model",
+  "opus",
+  "--output-format",
+  "json",
+  "--allowedTools",
+  "WebSearch",
+  "WebFetch"
+ ],
+ "duration_api_ms": 5406,
+ "stop_reason": "end_turn",
+ "session_id": "da90f8ac-94a6-5327-8f35-a039a241c696",
+ "total_cost_usd": 0.017855999999999997,
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 966,
+  "cache_read_input_tokens": 0,
+  "output_tokens": 280,
+  "output_tokens_details": {
+   "thinking_tokens": 48
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 966,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "not_available",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 280,
+    "cache_read_input_tokens": 0,
+    "cache_creation_input_tokens": 966,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 966
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "modelUsage": {
+  "claude-haiku-4-5-20251001": {
+   "inputTokens": 1106,
+   "outputTokens": 16,
+   "cacheReadInputTokens": 0,
+   "cacheCreationInputTokens": 0,
+   "webSearchRequests": 0,
+   "costUSD": 0.001186,
+   "contextWindow": 200000,
+   "maxOutputTokens": 32000,
+   "thinkingTokens": 0,
+   "canonicalModel": "claude-haiku-4-5",
+   "provider": "firstParty",
+   "costBasis": "list"
+  },
+  "claude-opus-5": {
+   "inputTokens": 2,
+   "outputTokens": 280,
+   "cacheReadInputTokens": 0,
+   "cacheCreationInputTokens": 966,
+   "webSearchRequests": 0,
+   "costUSD": 0.016669999999999997,
+   "contextWindow": 1000000,
+   "maxOutputTokens": 64000,
+   "thinkingTokens": 48,
+   "canonicalModel": "claude-opus-5",
+   "provider": "firstParty",
+   "costBasis": "list"
+  }
+ },
+ "permission_denials": [],
+ "terminal_reason": "completed",
+ "fast_mode_state": "off",
+ "fast_mode_disabled_reason": "sdk_opt_in_required",
+ "subagent_stats": {
+  "spawned": 0,
+  "requested": {
+   "background": 0,
+   "foreground": 0,
+   "unset": 0
+  },
+  "started_in_background": 0,
+  "max_depth": 0,
+  "spawned_by_subagents": 0,
+  "completed": 0,
+  "failed": 0,
+  "killed": {
+   "parent": 0,
+   "user": 0,
+   "system": 0
+  },
+  "refused": {
+   "depth_limit": 0,
+   "concurrency_limit": 0,
+   "budget": 0
+  },
+  "by_type": {}
+ },
+ "is_error": false,
+ "num_turns": 1,
+ "subtype": "success",
+ "api_error_status": null,
+ "result": "{\"answer\": \"As of 1 January 2024, 20 of the 27 European Union member states had adopted the euro as their official currency, forming the euro area (eurozone). They are: Austria, Belgium, Croatia, Cyprus, Estonia, Finland, France, Germany, Greece, Ireland, Italy, Latvia, Lithuania, Luxembourg, Malta, the Netherlands, Portugal, Slovakia, Slovenia and Spain. Croatia was the most recent to join, adopting the euro on 1 January 2023. (Bulgaria became the 21st member on 1 January 2026, but that was after the date specified.)\", \"confidence\": \"high\", \"abstained\": false}",
+ "ttft_ms": 2093,
+ "type": "result",
+ "duration_ms": 5535,
+ "uuid": "1e7ffeb0-2644-4053-9bef-656743dcdf69",
+ "ttft_stream_ms": 1261,
+ "time_to_request_ms": 163,
+ "time_to_request_from_spawn_ms": 850405,
+ "warm_spare_claimed": false,
+ "time_origin_ms": 1788356676573.5906,
+ "queued_turn_count": 0
+}

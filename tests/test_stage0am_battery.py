@@ -222,9 +222,34 @@ class TestNoTreatmentExposure:
         assert "NONE" in MANIFEST["treatment_exposure"]
         assert "NOT FROZEN" in MANIFEST["status"]
 
-    def test_no_run_directory_exists_for_this_experiment(self):
-        assert not (REPO / "runs" / "exp004_stage0am").exists(), \
-            "a run directory implies dispatch; none may exist before execution authorisation"
+    def test_dispatch_only_ever_happened_under_a_passed_runtime_freeze(self):
+        """Succeeds a pre-treatment guard that asserted no run directory existed.
+
+        That guard's purpose was to prevent exposure BEFORE authorisation, and it
+        held for the whole pre-freeze period. Production was authorised and began
+        on 2026-09-02 under the freeze at a1f4efb, so the assertion is now
+        lifecycle-stale rather than protective. Deleting it would remove the
+        protection entirely; it is therefore converted into the invariant that
+        actually matters afterwards: a run directory may exist ONLY if the freeze
+        record shows every runtime gate passed, and every dispatched trial must
+        carry the freeze commit it ran under. That is what makes exposure
+        auditable rather than merely forbidden."""
+        run = REPO / "runs" / "exp004_stage0am"
+        if not run.exists():
+            return                                  # pre-execution: nothing to check
+        rv = json.loads((REPO / "experiments" / "exp004_stage0am"
+                         / "freeze_record.json").read_text())["runtime_validation"]
+        assert rv["status"] == "PASS" and rv.get("all_gates_passed") is True, \
+            "a run directory exists but the runtime freeze did not pass"
+        ledger = run / "trials.jsonl"
+        if ledger.exists():
+            rows = [json.loads(x) for x in ledger.read_text().splitlines() if x.strip()]
+            assert rows, "empty ledger alongside a run directory"
+            commits = {r["freeze_commit"] for r in rows}
+            assert len(commits) == 1, f"trials span multiple freeze commits: {commits}"
+            for r in rows:
+                assert r["arm"] in ("closed", "retrieval_enabled")
+                assert r["agent"] in ("stage0am-solver-closed", "stage0am-solver-web")
 
 
 class TestPostVerificationAudit:

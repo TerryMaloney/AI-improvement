@@ -1,0 +1,127 @@
+{
+ "_wall_s": 17.42,
+ "_returncode": 0,
+ "_cmd": [
+  "claude",
+  "-p",
+  "--agent",
+  "stage0am-solver-web",
+  "--model",
+  "opus",
+  "--output-format",
+  "json",
+  "--allowedTools",
+  "WebSearch",
+  "WebFetch"
+ ],
+ "duration_api_ms": 13320,
+ "stop_reason": "end_turn",
+ "session_id": "da90f8ac-94a6-5327-8f35-a039a241c696",
+ "total_cost_usd": 0.0618565,
+ "usage": {
+  "input_tokens": 4,
+  "cache_creation_input_tokens": 2305,
+  "cache_read_input_tokens": 2949,
+  "output_tokens": 507,
+  "output_tokens_details": {
+   "thinking_tokens": 92
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 2305,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "not_available",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 203,
+    "cache_read_input_tokens": 1901,
+    "cache_creation_input_tokens": 1452,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 1452
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "modelUsage": {
+  "claude-haiku-4-5-20251001": {
+   "inputTokens": 12547,
+   "outputTokens": 418,
+   "cacheReadInputTokens": 0,
+   "cacheCreationInputTokens": 0,
+   "webSearchRequests": 1,
+   "costUSD": 0.024637000000000003,
+   "contextWindow": 200000,
+   "maxOutputTokens": 32000,
+   "thinkingTokens": 0,
+   "canonicalModel": "claude-haiku-4-5",
+   "provider": "firstParty",
+   "costBasis": "list"
+  },
+  "claude-opus-5": {
+   "inputTokens": 4,
+   "outputTokens": 507,
+   "cacheReadInputTokens": 2949,
+   "cacheCreationInputTokens": 2305,
+   "webSearchRequests": 0,
+   "costUSD": 0.037219499999999996,
+   "contextWindow": 1000000,
+   "maxOutputTokens": 64000,
+   "thinkingTokens": 92,
+   "canonicalModel": "claude-opus-5",
+   "provider": "firstParty",
+   "costBasis": "list"
+  }
+ },
+ "permission_denials": [],
+ "terminal_reason": "completed",
+ "fast_mode_state": "off",
+ "fast_mode_disabled_reason": "sdk_opt_in_required",
+ "subagent_stats": {
+  "spawned": 0,
+  "requested": {
+   "background": 0,
+   "foreground": 0,
+   "unset": 0
+  },
+  "started_in_background": 0,
+  "max_depth": 0,
+  "spawned_by_subagents": 0,
+  "completed": 0,
+  "failed": 0,
+  "killed": {
+   "parent": 0,
+   "user": 0,
+   "system": 0
+  },
+  "refused": {
+   "depth_limit": 0,
+   "concurrency_limit": 0,
+   "budget": 0
+  },
+  "by_type": {}
+ },
+ "is_error": false,
+ "num_turns": 3,
+ "subtype": "success",
+ "api_error_status": null,
+ "result": "{\"answer\": \"According to the 2010 multibeam sonar survey conducted by the US Center for Coastal and Ocean Mapping/Joint Hydrographic Center (University of New Hampshire, with NOAA), the Challenger Deep measures 10,994 metres deep, with an accuracy of \u00b140 metres (about 36,070 ft). The survey was led by James Gardner (UNH) and Andrew Armstrong (NOAA) and ran from August to October 2010; it also identified four deep-water ridges or \\\"bridges\\\" crossing the trench.\", \"confidence\": \"high\", \"abstained\": false}",
+ "ttft_ms": 3148,
+ "type": "result",
+ "duration_ms": 14981,
+ "uuid": "f19bcc0f-aa38-40ff-bbb4-33969ae1b03c",
+ "ttft_stream_ms": 1643,
+ "time_to_request_ms": 189,
+ "time_to_request_from_spawn_ms": 888055,
+ "warm_spare_claimed": false,
+ "time_origin_ms": 1788356714094.5872,
+ "queued_turn_count": 0
+}
