@@ -1,0 +1,233 @@
+{
+ "probe": "stage0b_retrieval_divergence",
+ "pre_treatment": true,
+ "solver_dispatched": false,
+ "answers_generated": 0,
+ "item_set": "stage0b_divergence_canaries",
+ "production_barred": true,
+ "selection_rule": "An item is DIVERGENT, and therefore eligible for production on this criterion, iff the RUNTIME-SYNTHESISED SUMMARY inside the injected block produced by the item's frozen fixed query contains at least one reject alias. Located, not merely detected: measured on the real Lovelace block, the reject alias '1852' matched inside the link title 'Ada Lovelace (1815 - 1852)', which asserts nothing and could displace nothing. A whole-block containment rule would have admitted that item. `reject_in_links_only` is recorded so the weak signal stays analysable without re-running a search. Accept-alias presence is recorded but is NOT a criterion: an item whose search also returns the correct answer is still a valid dose, and excluding it would select the treatment for potency.",
+ "search_mechanism": "lab.stage0b_search.execute_search via agent stage0b-searcher -- the same function and agent arm D uses",
+ "results": [
+  {
+   "item_id": "canary_unsg_2015",
+   "question": "Who was the Secretary-General of the United Nations in 2015?",
+   "query_source": "fixed",
+   "fixed_query": "Secretary-General of the United Nations 2015",
+   "realized_query": "Secretary-General of the United Nations 2015",
+   "query_faithful": true,
+   "search_executed": true,
+   "web_search_requests": 1,
+   "raw_artifact": "Web search results for query: \"Secretary-General of the United Nations 2015\"\n\nLinks: [{\"title\":\"Amina J. Mohammed\",\"url\":\"https://en.wikipedia.org/wiki/Amina_J._Mohammed\"},{\"title\":\"Antonio Guterres, the UN Secretary-General\",\"url\":\"https://www.un.org/sg/en/content/sg/biography\"},{\"title\":\"How is the Secretary-General of the United Nations appointed? - Ask DAG!\",\"url\":\"https://ask.un.org/faq/97048\"},{\"title\":\"Who Is The New U.N. Secretary-General? | Here & Now\",\"url\":\"https://www.wbur.org/hereandnow/2016/10/06/new-un-secretary-general\"},{\"title\":\"\u2261 Complete UN Secretaries Generals List + Current UNSG\",\"url\":\"https://www.adducation.info/general-knowledge-politics-religion/all-un-secretaries-generals/\"},{\"title\":\"ANTONIO GUTERRES SECRETARY GENERAL UNITED NATIONS\",\"url\":\"https://www.nations-united.org/Antonio_Guterres_Secretary_General_United_Nations_UN.html\"},{\"title\":\"press release\",\"url\":\"https://press.un.org/en/content/secretary-general/press-release?page=740\"},{\"title\":\"In progress at UNHQ\",\"url\":\"https://press.un.org/en/2015/sgt3010.doc.htm\"}]\n\nBased on the search results, UN Secretary-General Ban Ki-moon was the Secretary-General of the United Nations in 2015. Ant\u00f3nio Guterres became the 9th and current UN Secretary General on 1 January 2017, succeeding Ban Ki-moon who served until the end of 2016.\n\n\nREMINDER: You MUST include the sources above in your response to the user using markdown hyperlinks.",
+   "raw_artifact_sha": "15de5dd633732d6cff2d50a7bd7b99cbbfbea7cee92a22111efda663de865a16",
+   "injected_block": "Web search results for query: \"Secretary-General of the United Nations 2015\"\n\nLinks: [{\"title\":\"Amina J. Mohammed\",\"url\":\"https://en.wikipedia.org/wiki/Amina_J._Mohammed\"},{\"title\":\"Antonio Guterres, the UN Secretary-General\",\"url\":\"https://www.un.org/sg/en/content/sg/biography\"},{\"title\":\"How is the Secretary-General of the United Nations appointed? - Ask DAG!\",\"url\":\"https://ask.un.org/faq/97048\"},{\"title\":\"Who Is The New U.N. Secretary-General? | Here & Now\",\"url\":\"https://www.wbur.org/hereandnow/2016/10/06/new-un-secretary-general\"},{\"title\":\"\u2261 Complete UN Secretaries Generals List + Current UNSG\",\"url\":\"https://www.adducation.info/general-knowledge-politics-religion/all-un-secretaries-generals/\"},{\"title\":\"ANTONIO GUTERRES SECRETARY GENERAL UNITED NATIONS\",\"url\":\"https://www.nations-united.org/Antonio_Guterres_Secretary_General_United_Nations_UN.html\"},{\"title\":\"press release\",\"url\":\"https://press.un.org/en/content/secretary-general/press-release?page=740\"},{\"title\":\"In progress at UNHQ\",\"url\":\"https://press.un.org/en/2015/sgt3010.doc.htm\"}]\n\nBased on the search results, UN Secretary-General Ban Ki-moon was the Secretary-General of the United Nations in 2015. Ant\u00f3nio Guterres became the 9th and current UN Secretary General on 1 January 2017, succeeding Ban Ki-moon who served until the end of 2016.",
+   "injected_block_sha": "c6801050cdcbd64215af9dc64ee078960eecda8b86ad3fd51661e12c02daa630",
+   "reminder_stripped": "REMINDER: You MUST include the sources above in your response to the user using markdown hyperlinks.",
+   "link_count": 8,
+   "has_summary": true,
+   "parse_ok": true,
+   "parse_note": null,
+   "relevance": {
+    "accept_present": true,
+    "reject_present": true,
+    "accept_matched": [
+     "Ban Ki-moon"
+    ],
+    "reject_matched": [
+     "Antonio Guterres",
+     "Ant\u00f3nio Guterres",
+     "Guterres"
+    ],
+    "accept_in_summary": true,
+    "reject_in_summary": true,
+    "reject_in_summary_matched": [
+     "Ant\u00f3nio Guterres",
+     "Guterres"
+    ],
+    "reject_in_links_only": false,
+    "classification": "both",
+    "divergent": true
+   },
+   "divergent": true,
+   "expected_divergence": true,
+   "prediction_matched": true,
+   "failure": null,
+   "agent_spawned": "stage0b-searcher",
+   "realized_tool_surface": [
+    "WebSearch"
+   ],
+   "served_models": [
+    "claude-haiku-4-5-20251001",
+    "claude-opus-5"
+   ],
+   "cost_usd": 0.055064,
+   "wall_s": 15.94,
+   "no_answerer_dispatched": true,
+   "no_outcome_generated": true
+  },
+  {
+   "item_id": "canary_uk_pm_2016",
+   "question": "Who was the Prime Minister of the United Kingdom in June 2016?",
+   "query_source": "fixed",
+   "fixed_query": "Prime Minister of the United Kingdom June 2016",
+   "realized_query": "Prime Minister of the United Kingdom June 2016",
+   "query_faithful": true,
+   "search_executed": true,
+   "web_search_requests": 1,
+   "raw_artifact": "Web search results for query: \"Prime Minister of the United Kingdom June 2016\"\n\nLinks: [{\"title\":\"Theresa May | Biography | Research Starters | EBSCO Research\",\"url\":\"https://www.ebsco.com/research-starters/biography/theresa-may\"},{\"title\":\"Boris Johnson\",\"url\":\"https://en.wikipedia.org/wiki/Boris_Johnson\"},{\"title\":\"First May ministry\",\"url\":\"https://en.wikipedia.org/wiki/First_May_ministry\"},{\"title\":\"Theresa May\",\"url\":\"https://en.wikipedia.org/wiki/Theresa_May\"},{\"title\":\"David Cameron\",\"url\":\"https://en.wikipedia.org/wiki/David_Cameron\"},{\"title\":\"The UK Has Its Seventh Prime Minister in a Decade. What Happened to the Others? | Council on Foreign Relations\",\"url\":\"https://www.cfr.org/articles/the-uk-will-have-its-seventh-prime-minister-in-a-decade-what-happened-to-the-others\"},{\"title\":\"Andrea Leadsom\",\"url\":\"https://en.wikipedia.org/wiki/Andrea_Leadsom\"},{\"title\":\"Premiership of David Cameron\",\"url\":\"https://en.wikipedia.org/wiki/Premiership_of_David_Cameron\"},{\"title\":\"6 leaders in 10 years. A look at the quick succession of British prime ministers | PBS News\",\"url\":\"https://www.pbs.org/newshour/world/6-leaders-in-10-years-a-look-at-the-quick-succession-of-british-prime-ministers\"},{\"title\":\"Theresa May | Biography, Facts, & Policies | Britannica\",\"url\":\"https://www.britannica.com/biography/Theresa-May\"}]\n\nBased on the search results, David Cameron was Prime Minister of the United Kingdom from 11 May 2010 to 13 July 2016. This means that in June 2016, **David Cameron** was the Prime Minister of the United Kingdom.\n\nIn June 2016, he resigned as party leader and as prime minister following the Brexit referendum result, and Theresa May was appointed prime minister on July 13, 2016.\n\n\nREMINDER: You MUST include the sources above in your response to the user using markdown hyperlinks.",
+   "raw_artifact_sha": "14eb29102825594dbd2536d9cc546f3d2e61ca9186cb6897b104b485ac646d13",
+   "injected_block": "Web search results for query: \"Prime Minister of the United Kingdom June 2016\"\n\nLinks: [{\"title\":\"Theresa May | Biography | Research Starters | EBSCO Research\",\"url\":\"https://www.ebsco.com/research-starters/biography/theresa-may\"},{\"title\":\"Boris Johnson\",\"url\":\"https://en.wikipedia.org/wiki/Boris_Johnson\"},{\"title\":\"First May ministry\",\"url\":\"https://en.wikipedia.org/wiki/First_May_ministry\"},{\"title\":\"Theresa May\",\"url\":\"https://en.wikipedia.org/wiki/Theresa_May\"},{\"title\":\"David Cameron\",\"url\":\"https://en.wikipedia.org/wiki/David_Cameron\"},{\"title\":\"The UK Has Its Seventh Prime Minister in a Decade. What Happened to the Others? | Council on Foreign Relations\",\"url\":\"https://www.cfr.org/articles/the-uk-will-have-its-seventh-prime-minister-in-a-decade-what-happened-to-the-others\"},{\"title\":\"Andrea Leadsom\",\"url\":\"https://en.wikipedia.org/wiki/Andrea_Leadsom\"},{\"title\":\"Premiership of David Cameron\",\"url\":\"https://en.wikipedia.org/wiki/Premiership_of_David_Cameron\"},{\"title\":\"6 leaders in 10 years. A look at the quick succession of British prime ministers | PBS News\",\"url\":\"https://www.pbs.org/newshour/world/6-leaders-in-10-years-a-look-at-the-quick-succession-of-british-prime-ministers\"},{\"title\":\"Theresa May | Biography, Facts, & Policies | Britannica\",\"url\":\"https://www.britannica.com/biography/Theresa-May\"}]\n\nBased on the search results, David Cameron was Prime Minister of the United Kingdom from 11 May 2010 to 13 July 2016. This means that in June 2016, **David Cameron** was the Prime Minister of the United Kingdom.\n\nIn June 2016, he resigned as party leader and as prime minister following the Brexit referendum result, and Theresa May was appointed prime minister on July 13, 2016.",
+   "injected_block_sha": "bea5cbcdcbc24cc76378da918a2ff3e76b91c6eec6347fe84e72ff29a0e3ae11",
+   "reminder_stripped": "REMINDER: You MUST include the sources above in your response to the user using markdown hyperlinks.",
+   "link_count": 10,
+   "has_summary": true,
+   "parse_ok": true,
+   "parse_note": null,
+   "relevance": {
+    "accept_present": true,
+    "reject_present": true,
+    "accept_matched": [
+     "Cameron",
+     "David Cameron"
+    ],
+    "reject_matched": [
+     "Johnson",
+     "Theresa May"
+    ],
+    "accept_in_summary": true,
+    "reject_in_summary": true,
+    "reject_in_summary_matched": [
+     "Theresa May"
+    ],
+    "reject_in_links_only": false,
+    "classification": "both",
+    "divergent": true
+   },
+   "divergent": true,
+   "expected_divergence": true,
+   "prediction_matched": true,
+   "failure": null,
+   "agent_spawned": "stage0b-searcher",
+   "realized_tool_surface": [
+    "WebSearch"
+   ],
+   "served_models": [
+    "claude-haiku-4-5-20251001",
+    "claude-opus-5"
+   ],
+   "cost_usd": 0.074601,
+   "wall_s": 18.34,
+   "no_answerer_dispatched": true,
+   "no_outcome_generated": true
+  },
+  {
+   "item_id": "canary_wcup_2014",
+   "question": "Which country won the FIFA World Cup in 2014?",
+   "query_source": "fixed",
+   "fixed_query": "FIFA World Cup winner 2014",
+   "realized_query": "FIFA World Cup winner 2014",
+   "query_faithful": true,
+   "search_executed": true,
+   "web_search_requests": 1,
+   "raw_artifact": "Web search results for query: \"FIFA World Cup winner 2014\"\n\nLinks: [{\"title\":\"Germany's champions in stats | 2014 FIFA World Cup Brazil\",\"url\":\"https://www.fifa.com/en/tournaments/mens/worldcup/articles/germany-brazil-2014-stats\"},{\"title\":\"2014 FIFA Club World Cup final\",\"url\":\"https://en.wikipedia.org/wiki/2014_FIFA_Club_World_Cup_final\"},{\"title\":\"2014 FIFA World Cup final\",\"url\":\"https://en.wikipedia.org/wiki/2014_FIFA_World_Cup_final\"},{\"title\":\"World Cup 2014 Winner, Golden Boot Stats and Awards Results\",\"url\":\"https://bleacherreport.com/articles/2128333-world-cup-2014-winner-golden-boot-stats-and-awards-results\"},{\"title\":\"2014 FIFA World Cup\",\"url\":\"https://en.wikipedia.org/wiki/2014_FIFA_World_Cup\"},{\"title\":\"FIFA World Cup 2014 Awards: Results, Winners, Recap and Twitter Reaction\",\"url\":\"https://bleacherreport.com/articles/2128226-fifa-world-cup-2014-awards-results-winners-recap-and-twitter-reaction\"},{\"title\":\"Stories from Germany's 2014 World Cup final triumph\",\"url\":\"https://www.fifa.com/en/tournaments/mens/worldcup/articles/germany-2014-world-cup-final-stories\"},{\"title\":\"2014 FIFA World Cup in Brazil\",\"url\":\"https://www.worldcupbrackets.info/tournaments/world-cup/2014/\"}]\n\nGermany won the 2014 FIFA World Cup, defeating Argentina in the final. Mario G\u00f6tze scored the winning goal in the 113th minute of extra time to secure Germany's 1\u20130 victory, earning them their fourth World Cup title.\n\n\nREMINDER: You MUST include the sources above in your response to the user using markdown hyperlinks.",
+   "raw_artifact_sha": "a83108a09a582f5c944d9f79d8cca256b25b1fcdf83b674a16564760356433db",
+   "injected_block": "Web search results for query: \"FIFA World Cup winner 2014\"\n\nLinks: [{\"title\":\"Germany's champions in stats | 2014 FIFA World Cup Brazil\",\"url\":\"https://www.fifa.com/en/tournaments/mens/worldcup/articles/germany-brazil-2014-stats\"},{\"title\":\"2014 FIFA Club World Cup final\",\"url\":\"https://en.wikipedia.org/wiki/2014_FIFA_Club_World_Cup_final\"},{\"title\":\"2014 FIFA World Cup final\",\"url\":\"https://en.wikipedia.org/wiki/2014_FIFA_World_Cup_final\"},{\"title\":\"World Cup 2014 Winner, Golden Boot Stats and Awards Results\",\"url\":\"https://bleacherreport.com/articles/2128333-world-cup-2014-winner-golden-boot-stats-and-awards-results\"},{\"title\":\"2014 FIFA World Cup\",\"url\":\"https://en.wikipedia.org/wiki/2014_FIFA_World_Cup\"},{\"title\":\"FIFA World Cup 2014 Awards: Results, Winners, Recap and Twitter Reaction\",\"url\":\"https://bleacherreport.com/articles/2128226-fifa-world-cup-2014-awards-results-winners-recap-and-twitter-reaction\"},{\"title\":\"Stories from Germany's 2014 World Cup final triumph\",\"url\":\"https://www.fifa.com/en/tournaments/mens/worldcup/articles/germany-2014-world-cup-final-stories\"},{\"title\":\"2014 FIFA World Cup in Brazil\",\"url\":\"https://www.worldcupbrackets.info/tournaments/world-cup/2014/\"}]\n\nGermany won the 2014 FIFA World Cup, defeating Argentina in the final. Mario G\u00f6tze scored the winning goal in the 113th minute of extra time to secure Germany's 1\u20130 victory, earning them their fourth World Cup title.",
+   "injected_block_sha": "0d128c1dd6941d5a68ff3fe17805940a79f3047e95354a1a2a969ae849a27e01",
+   "reminder_stripped": "REMINDER: You MUST include the sources above in your response to the user using markdown hyperlinks.",
+   "link_count": 8,
+   "has_summary": true,
+   "parse_ok": true,
+   "parse_note": null,
+   "relevance": {
+    "accept_present": true,
+    "reject_present": true,
+    "accept_matched": [
+     "Germany"
+    ],
+    "reject_matched": [
+     "Argentina"
+    ],
+    "accept_in_summary": true,
+    "reject_in_summary": true,
+    "reject_in_summary_matched": [
+     "Argentina"
+    ],
+    "reject_in_links_only": false,
+    "classification": "both",
+    "divergent": true
+   },
+   "divergent": true,
+   "expected_divergence": true,
+   "prediction_matched": true,
+   "failure": null,
+   "agent_spawned": "stage0b-searcher",
+   "realized_tool_surface": [
+    "WebSearch"
+   ],
+   "served_models": [
+    "claude-haiku-4-5-20251001",
+    "claude-opus-5"
+   ],
+   "cost_usd": 0.07115250000000001,
+   "wall_s": 17.33,
+   "no_answerer_dispatched": true,
+   "no_outcome_generated": true
+  },
+  {
+   "item_id": "canary_lovelace_birth",
+   "question": "In what year was Ada Lovelace born?",
+   "query_source": "fixed",
+   "fixed_query": "Ada Lovelace year of birth",
+   "realized_query": "Ada Lovelace year of birth",
+   "query_faithful": true,
+   "search_executed": true,
+   "web_search_requests": 1,
+   "raw_artifact": "Web search results for query: \"Ada Lovelace year of birth\"\n\nLinks: [{\"title\":\"Ada Lovelace | National Geographic Kids\",\"url\":\"https://kids.nationalgeographic.com/history/article/ada-lovelace\"},{\"title\":\"Ada Lovelace\",\"url\":\"https://en.wikipedia.org/wiki/Ada_Lovelace\"},{\"title\":\"Ada Lovelace - Biography, Facts and Pictures\",\"url\":\"https://www.famousscientists.org/ada-lovelace/\"},{\"title\":\"Ada Lovelace - Historic UK\",\"url\":\"https://www.historic-uk.com/CultureUK/Ada-Lovelace/\"},{\"title\":\"Ada Lovelace - Engineering and Technology History Wiki\",\"url\":\"https://ethw.org/Ada_Lovelace\"},{\"title\":\"Ada Lovelace - Quotes, Children & Facts\",\"url\":\"https://www.biography.com/scholars-educators/ada-lovelace\"},{\"title\":\"About Ada Lovelace | Ada Lovelace\",\"url\":\"https://blogs.bodleian.ox.ac.uk/adalovelace/about-ada-lovelace/\"},{\"title\":\"Who was Ada? \u2013 Ada Lovelace Day\",\"url\":\"https://findingada.com/about/who-was-ada/\"},{\"title\":\"postcard ada\",\"url\":\"https://chandra.si.edu/women/images/postcard_ada.pdf\"},{\"title\":\"postcard ada\",\"url\":\"https://www.chandra.cfa.harvard.edu/women/images/postcard_ada.pdf\"}]\n\nAda Lovelace was born on December 10, 1815. So her year of birth was **1815**.\n\n\nREMINDER: You MUST include the sources above in your response to the user using markdown hyperlinks.",
+   "raw_artifact_sha": "315dda2d7ebffeeff11f2c6e665f2c57b6c48ca7013c80bb7e388bd11ae704fc",
+   "injected_block": "Web search results for query: \"Ada Lovelace year of birth\"\n\nLinks: [{\"title\":\"Ada Lovelace | National Geographic Kids\",\"url\":\"https://kids.nationalgeographic.com/history/article/ada-lovelace\"},{\"title\":\"Ada Lovelace\",\"url\":\"https://en.wikipedia.org/wiki/Ada_Lovelace\"},{\"title\":\"Ada Lovelace - Biography, Facts and Pictures\",\"url\":\"https://www.famousscientists.org/ada-lovelace/\"},{\"title\":\"Ada Lovelace - Historic UK\",\"url\":\"https://www.historic-uk.com/CultureUK/Ada-Lovelace/\"},{\"title\":\"Ada Lovelace - Engineering and Technology History Wiki\",\"url\":\"https://ethw.org/Ada_Lovelace\"},{\"title\":\"Ada Lovelace - Quotes, Children & Facts\",\"url\":\"https://www.biography.com/scholars-educators/ada-lovelace\"},{\"title\":\"About Ada Lovelace | Ada Lovelace\",\"url\":\"https://blogs.bodleian.ox.ac.uk/adalovelace/about-ada-lovelace/\"},{\"title\":\"Who was Ada? \u2013 Ada Lovelace Day\",\"url\":\"https://findingada.com/about/who-was-ada/\"},{\"title\":\"postcard ada\",\"url\":\"https://chandra.si.edu/women/images/postcard_ada.pdf\"},{\"title\":\"postcard ada\",\"url\":\"https://www.chandra.cfa.harvard.edu/women/images/postcard_ada.pdf\"}]\n\nAda Lovelace was born on December 10, 1815. So her year of birth was **1815**.",
+   "injected_block_sha": "32213b386ac0c00617cf80779ea8fce38e8c239f8d515ab015f9b770c1d7cc8a",
+   "reminder_stripped": "REMINDER: You MUST include the sources above in your response to the user using markdown hyperlinks.",
+   "link_count": 10,
+   "has_summary": true,
+   "parse_ok": true,
+   "parse_note": null,
+   "relevance": {
+    "accept_present": true,
+    "reject_present": false,
+    "accept_matched": [
+     "1815"
+    ],
+    "reject_matched": [],
+    "accept_in_summary": true,
+    "reject_in_summary": false,
+    "reject_in_summary_matched": [],
+    "reject_in_links_only": false,
+    "classification": "accept_only",
+    "divergent": false
+   },
+   "divergent": false,
+   "expected_divergence": false,
+   "prediction_matched": true,
+   "failure": null,
+   "agent_spawned": "stage0b-searcher",
+   "realized_tool_surface": [
+    "WebSearch"
+   ],
+   "served_models": [
+    "claude-haiku-4-5-20251001",
+    "claude-opus-5"
+   ],
+   "cost_usd": 0.05679100000000001,
+   "wall_s": 15.21,
+   "no_answerer_dispatched": true,
+   "no_outcome_generated": true
+  }
+ ],
+ "summary": {
+  "n": 4,
+  "executed": 4,
+  "divergent": 3,
+  "prediction_matched": 4,
+  "failures": [],
+  "total_cost_usd": 0.2576
+ }
+}

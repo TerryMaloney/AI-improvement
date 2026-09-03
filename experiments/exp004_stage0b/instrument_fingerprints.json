@@ -1,0 +1,64 @@
+{
+ "set": "stage0b_instrument",
+ "frozen": false,
+ "why_not_frozen": "The instrument passes its live correspondence gate, but the calibration bank has not run, the grader has not met a non-Stage-0A-M answer, and power has not been re-derived from measured values. Freezing now would freeze assumptions.",
+ "components": {
+  "lab/stage0b_search.py": {
+   "sha16": "9d42c34123f2272a",
+   "bytes": 18200,
+   "load_bearing_for": "dispatch, the runtime block parser, and the deterministic relevance flags"
+  },
+  "lab/stage0b_harness.py": {
+   "sha16": "667e17e021d47318",
+   "bytes": 16539,
+   "load_bearing_for": "arm A/C/D packets, the fixed-query rule, and the per-dispatch ledger row"
+  },
+  "lab/stage0b_failures.py": {
+   "sha16": "959c90b64cc45d6b",
+   "bytes": 10715,
+   "load_bearing_for": "failure semantics, defined before any Stage 0B outcome exists"
+  },
+  "lab/stage0b_divergence_probe.py": {
+   "sha16": "5abe76acd160bc13",
+   "bytes": 6193,
+   "load_bearing_for": "the pre-treatment divergence probe and its selection rule"
+  },
+  "lab/stage0b_runtime_gate.py": {
+   "sha16": "65ada1d5091e9739",
+   "bytes": 15464,
+   "load_bearing_for": "the live correspondence gate"
+  },
+  "lab/stage0b_cvd.py": {
+   "sha16": "7e66581a4e01f928",
+   "bytes": 13531,
+   "load_bearing_for": "the C-vs-D pre-freeze discriminability requirement"
+  },
+  "lab/grading_v2.py": {
+   "sha16": "4ee0268aa298b778",
+   "bytes": 8924,
+   "load_bearing_for": "the candidate grader (NOT frozen: it must first meet answers that are not Stage 0A-M's)"
+  },
+  ".claude/agents/stage0b-searcher.md": {
+   "sha16": "198f4175ddd09324",
+   "bytes": 1044,
+   "load_bearing_for": "the one search mechanism, shared by arms C and D"
+  },
+  ".claude/agents/stage0b-query-writer.md": {
+   "sha16": "78984d4e5acaac9d",
+   "bytes": 697,
+   "load_bearing_for": "arm C's query writer"
+  },
+  ".claude/agents/stage0b-answerer.md": {
+   "sha16": "5e26af8a0e65b97f",
+   "bytes": 686,
+   "load_bearing_for": "the answerer, identical in every arm"
+  },
+  "experiments/exp004_stage0b/divergence_canaries.yaml": {
+   "sha16": "f25d5fb85ddd2aad",
+   "bytes": 2320,
+   "load_bearing_for": "canary items for the probe; permanently barred from production"
+  }
+ },
+ "missing": [],
+ "combined_sha16": "1b479a9cf04d7395"
+}

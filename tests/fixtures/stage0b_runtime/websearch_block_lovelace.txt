@@ -1,0 +1,8 @@
+Web search results for query: "Ada Lovelace year of birth"
+
+Links: [{"title":"Ada Lovelace | National Geographic Kids","url":"https://kids.nationalgeographic.com/history/article/ada-lovelace"},{"title":"Ada Lovelace","url":"https://en.wikipedia.org/wiki/Ada_Lovelace"},{"title":"Ada Lovelace - Biography, Facts and Pictures","url":"https://www.famousscientists.org/ada-lovelace/"},{"title":"Ada Lovelace (1815 - 1852) - Biography - MacTutor History of Mathematics","url":"https://mathshistory.st-andrews.ac.uk/Biographies/Lovelace/"},{"title":"Ada Lovelace - Engineering and Technology History Wiki","url":"https://ethw.org/Ada_Lovelace"},{"title":"Ada Lovelace - Quotes, Children & Facts","url":"https://www.biography.com/scholars-educators/ada-lovelace"},{"title":"About Ada Lovelace | Ada Lovelace","url":"https://blogs.bodleian.ox.ac.uk/adalovelace/about-ada-lovelace/"},{"title":"Who was Ada? – Ada Lovelace Day","url":"https://findingada.com/about/who-was-ada/"},{"title":"postcard ada","url":"https://chandra.si.edu/women/images/postcard_ada.pdf"},{"title":"postcard ada","url":"https://www.chandra.cfa.harvard.edu/women/images/postcard_ada.pdf"}]
+
+Ada Lovelace was born on December 10, 1815, so her year of birth was **1815**.
+
+
+REMINDER: You MUST include the sources above in your response to the user using markdown hyperlinks.

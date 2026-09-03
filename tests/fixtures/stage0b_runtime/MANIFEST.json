@@ -1,0 +1,61 @@
+{
+ "fixture_set": "stage0b_runtime",
+ "captured": "2026-09-03",
+ "runtime": "Claude Code 2.1.259, agent stage0b-searcher, --output-format stream-json",
+ "why": "Offline tests must exercise the parser on genuine runtime output. A synthetic example proves only that the parser handles what its author imagined; the design draft's 'returns the block verbatim' survived review precisely because nobody had looked at a real one.",
+ "queries_are_public_and_harmless": true,
+ "credential_scan": "scanned for API-key, bearer-token, AWS-key and password patterns: none present. The only 'secret' substring matches are inside the phrase 'Secretary-General'.",
+ "files": [
+  {
+   "file": "websearch_block_lovelace.txt",
+   "kind": "raw WebSearch tool_result content",
+   "sanitised": false,
+   "raw_sha256": "939a8a243f7194ab16771fa1af85e8fa9ddfff10b5f364eda09bcff858c67c84",
+   "fixture_sha256": "939a8a243f7194ab16771fa1af85e8fa9ddfff10b5f364eda09bcff858c67c84",
+   "bytes_changed_by_sanitisation": 0,
+   "note": "byte-identical to what the runtime handed the searcher"
+  },
+  {
+   "file": "websearch_block_lovelace_repeat.txt",
+   "kind": "raw WebSearch tool_result content",
+   "sanitised": false,
+   "raw_sha256": "45f961554bce0bc86b745f2119133b495ee6a622c6c39fc5fd17e001b2c15915",
+   "fixture_sha256": "45f961554bce0bc86b745f2119133b495ee6a622c6c39fc5fd17e001b2c15915",
+   "bytes_changed_by_sanitisation": 0,
+   "note": "byte-identical to what the runtime handed the searcher"
+  },
+  {
+   "file": "websearch_block_unsg_2015.txt",
+   "kind": "raw WebSearch tool_result content",
+   "sanitised": false,
+   "raw_sha256": "cd6449b6ee42dcc8330659d90a73588efa5d1b9a31d2dbc4fb71b5800278db0f",
+   "fixture_sha256": "cd6449b6ee42dcc8330659d90a73588efa5d1b9a31d2dbc4fb71b5800278db0f",
+   "bytes_changed_by_sanitisation": 0,
+   "note": "byte-identical to what the runtime handed the searcher"
+  },
+  {
+   "file": "searcher_stream_transcript.jsonl",
+   "kind": "full stream-json transcript of one searcher dispatch",
+   "sanitised": true,
+   "raw_sha256": "a1a04e96a9e4e39f6d6fe866683a6471324a6cb744f0b08b4aad736a89fadc68",
+   "fixture_sha256": "c375682e53b7682da9188447b7c89576d11d94e1f07cb01166fdcfc334cb9133",
+   "bytes_changed_by_sanitisation": 25249,
+   "substitutions": {
+    "session_id/uuid": "00000000-0000-4000-8000-000000000000",
+    "tool_use ids": "toolu_FIXTURE0000000000000000",
+    "cwd": "/fixture/repo"
+   },
+   "note": "Only session-scoped identifiers and the absolute repo path were replaced. No tool_result content, no tool_use input, no usage/modelUsage figure and no assistant text was altered, so everything the parser and the telemetry lineage read is the real value. raw_sha256 is the pre-sanitisation hash and is recorded so the distinction is not lost."
+  }
+ ],
+ "non_determinism_demonstrated": {
+  "files": [
+   "websearch_block_lovelace.txt",
+   "websearch_block_lovelace_repeat.txt"
+  ],
+  "same_query": "Ada Lovelace year of birth",
+  "links_array_identical": true,
+  "summary_paragraph_differs": true,
+  "consequence": "The artifact hash is per-trial provenance, not a reproducibility guarantee, and the design must not claim otherwise."
+ }
+}

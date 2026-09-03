@@ -680,11 +680,13 @@ freeze holds — the grading rule and test statistic were frozen at `9c57635`, w
 before any outcome, and are byte-identical from the freeze commit to HEAD — but
 the window is real and is closed prospectively rather than argued away.
 
-**R1′ scored again, n=2.** The grader was deterministic, fingerprinted, and
-covered by a 51-case golden corpus, and it mis-scored 30 of 130 production trials
-in two independent ways while 1,397 tests passed. As with the 2026-09-02
-`live_agent_registry` defect, every check read the rule and none read a realized
-output. SUPPORTS R1′ over the churn rival.
+**~~R1′ scored again, n=2.~~ CORRECTED 2026-09-03 — see the entry of that date.**
+The empirical finding is unchanged: the grader was deterministic, fingerprinted
+and covered by a 51-case golden corpus, and it mis-scored 30 of 130 production
+trials in two independent ways while 1,397 tests passed. The *scoring* was wrong.
+The frozen prospective table classifies `grader` as symmetric, checked and
+**R1′-low**; a defect there is `HURT_BOTH` under the table's own rules, not a
+confirmation. Prospective confirmations of R1′ remain **n=1**.
 
 **Unchanged:** Stage 0A-M raw outcomes, graded ledger, frozen grader
 `10adaf1dac94ea70`, official primary result, battery `1ec90754f1de2696`, schedule.
@@ -749,3 +751,124 @@ The searcher and injection harness are unbuilt, so the divergence probe cannot
 run, so the calibration bank cannot run, so the recipe is unvalidated. A is not
 available, and choosing it to show progress is how a second uninformative null
 gets funded.
+
+
+---
+
+## 2026-09-03 — Stage 0B instrument built and measured; the treatment is renamed a second time
+
+**Decision: A — READY TO AUTHOR/RUN THE CALIBRATION BANK.** The single blocker
+behind the previous entry's decision B is cleared. **The calibration bank was
+deliberately not run in this pass.** It is the first step that produces solver
+outcomes, and it should begin from a committed, reviewed instrument rather than one
+built in the same breath as the run that depends on it.
+
+**Decision: the recorded treatment artifact is read from the runtime, not from the
+searcher model.** The design said a searcher agent would "return the result block
+verbatim". Measured against the live runtime, that is false: the searcher reformats
+into markdown, drops the header and the trailing instruction, and duplicates the
+source list *because that instruction told it to*. `--output-format stream-json`
+exposes the `tool_result` block the runtime handed the agent; that string is the
+artifact. The searcher's prose is kept for audit and is never data. **The model in
+the middle is reduced to issuing the call**, and whether it issued the *requested*
+query is byte-checked against `tool_use.input.query`.
+
+**Decision: the treatment is renamed to `runtime_exposed_search_result_block_exposure`.**
+`search_snippet_exposure` was itself a rename made for honesty two days ago, and it
+was also wrong: **there are no snippets.** What crosses the boundary is a header
+echoing the query, a `Links:` array of titles and URLs only, a **model-synthesised
+prose answer to the query**, and an imperative addressed to the reader. Because that
+paragraph is a second model's answer generated inside the search tool, **a
+displacement effect could originate there rather than in any retrieved page**, and
+no Stage 0B claim may say "retrieved content" without that qualification. Naming is
+not cosmetic here: twice now the name has been the first thing measurement falsified.
+
+**Decision: the runtime's trailing imperative is stripped before injection, and the
+stripped text is recorded verbatim.** Left in, it would instruct C and D answerers
+to emit markdown source lists — a format change arm A never receives, landing
+directly on the grader's leading-sentence span rule. That is the
+treatment-correlated instrument risk for which structured output was already
+rejected as primary. The strip is a named transformation in the contract, not a
+silent cleanup.
+
+**Decision: one direct query→answerer path is kept and declared.** The block's
+header echoes the query, so the query text reaches the answerer. Removing it would
+make the injected block differ from what the runtime exposes, and the whole lesson
+is to bind to what actually crosses the boundary. It is written into the causal
+contract as a declared edge rather than left for a later review to find.
+
+**Decision: the search-attempt indicator is `sum(modelUsage[*].webSearchRequests)`
+over ALL models.** `usage.server_tool_use` reports 0 on a dispatch that demonstrably
+searched — the same defect that made Stage 0A-M's `retrieval_failure_rate` vacuous.
+WebSearch is billed to the model that services it, measured as `claude-haiku-4-5`,
+not the solver; reading the solver's own count would report zero on every trial.
+
+**Decision: a per-trial artifact hash is provenance, not reproducibility.** Two
+dispatches of an identical query returned a byte-identical `Links:` array and a
+different synthesised paragraph. Both are committed as fixtures so the distinction
+is testable rather than remembered.
+
+**Decision: divergence is defined on the runtime's synthesised summary, not on the
+whole block.** Containment fires on incidental text: on the real Lovelace block the
+reject alias `1852` matched inside the link title "Ada Lovelace (1815 - 1852)", a
+date range asserting nothing. Whole-block containment would have admitted that item
+to production and spent a slot on a foregone null. `reject_in_links_only` keeps the
+weak signal analysable without re-running a search.
+
+**Decision: every correspondence check dispatches; a static config test may not
+substitute for one.** 14 checks, 14 PASS, **0 UNOBSERVABLE**, 6 dispatches, $0.19.
+Fresh context is measured with a planted marker; key quarantine as an empty realized
+tool surface plus self-report; C/D symmetry on realized command lines and realized
+tool surfaces. Unobservable is a recorded status, never a silent pass.
+
+**Decision: failure semantics are four classes, not one, and are fixed before any
+outcome.** HARNESS / TREATMENT REALIZATION / ANSWER / ENVIRONMENT DRIFT, 14 rules.
+Retry is barred wherever retrying would condition the sample on a realized outcome —
+a tested invariant, not a convention. **A search that returns nothing displacing is
+not a failure; it is the measurement**, and voiding it would select the treatment
+for potency.
+
+**Decision on C-vs-D: not promoted to primary, and put on notice.** It is the *only*
+support for the objective's second claim, so it must be capable of discriminating.
+It is two-sided, needing 6 discordant pairs before it can reject at all. **At the
+recommended n=50 it has power 0.60 against the preregistered gap of 0.20 and needs
+n=76**; under Stage 0A-M's symmetric 20% grader error it is unpowered at every n up
+to 240 — there, symmetric noise *manufactures balanced discordance*, the opposite of
+its silent-deletion behaviour in the one-sided primary. Three rules are fixed before
+outcomes: a realized discordant count below 6 is reported as **UNINFORMATIVE —
+INCAPABLE OF REJECTING** and never as "no evidence"; `authorize()` runs on measured
+values before freeze and **withdraws the query-construction claim** if it fails; arm
+D is retained either way, because its interpretive job does not require C-vs-D to
+reject. **Nothing was resized on assumed values** — sizing on assumptions is what
+produced Stage 0A-M.
+
+**Decision: the R1′ scoring of the grader defect is corrected.** The independent
+review recorded "supported again, n=2". The frozen prospective table classifies
+`grader` as symmetric, `check_executed: true`, `r1_prime_predicted_risk: low`. R1′
+predicted that cell was safe, so under the table's own `what_future_observations_mean`
+a load-bearing defect there is **`HURT_BOTH`** — disconfirming, not confirming.
+**Prospective confirmations of R1′ remain n=1.** The empirical grader failure is
+untouched; only the theory scoring changed. R1′ was **not** widened to cover the
+observation: redefining "unchecked" to mean "not checked against the right thing"
+would make it unfalsifiable. A successor hypothesis (**R3′** — a check binds a
+component only to the representation it actually reads) is recorded as a candidate
+with **zero** prospective evidence until its own table is frozen.
+
+**Decision: `query_writer` is added to the shared causal-contract node vocabulary.**
+A multi-dispatch trial puts a second model inside one arm, and the edges that matter
+— `query_writer → outcome` (must be absent) and `query_writer → tool_use` (the one
+licensed path) — could not otherwise be written down. An assumption that cannot be
+written down is the kind this contract exists to catch.
+
+**Contract status: VALID as `draft`**, 7 open fields, 4 `[OPEN]` bindings. Not
+`freeze_ready`, and it must not be until the calibration bank, the grader freeze and
+the measured power re-derivation exist.
+
+**Tests: 1569 passing (was 1466).** The parser tests run against a real sanitized
+runtime transcript rather than invented examples — which is precisely why the
+"verbatim" claim did not survive this pass, and no author-derived corpus would have
+caught it.
+
+**Unchanged:** every Stage 0A-M frozen artifact — raw outcomes, graded ledger,
+frozen grader `10adaf1dac94ea70`, official primary result, battery
+`1ec90754f1de2696`, schedule `321c3a2397958c30`.

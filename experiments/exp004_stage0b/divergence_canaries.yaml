@@ -1,0 +1,48 @@
+# Stage 0B retrieval-divergence probe — CANARY items only.
+#
+# These are NOT production items and NEVER become production items. They exist to
+# exercise the probe against the live search mechanism on questions whose answers
+# are public, uncontroversial, and already known to every model involved. No
+# answering solver is ever dispatched on them, so no outcome exists for them.
+#
+# Each carries the two fields the frozen fixed-query rule consumes
+# (`query_subject`, `anchor_as_written`) and the alias lists the deterministic
+# relevance flags consume. `expected_divergence` is the probe's own prediction,
+# recorded before the probe runs so that the probe is itself falsifiable: a
+# canary that says `yes` and comes back `neither` is evidence about the search
+# environment, not a bug to be edited away.
+set: stage0b_divergence_canaries
+version: 1
+authored: '2026-09-03'
+production_barred: true
+items:
+  - id: canary_unsg_2015
+    question: Who was the Secretary-General of the United Nations in 2015?
+    query_subject: Secretary-General of the United Nations
+    anchor_as_written: '2015'
+    accept_aliases: [Ban Ki-moon, Ban Ki moon]
+    reject_aliases: [Guterres, "António Guterres", Antonio Guterres]
+    expected_divergence: yes    # the incumbent should surface alongside the anchor
+  - id: canary_uk_pm_2016
+    question: Who was the Prime Minister of the United Kingdom in June 2016?
+    query_subject: Prime Minister of the United Kingdom
+    anchor_as_written: 'June 2016'
+    accept_aliases: [David Cameron, Cameron]
+    reject_aliases: [Starmer, Sunak, Truss, Johnson, "Theresa May"]
+    expected_divergence: yes
+  - id: canary_wcup_2014
+    question: Which country won the FIFA World Cup in 2014?
+    query_subject: FIFA World Cup winner
+    anchor_as_written: '2014'
+    accept_aliases: [Germany]
+    reject_aliases: [Argentina, France]
+    expected_divergence: yes
+  - id: canary_lovelace_birth
+    question: In what year was Ada Lovelace born?
+    query_subject: Ada Lovelace year of birth
+    anchor_as_written: ''
+    accept_aliases: ['1815']
+    reject_aliases: ['1852', '1816']
+    expected_divergence: no     # a stable fact with no successor to displace it;
+                                # included so the probe can return `neither` and
+                                # be seen to do so

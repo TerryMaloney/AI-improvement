@@ -20,10 +20,37 @@
 #   - new bindings the three-arm design forces: fixed-query construction, the
 #     searcher's verbatim return, the answer-first packet instruction, forced
 #     uptake, result-relevance measurement, and the freeze/grade/analyse driver.
+#
+# WHAT CHANGED 2026-09-03 -- THE INSTRUMENT WAS BUILT AND MEASURED
+#   - `searcher_verbatim_return` is RETIRED as a construct. Measured against the
+#     live runtime, nothing about it is true: the searcher model reformats the
+#     block, the runtime's own block contains NO snippets (titles and URLs only)
+#     plus a MODEL-SYNTHESISED answer plus an instruction addressed to the reader,
+#     and two dispatches of an identical query differ. It is replaced by
+#     `runtime_exposed_search_result_block`, which names the string that actually
+#     crosses the treatment boundary and is read from the runtime's own
+#     tool_result rather than from the searcher's prose;
+#   - the treatment is renamed AGAIN, and for the same reason as the first time:
+#     `search_snippet_exposure` was measured to be wrong, because there are no
+#     snippets. The treatment is `runtime_exposed_search_result_block_exposure`;
+#   - every arm-symmetry, isolation and telemetry edge is now bound to a LIVE
+#     check that dispatches. `experiments/exp004_stage0b/runtime_correspondence.json`
+#     records 14/14 PASS, 0 UNOBSERVABLE, at a cost of $0.19 and 6 dispatches;
+#   - a new edge, `query_writer -> outcome`, is declared assumed-absent, because
+#     the C arm introduces a second model whose reasoning must not reach the
+#     answerer by any route except the search block;
+#   - `c_vs_d_inferential_requirement` is added and, on the ASSUMED design point,
+#     it FAILS. That is recorded rather than smoothed: C-vs-D at n=50 has power
+#     0.60 against the preregistered gap, not 0.80.
+#
+# STATUS REMAINS `draft`. The instrument passes; the calibration bank, the grader
+# freeze and the power re-derivation do not exist, so [OPEN] fields remain and the
+# validator must continue to refuse freeze_ready.
 experiment: exp004_stage0b
 status: draft
 nodes: [treatment, model, served_model, system_instructions, tool_definitions, tool_use,
-        environment, item, evaluator, selection, outcome, missingness, cost_effort, shared_latent]
+        environment, item, evaluator, selection, outcome, missingness, cost_effort, shared_latent,
+        query_writer]
 
 required_edges:
   - [treatment, tool_use]                # arms C and D execute a search by construction
@@ -31,30 +58,76 @@ required_edges:
   - [item, outcome]                      # the answering dispatch reads stem + injected block
   - [treatment, cost_effort]             # REALIZED effort is a mediator/outcome, never equalised
   - [selection, item]                    # the frozen selection rule determines the item set
+  - [query_writer, tool_use]             # arm C's ONLY licensed path: query -> search execution
 
 assumed_absent_edges:
 
+  # ---- the C arm's second model, which Stage 0A-M did not have ------------ #
+  - edge: [query_writer, outcome]
+    check: {type: live_probe,
+            artifact: experiments/exp004_stage0b/runtime_correspondence.json,
+            test: tests/test_stage0b_search_instrument.py::TestArmSymmetry,
+            note: "The ONLY intended path from C's query writer to C's answerer is
+                   query -> executed search -> runtime block -> injected section. The
+                   answerer is a separate `claude -p` process that receives one string,
+                   so no reasoning, history or marker can travel any other way. MEASURED
+                   live (checks C01, C09, C10): a marker planted in the query-writer
+                   dispatch is absent from the answerer's context and from the realized
+                   arm-C packet, and the sessions differ. Note the ONE path that does
+                   exist and is deliberately kept: the runtime block echoes the query in
+                   its header line, so the query text itself reaches the answerer. It is
+                   kept because removing it would make the injected block differ from
+                   what the runtime exposes -- and it is DECLARED here rather than
+                   discovered in a later review."}
+  - edge: [query_writer, evaluator]
+    check: {type: design, artifact: lab/stage0b_harness.py,
+            note: "The query writer never sees a key and never sees an answer. It has no
+                   file access (MEASURED, check C02: realized tool surface [], self-report
+                   can_read_files false)."}
+
   # ---- arm symmetry -------------------------------------------------------
   - edge: [treatment, system_instructions]
-    check: {type: byte_identity, artifact: "[OPEN]", test: "[OPEN]",
-            note: "Stage 0B agents do not exist. The answering packet must be byte-identical
-                   across A, C and D except the injected results block, and the diff must be
-                   asserted, not described. Stage 0A-M's packet diff was 3 lines and asserted."}
+    check: {type: byte_identity,
+            artifact: experiments/exp004_stage0b/runtime_correspondence.json,
+            test: tests/test_stage0b_search_instrument.py::TestArmSymmetry::test_the_exposure_section_is_the_only_arm_difference,
+            note: "CLOSED 2026-09-03. The three Stage 0B agents exist and share one answerer:
+                   A, C and D all dispatch `stage0b-answerer`, so the system instructions are
+                   the same file in every arm. The answering packet differs between A and C/D
+                   by exactly the exposure section and between C and D by exactly the string
+                   inside it -- asserted on REALIZED strings (check C12), not on templates."}
   - edge: [treatment, served_model]
-    check: {type: recorded_value, artifact: "[OPEN]",
-            note: "per-DISPATCH served-model log. Stage 0A-M logged one model per trial;
-                   a Stage 0B trial is up to three dispatches (query-writer, searcher,
-                   answerer) and each needs its own record."}
+    check: {type: recorded_value,
+            artifact: experiments/exp004_stage0b/runtime_correspondence.json,
+            test: tests/test_stage0b_search_instrument.py::TestTelemetryLineage,
+            note: "CLOSED 2026-09-03. Served model is recorded PER DISPATCH from
+                   result.modelUsage, not per trial: a Stage 0B trial is up to three
+                   dispatches. Measured across all four gate dispatches: one solver model,
+                   claude-opus-5. `claude-haiku-4-5` appears in every dispatch as harness
+                   work AND, in searcher dispatches, as the model that services WebSearch --
+                   which is why the search indicator sums over ALL models."}
   - edge: [cost_effort, treatment]       # CONFIGURED effort symmetric (pre-treatment invariant)
-    check: {type: recorded_value, artifact: "[OPEN]",
-            note: "freeze record must carry effort_level / max_tokens / timeout, identical
-                   across arms. Realized effort is NOT equalised: Stage 0A-M measured 506 vs
-                   161 median output tokens between searching and declining trials."}
+    check: {type: recorded_value,
+            artifact: experiments/exp004_stage0b/runtime_correspondence.json,
+            test: tests/test_stage0b_search_instrument.py::TestTelemetryLineage::test_a_value_the_runtime_did_not_expose_stays_none,
+            note: "CLOSED 2026-09-03. Configured effort for this harness IS the command line:
+                   agent, --model flag, --allowedTools grant, output format. It is recorded
+                   verbatim per dispatch in DispatchRow.configured_command and is identical
+                   per role across arms (check C06/C13). Realized effort is NOT equalised and
+                   is a mediator: the gate measured 20 / 1184 / 1004 / 251 output tokens
+                   across the four dispatch roles."}
   - edge: [environment, treatment]
-    check: {type: live_probe, artifact: "[OPEN]",
-            note: "E is search-capable, fetch-blocked. Re-probe through the Stage 0B agents
-                   before dispatch. No pooling across environments; the treatment is named
-                   search_snippet_exposure, never unrestricted web retrieval."}
+    check: {type: live_probe,
+            artifact: experiments/exp004_stage0b/runtime_correspondence.json,
+            test: tests/test_stage0b_search_instrument.py::TestWhatCrossesTheTreatmentBoundary,
+            note: "CLOSED 2026-09-03, and measured through the ACTUAL Stage 0B path rather
+                   than through a Stage 0A-M agent (check C14). Search reachable: 2/2 through
+                   `stage0b-searcher`, plus 4/4 in the divergence probe. WebFetch is not
+                   granted anywhere on the Stage 0B path, so this environment is
+                   search-capable and fetch-ABSENT BY CONSTRUCTION as well as proxy-blocked.
+                   No pooling across environments. The treatment is
+                   runtime_exposed_search_result_block_exposure -- never unrestricted web
+                   retrieval, and no longer `search_snippet_exposure` either, because the
+                   measured block contains no snippets."}
 
   # ---- the evaluator, which is where Stage 0A-M actually failed ------------
   - edge: [treatment, evaluator]
@@ -90,65 +163,157 @@ assumed_absent_edges:
                    statistical -- see lab/stage0am.py's module docstring on how badly
                    cross-item dependence breaks this test."}
   - edge: [missingness, treatment]       # dispatch mortality must not lean on an arm
-    check: {type: schema_equality, artifact: lab/stage0am.py,
-            test: tests/test_stage0am_failure_semantics.py::TestTheSixRequiredCases,
-            note: "Case A (retrieval-tool outcome, gradeable answer) is retained and graded;
-                   Case B (dispatch death) voids the pair symmetrically. Voiding on a
-                   treatment-arm-only variable is post-treatment selection. A three-dispatch
-                   trial has three ways to die and the rule must cover all of them: [OPEN]."}
+    check: {type: schema_equality, artifact: lab/stage0b_failures.py,
+            test: tests/test_stage0b_search_instrument.py::TestFailureSemantics,
+            note: "CLOSED 2026-09-03. 14 rules across four classes that are deliberately not
+                   collapsed: HARNESS_FAILURE, TREATMENT_REALIZATION_FAILURE, ANSWER_FAILURE,
+                   ENVIRONMENT_DRIFT. Every rule that invalidates an arm voids the whole item,
+                   because voiding one arm on a treatment-arm-only variable is post-treatment
+                   selection. Retry is barred wherever retrying would condition the sample on
+                   a realized outcome, and that is a tested invariant, not a convention.
+                   A search returning nothing displacing is explicitly NOT a failure -- it is
+                   the measurement."}
 
 bindings:
 
-  - construct: search_snippet_exposure_treatment
+  - construct: runtime_exposed_search_result_block_exposure   # was search_snippet_exposure
     claim: docs/EXP004_STAGE0B_DESIGN_DRAFT.md#4
-    implementation: "[OPEN]"
-    fingerprint: "[OPEN]"
-    correspondence_test: "[OPEN]"
+    implementation: lab/stage0b_search.py:parse_exposure_block
+    fingerprint: experiments/exp004_stage0b/instrument_fingerprints.json
+    correspondence_test: tests/test_stage0b_search_instrument.py::TestWhatCrossesTheTreatmentBoundary
+    # RENAMED on measurement, 2026-09-03. The string that crosses the treatment
+    # boundary is a runtime-composed block: a header echoing the query, a Links array
+    # of TITLES AND URLS ONLY, a MODEL-SYNTHESISED prose answer, and a trailing
+    # imperative addressed to the reader. There are no search snippets in it, so
+    # `search_snippet_exposure` named something that does not exist. The imperative is
+    # stripped before injection -- it would tell C and D answerers to emit markdown
+    # source lists, a format change arm A never receives, landing squarely on the
+    # grader's leading-sentence span rule -- and the stripped text is recorded verbatim.
+
+  - construct: search_artifact_is_not_reproducible
+    claim: docs/EXP004_STAGE0B_DESIGN_DRAFT.md#4.3
+    implementation: tests/fixtures/stage0b_runtime/
+    fingerprint: tests/fixtures/stage0b_runtime/MANIFEST.json
+    correspondence_test: tests/test_stage0b_search_instrument.py::TestTheRuntimeFixtureIsReal::test_two_dispatches_of_one_query_are_not_byte_identical
+    # MEASURED: two dispatches of an identical query returned a byte-identical Links
+    # array and a DIFFERENT synthesised paragraph. The per-trial hash is provenance,
+    # not a reproducibility guarantee, and no Stage 0B claim may treat it as one.
 
   - construct: retrieval_uptake_forced_to_one
     claim: docs/EXP004_STAGE0B_DESIGN_DRAFT.md#4.2
-    implementation: "[OPEN]"
-    fingerprint: "[OPEN]"
-    correspondence_test: "[OPEN]"
-    # Stage 0A-M realized 8/65 uptake and 0/25 where it mattered. The dose is made
-    # structural (harness-executed search, results injected) rather than requested,
-    # so "the model declined" ceases to be a possible outcome.
+    implementation: lab/stage0b_harness.py:run_arm
+    fingerprint: experiments/exp004_stage0b/instrument_fingerprints.json
+    correspondence_test: experiments/exp004_stage0b/runtime_correspondence.json#C04,C05
+    # Stage 0A-M realized 8/65 uptake and 0/25 where it mattered. The dose is now
+    # structural: the harness executes the search and injects the block, so "the model
+    # declined" is not a possible outcome. MEASURED live: search executed for both C
+    # and D, authoritative webSearchRequests=1 each.
 
   - construct: fixed_query_construction
     claim: docs/EXP004_STAGE0B_DESIGN_DRAFT.md#5
-    implementation: "[OPEN]"
-    fingerprint: "[OPEN]"
-    correspondence_test: "[OPEN]"
-    # Mechanical rule, derivable from the stem alone by a third party, frozen before
-    # production. Deliberately not further optimised: an optimised query would
-    # confound query quality with query effort.
+    implementation: lab/stage0b_harness.py:fixed_query
+    fingerprint: experiments/exp004_stage0b/instrument_fingerprints.json
+    correspondence_test: tests/test_stage0b_search_instrument.py::TestFixedQueryConstruction
+    # Mechanical, derivable from the stem alone by a third party, and frozen before
+    # production. Deliberately not further optimised: an optimised query would confound
+    # query quality with query effort. A YAML anchor that parsed as a number is refused,
+    # because the query would then depend on how the battery file was quoted.
 
-  - construct: searcher_verbatim_return
+  - construct: query_fidelity
+    claim: docs/EXP004_STAGE0B_DESIGN_DRAFT.md#5
+    implementation: lab/stage0b_search.py:execute_search
+    fingerprint: experiments/exp004_stage0b/instrument_fingerprints.json
+    correspondence_test: experiments/exp004_stage0b/runtime_correspondence.json#C06
+    # The C/D contrast is DEFINED on the query, so a searcher that rewords it is running
+    # a different treatment. The realized query is read from tool_use.input.query and
+    # byte-compared to the requested one; a mismatch is QUERY_FIDELITY_FAILURE and is
+    # never retried. Measured faithful 6/6 so far (2 gate + 4 probe).
+
+  - construct: searcher_c_d_symmetry
     claim: docs/EXP004_STAGE0B_DESIGN_DRAFT.md#4.3
-    implementation: "[OPEN]"
-    fingerprint: "[OPEN]"
-    correspondence_test: "[OPEN]"
-    # A model sits between the query and the recorded content. Byte-identical agent
-    # body across C and D; a fixed synthetic query whose block must be reproduced
-    # verbatim; raw searcher output persisted per trial so summarisation is visible.
+    implementation: lab/stage0b_search.py:execute_search
+    fingerprint: .claude/agents/stage0b-searcher.md
+    correspondence_test: experiments/exp004_stage0b/runtime_correspondence.json#C06
+    # REPLACES the retired `searcher_verbatim_return`, which was measured to be false in
+    # three ways (see the header). Symmetry is now structural rather than asserted:
+    # `execute_search(query)` takes one parameter, so C and D have nothing else to differ
+    # in. Same agent, same model flag, same tool grant, same packet, same parser --
+    # measured identical at runtime, including the realized tool surface ['WebSearch'].
+
+  - construct: arm_A_isolation
+    claim: docs/EXP004_STAGE0B_DESIGN_DRAFT.md#4.2
+    implementation: lab/stage0b_harness.py:build_answer_packet
+    fingerprint: experiments/exp004_stage0b/instrument_fingerprints.json
+    correspondence_test: experiments/exp004_stage0b/runtime_correspondence.json#C11
+    # Arm A receives no exposure section, no block, and no searcher or query-writing
+    # history. Its answerer has an empty realized tool surface, so it cannot acquire one.
+
+  - construct: telemetry_lineage
+    claim: docs/EXP004_STAGE0B_DESIGN_DRAFT.md#5
+    implementation: lab/stage0b_harness.py:ANALYSIS_FIELD_LINEAGE
+    fingerprint: experiments/exp004_stage0b/instrument_fingerprints.json
+    correspondence_test: tests/test_stage0b_search_instrument.py::TestTelemetryLineage
+    # Every analysis field names the runtime record it is read from. A value the runtime
+    # did not expose stays None and means UNOBSERVABLE; it is never coerced to 0. That is
+    # the exact defect behind Stage 0A-M's vacuous retrieval_failure_rate, which reported
+    # attempted_retrieval: 0 because analyse_run fed it empty tuples.
+    # `usage.server_tool_use` is recorded and explicitly BARRED as an indicator: measured
+    # 2026-09-03 reporting 0 web_search_requests on a dispatch that demonstrably searched.
+
+  - construct: failure_semantics_stage0b
+    claim: docs/EXP004_STAGE0B_DESIGN_DRAFT.md#4.2
+    implementation: lab/stage0b_failures.py
+    fingerprint: experiments/exp004_stage0b/instrument_fingerprints.json
+    correspondence_test: tests/test_stage0b_search_instrument.py::TestFailureSemantics
+
+  - construct: retrieval_divergence_probe
+    claim: docs/EXP004_STAGE0B_DESIGN_DRAFT.md#2.3
+    implementation: lab/stage0b_divergence_probe.py
+    fingerprint: runs/exp004_stage0b_instrument/divergence_probe.json
+    correspondence_test: tests/test_stage0b_search_instrument.py::TestRelevanceFlags
+    # Pre-treatment because no answerer is dispatched and no answer exists -- asserted in
+    # the persisted artifact, not merely claimed. Ran live on 4 canaries: 4/4 executed,
+    # 4/4 queries faithful, 4/4 predictions matched, 3 divergent. Canaries are
+    # permanently barred from production.
+
+  - construct: c_vs_d_inferential_requirement
+    claim: docs/EXP004_STAGE0B_DESIGN_DRAFT.md#7
+    implementation: lab/stage0b_cvd.py
+    fingerprint: runs/exp004_stage0b_design/cvd_inferential_status.json
+    correspondence_test: tests/test_stage0b_cvd.py
+    # THIS BINDING CURRENTLY FAILS ON THE ASSUMED DESIGN POINT, and that is recorded
+    # rather than smoothed. C-vs-D is the ONLY support for the objective's second claim
+    # ("displacement depends on the query"). It is two-sided, so it needs 6 discordant
+    # pairs before it can reject at all; at n=50 it has power 0.60 against the
+    # preregistered gap of 0.20, needing n=76. Under Stage 0A-M's symmetric grader error
+    # rate it is unpowered at every n up to 240. `authorize()` is run before freeze on
+    # MEASURED p and displacement rates; if it fails there, the claim is WITHDRAWN before
+    # the run and C-vs-D is reported descriptively. Arm D is retained either way -- its
+    # interpretive job does not require C-vs-D to reject.
 
   - construct: answer_first_packet_instruction
     claim: docs/EXP004_STAGE0B_DESIGN_DRAFT.md#3.4
-    implementation: lab/grading_v2.py
-    fingerprint: "[OPEN]"
-    correspondence_test: tests/test_stage0b_grading_v2.py::test_span_rule_properties
+    implementation: lab/stage0b_harness.py:ANSWER_PACKET
+    fingerprint: experiments/exp004_stage0b/instrument_fingerprints.json
+    correspondence_test: tests/test_stage0b_search_instrument.py::TestArmSymmetry::test_the_answer_first_instruction_is_identical_in_every_arm
     # The span rule is only sound if the direct answer leads. The instruction is
     # identical in every arm, so it cannot be an arm difference -- but it is part of
     # the grader, not a prompt detail.
 
   - construct: result_relevance_measurement
     claim: docs/EXP004_STAGE0B_DESIGN_DRAFT.md#5
-    implementation: "[OPEN]"
-    fingerprint: "[OPEN]"
-    correspondence_test: "[OPEN]"
-    # Deterministic flags over the injected block: accept present / reject present /
-    # both / neither. Stage 0A-M could not compute this at all: the raw records carry
-    # no tool transcript and no query text.
+    implementation: lab/stage0b_search.py:relevance_flags
+    fingerprint: experiments/exp004_stage0b/instrument_fingerprints.json
+    correspondence_test: tests/test_stage0b_search_instrument.py::TestRelevanceFlags
+    # Deterministic, model-free flags over the INJECTED block (what the answerer sees),
+    # not the raw one. Stage 0A-M could not compute this at all: its raw records carry no
+    # tool transcript and no query text.
+    # MEASURED LIMITATION that changed the rule: containment fires on incidental text.
+    # On the real Lovelace block the reject alias "1852" matched inside the link title
+    # "Ada Lovelace (1815 - 1852)" -- a date range asserting nothing. So matches are
+    # LOCATED as well as detected, and `divergent` requires the alias to appear in the
+    # runtime's synthesised summary, where it is a claim. `reject_in_links_only` keeps
+    # the weak signal analysable without re-running a search.
 
   - construct: item_selection_rule
     claim: docs/EXP004_STAGE0B_BATTERY_AUTHORING_PROTOCOL.md#4
@@ -186,14 +351,15 @@ bindings:
     fingerprint: "[OPEN]"
     correspondence_test: tests/test_stage0am_failure_semantics.py::TestTheSixRequiredCases
 
+# CLOSED since the 2026-09-02 draft: searcher + injection harness; divergence probe;
+# Stage 0B agent files and their hashes; per-dispatch served-model and configured-effort
+# logging; three-dispatch failure semantics; environment probe through the Stage 0B path.
 open_fields:
-  - searcher agent and the results-injection harness (unbuilt; the largest gap)
-  - retrieval-divergence probe implementation
-  - calibration bank -- authored, dispatched, and its accuracy band measured
-  - grader freeze, which must wait until the calibration bank has exercised the span parser
+  - calibration bank -- authored, dispatched, and its closed-book accuracy band measured
+  - grader freeze, which must wait until the calibration bank has exercised the span
+    parser on answers that are not Stage 0A-M's
   - power re-derived from measured p and c_disp rather than assumed values
-  - Stage 0B agent files (byte-identical bodies) and their hashes
-  - per-dispatch served-model and configured-effort logging for a three-dispatch trial
-  - Case-B failure semantics extended to a three-dispatch trial
-  - execution-environment probe through the Stage 0B agents
+  - C-vs-D authorization re-run on those measured values; it FAILS on the assumed ones
+  - item_selection_rule fingerprint, which cannot be fixed until the recipe is validated
+  - freeze_grade_analyse_driver for a three-dispatch trial
   - production items (NOT to be authored until the recipe is validated)

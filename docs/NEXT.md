@@ -1,34 +1,40 @@
-# Next action — build the Stage 0B instrument, in this order. Do NOT author production items.
+# Next action — author and run the CALIBRATION BANK. Do NOT author production items.
 
-Stage 0A-M is finished and independently reviewed. Stage 0B is designed and the
-decision is **B — MORE DESIGN WORK REQUIRED**
-(`docs/EXP004_STAGE0B_DESIGN_DRAFT.md` §11).
+Stage 0A-M is finished and independently reviewed. **Steps 1 and 2 of the chain
+below are DONE as of 2026-09-03**: the searcher/exposure harness is built and
+passes a 14-check live correspondence gate with 0 unobservable, and the
+retrieval-divergence probe is implemented and has run on canaries. The decision
+is now **A — READY TO AUTHOR/RUN THE CALIBRATION BANK**
+(`docs/EXP004_STAGE0B_DESIGN_DRAFT.md` §12.7; the older decision B at §11 stands
+as the correct call on the evidence it had).
 
-**The single reason A was not chosen:** the item recipe cannot be validated,
-because the calibration bank cannot be run, because the retrieval-divergence
-probe is unimplemented, because the searcher and results-injection harness do
-not exist. Authoring production items against an unvalidated recipe is exactly
-the mistake Stage 0A-M made — its battery turned out to contain **zero** items
-Opus 5 answers incorrectly, and 130 dispatches were spent discovering that.
+**The next step is step 3 and nothing else.** Authoring production items against
+an unvalidated recipe is exactly the mistake Stage 0A-M made — its battery turned
+out to contain **zero** items Opus 5 answers incorrectly, and 130 dispatches were
+spent discovering that. The bank is what validates the recipe.
 
 ## The dependency chain, in order. Do not start step N+1 before step N passes.
 
-1. **Build the searcher agent and the results-injection harness.**
-   A dedicated agent whose only job is to execute a given query and return the
-   result block verbatim; the harness injects that block into the answering
-   packet. Byte-identical agent body used by both arms C and D.
-   **Correspondence test required before anything downstream:** a fixed synthetic
-   query whose returned block is reproduced verbatim, with the raw searcher
-   output persisted so any summarisation is visible.
-   This is the largest gap and everything else waits on it.
+1. ~~Build the searcher agent and the results-injection harness.~~ **DONE
+   2026-09-03.** `lab/stage0b_search.py`, `lab/stage0b_harness.py`,
+   `lab/stage0b_runtime_gate.py`; evidence
+   `experiments/exp004_stage0b/runtime_correspondence.json` (14/14 PASS, 0
+   UNOBSERVABLE, 6 dispatches, $0.19).
+   **What building it changed:** "return the result block verbatim" was false —
+   see design draft §12. The recorded artifact is now the runtime's own
+   `tool_result`, read out of `--output-format stream-json`, not the searcher
+   model's retelling. The treatment is renamed
+   `runtime_exposed_search_result_block_exposure`; the measured block contains
+   **no snippets**, only titles/URLs plus a model-synthesised answer plus a
+   runtime instruction that is stripped before injection.
 
-2. **Implement the retrieval-divergence probe.**
-   Executes an item's fixed query through the searcher and records the raw
-   block, its SHA, and deterministic relevance flags. **No solver, no answer, no
-   outcome** — that is what makes the screen pre-treatment. Log it in full
-   anyway; "pre-treatment" is a claim that must be inspectable.
+2. ~~Implement the retrieval-divergence probe.~~ **DONE 2026-09-03.**
+   `lab/stage0b_divergence_probe.py`; evidence
+   `runs/exp004_stage0b_instrument/divergence_probe.json`. Canaries only: 4/4
+   executed, 4/4 queries byte-faithful, 4/4 pre-recorded predictions matched, 3
+   divergent. No solver, no answer, no outcome — asserted in the artifact.
 
-3. **Author and run the calibration bank** (≥3× production size), per
+3. **← YOU ARE HERE. Author and run the calibration bank** (≥3× production size), per
    `docs/EXP004_STAGE0B_BATTERY_AUTHORING_PROTOCOL.md`.
    Closed-book, R=1, fresh context per trial. Establishes the realized
    closed-book accuracy `p` against the target band **0.90–1.00**, and the
@@ -44,6 +50,13 @@ Opus 5 answers incorrectly, and 130 dispatches were spent discovering that.
    design point in `runs/exp004_stage0b_design/power_simulation.json`. If the
    measured values move the required n materially, the design changes before any
    production dispatch, not after.
+   **This step now has a second, binding part.** Run
+   `lab.stage0b_cvd.authorize()` on the measured `p`, δ_C and δ_D. On the
+   *assumed* design point it FAILS: C-vs-D at n=50 has power 0.60 against the
+   preregistered gap of 0.20, and needs n=76; under a Stage 0A-M-like symmetric
+   20% grader error it is unpowered at every n up to 240. If it fails on the
+   measured values too, **the query-construction claim is withdrawn before the
+   run** and C-vs-D is reported descriptively. Arm D is retained either way.
 
 6. **Only then** author production items, freeze every fingerprint listed in the
    authoring protocol §5 — **including the freeze/grade/analyse driver, which
@@ -68,11 +81,27 @@ Opus 5 answers incorrectly, and 130 dispatches were spent discovering that.
 - **Do not reuse `date_anchored` or `definition_anchored` for confirmation.** Both
   are production-exposed and at complete ceiling. `date_anchored` is retained as
   a grader regression corpus only.
-- **Do not call the treatment "web retrieval".** `E` is search-capable and
-  fetch-blocked; the treatment is `search_snippet_exposure`. No pooling across
-  environments.
+- **Do not call the treatment "web retrieval", and no longer call it
+  "search_snippet_exposure" either.** Measured 2026-09-03: the runtime block
+  contains no snippets. The treatment is
+  `runtime_exposed_search_result_block_exposure`. On the Stage 0B path WebFetch is
+  not granted at all, so `E` is search-capable and fetch-*absent by construction*
+  as well as proxy-blocked. No pooling across environments.
+- **Do not treat a search-artifact hash as a reproducibility guarantee.** Two
+  dispatches of an identical query return different bytes; only the `Links:` array
+  was stable. The hash is per-trial provenance.
+- **Do not read `usage.server_tool_use` as a search indicator.** It reports 0 on a
+  dispatch that demonstrably searched. Use
+  `sum(modelUsage[*].webSearchRequests)` over ALL models — WebSearch is billed to
+  `claude-haiku-4-5`, not to the solver.
+- **Do not count the Stage 0A-M grader defect as a prospective R1′ confirmation.**
+  The frozen table classifies `grader` as checked, symmetric, R1′-**low**; a defect
+  there is `HURT_BOTH`. Corrected 2026-09-03 in
+  `experiments/meta_r1r2/observation_2026-09-03_grader.md`. Prospective
+  confirmations of R1′ remain n=1.
 - **Do not treat the Stage 0A-M null as evidence of safety.** Its own harm bounds
   are ≤0.113 (availability) and ≤0.312 (restricted to the 8 trials that actually
   retrieved).
 - **No Stage 0B production dispatch** until steps 1–6 pass and the contract
-  validates as `freeze_ready`.
+  validates as `freeze_ready`. It currently validates as `draft` with 7 open
+  fields, which is correct and must stay that way until they are genuinely closed.

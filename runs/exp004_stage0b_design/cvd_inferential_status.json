@@ -1,0 +1,215 @@
+{
+ "comparison": "C vs D",
+ "inferential_status": "SECONDARY, own family, alpha=0.05, no primary alpha spent",
+ "not_promoted_to_primary": "Promoting it would cost A-vs-C the alpha it was sized on, to buy sensitivity for a genuinely secondary claim.",
+ "two_sided": "Neither direction is predicted; a model query could be worse (drops the anchor) or better (more specific).",
+ "min_discordant_for_a_claim": 6,
+ "floor_table": {
+  "0": "1",
+  "1": "1",
+  "2": "1/2",
+  "3": "1/4",
+  "4": "1/8",
+  "5": "1/16",
+  "6": "1/32",
+  "7": "1/64",
+  "8": "1/128"
+ },
+ "delta_gap_preregistered": 0.2,
+ "scenarios_at_n50": {
+  "query construction matters a lot (model query drops the anchor)": {
+   "n": 50,
+   "p": 0.95,
+   "delta_C": 0.3,
+   "delta_D": 0.05,
+   "grader_error": 0.0,
+   "E_n10_C_worse": 13.573,
+   "E_n01_D_worse": 1.698,
+   "E_discordant": 15.271,
+   "meets_discordance_floor": true,
+   "power": 0.8736,
+   "alpha": "1/20",
+   "min_discordant_for_a_claim": 6
+  },
+  "query construction matters by exactly the preregistered gap": {
+   "n": 50,
+   "p": 0.95,
+   "delta_C": 0.3,
+   "delta_D": 0.1,
+   "grader_error": 0.0,
+   "E_n10_C_worse": 12.896,
+   "E_n01_D_worse": 3.396,
+   "E_discordant": 16.292,
+   "meets_discordance_floor": true,
+   "power": 0.5993,
+   "alpha": "1/20",
+   "min_discordant_for_a_claim": 6
+  },
+  "query construction does not matter": {
+   "n": 50,
+   "p": 0.95,
+   "delta_C": 0.3,
+   "delta_D": 0.3,
+   "grader_error": 0.0,
+   "E_n10_C_worse": 10.189,
+   "E_n01_D_worse": 10.189,
+   "E_discordant": 20.378,
+   "meets_discordance_floor": true,
+   "power": 0.0295,
+   "alpha": "1/20",
+   "min_discordant_for_a_claim": 6
+  },
+  "nothing displaces anything (the A-vs-C null world)": {
+   "n": 50,
+   "p": 0.95,
+   "delta_C": 0.02,
+   "delta_D": 0.02,
+   "grader_error": 0.0,
+   "E_n10_C_worse": 0.932,
+   "E_n01_D_worse": 0.932,
+   "E_discordant": 1.864,
+   "meets_discordance_floor": false,
+   "power": 0.0003,
+   "alpha": "1/20",
+   "min_discordant_for_a_claim": 6
+  },
+  "Stage 0A-M's grader error rate, symmetric 20%": {
+   "n": 50,
+   "p": 0.95,
+   "delta_C": 0.3,
+   "delta_D": 0.1,
+   "grader_error": 0.2,
+   "E_n10_C_worse": 13.783,
+   "E_n01_D_worse": 8.083,
+   "E_discordant": 21.865,
+   "meets_discordance_floor": true,
+   "power": 0.1668,
+   "alpha": "1/20",
+   "min_discordant_for_a_claim": 6
+  }
+ },
+ "authorization_on_assumed_values": {
+  "query construction matters a lot (model query drops the anchor)": {
+   "verdict": "CLAIM_AUTHORIZED",
+   "claim": "query construction changes whether search exposure displaces an anchored answer",
+   "reasons": [],
+   "if_withdrawn": "Arm D is still run. Its interpretive job -- without it a null in C cannot be told apart from 'the model's query happened to return anchored content' -- does not require C-vs-D to reject. C-vs-D is then reported descriptively, with its realized discordant count and its smallest attainable p stated in the same sentence.",
+   "analysis": {
+    "n": 50,
+    "p": 0.95,
+    "delta_C": 0.3,
+    "delta_D": 0.05,
+    "grader_error": 0.0,
+    "E_n10_C_worse": 13.573,
+    "E_n01_D_worse": 1.698,
+    "E_discordant": 15.271,
+    "meets_discordance_floor": true,
+    "power": 0.8736,
+    "alpha": "1/20",
+    "min_discordant_for_a_claim": 6
+   }
+  },
+  "query construction matters by exactly the preregistered gap": {
+   "verdict": "CLAIM_WITHDRAWN_BEFORE_RUN",
+   "claim": "query construction changes whether search exposure displaces an anchored answer",
+   "reasons": [
+    "power 0.5993 < 0.8 at the measured rates",
+    "the measured gap between the two queries is 0.200, below the preregistered 0.2 that the claim is about; a comparison sized on a smaller gap would be detecting a difference nobody preregistered as mattering"
+   ],
+   "if_withdrawn": "Arm D is still run. Its interpretive job -- without it a null in C cannot be told apart from 'the model's query happened to return anchored content' -- does not require C-vs-D to reject. C-vs-D is then reported descriptively, with its realized discordant count and its smallest attainable p stated in the same sentence.",
+   "analysis": {
+    "n": 50,
+    "p": 0.95,
+    "delta_C": 0.3,
+    "delta_D": 0.1,
+    "grader_error": 0.0,
+    "E_n10_C_worse": 12.896,
+    "E_n01_D_worse": 3.396,
+    "E_discordant": 16.292,
+    "meets_discordance_floor": true,
+    "power": 0.5993,
+    "alpha": "1/20",
+    "min_discordant_for_a_claim": 6
+   }
+  },
+  "query construction does not matter": {
+   "verdict": "CLAIM_WITHDRAWN_BEFORE_RUN",
+   "claim": "query construction changes whether search exposure displaces an anchored answer",
+   "reasons": [
+    "power 0.0295 < 0.8 at the measured rates",
+    "the measured gap between the two queries is 0.000, below the preregistered 0.2 that the claim is about; a comparison sized on a smaller gap would be detecting a difference nobody preregistered as mattering"
+   ],
+   "if_withdrawn": "Arm D is still run. Its interpretive job -- without it a null in C cannot be told apart from 'the model's query happened to return anchored content' -- does not require C-vs-D to reject. C-vs-D is then reported descriptively, with its realized discordant count and its smallest attainable p stated in the same sentence.",
+   "analysis": {
+    "n": 50,
+    "p": 0.95,
+    "delta_C": 0.3,
+    "delta_D": 0.3,
+    "grader_error": 0.0,
+    "E_n10_C_worse": 10.189,
+    "E_n01_D_worse": 10.189,
+    "E_discordant": 20.378,
+    "meets_discordance_floor": true,
+    "power": 0.0295,
+    "alpha": "1/20",
+    "min_discordant_for_a_claim": 6
+   }
+  },
+  "nothing displaces anything (the A-vs-C null world)": {
+   "verdict": "CLAIM_WITHDRAWN_BEFORE_RUN",
+   "claim": "query construction changes whether search exposure displaces an anchored answer",
+   "reasons": [
+    "expected discordance 1.864 < 6: at that count the smallest attainable two-sided p is 1.0000, so the comparison cannot reject at any orientation of its own data",
+    "power 0.0003 < 0.8 at the measured rates",
+    "the measured gap between the two queries is 0.000, below the preregistered 0.2 that the claim is about; a comparison sized on a smaller gap would be detecting a difference nobody preregistered as mattering"
+   ],
+   "if_withdrawn": "Arm D is still run. Its interpretive job -- without it a null in C cannot be told apart from 'the model's query happened to return anchored content' -- does not require C-vs-D to reject. C-vs-D is then reported descriptively, with its realized discordant count and its smallest attainable p stated in the same sentence.",
+   "analysis": {
+    "n": 50,
+    "p": 0.95,
+    "delta_C": 0.02,
+    "delta_D": 0.02,
+    "grader_error": 0.0,
+    "E_n10_C_worse": 0.932,
+    "E_n01_D_worse": 0.932,
+    "E_discordant": 1.864,
+    "meets_discordance_floor": false,
+    "power": 0.0003,
+    "alpha": "1/20",
+    "min_discordant_for_a_claim": 6
+   }
+  },
+  "Stage 0A-M's grader error rate, symmetric 20%": {
+   "verdict": "CLAIM_WITHDRAWN_BEFORE_RUN",
+   "claim": "query construction changes whether search exposure displaces an anchored answer",
+   "reasons": [
+    "power 0.1668 < 0.8 at the measured rates",
+    "the measured gap between the two queries is 0.200, below the preregistered 0.2 that the claim is about; a comparison sized on a smaller gap would be detecting a difference nobody preregistered as mattering"
+   ],
+   "if_withdrawn": "Arm D is still run. Its interpretive job -- without it a null in C cannot be told apart from 'the model's query happened to return anchored content' -- does not require C-vs-D to reject. C-vs-D is then reported descriptively, with its realized discordant count and its smallest attainable p stated in the same sentence.",
+   "analysis": {
+    "n": 50,
+    "p": 0.95,
+    "delta_C": 0.3,
+    "delta_D": 0.1,
+    "grader_error": 0.2,
+    "E_n10_C_worse": 13.783,
+    "E_n01_D_worse": 8.083,
+    "E_discordant": 21.865,
+    "meets_discordance_floor": true,
+    "power": 0.1668,
+    "alpha": "1/20",
+    "min_discordant_for_a_claim": 6
+   }
+  }
+ },
+ "n_for_80_percent_power": {
+  "query construction matters a lot (model query drops the anchor)": 44,
+  "query construction matters by exactly the preregistered gap": 76,
+  "query construction does not matter": null,
+  "nothing displaces anything (the A-vs-C null world)": null,
+  "Stage 0A-M's grader error rate, symmetric 20%": null
+ },
+ "note": "These use the ASSUMED design point. The binding run of `authorize` happens before freeze, on p from the calibration bank and delta_C/delta_D from the divergence probe.",
+ "finding_on_assumed_values": "At the recommended n=50, C-vs-D has power 0.599 against the preregistered gap of 0.20 -- it does NOT clear 0.80, and would need n\u224880. Under a Stage 0A-M-like symmetric 20% grader error rate it is unpowered at every n up to 200. Symmetric grader noise is WORSE for C-vs-D than for the primary: in a one-sided paired test it deletes at-risk items silently, but here it manufactures BALANCED discordance that directly swamps the sign test. The design is therefore on notice: unless the measured values are kinder than the assumed ones, claim (ii) is withdrawn before the run or the C/D family is resized. It is not resized on assumed values today, because sizing on assumptions is what produced Stage 0A-M."
+}

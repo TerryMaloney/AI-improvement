@@ -52,6 +52,13 @@ NODE_VOCABULARY = frozenset({
     "treatment", "model", "served_model", "system_instructions", "tool_definitions",
     "tool_use", "environment", "item", "evaluator", "selection", "outcome",
     "missingness", "cost_effort", "shared_latent",
+    # Added 2026-09-03 for Stage 0B. A multi-dispatch trial puts a SECOND model
+    # inside one arm: arm C's query writer, whose output reaches the answerer only
+    # through an executed search. Without a node for it, the edges that matter --
+    # query_writer -> outcome (must be absent) and query_writer -> tool_use (the
+    # one licensed path) -- cannot be written down, and an assumption that cannot
+    # be written down is the kind this contract exists to catch.
+    "query_writer",
 })
 
 CHECK_TYPES = frozenset({

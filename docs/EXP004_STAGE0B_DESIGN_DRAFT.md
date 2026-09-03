@@ -4,7 +4,17 @@
 Derived from `docs/EXP004_STAGE0AM_INDEPENDENT_REVIEW_2026-09-02.md`.
 Power figures: `python -m lab.stage0b_power` →
 `runs/exp004_stage0b_design/power_simulation.json`.
-Decision at §11.
+Decision at §11; **amendments of 2026-09-03 at §12, and they change the treatment's
+name and three of this document's factual claims.**
+
+> **AMENDED 2026-09-03 — read §12 before citing §4.3, §5 or §6.**
+> The instrument described here as unbuilt has been built and measured against the
+> live runtime. Three claims in the text below were **false**, and are corrected in
+> §12 rather than quietly edited away, because how they came to be believed is part
+> of the record: they were all statements about a runtime nobody had looked at.
+> The treatment is renamed from `search_snippet_exposure` to
+> **`runtime_exposed_search_result_block_exposure`**. The measured block contains no
+> snippets.
 
 ---
 
@@ -251,8 +261,16 @@ requires:
   reproduced verbatim, asserted before production;
 - the raw searcher output persisted per trial, so any summarisation is visible.
 
-This is **[OPEN]** — it is not built, and it is the single largest reason Stage 0B
-is not ready for battery authoring.
+~~This is **[OPEN]** — it is not built, and it is the single largest reason Stage 0B
+is not ready for battery authoring.~~
+
+**BUILT AND MEASURED 2026-09-03. Every requirement above is superseded — see §12.**
+The critical change: the recorded artifact is no longer taken from the searcher
+model at all. `--output-format stream-json` exposes the `tool_result` block the
+runtime handed the agent, and *that* string is persisted. The searcher's prose is
+kept for audit and is never data. A model no longer sits between the query and the
+recorded content; it only issues the call, and whether it issued the *requested*
+query is checked by byte equality against `tool_use.input.query`.
 
 ---
 
@@ -303,10 +321,16 @@ the pre-recorded `E`.
   reachable: search snippets carry present-tense content, which is precisely the
   displacing material the hypothesis is about.
 
-**The treatment is named `search_snippet_exposure`, everywhere, in the contract
-and in every claim.** It is **not** unrestricted web retrieval. A fetch-capable
-replication is a named follow-on, and no Stage 0B result may be pooled across
-environments.
+~~**The treatment is named `search_snippet_exposure`, everywhere.**~~
+**SUPERSEDED 2026-09-03. The treatment is named
+`runtime_exposed_search_result_block_exposure`.** The rename is for the same reason
+as the first one — the previous name was measured to be wrong. There are **no
+snippets** in what the runtime returns: it is a link list of titles and URLs, plus a
+model-synthesised prose answer. Naming it after snippets would name a thing that
+does not cross the boundary. It is still **not** unrestricted web retrieval; on the
+Stage 0B path WebFetch is not granted at all, so this environment is fetch-*absent*
+by construction as well as proxy-blocked. A fetch-capable replication is a named
+follow-on, and no Stage 0B result may be pooled across environments.
 
 ---
 
@@ -385,6 +409,60 @@ dispatches, and unlike Stage 0A-M it can reject.
 **A null in C-vs-D is a null about query quality**, not about displacement, and
 must be reported that way.
 
+### 7.3 C-vs-D must be *capable* of that, and at n=50 it is not (measured 2026-09-03)
+
+`lab/stage0b_cvd.py`; artifact `runs/exp004_stage0b_design/cvd_inferential_status.json`.
+
+The objective sentence contains two claims. Claim (i) — content can displace an
+anchored answer — rests on A-vs-C. Claim (ii) — *whether it does depends on the
+query* — rests **entirely** on C-vs-D. So the question is not whether C-vs-D
+deserves symmetry with the primary; it is what claim (ii) needs C-vs-D to be able
+to do, and whether it can.
+
+C-vs-D is **two-sided**: neither direction is predicted, since a model-written
+query could be worse (it drops the anchor) or better (it is more specific). The
+exact two-sided floor is `2/2^D`, so **6 discordant pairs** are needed before it
+can reject at α=0.05 at any orientation of its own data.
+
+| | E[D] | power @ α=0.05 | n for 80% |
+|---|---:|---:|---:|
+| query construction matters a lot (δ_C 0.30, δ_D 0.05) | 15.3 | 0.874 | 44 |
+| **matters by exactly the preregistered gap** (0.30 / 0.10) | 16.3 | **0.599** | **76** |
+| does not matter (0.30 / 0.30) | 20.4 | 0.030 | — |
+| nothing displaces anything (0.02 / 0.02) | 1.9 | 0.000 | — |
+| **preregistered gap + Stage 0A-M's symmetric 20% grader error** | 21.9 | **0.167** | **unreachable ≤240** |
+
+**Two findings, and the second is the sharper one.**
+
+1. **At the recommended n=50, C-vs-D has power 0.60 against the preregistered gap,
+   not 0.80.** It would need n=76. So the design as sized cannot support claim (ii).
+2. **Symmetric grader error is worse for C-vs-D than for the primary.** In the
+   one-sided primary it deletes at-risk items silently (§7.1). Here it *manufactures
+   balanced discordance* — note E[D] goes **up**, from 16.3 to 21.9, while power
+   collapses from 0.60 to 0.17 — and the sign test spends its evidence on noise. No
+   reachable n recovers it.
+
+**Three rules, fixed before outcomes.**
+
+- **Not promoted to primary.** Promoting it would cost A-vs-C the α it was sized on,
+  to buy sensitivity for a genuinely secondary claim. It keeps its own family at
+  α=0.05.
+- **The reporting rule.** If the realized C-vs-D discordant count is **< 6**, the
+  result is reported as *UNINFORMATIVE — INCAPABLE OF REJECTING*. It may **not** be
+  reported as "no evidence that query construction matters". This is precisely the
+  rule Stage 0A-M lacked when it reported D=2 as a null.
+- **The authorization rule.** Before freeze, `authorize()` runs on the **measured**
+  `p` (calibration bank) and the **measured** δ_C / δ_D (divergence probe). If it
+  fails there, **claim (ii) is withdrawn from the design before the run** and C-vs-D
+  becomes descriptive. Running it anyway and reporting whatever emerges is how an
+  uninformative null gets published as a finding.
+- **Arm D is retained either way.** Its first job is interpretive: without it, a null
+  in C cannot be told apart from "the model's query happened to return anchored
+  content". That job does not require C-vs-D to reject.
+
+**Nothing is resized on the assumed values today.** Sizing on assumptions is what
+produced Stage 0A-M. The gate is written; it runs on measurements.
+
 ---
 
 ## 8. The old battery
@@ -418,18 +496,31 @@ New bindings this design forces, none of which existed for Stage 0A-M:
 
 ## 10. What is still missing
 
-1. **The searcher agent and the injection harness do not exist.** Unbuilt and
-   unverified. This is the largest gap.
+**Updated 2026-09-03.** Items 1, 3, 4 and 5 are CLOSED; see §12.
+
+1. ~~The searcher agent and the injection harness do not exist.~~ **CLOSED.**
+   `lab/stage0b_search.py`, `lab/stage0b_harness.py`; 14/14 live correspondence
+   checks pass, 0 unobservable.
 2. **No calibration bank exists.** Nothing has established the 0.90–1.00 band for
-   Opus 5 on a fresh recipe, and the recipe itself is unvalidated.
-3. **The retrieval-divergence probe is unimplemented**, so the frozen selection
-   rule cannot yet be executed.
-4. **`E` has not been probed through the Stage 0B agents**, which do not exist.
-5. **Configured effort and served-model logging** for a three-arm, multi-dispatch
-   design is unspecified — Stage 0A-M's per-trial record shape does not cover a
-   trial made of three dispatches.
+   Opus 5 on a fresh recipe, and the recipe itself is unvalidated. **This is now
+   the largest gap, and it is the next step.**
+3. ~~The retrieval-divergence probe is unimplemented.~~ **CLOSED.**
+   `lab/stage0b_divergence_probe.py`; ran live on 4 canaries, 4/4 executed,
+   4/4 queries faithful, 4/4 predictions matched.
+4. ~~`E` has not been probed through the Stage 0B agents.~~ **CLOSED.** Measured
+   through the actual Stage 0B path: search reachable 6/6; WebFetch not granted
+   anywhere on that path.
+5. ~~Configured effort and served-model logging for a multi-dispatch design is
+   unspecified.~~ **CLOSED.** `DispatchRow` records both per dispatch, with a
+   named runtime source for every field that feeds analysis.
 6. **The grader candidate is not frozen**, and must not be until the calibration
    bank has exercised its span parser on non-Stage-0A-M answers.
+7. **NEW: the C-vs-D comparison is underpowered at the recommended n** for the
+   claim it exists to support (§7.3). Its authorization gate runs on measured
+   values before freeze; on assumed values it fails.
+8. **NEW: the treatment artifact is not reproducible.** Two dispatches of an
+   identical query return different bytes (§12). Every claim that reads as though
+   a hash guarantees reproducibility must be re-read.
 
 ---
 
@@ -453,6 +544,109 @@ measured.
 
 **A is not available, and choosing it to show progress is how a second
 uninformative null gets funded.**
+
+---
+
+## 12. Amendments of 2026-09-03 — the instrument was built, and the runtime was measured
+
+The whole of §11's blocker was step (1). It is done. What follows is what building
+it revealed, which is more than "it works".
+
+### 12.1 Three claims in this document were false
+
+Each was a statement about a runtime that nobody had executed and looked at. They
+survived a design pass, a red-team and a causal-contract pass — which is the point,
+and is why they are corrected here rather than edited out.
+
+| claim, as written | measured reality |
+|---|---|
+| §4.3 "an agent whose only job is to run the given query and **return the results verbatim**" | The searcher model reformats the block into markdown, drops the header, drops the trailing instruction, and duplicates the source list because that instruction told it to. **Nothing byte-identical survives the model.** |
+| §4.2 "harness searcher → **top-k results verbatim**" | The runtime hands the agent a *composed* block: a header echoing the query, a `Links:` JSON array of **titles and URLs only — no snippets**, a **model-synthesised prose answer to the query**, and a trailing imperative addressed to the reader. |
+| §6 the treatment is `search_snippet_exposure` | There are **no snippets**. The name pointed at something that does not cross the boundary. |
+
+### 12.2 What actually crosses the treatment boundary
+
+```
+Web search results for query: "<the query, echoed>"
+
+Links: [{"title": …, "url": …}, …]        ← titles and URLs only
+
+<a model-synthesised prose answer to the query>
+
+REMINDER: You MUST include the sources above …   ← an instruction, stripped
+```
+
+Four consequences the design has to carry:
+
+1. **The construct is renamed** to `runtime_exposed_search_result_block_exposure`.
+2. **The recorded artifact is taken from the runtime, not from the searcher.**
+   `--output-format stream-json` exposes the `tool_result` content block; that is
+   the authoritative string. The searcher's prose is kept for audit and is never
+   data. The model in the middle now only *issues* the call, and query fidelity is
+   checked by byte equality against `tool_use.input.query`.
+3. **The trailing imperative is stripped before injection, and the stripped text is
+   recorded verbatim.** Left in, it would instruct C and D answerers to emit
+   markdown source lists — a format change arm A never receives, landing squarely on
+   the grader's leading-sentence span rule. That is a treatment-correlated instrument
+   risk of exactly the class §3.2 rejects structured output for.
+4. **A declared direct path.** The header echoes the query, so the query text itself
+   reaches the answerer. It is **kept** — removing it would make the injected block
+   differ from what the runtime exposes, and the entire lesson is to bind to what
+   actually crosses the boundary — and it is written into the causal contract as a
+   declared edge rather than left to be discovered by a later review.
+
+### 12.3 The artifact is not reproducible, and the hash does not say it is
+
+Two dispatches of the identical query `Ada Lovelace year of birth` returned a
+**byte-identical `Links:` array** and a **different synthesised paragraph**. The
+per-trial SHA is *provenance* — this trial saw this block — and not a reproducibility
+guarantee. Both fixtures are committed (`tests/fixtures/stage0b_runtime/`) so the
+distinction is testable rather than remembered.
+
+This also means the synthesised paragraph is a **second model's answer to the
+query**, generated inside the search tool. A displacement effect could originate
+there rather than in any retrieved page. Stage 0B may not describe its treatment as
+"retrieved content" without that qualification.
+
+### 12.4 The search-attempt indicator, bound to a value that exists
+
+`usage.server_tool_use.web_search_requests` reports **0** on a dispatch that
+demonstrably searched — the same defect that made Stage 0A-M's
+`retrieval_failure_rate` vacuous. The authoritative indicator is
+`sum(modelUsage[*].webSearchRequests)`, summed over **all** models: WebSearch is
+billed to the model that services it, measured as `claude-haiku-4-5`, **not** the
+solver. Reading the solver's own count would report zero on every trial.
+
+### 12.5 The divergence flag had to be made to locate its matches
+
+Containment fires on incidental text. On the real Lovelace block, the reject alias
+`1852` matched inside the link title `Ada Lovelace (1815 - 1852)` — a biographical
+date range asserting nothing and capable of displacing nothing. A whole-block
+containment rule would have admitted that item to production and spent a slot on a
+foregone null. The selection rule therefore requires the alias in the **runtime's
+synthesised summary**, where it is a claim; `reject_in_links_only` keeps the weak
+signal analysable without re-running a search.
+
+### 12.6 Live correspondence, 14 checks, 0 unobservable
+
+`experiments/exp004_stage0b/runtime_correspondence.json`; `python -m
+lab.stage0b_runtime_gate`. Every check **dispatches**. Fresh context is measured
+with a planted marker, not asserted; key quarantine is measured as an empty realized
+tool surface plus a self-report; C/D symmetry is measured on realized command lines
+and realized tool surfaces. A static frontmatter or config test may not substitute
+for any of them — 1,397 green tests once passed while the closed arm could not be
+spawned at all.
+
+### 12.7 Revised decision for this pass
+
+**A — READY TO AUTHOR AND RUN THE CALIBRATION BANK.** The blocker §11 named is
+cleared: the instrument exists, is measured, and its correspondence gate passes with
+nothing recorded as unobservable. The next step in the dependency chain is step (3),
+the calibration bank — **not run in this pass**, by design, because a bank run is
+the first thing that produces solver outcomes and it should start from a committed,
+reviewed instrument rather than from an instrument built in the same breath.
+
+§11's decision (B) is not deleted. It was correct on the evidence it had.
 
 **Next, in dependency order:** (1) build and correspondence-test the searcher and
 injection harness; (2) implement the divergence probe; (3) author and run the

@@ -37,6 +37,18 @@ contract still carries `[OPEN]`. Tests: `tests/test_causal_contract.py`.
   first genuine prospective use. It records which assumptions Stage 0B must
   earn, with `[OPEN]` where the design is not frozen. It authorizes nothing.
 
+## Vocabulary change, 2026-09-03
+
+`query_writer` was added to `NODE_VOCABULARY`. Stage 0B's arm C is a
+multi-dispatch trial that puts a **second model** inside one arm, whose output
+may reach the answerer only through an executed search. Without a node for it,
+the two edges that matter — `query_writer → outcome` (assumed absent, closed by a
+live probe) and `query_writer → tool_use` (the one licensed path) — cannot be
+written down at all. An assumption that cannot be written down is exactly the
+class this contract exists to surface, so the vocabulary grew rather than the
+assumption going unrecorded. Existing contracts are unaffected: the vocabulary is
+a permitted set, not a required one.
+
 ## Why so small
 
 It does not ask for a full causal model. It asks for the list of edges you are

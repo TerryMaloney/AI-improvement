@@ -6,9 +6,10 @@
 
 **Stage 0A-M is EXECUTED, COMPLETE and INDEPENDENTLY REVIEWED. Result: a null that
 could not have been anything else — at the realized discordant count D=2, the
-smallest attainable exact p is 1/4. Stage 0B is DESIGNED but NOT AUTHORIZED:
-decision B, more design work required. No Stage 0B dispatch has occurred and none
-is permitted.**
+smallest attainable exact p is 1/4. Stage 0B's INSTRUMENT is now BUILT, MEASURED
+and CORRESPONDENCE-TESTED (2026-09-03): decision A, ready to author and run the
+calibration bank. No Stage 0B production dispatch has occurred, none is permitted,
+and no production item exists or has been authored.**
 
 - Stage 0A-M: 130/130 dispatches under freeze `a1f4efb`, all `claude-opus-5`,
   0 voids. Neither primary class rejected. Report:
@@ -24,7 +25,94 @@ is permitted.**
   `experiments/exp004_stage0b/causal_contract.yaml` (draft, [OPEN] fields).
 - Frozen fingerprints, unchanged: battery `1ec90754f1de2696`, Stage 0A-M grader
   `10adaf1dac94ea70`, schedule `321c3a2397958c30`.
-- Full suite: 1466 passing.
+- Stage 0B instrument (2026-09-03): searcher/exposure harness, divergence probe,
+  live correspondence gate 14/14 PASS with 0 UNOBSERVABLE, real sanitized runtime
+  fixture. Treatment renamed on measurement to
+  `runtime_exposed_search_result_block_exposure`.
+- Full suite: 1569 passing (was 1466).
+
+## 2026-09-03 — STAGE 0B INSTRUMENT BUILT AND MEASURED; R1′ SCORING CORRECTED
+
+**Decision: A — READY TO AUTHOR/RUN THE CALIBRATION BANK.** The blocker that forced
+decision B is cleared. **The calibration bank was deliberately NOT run in this
+pass**: it is the first thing that produces solver outcomes and should start from a
+committed, reviewed instrument rather than one built in the same breath.
+
+**The design draft was wrong about the runtime in three ways, and the corrections
+are the substance of this pass** (`docs/EXP004_STAGE0B_DESIGN_DRAFT.md` §12):
+
+1. **"The searcher returns the block verbatim" is false.** The searcher model
+   reformats into markdown, drops the header and the trailing instruction, and
+   duplicates the source list *because that instruction told it to*. The recorded
+   artifact is therefore taken from the runtime's own `tool_result` block, exposed by
+   `--output-format stream-json`, and the searcher's prose is audit-only. A model no
+   longer sits between the query and the recorded content.
+2. **There are no snippets.** The runtime block is: a header echoing the query, a
+   `Links:` array of **titles and URLs only**, a **model-synthesised prose answer to
+   the query**, and a trailing imperative addressed to the reader. The treatment is
+   renamed `runtime_exposed_search_result_block_exposure`. Because the synthesised
+   paragraph is a second model's answer generated inside the search tool, a
+   displacement effect could originate there rather than in any retrieved page, and
+   no Stage 0B claim may say "retrieved content" without that qualification.
+3. **The artifact is not reproducible.** Two dispatches of an identical query gave a
+   byte-identical `Links:` array and a *different* synthesised paragraph. The hash is
+   per-trial provenance, not a reproducibility guarantee. Both fixtures are committed
+   so the distinction is testable.
+
+**The trailing imperative is stripped before injection, and the stripped text is
+recorded.** Left in, it would tell C and D answerers to emit markdown source lists —
+a format change arm A never receives, landing on the grader's leading-sentence span
+rule. That is the treatment-correlated instrument risk the design rejects structured
+output for.
+
+**Live correspondence: 14/14 PASS, 0 UNOBSERVABLE, 6 dispatches, $0.19.**
+`experiments/exp004_stage0b/runtime_correspondence.json`. Every check dispatches.
+Fresh context is measured with a planted marker; key quarantine as an empty realized
+tool surface plus self-report; C/D symmetry on realized command lines and realized
+tool surfaces. Query fidelity byte-checked against `tool_use.input.query`: 6/6.
+
+**Divergence probe ran on canaries only:** 4/4 executed, 4/4 queries faithful, 4/4
+pre-recorded predictions matched, 3 divergent, no solver, no answer, no outcome.
+`runs/exp004_stage0b_instrument/divergence_probe.json`.
+
+**The divergence flag had to be made to locate its matches.** On the real Lovelace
+block the reject alias `1852` matched inside the link title "Ada Lovelace (1815 -
+1852)" — a date range asserting nothing. Whole-block containment would have admitted
+that item. `divergent` now requires the alias in the runtime's synthesised summary.
+
+**Search-attempt indicator bound to a value that exists:**
+`sum(modelUsage[*].webSearchRequests)` over ALL models. `usage.server_tool_use`
+reports 0 on a dispatch that demonstrably searched, and WebSearch is billed to
+`claude-haiku-4-5`, not the solver — reading the solver's count would give zero
+every trial.
+
+**C-vs-D is underpowered for the claim it exists to support.** At n=50 it has power
+**0.60** against the preregistered gap of 0.20 (needs n=76); under Stage 0A-M's
+symmetric 20% grader error it is unpowered at every n ≤ 240 — symmetric noise
+*manufactures balanced discordance* there, unlike in the one-sided primary where it
+deletes items silently. Not promoted to primary. A pre-freeze `authorize()` gate and
+a fixed reporting rule (< 6 discordant pairs ⇒ "UNINFORMATIVE — INCAPABLE OF
+REJECTING", never "no evidence") are committed. `lab/stage0b_cvd.py`.
+
+**R1′ SCORING CORRECTED.** The review's "supported again, n=2" is not licensed by the
+frozen prospective table, which classifies `grader` as symmetric, `check_executed:
+true`, R1′ risk **low**. Under the table's own rules a defect there is `HURT_BOTH`.
+**Prospective confirmations of R1′ remain n=1.** The empirical grader failure is
+untouched; only the theory scoring changed, and R1′ was *not* rewritten to win — a
+successor hypothesis (R3′, realized-output correspondence) is recorded as a
+candidate with **zero** prospective evidence until its own table is frozen.
+`experiments/meta_r1r2/observation_2026-09-03_grader.md`.
+
+**Causal contract: VALID as `draft`,** with 7 genuinely open fields and 4 `[OPEN]`
+bindings. Not `freeze_ready`, and must not be. New node `query_writer` added to the
+shared vocabulary, because a multi-dispatch trial puts a second model inside one arm
+and the edge `query_writer → outcome` could not otherwise be written down.
+
+**Tests: 1569 passing (was 1466).** 103 added. Parser tests run against a real
+sanitized runtime transcript, not invented examples — which is exactly why the
+"verbatim" claim did not survive.
+
+**Unchanged:** every Stage 0A-M frozen artifact.
 
 ## Red-team of the remediation (2026-09-01)
 
