@@ -1,11 +1,17 @@
 # Next action — RUN the calibration bank to the frozen plan. Do NOT author production items.
 
-> **Updated 2026-09-03 (second pass).** The pre-calibration design reconciliation
-> is done. Every quantity that will decide the production size is now defined on
-> the arm it must be measured from, and every stopping rule is frozen and
-> fingerprinted **before** the first calibration outcome exists. Batch 1 is
-> **48 authored → 36 screen-passing items, 228 dispatches, ~$8.44.** The exact
-> next action is at the bottom of this file.
+> **Updated 2026-09-03 (third pass — final pre-calibration red team).** An
+> independent review found that two of the second pass's own corrections were
+> wrong, and both were load-bearing: the grader bound pooled dependent
+> observations, and `q_D = 1.0 by construction` described an artifact the
+> experiment never injects. Both are corrected. **Batch 1 is now 64 authored → 48
+> screen-passing items, 400 dispatches, ~$14.32**, and it carries a **human
+> adjudication prerequisite of roughly 29 answers** that must be discharged before
+> the grader is run. The exact next action is at the bottom of this file.
+>
+> The batch-1 specified at `120620c` **could not have passed even with a flawless
+> holdout** — under the valid sampling unit its 24-item holdout bounds the grader
+> asymmetry at 0.117 against a 0.08 threshold. That is why the numbers moved.
 
 Stage 0A-M is finished and independently reviewed. **Steps 1 and 2 of the chain
 below are DONE as of 2026-09-03**: the searcher/exposure harness is built and
@@ -47,14 +53,15 @@ spent discovering that. The bank is what validates the recipe.
    `c_disp`.~~ **SUPERSEDED 2026-09-03 (design draft §13.2–13.3):** the ≥3× rule
    had no derivation and was wrong in both directions, and closed-book dispatches
    cannot measure three of the four things the bank exists for.
-   **Batch 1: 48 authored → 36 screen-passing items, six dispatches each on
-   passers, 228 dispatches, ~$8.44.** Measures `p` (target band **0.90–1.00**),
-   **`q_C` on the C arm** (the renamed `c_disp`), `q_D` (1.0 by construction),
-   the screen pass rate `s`, and the grader's defect rate on fresh **closed and
-   exposed** answers. R=1, fresh context per trial. **Calibration items are
-   permanently barred from production**, and the 12/24 development/holdout split
-   is what keeps a grader repair from being validated on the answers that
-   motivated it.
+   **Batch 1: 64 authored → 48 screen-passing items, six dispatches each on
+   passers plus the screen, 400 dispatches, ~$14.32.** Measures `p` (band
+   **0.90–1.00**, on the point estimate), **`q_C` on the C arm** (the renamed
+   `c_disp`), **`r_D`** (the arm-D re-execution rate — *not* 1.0; see design draft
+   §14.2), the screen pass rate `s`, and the grader's defect rate on fresh
+   **closed and exposed** answers, **one observation per item**. R=1, fresh context
+   per trial. **Calibration items are permanently barred from production**, and the
+   16/48 authored development/holdout split is what keeps a grader repair from
+   being validated on the answers that motivated it.
 
 4. **Freeze the grader** (`lab/grading_v2.py`) only after the calibration bank
    has exercised its span parser on answers that are not Stage 0A-M's. It has so
@@ -80,22 +87,34 @@ spent discovering that. The bank is what validates the recipe.
 
 ## The exact next action for the calibration-run session
 
-1. Author **48 calibration items** to the recipe in the authoring protocol §2,
-   `pool: calibration`, split 16 development / 32 holdout **before any dispatch**
-   (the split is on the authored list, not on which items pass the screen).
+0. **Confirm the human adjudication prerequisite first.** Roughly **29 of 144**
+   batch-1 answers will escalate to Terry, and they must be adjudicated **before**
+   the candidate grader is run on them. If that capacity is not available, do not
+   dispatch the bank — skipping adjudication is not the alternative, because a
+   defect rate measured against the grader's own rule is not a measurement.
+1. Author **64 calibration items** to the recipe in the authoring protocol §2,
+   `pool: calibration`, split **16 development / 48 holdout** **before any
+   dispatch** (the split is on the authored list, not on which items pass the
+   screen).
 2. Run **stage 1 only** — the fixed-query divergence screen, one search dispatch
    per authored item, no answerer. Record `s`.
-3. Run **stage 2** on screen-passing items only: closed-book answerer,
-   query-writer, C search, C exposed answerer, D exposed answerer.
-4. **Adjudicate every answer by hand BEFORE running the grader**, and set
-   `hand_verdict_recorded_first`. `lab.stage0b_calibration.validate_row` refuses
-   a row graded without it.
+3. Run **stage 2** on screen-passing items only, six dispatches: closed-book
+   answerer, query-writer, C search, **D production search** (a second, fresh
+   fixed-query execution — this is the block arm D's answerer receives), C exposed
+   answerer, D exposed answerer.
+4. **Adjudicate every answer BEFORE running the grader.** Run
+   `lab.stage0b_adjudication.reference_verdict` first; send every `ESCALATE` to
+   Terry; record `hand_adjudicator` and `hand_verdict_recorded_first`.
+   `lab.stage0b_calibration.validate_row` refuses a row graded without an
+   attributed adjudicator, and refuses one naming `grading_v2`.
 5. Compute `lab.stage0b_calibration.calibration_statistics`, then
    `lab.stage0b_calibration.decide`. **Compute nothing else**, and change nothing
-   in `lab/stage0b_calibration.py`: a statistic invented after seeing the data is
-   a stopping rule invented after seeing the data.
-6. Do **not** freeze the grader, re-derive power, or author a production item in
-   the same session. Those are steps 4–6 and they start from a committed bank.
+   in `lab/stage0b_calibration.py` or `lab/stage0b_adjudication.py`: a statistic
+   invented after seeing the data is a stopping rule invented after seeing the
+   data.
+6. Do **not** freeze the grader, re-derive power, author a production item, or fix
+   the negative-control count in the same session. Those are steps 4–6 and they
+   start from a committed bank.
 
 ## Traps already closed — do not reopen
 
@@ -150,9 +169,28 @@ spent discovering that. The bank is what validates the recipe.
   query, so C and D differ through the query text, the synthesised answer and the
   link list at once. The claim is narrowed to the total effect of the
   query-construction procedure, and decomposition is a named follow-on.
-- **Do not use 15 or 20 negative controls.** Neither was derived; both leave a
-  generic exposure tax of 0.10 — the entire minimum rejectable primary signal —
-  unexcluded. The derived count is 30, and it is a function of the primary n.
+- **Do not use 15 or 20 negative controls, and do not treat 30 as final.** Neither
+  of the old numbers was derived; both leave a generic exposure tax of 0.10 — the
+  entire minimum rejectable primary signal — unexcluded. The rule is derived and
+  the count is a **function of the final primary n** (50→30, 72→42, 90→54), which
+  does not exist until the bank has run. No control item is authored until then.
+- **Do not pool (A,C) with (A,D) into two grader observations.** They share the
+  closed-arm verdict completely, so one closed-arm defect gets counted twice; the
+  resulting bound is narrower than the evidence supports, and for an instrument
+  defect that under-sizes production. The unit is the ITEM, and the bound is the
+  (A,C) pair alone.
+- **Do not say `q_D = 1.0 by construction`.** The screen tests one execution, the
+  artifact is not reproducible, and arm D re-runs its query at answering time, so
+  the screened block is never the injected block. The parameter is `r_D` and it is
+  measured. A non-divergent re-execution is the measurement, not a failure.
+- **Do not require the p lower bound to clear 0.90.** That certification rejects a
+  recipe sitting on the design point 5 times in 6 at n=36. The band is checked on
+  the point estimate; sizing uses the lower bound.
+- **Do not let the candidate grader produce its own ground truth**, and do not let
+  the orchestrating model adjudicate an answer whose grader verdict it has already
+  seen. Both are schema errors.
+- **Do not call any Stage 0B threshold "preregistered".** Stage 0B has no frozen
+  preregistration; these are pre-calibration commitments.
 - **Do not treat the Stage 0A-M null as evidence of safety.** Its own harm bounds
   are ≤0.113 (availability) and ≤0.312 (restricted to the 8 trials that actually
   retrieved).

@@ -7,8 +7,9 @@
 **Stage 0A-M is EXECUTED, COMPLETE and INDEPENDENTLY REVIEWED. Result: a null that
 could not have been anything else — at the realized discordant count D=2, the
 smallest attainable exact p is 1/4. Stage 0B's INSTRUMENT is BUILT, MEASURED and
-CORRESPONDENCE-TESTED, and as of the second pass of 2026-09-03 its CALIBRATION
-PLAN is RECONCILED AND FROZEN: decision A, ready to run the calibration bank. No
+CORRESPONDENCE-TESTED, and as of the THIRD pass of 2026-09-03 its CALIBRATION
+PLAN has survived a final red team that found and fixed two load-bearing defects in
+the second pass's own corrections: decision A, ready to run the calibration bank. No
 Stage 0B production dispatch has occurred, none is permitted, no calibration item
 has been dispatched, and no production item exists or has been authored.**
 
@@ -30,12 +31,79 @@ has been dispatched, and no production item exists or has been authored.**
   live correspondence gate 14/14 PASS with 0 UNOBSERVABLE, real sanitized runtime
   fixture. Treatment renamed on measurement to
   `runtime_exposed_search_result_block_exposure`.
-- Stage 0B calibration plan (2026-09-03, second pass): batch 1 = 48 authored → 36
-  screen-passing items, 228 dispatches, ~$8.44; cap 84 screen-passing items, 532
-  dispatches, ~$19.69. `lab/stage0b_calibration.py`;
+- Stage 0B calibration plan (2026-09-03, third pass): batch 1 = **64 authored → 48
+  screen-passing items, 400 dispatches, ~$14.32**; cap 80 screen-passing items, 588
+  dispatches, ~$23.96. `lab/stage0b_calibration.py`, `lab/stage0b_adjudication.py`;
   `runs/exp004_stage0b_design/calibration_plan.json`. Stopping rules frozen and
   fingerprinted before the first calibration outcome exists.
-- Full suite: 1618 passing (was 1569).
+- **Human adjudication prerequisite: ~29 of 144 batch-1 answers**, to be discharged
+  BEFORE the candidate grader is run on them.
+- Full suite: 1656 passing (was 1618).
+
+## 2026-09-03 (third pass) — FINAL PRE-CALIBRATION RED TEAM
+
+**Decision: A — CALIBRATION READY.** No calibration datum exists; **no live call
+was made.** An independent review of `120620c` found that **two of the second
+pass's own corrections were wrong**, and both were load-bearing. This is what the
+red team was for.
+
+**1. The grader bound pooled dependent observations.** The second pass counted
+(A,C) and (A,D) as two Bernoulli trials per item, on an "exchangeability"
+argument. **Exchangeability is not independence.** Both pairs are built from the
+*same* closed-arm verdict on the *same* closed-arm answer, so one closed-arm
+defect produced two counted events — one draw written down twice. A binomial bound
+at n = 2 × items is therefore **narrower than the evidence supports**, and for an
+*instrument defect* that error **under-sizes production** — the exact failure mode
+§7.1 exists to prevent. It also bounded the wrong estimand: `g_one` is a property
+of the A-vs-C pair, because A-vs-C is the primary.
+
+**Corrected: the unit is the ITEM, and the bound is the (A,C) pair alone.** (A,D)
+becomes a diagnostic and the only exercise arm D's answer form gets before a
+production run that grades arm D too; an item-level union bound is reported as a
+conservative companion. **Consequence: a clean 24-item holdout bounds `g_one` at
+0.117, not 0.061 — above the 0.08 PASS threshold. Batch 1 as specified could not
+have passed however clean it came back.** The holdout rises to 36 items and batch 1
+to 48 screen-passing items.
+
+**2. `q_D = 1.0 by construction` was false, and the repository already held the
+refutation.** The screen tests ONE execution of the fixed query; the artifact is
+**not reproducible** (§12.3) and `run_arm` **re-executes** arm D's fixed query at
+answering time. The screened block is never the injected block. Freezing the
+screened artifact was **rejected** — a stale D block against a contemporaneous C
+block would break the one structural guarantee the C/D contrast rests on. **Arm D
+re-runs its query, and the parameter is `r_D`, measured** by a second fixed-query
+execution per calibration item. A non-divergent re-execution is **the measurement,
+not a failure**. `CvDScenario.from_exposure` now requires `r_D` with no default.
+
+**3. The p PASS rule tested a claim the design never made.** Requiring the 95%
+lower bound to clear 0.90 rejects a recipe sitting **on this design's own point of
+0.95** five times in six at n=36, and rejects one exactly at the band edge by
+construction. §2.2 sets a **band**, not a certification. The band is now checked on
+the **point estimate**; **sizing** uses the lower bound, the conservative
+direction. Errors cost production items instead of triggering a false stop.
+
+**4. The negative-control count is provisional.** 30 was derived against n=50 while
+the same document superseded n=50. The rule is a function of the final primary n:
+50→30, 66→40, **72→42**, 90→54. No control item is authored until production n is
+fixed.
+
+**5. Terminology.** Stage 0B has **no frozen preregistration**.
+`Q_GAP_PREREGISTERED` → `PRECALIBRATION_COMMITTED_Q_GAP`, with lineage to the
+2026-09-02 displacement-scale 0.20 recorded rather than backdated.
+
+**6. Ground truth has a named producer and a stated cost.**
+`lab/stage0b_adjudication.py`: a deterministic tier-1 reference that does **not**
+import the grader and decides only what the key can decide, plus **human**
+adjudication on the six classes where a positional rule is known to be unreliable —
+deciding those by rule would certify the grader against its own blind spot. The
+candidate grader producing its own ground truth is a **schema error**. **Manual
+prerequisite: ~29 of 144 batch-1 answers, flagged before dispatch.**
+
+**Tests: 1656 passing (was 1618).** 38 added, all offline. **Zero live calls.**
+
+**LIVE REVALIDATION: NOT REQUIRED.** No packet, agent, searcher or parser semantics
+changed; the arm-D re-execution is what the committed harness already did. The
+14-check runtime correspondence gate still describes the instrument in the tree.
 
 ## 2026-09-03 (second pass) — PRE-CALIBRATION DESIGN RECONCILIATION
 

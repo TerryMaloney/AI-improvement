@@ -1009,3 +1009,104 @@ thorough is how quota gets spent on nothing.
 **Unchanged:** every Stage 0A-M frozen artifact; the candidate grader, still not
 frozen and not touched.
 
+
+---
+
+## 2026-09-03 (third pass) — Final pre-calibration red team
+
+**Decision: A — CALIBRATION READY.** No calibration datum exists and no live call
+was made. An independent review of `120620c` found that **two of the second pass's
+own corrections were wrong**, and both were load-bearing. Finding them here rather
+than in the bank's output is what the red team was for.
+
+**Decision: the grader-defect sampling unit is the ITEM, and the bound is computed
+on the (A,C) pair alone.** The second pass pooled (A,C) and (A,D) into two
+Bernoulli trials per item, licensed by "exchangeability". **Exchangeability is not
+independence.** Both pairs are built from the same closed-arm verdict on the same
+closed-arm answer, so a single closed-arm defect produced two counted `g_one`
+events — one draw written down twice. A Clopper-Pearson bound at n = 2 × items
+assumes 2m independent trials and so returns an interval **narrower than the
+evidence supports**; for an *instrument defect* that runs in the dangerous
+direction and **under-sizes production**. It also bounded the wrong estimand:
+`g_one` is a property of the A-vs-C pair, because A-vs-C is the primary, and
+folding in (A,D) rests on an assumption about model behaviour that no packet-level
+symmetry establishes. **(A,D) is retained as a diagnostic and as the only exercise
+arm D's answer form gets before a production run that grades arm D too; it enters
+no bound.** An item-level union bound is reported as a conservative companion.
+
+**Consequence, and it is not cosmetic:** a clean 24-item holdout bounds `g_one` at
+**0.117**, not 0.061 — above the 0.08 PASS threshold. **Batch 1 as specified could
+not have passed even with a flawless holdout.** The holdout rises to **36 items**
+(the smallest clean holdout that reaches the threshold at all) and batch 1 to 48
+screen-passing items.
+
+**Decision: arm D re-executes its fixed query at answering time, and the parameter
+is `r_D`, measured.** `q_D = 1.0 by construction` was **false**, and this
+repository already held the refutation: the search artifact is not reproducible
+(design draft §12.3) and `lab/stage0b_harness.py:run_arm` executes arm D's fixed
+query freshly at answering time, so the screened block is never the injected block.
+`q_D = 1` was true of an artifact the experiment never uses. Freezing the screened
+block was **rejected** — it would give arm D a stale block against a contemporaneous
+C block, breaking the one structural guarantee the C/D contrast rests on
+(`execute_search(query)` takes one parameter, so C and D can differ in nothing
+else). Freezing both arms' blocks was rejected as unnecessary. **The screen is a
+filter on item propensity, not a guaranteed dose**, and a production D trial whose
+re-executed block is non-divergent is **the measurement, not a failure**.
+`CvDScenario.from_exposure` now **requires** `r_D` and has no default: a default is
+how an unmeasured value re-enters a power calculation. The inference that "D must
+displace at least as often as C" is withdrawn with its premise.
+
+**Decision: the p certification is withdrawn; the band is checked on the point
+estimate and sizing uses the lower bound.** Requiring a 95% one-sided lower bound
+to clear 0.90 rejects a recipe sitting **on this design's own point of p=0.95**
+about five times in six at n=36 (P(pass)=0.158), and rejects one exactly at the
+band edge with probability ≥0.95 by construction. Design draft §2.2 sets a **band
+on the measured accuracy**, not a certification that its edge is exceeded. The
+criterion is changed to match the intended claim — not because certification was
+expensive. Errors in the bank now cost production items rather than triggering a
+near-certain false stop, and the affordability cap stays the binding gate.
+
+**Decision: the negative-control count is PROVISIONAL and 30 was never a
+commitment.** It is a function of the final primary n, which does not exist until
+the bank has run — and the same document that reported 30 superseded the n=50 it
+was derived against. The rule gives 50→30, 66→40, **72→42**, 90→54. No control item
+is authored until production n is fixed.
+
+**Decision: Stage 0B thresholds are PRE-CALIBRATION COMMITMENTS, not
+preregistration.** Stage 0B has no frozen preregistration — the design draft says
+"DRAFT. Not frozen" and the contract validates as `draft`. `Q_GAP_PREREGISTERED` is
+renamed `PRECALIBRATION_COMMITTED_Q_GAP`; it was created at `120620c`, after the
+runtime was characterised, by restating the 2026-09-02 displacement-scale 0.20 onto
+the exposure scale, and calling it "preregistered" backdated a commitment by a day
+and a runtime discovery. `PARAMETER_LINEAGE` records the old quantity, scale,
+conversion and date.
+
+**Decision: ground truth is two-tier, and the manual burden is a stated
+prerequisite.** `lab/stage0b_adjudication.py`. Tier 1 is deterministic, does **not**
+import `grading_v2.py` (asserted by test), and reads a flat 240-character window
+with whole-answer first-occurrence ordering — deliberately not the span rule under
+test. Tier 2 is a human, on the six classes where any positional rule is known to
+be unreliable; deciding those by rule would certify the grader against its own
+blind spot, which is the honest difficulty here rather than something the design
+can engineer away. **The candidate grader may never produce its own ground truth,
+and the orchestrating model may never adjudicate an answer whose grader verdict it
+has seen** — both are schema errors `validate_row` refuses. **Roughly 29 of 144
+batch-1 answers will need human adjudication, before the grader runs**, and that is
+flagged as a precondition of dispatch rather than discovered mid-bank. Two of the
+escalation classes are themselves REVISE-RECIPE triggers.
+
+**Costs.** Batch 1 rises from 228 dispatches / $8.44 to **400 dispatches / $14.32**
+— the larger holdout, plus one extra dispatch per screen-passing item for `r_D`.
+Maximum 588 dispatches / $23.96.
+
+**Contract: VALID as `draft`,** 10 open fields (was 7), 25 bindings (was 22). Three
+added: `arm_D_treatment_realization`, `grader_defect_sampling_unit`,
+`reference_adjudication`.
+
+**Tests: 1656 passing (was 1618), all offline. Zero live calls.** No live
+revalidation is required: no packet, agent, searcher or parser semantics changed,
+and the arm-D re-execution is what the committed harness already did.
+
+**Unchanged:** every Stage 0A-M frozen artifact; the candidate grader, still not
+frozen and not touched.
+

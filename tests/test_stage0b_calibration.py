@@ -11,6 +11,7 @@ from fractions import Fraction
 import pytest
 
 from lab import stage0b_calibration as cal
+from lab import stage0b_adjudication as adj
 from lab.stage0b_cvd import CvDScenario, authorize
 from lab.stage0b_power import RECOMMENDED_N_CONTROL, Scenario, analyse_scenario
 
@@ -77,8 +78,8 @@ class TestTheNegativeControlCountIsDerivedNotChosen:
 
 # --------------------------------------------------------------------------- #
 class TestTheGraderBoundIsTheThingThatSizesTheRun:
-    """The load-bearing finding of the reconciliation: calibration cannot certify
-    the grader for n=50, so production is sized AT the achievable bound."""
+    """The load-bearing finding: calibration cannot certify the grader for n=50,
+    so production is sized AT the achievable bound."""
 
     def test_asymmetric_grader_error_is_far_more_destructive_than_symmetric(self):
         base = dict(p=0.95, u=1.0, q_exposure=0.50, delta=0.30)
@@ -88,11 +89,18 @@ class TestTheGraderBoundIsTheThingThatSizesTheRun:
         assert one < 0.65 < both
 
     def test_holding_power_at_n50_needs_a_g_one_no_calibration_bank_can_certify(self):
-        # 0.014 is the largest g_one keeping power >= 0.80 at n=50.
         assert cal.required_production_n(0.95, 0.50, 0.014) == 50
         assert cal.required_production_n(0.95, 0.50, 0.020) > 50
-        # ... and bounding it there needs more clean pairs than the whole run.
         assert cal.n_clean_for_upper_bound(0.014) > 200
+
+    def test_the_recorded_sensitivity_table_matches_a_live_recomputation(self):
+        """Every entry cheap enough to re-derive is re-derived. The low-q_C rows
+        need a scan to n=400 whose unreachable cases cost ~60s, so they are
+        recorded with provenance rather than recomputed on every report."""
+        for q, recorded in cal.Q_C_SENSITIVITY_AT_PERFECT_GRADER.items():
+            if recorded is None or recorded > cal.N_PROD_VIABLE_CAP:
+                continue
+            assert cal.required_production_n(0.95, q, 0.0) == recorded, q
 
     def test_the_pass_bound_is_the_loosest_one_that_stays_inside_the_affordable_cap(self):
         n_at_bound = cal.required_production_n(0.95, 0.50, cal.G_ONE_BOUND_FOR_PASS)
@@ -100,18 +108,68 @@ class TestTheGraderBoundIsTheThingThatSizesTheRun:
         assert cal.required_production_n(0.95, 0.50, 0.10) > n_at_bound
 
     def test_sizing_uses_the_upper_bound_for_the_instrument_and_the_point_for_the_environment(self):
-        # a worse grader bound must never produce a SMALLER production run
         ns = [cal.required_production_n(0.95, 0.50, g) for g in (0.0, 0.02, 0.05, 0.08)]
         assert ns == sorted(ns)
 
-    def test_one_calibration_item_yields_two_closed_exposed_pairs(self):
-        stage2 = cal.dispatch_structure()["stage_2_screen_passing_items_only"]
-        exposed = [d for d in stage2 if "exposed answerer" in d["dispatch"]]
-        assert len(exposed) == 2
-        assert cal.cp_upper(0, 2 * cal.BATCH1_HOLDOUT) < cal.G_ONE_BOUND_FOR_PASS
+
+class TestTheGraderBoundSamplingUnitIsTheItem:
+    """ISSUE 1. Pooling (A,C) with (A,D) counted one shared closed-arm verdict
+    twice and bounded the wrong estimand. Both defects are pinned here."""
+
+    def test_the_two_pairs_share_the_closed_arm_verdict_completely(self):
+        # A single closed-arm defect, with both exposed arms clean, is ONE event
+        # about the A/C pair -- not two.
+        r = _scored("cal001", "grader_validation_holdout",
+                    closed=("CORRECT", "INCORRECT"))
+        assert cal.ac_pair_defect(r) == (True, False)
+        assert cal.ad_pair_defect(r) == (True, False)
+        # ... and only the A/C one is counted.
+        st = cal.calibration_statistics([r])
+        assert st["grader"]["observations"] == 1
+        assert st["grader"]["k_g_one"] == 1
+
+    def test_one_item_contributes_exactly_one_observation(self):
+        rows = [_scored(f"cal{i:03d}", "grader_validation_holdout") for i in range(24)]
+        st = cal.calibration_statistics(rows)
+        assert st["grader"]["observations"] == 24
+        assert st["grader"]["g_one_upper_95"] == round(cal.cp_upper(0, 24), 4)
+
+    def test_the_invalid_pooling_claimed_a_bound_the_evidence_does_not_support(self):
+        valid, invalid = cal.cp_upper(0, 24), cal.cp_upper(0, 48)
+        assert invalid < valid            # anti-conservative, the dangerous direction
+        assert cal.required_production_n(0.95, 0.50, invalid) < \
+            cal.required_production_n(0.95, 0.50, valid)
+
+    def test_the_A_D_pair_is_a_diagnostic_and_enters_no_bound(self):
+        clean_c = _scored("cal001", "grader_validation_holdout",
+                          d=("CORRECT", "INCORRECT"))
+        st = cal.calibration_statistics([clean_c])
+        assert st["grader"]["k_g_one"] == 0                       # bound untouched
+        assert st["grader"]["arm_D_diagnostic"]["k_g_one_on_AD_pairs"] == 1
+
+    def test_the_union_companion_is_conservative_and_never_the_headline(self):
+        rows = [_scored(f"cal{i:03d}", "grader_validation_holdout",
+                        d=("CORRECT", "INCORRECT") if i < 3 else ("CORRECT", "CORRECT"))
+                for i in range(24)]
+        st = cal.calibration_statistics(rows)
+        comp = st["grader"]["conservative_companion"]
+        assert comp["k_item_union"] == 3 and st["grader"]["k_g_one"] == 0
+        assert comp["g_one_union_upper_95"] > st["grader"]["g_one_upper_95"]
+
+    def test_the_batch_1_holdout_can_actually_reach_the_pass_threshold(self):
+        # The defect that mattered: at the old 24-item holdout a PERFECT result
+        # bounded g_one at 0.117, above the 0.08 PASS threshold. Batch 1 could not
+        # have passed.
+        assert cal.cp_upper(0, 24) > cal.G_ONE_BOUND_FOR_PASS
+        assert cal.cp_upper(0, cal.BATCH1_HOLDOUT) <= cal.G_ONE_BOUND_FOR_PASS
+        assert cal.BATCH1_HOLDOUT == cal.n_clean_for_upper_bound(cal.G_ONE_BOUND_FOR_PASS)
+
+    def test_the_statistics_declare_their_sampling_unit(self):
+        st = cal.calibration_statistics([_scored("cal001", "grader_validation_holdout")])
+        assert "ITEM" in st["sampling_unit"]
+        assert st["grader"]["unit"] == "item"
 
 
-# --------------------------------------------------------------------------- #
 class TestTheOldMultiplierIsReplacedRatherThanRestated:
 
     def test_the_derived_cap_costs_less_than_the_multiplier_would_have(self):
@@ -151,7 +209,7 @@ class TestTheDispatchStructureIsMinimalAndScreenedFirst:
         ds = cal.dispatch_structure()
         assert [d["dispatch"] for d in ds["stage_1_every_authored_item"]] \
             == ["D fixed-query search"]
-        assert len(ds["stage_2_screen_passing_items_only"]) == 5
+        assert len(ds["stage_2_screen_passing_items_only"]) == 6
 
     def test_no_exposed_answerer_is_bought_by_the_exposure_estimate(self):
         assert "measured on the BLOCK, before any answerer" in cal.dispatch_structure()[
@@ -179,23 +237,53 @@ class TestTheParametersNameWhatCrossesTheBoundary:
         assert "different queries producing" in \
             cal.PARAMETER_GLOSSARY["q_C"]["why_it_cannot_be_taken_from_arm_D"]
 
-    def test_the_screen_pins_q_D_at_one_on_the_production_pool(self):
-        assert cal.PARAMETER_GLOSSARY["q_D"]["value_on_the_production_pool"] == 1.0
-        assert CvDScenario.from_exposure(p=0.95, q_C=0.50).delta_D == \
-            pytest.approx(cal.DELTA_PREREGISTERED)
+    def test_the_screen_does_not_pin_arm_D_exposure_at_one(self):
+        assert "q_D" not in cal.PARAMETER_GLOSSARY
+        g = cal.PARAMETER_GLOSSARY["r_D"]
+        assert "THAT WAS FALSE" in g["replaces"]
+        assert "not the injected block" in g["replaces"]
+
+    def test_the_cvd_scenario_refuses_to_default_arm_D_exposure(self):
+        with pytest.raises(TypeError):
+            CvDScenario.from_exposure(p=0.95, q_C=0.50)
+        s = CvDScenario.from_exposure(p=0.95, q_C=0.50, r_D=0.80)
+        assert s.delta_D == pytest.approx(0.80 * cal.DELTA_PREREGISTERED)
+
+    def test_a_nondivergent_reexecution_is_the_measurement_not_a_failure(self):
+        assert "not a failure" in \
+            cal.PARAMETER_GLOSSARY["r_D"]["a_nondivergent_reexecution_is_not_a_failure"] \
+            or "measurement" in \
+            cal.PARAMETER_GLOSSARY["r_D"]["a_nondivergent_reexecution_is_not_a_failure"]
+
+    def test_r_D_is_measured_by_a_second_search_distinct_from_the_screen(self):
+        names = [d["dispatch"] for d in
+                 cal.dispatch_structure()["stage_2_screen_passing_items_only"]]
+        assert any("D production search" in n for n in names)
+        assert cal.DISPATCHES_PER_SCREENED_CALIBRATION_ITEM == 6
+
+    def test_the_q_gap_is_named_a_commitment_rather_than_a_preregistration(self):
+        assert not hasattr(cal, "Q_GAP_PREREGISTERED")
+        lin = cal.PARAMETER_LINEAGE["PRECALIBRATION_COMMITTED_Q_GAP"]
+        assert lin["status"] == "PRE-CALIBRATION COMMITMENT, not preregistration"
+        assert "0.20" in lin["derived_from"]
+        assert "NOT preregistered" in cal.PREREGISTRATION_STATUS
 
     def test_the_legacy_displacement_gap_implies_an_exposure_gap_nobody_would_preregister(self):
         implied = cal.DELTA_GAP_ON_DISPLACEMENT_SCALE_LEGACY / cal.DELTA_PREREGISTERED
         assert implied > 0.66
-        assert cal.Q_GAP_PREREGISTERED < implied
+        assert cal.PRECALIBRATION_COMMITTED_Q_GAP < implied
 
     def test_the_two_scales_cannot_be_mixed_silently(self):
-        s = CvDScenario.from_exposure(p=0.95, q_C=0.40, q_D=1.0, delta=0.30)
+        s = CvDScenario.from_exposure(p=0.95, q_C=0.40, r_D=1.0, delta=0.30)
         assert s.delta_C == pytest.approx(0.12)
         assert s.delta_D == pytest.approx(0.30)
 
+    def test_an_out_of_range_exposure_rate_is_refused(self):
+        with pytest.raises(ValueError):
+            CvDScenario.from_exposure(p=0.95, q_C=1.4, r_D=0.8)
+
     def test_the_cvd_claim_is_narrowed_to_the_query_construction_procedure(self):
-        v = authorize(CvDScenario.from_exposure(p=0.95, q_C=0.50), 50)
+        v = authorize(CvDScenario.from_exposure(p=0.95, q_C=0.50, r_D=0.80), 50)
         assert "query-construction procedure" in v["claim"]
         assert "NOT a claim about retrieved page content" in v["claim"]
 
@@ -212,13 +300,16 @@ def _row(item_id="cal001", subset="grader_validation_holdout", **kw):
 
 
 def _scored(item_id, subset, closed=("CORRECT", "CORRECT"),
-            c=("CORRECT", "CORRECT"), d=("CORRECT", "CORRECT"), divergent_c=True):
+            c=("CORRECT", "CORRECT"), d=("CORRECT", "CORRECT"), divergent_c=True,
+            divergent_d_production=True):
     return _row(item_id, subset, screen_passed=True, d_divergent=True,
                 c_divergent=divergent_c,
+                d_production_divergent=divergent_d_production,
                 hand_verdict_closed=closed[0], grader_verdict_closed=closed[1],
                 hand_verdict_c=c[0], grader_verdict_c=c[1],
                 hand_verdict_d=d[0], grader_verdict_d=d[1],
-                hand_verdict_recorded_first=True, grader_fingerprint="deadbeefdeadbeef")
+                hand_verdict_recorded_first=True, grader_fingerprint="deadbeefdeadbeef",
+                hand_adjudicator="tier1:lab.stage0b_adjudication")
 
 
 class TestTheLedgerSchemaCarriesLineageForEveryStatistic:
@@ -268,42 +359,44 @@ class TestTheDecisionRulesAreFixedBeforeAnyDatumExists:
         return rows
 
     def test_a_clean_large_bank_passes_and_says_what_it_authorizes(self):
-        rows = self._bank(n_hold=24, n_dev=12)
+        rows = self._bank(n_hold=cal.BATCH1_HOLDOUT, n_dev=cal.BATCH1_DEV)
         st = cal.calibration_statistics(rows)
-        assert st["p"]["p_lower_95"] >= cal.P_TARGET_LOWER
+        assert st["p"]["in_band"] is True
         assert st["grader"]["g_one_upper_95"] <= cal.G_ONE_BOUND_FOR_PASS
-        d = cal.decide(st, n_screened_total=36)
+        d = cal.decide(st, n_screened_total=cal.BATCH1_TARGET_SCREENED)
         assert d["verdict"] == cal.PASS
         assert any("freeze" in a for a in d["authorizes"])
 
     def test_a_small_clean_bank_continues_rather_than_passing(self):
         rows = self._bank(n_hold=6, n_dev=2)
-        d = cal.decide(cal.calibration_statistics(rows), n_screened_total=8)
+        st = cal.calibration_statistics(rows)
+        assert st["n_prod_required"] is None, "too small to size against"
+        d = cal.decide(st, n_screened_total=8)
         assert d["verdict"] == cal.CONTINUE
         assert d["next_batch_screen_passing_items"] == cal.BATCHN_TARGET_SCREENED
 
     def test_a_single_held_out_grader_defect_forces_a_repair_and_burns_the_holdout(self):
-        rows = self._bank(n_hold=24, n_dev=12, defects=1)
-        d = cal.decide(cal.calibration_statistics(rows), n_screened_total=36)
+        rows = self._bank(n_hold=cal.BATCH1_HOLDOUT, n_dev=cal.BATCH1_DEV, defects=1)
+        d = cal.decide(cal.calibration_statistics(rows), n_screened_total=48)
         assert d["verdict"] == cal.REVISE_GRADER
         assert "spent" in d["reasons"][0]
 
     def test_a_grader_change_after_the_holdout_was_scored_forces_a_fresh_holdout(self):
-        rows = self._bank(n_hold=24, n_dev=12)
-        d = cal.decide(cal.calibration_statistics(rows), n_screened_total=36,
+        rows = self._bank(n_hold=cal.BATCH1_HOLDOUT, n_dev=cal.BATCH1_DEV)
+        d = cal.decide(cal.calibration_statistics(rows), n_screened_total=48,
                        grader_repaired_since_holdout=True)
         assert d["verdict"] == cal.CONTINUE
         assert "fresh holdout" in d["reasons"][0]
 
     def test_a_recipe_below_the_band_revises_the_recipe_and_never_the_pool(self):
         rows = self._bank(n_hold=24, n_dev=12, closed_errors=8)
-        d = cal.decide(cal.calibration_statistics(rows), n_screened_total=36)
+        d = cal.decide(cal.calibration_statistics(rows), n_screened_total=48)
         assert d["verdict"] == cal.REVISE_RECIPE
         assert any("too hard" in r for r in d["reasons"])
 
     def test_an_undosed_C_arm_revises_the_recipe(self):
         rows = self._bank(n_hold=24, n_dev=12, c_divergent=2)   # q_C ~ 0.056
-        d = cal.decide(cal.calibration_statistics(rows), n_screened_total=36)
+        d = cal.decide(cal.calibration_statistics(rows), n_screened_total=48)
         assert d["verdict"] == cal.REVISE_RECIPE
         assert any("undosed" in r for r in d["reasons"])
 
@@ -318,7 +411,7 @@ class TestTheDecisionRulesAreFixedBeforeAnyDatumExists:
         # a grader repair cannot rescue items the model cannot answer closed-book.
         rows = self._bank(n_hold=24, n_dev=12, closed_errors=8, defects=1)
         assert cal.decide(cal.calibration_statistics(rows),
-                          n_screened_total=36)["verdict"] == cal.REVISE_RECIPE
+                          n_screened_total=48)["verdict"] == cal.REVISE_RECIPE
 
     def test_the_screen_pass_rate_is_computed_over_authored_items_not_screened_ones(self):
         rows = self._bank(n_hold=6, n_dev=2)
@@ -336,10 +429,14 @@ class TestTheDecisionRulesAreFixedBeforeAnyDatumExists:
         assert with_reject["q_C"] == base["q_C"]
         assert with_reject["screen"]["s_hat"] < 1.0
 
-    def test_the_pooling_licence_is_reported_so_it_can_be_falsified(self):
+    def test_the_arm_D_diagnostic_is_reported_separately_and_enters_no_bound(self):
         st = cal.calibration_statistics(self._bank(n_hold=24, n_dev=12, defects=3))
-        ex = st["grader"]["exchangeability_check"]
-        assert ex["defects_on_C_pairs"] == 3 and ex["defects_on_D_pairs"] == 0
+        assert st["grader"]["k_g_one"] == 3           # the A/C pairs carry the bound
+        assert st["grader"]["arm_D_diagnostic"]["k_g_one_on_AD_pairs"] == 0
+
+    def test_a_bank_too_small_to_size_against_is_not_a_design_failure(self):
+        st = cal.calibration_statistics(self._bank(n_hold=6, n_dev=2))
+        assert cal.decide(st, n_screened_total=8)["verdict"] == cal.CONTINUE
 
     def test_the_reported_n_prod_is_the_one_sized_at_the_grader_bound(self):
         st = cal.calibration_statistics(self._bank(n_hold=24, n_dev=12))

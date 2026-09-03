@@ -85,16 +85,26 @@ So the estimand C-vs-D supports is, in full:
 It is NOT an estimate of the effect of retrieved page content. Decomposing the
 three channels is a NAMED FOLLOW-ON, not a Stage 0B result.
 
-WHAT THE SELECTION RULE DOES TO delta_D
----------------------------------------
-The divergence screen admits an item to production iff its FIXED-query block is
-divergent, so on the production pool `q_D = 1.0 BY CONSTRUCTION` while `q_C` is
-estimated. Under the common-susceptibility decomposition
-`delta_C = q_C * delta`, `delta_D = q_D * delta`, that means D is expected to
-displace AT LEAST as often as C. The test is nonetheless kept TWO-SIDED: a
-model-written query can return a different and more potent displacing claim, so
-the direction is not logically forced. The asymmetry is declared here rather than
-discovered in a later review.
+WHAT THE SELECTION RULE DOES TO delta_D -- CORRECTED 2026-09-03 (second red team)
+--------------------------------------------------------------------------------
+An earlier version of this docstring said the divergence screen pins
+`q_D = 1.0 BY CONSTRUCTION`, and inferred that D must displace at least as often
+as C. **Both the premise and the inference are withdrawn.**
+
+The screen tests the block returned by ONE execution of the fixed query. The
+artifact is not reproducible, and arm D executes its fixed query FRESHLY at
+answering time, so the block that passed the screen is never the block that is
+injected. Screen-time divergence does not transfer to the trial.
+
+The measured parameter is `r_D` -- P(a re-execution of the frozen fixed query on a
+screened item is again divergent) -- and the decomposition is
+
+    delta_C = q_C * delta       delta_D = r_D * delta
+
+with BOTH rates measured on the calibration bank and neither pinned. Nothing in
+the design forces a direction for the C-vs-D contrast, so the test is two-sided
+for its original reason -- neither direction is predicted -- rather than in spite
+of a structural asymmetry that turned out not to exist.
 """
 from __future__ import annotations
 
@@ -173,22 +183,31 @@ class CvDScenario:
 
 
     @classmethod
-    def from_exposure(cls, p: float, q_C: float, q_D: float = 1.0,
+    def from_exposure(cls, p: float, q_C: float, r_D: float,
                       delta: float = 0.30, g: float = 0.0) -> "CvDScenario":
-        """Build the scenario from MEASURED exposure rates and a preregistered delta.
+        """Build the scenario from MEASURED exposure rates and a committed delta.
 
-        `q_D` defaults to 1.0 because the divergence screen pins it there on the
-        production pool. Passing anything else means the items were not screened,
-        and the scenario is then not describing the run that will happen.
+        `r_D` IS REQUIRED AND HAS NO DEFAULT. It used to default to 1.0, on the
+        argument that the divergence screen pins arm D's exposure at 1 by
+        construction. **That argument was wrong**, and this repository already
+        held its refutation: the search artifact is not reproducible, and
+        `lab/stage0b_harness.py:run_arm` executes arm D's fixed query FRESHLY at
+        answering time, so the screened block is never the injected block. The
+        default is removed rather than corrected to another number, because a
+        default here is exactly how an unmeasured value re-enters a power
+        calculation.
         """
-        return cls(p=p, delta_C=q_C * delta, delta_D=q_D * delta, g=g)
+        for name, v in (("q_C", q_C), ("r_D", r_D)):
+            if not 0.0 <= v <= 1.0:
+                raise ValueError(f"{name} must be a measured probability, got {v!r}")
+        return cls(p=p, delta_C=q_C * delta, delta_D=r_D * delta, g=g)
 
 
 # The preregistered gap, restated on the scale it is measured on. On the
 # DISPLACEMENT scale the commitment is 0.20; at delta=0.30 that implies an
 # exposure-rate difference of 0.667 between the two queries, which is not a target
 # anyone would have written down had the number been expressed in the units the
-# calibration bank observes. lab.stage0b_calibration.Q_GAP_PREREGISTERED restates
+# calibration bank observes. lab.stage0b_calibration.PRECALIBRATION_COMMITTED_Q_GAP restates
 # it as |q_C - q_D| >= 0.25, implying a displacement gap of 0.075.
 DELTA_GAP_IMPLIED_EXPOSURE_GAP_AT_DELTA_030 = 0.20 / 0.30
 

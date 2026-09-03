@@ -34,6 +34,10 @@ COMPONENTS: dict[str, str] = {
         "the live correspondence gate",
     "lab/stage0b_cvd.py":
         "the C-vs-D pre-freeze discriminability requirement",
+    "lab/stage0b_adjudication.py":
+        "the reference adjudicator that produces the ground truth the grader's defect "
+        "rate is measured against. Fingerprinted because a ground truth that can be "
+        "edited after the disagreements are visible is not a ground truth",
     "lab/stage0b_calibration.py":
         "the calibration sizing derivations and the FROZEN PASS/CONTINUE/REVISE rules. "
         "It is fingerprinted for the same reason the grader is: a stopping rule that can "

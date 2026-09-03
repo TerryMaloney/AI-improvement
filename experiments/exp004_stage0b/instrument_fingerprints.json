@@ -29,13 +29,18 @@
    "load_bearing_for": "the live correspondence gate"
   },
   "lab/stage0b_cvd.py": {
-   "sha16": "a386b502dc60b3e7",
-   "bytes": 17602,
+   "sha16": "9df1d953a46ef99c",
+   "bytes": 18710,
    "load_bearing_for": "the C-vs-D pre-freeze discriminability requirement"
   },
+  "lab/stage0b_adjudication.py": {
+   "sha16": "4f8fbd9be7806669",
+   "bytes": 13950,
+   "load_bearing_for": "the reference adjudicator that produces the ground truth the grader's defect rate is measured against. Fingerprinted because a ground truth that can be edited after the disagreements are visible is not a ground truth"
+  },
   "lab/stage0b_calibration.py": {
-   "sha16": "6a27dad4ac7f84c5",
-   "bytes": 47075,
+   "sha16": "7c85987a79a257dd",
+   "bytes": 70210,
    "load_bearing_for": "the calibration sizing derivations and the FROZEN PASS/CONTINUE/REVISE rules. It is fingerprinted for the same reason the grader is: a stopping rule that can be edited after the data arrives is not a stopping rule"
   },
   "lab/grading_v2.py": {
@@ -65,5 +70,5 @@
   }
  },
  "missing": [],
- "combined_sha16": "eb65afbcd1f119ed"
+ "combined_sha16": "4a6312a7546f4207"
 }

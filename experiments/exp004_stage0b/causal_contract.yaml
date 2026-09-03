@@ -65,6 +65,38 @@
 #     selects on has been validated by the bank;
 #   - the negative-control count is DERIVED (30) rather than asserted (15 or 20).
 #
+# WHAT CHANGED 2026-09-03 (THIRD PASS) -- THE FINAL PRE-CALIBRATION RED TEAM
+#   Two of the second pass's own corrections were wrong, and both were load-bearing.
+#   - the grader bound POOLED DEPENDENT OBSERVATIONS. It counted (A,C) and (A,D) as
+#     two Bernoulli trials per item, but both are built from the SAME closed-arm
+#     verdict, so one closed-arm defect produced two counted events. A binomial
+#     bound at n = 2 x items is therefore NARROWER than the evidence supports, and
+#     an instrument-defect bound that is too narrow UNDER-SIZES production.
+#     Exchangeability is not independence. CORRECTED: the sampling unit is the
+#     ITEM, the bound is computed on the (A,C) pair alone, and (A,D) is a
+#     diagnostic that enters no bound. Consequence: a clean 24-item holdout bounds
+#     g_one at 0.117, not 0.061 -- above the PASS threshold -- so batch 1 could not
+#     have passed however clean it came back. The holdout rises to 36 items;
+#   - `q_D = 1.0 BY CONSTRUCTION` was FALSE, and this contract already held the
+#     refutation in `search_artifact_is_not_reproducible`. The screen tests ONE
+#     execution; lab/stage0b_harness.py:run_arm re-executes arm D's fixed query at
+#     answering time, so the screened block is never the injected block. REPLACED by
+#     `r_D`, MEASURED by a second fixed-query execution per calibration item. Arm D
+#     re-runs its query (design option B) rather than injecting a stale screened
+#     artifact, because a stale D block against a contemporaneous C block would
+#     break the one structural guarantee the C/D contrast rests on;
+#   - the p PASS rule required a 95% lower bound clearing 0.90 -- a CERTIFICATION
+#     that rejects a recipe sitting on the design point 5 times in 6 at n=36, and
+#     rejects one exactly at the band edge by construction. Withdrawn: the band is
+#     checked on the POINT ESTIMATE and sizing uses the LOWER bound;
+#   - a new binding `reference_adjudication` names who produces the ground truth the
+#     grader's defect rate is measured against, and forbids the grader producing its
+#     own;
+#   - the negative-control count is PROVISIONAL, a function of a production n that
+#     does not exist yet. 30 was never a commitment;
+#   - `Q_GAP_PREREGISTERED` is renamed `PRECALIBRATION_COMMITTED_Q_GAP`. Stage 0B has
+#     no frozen preregistration; its thresholds are pre-calibration commitments.
+#
 # STATUS REMAINS `draft`. The instrument passes; the calibration bank, the grader
 # freeze and the power re-derivation do not exist, so [OPEN] fields remain and the
 # validator must continue to refuse freeze_ready.
@@ -374,6 +406,53 @@ bindings:
     # The FINGERPRINT stays [OPEN] because it cannot be fixed until the calibration bank
     # has validated the recipe the rule selects on.
 
+  - construct: arm_D_treatment_realization
+    claim: docs/EXP004_STAGE0B_DESIGN_DRAFT.md#14.2
+    implementation: lab/stage0b_harness.py:run_arm
+    fingerprint: experiments/exp004_stage0b/instrument_fingerprints.json
+    correspondence_test: tests/test_stage0b_calibration.py::TestTheParametersNameWhatCrossesTheBoundary
+    # WHAT ARM D ACTUALLY RECEIVES, decided prospectively. The divergence screen tests
+    # ONE execution of the fixed query, and the artifact is not reproducible, so the
+    # screened block is NOT the injected block. Arm D RE-EXECUTES its fixed query at
+    # answering time (design option B) and the exposure rate `r_D` is MEASURED, not
+    # assumed. Freezing the screened artifact was rejected: it would hand arm D a stale
+    # block while arm C's is contemporaneous, breaking the structural guarantee that
+    # `execute_search(query)` takes one parameter and so C and D can differ in nothing
+    # else. A re-execution that returns a non-divergent block is NOT a failure -- it is
+    # the measurement, and voiding it would condition the sample on a realized treatment
+    # property of one arm.
+
+  - construct: grader_defect_sampling_unit
+    claim: docs/EXP004_STAGE0B_BATTERY_AUTHORING_PROTOCOL.md#3.3
+    implementation: lab/stage0b_calibration.py:ac_pair_defect
+    fingerprint: experiments/exp004_stage0b/instrument_fingerprints.json
+    correspondence_test: tests/test_stage0b_calibration.py::TestTheGraderBoundSamplingUnitIsTheItem
+    # The unit is the ITEM, and the bound is computed on the (A,C) pair alone. Pooling
+    # (A,C) with (A,D) counted one shared closed-arm verdict twice: a binomial bound at
+    # n = 2 x items assumes 2m independent trials and therefore returns an interval
+    # narrower than the evidence supports, which for an INSTRUMENT DEFECT under-sizes
+    # production. It also bounded the wrong estimand -- g_one is a property of the
+    # A-vs-C pair, because A-vs-C is the primary. (A,D) is retained as a DIAGNOSTIC and
+    # as the only exercise arm D's answer form gets before a production run that grades
+    # arm D too. An item-level UNION bound is reported as a conservative companion.
+
+  - construct: reference_adjudication
+    claim: docs/EXP004_STAGE0B_BATTERY_AUTHORING_PROTOCOL.md#3.8
+    implementation: lab/stage0b_adjudication.py
+    fingerprint: experiments/exp004_stage0b/instrument_fingerprints.json
+    correspondence_test: tests/test_stage0b_adjudication.py
+    # WHO PRODUCES THE GROUND TRUTH the grader's defect rate is measured against. Tier 1
+    # is deterministic and does NOT import lab/grading_v2.py -- asserted by test -- and
+    # reads a flat 240-character window with whole-answer first-occurrence ordering,
+    # which is NOT the rule under test. Tier 2 is a human, on the classes where any
+    # positional rule is known to be unreliable (contrastive negation, contested
+    # premise, alias-coverage gap, reject-leads-accept, no polarity token, multiple
+    # numeric candidates) -- deciding those by rule would certify the grader against its
+    # own blind spot. The candidate grader may NEVER produce its own ground truth, and
+    # `validate_row` refuses a row whose recorded adjudicator names it. The reference
+    # verdict is recorded BEFORE the grader runs. The manual burden -- about 29 of 144
+    # answers in batch 1 -- is a stated PREREQUISITE of dispatch, not a discovery.
+
   - construct: calibration_bank_sizing
     claim: docs/EXP004_STAGE0B_BATTERY_AUTHORING_PROTOCOL.md#3.1
     implementation: lab/stage0b_calibration.py
@@ -404,7 +483,7 @@ bindings:
     # on the HOLDOUT only; a repair informed by a holdout answer burns that holdout and a
     # fresh one is required. No production item may serve either purpose.
 
-  - construct: negative_control_sizing
+  - construct: negative_control_sizing   # PROVISIONAL until production n is fixed
     claim: docs/EXP004_STAGE0B_BATTERY_AUTHORING_PROTOCOL.md#1.1
     implementation: lab/stage0b_calibration.py:negative_control_n
     fingerprint: experiments/exp004_stage0b/instrument_fingerprints.json
@@ -415,8 +494,10 @@ bindings:
     # minimum rejectable primary signal at n=50. DERIVED: 29 is the exact minimum whose
     # clean 95% upper bound clears that rate; 30 is taken so the composition stays 15
     # reused + 15 fresh. It is a FUNCTION of the primary n, recomputed if power
-    # re-derivation moves it. Brittleness declared: one harm in the control lifts the
-    # bound above the threshold, and the preregistered response is a REPORTING rule --
+    # re-derivation moves it, so the value is PROVISIONAL and 30 is not a commitment:
+    # 50 -> 30, 66 -> 40, 72 -> 42, 90 -> 54, and no control item is authored until
+    # production n is fixed. Brittleness declared: one harm in the control lifts the
+    # bound above the threshold, and the committed response is a REPORTING rule --
     # the primary is then reported with the generic exposure tax explicitly not excluded
     # -- not more items.
 
@@ -466,3 +547,9 @@ open_fields:
     tested), which cannot be fixed until the recipe is validated
   - freeze_grade_analyse_driver for a three-dispatch trial
   - production items (NOT to be authored until the recipe is validated)
+  - negative-control items, whose COUNT is a function of a production n that does not
+    exist yet. The rule is fixed; the number is not
+  - r_D, the arm-D re-execution divergence rate, which replaces the withdrawn
+    `q_D = 1.0 by construction` and is measured by the calibration bank
+  - human adjudication capacity for the escalated calibration answers, which is a
+    PREREQUISITE of dispatching the bank rather than a step inside it

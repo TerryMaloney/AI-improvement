@@ -4,9 +4,9 @@
 Derived from `docs/EXP004_STAGE0AM_INDEPENDENT_REVIEW_2026-09-02.md`.
 Power figures: `python -m lab.stage0b_power` →
 `runs/exp004_stage0b_design/power_simulation.json`.
-Decision at §11; **amendments of 2026-09-03 at §12 (the instrument was built) and
-§13 (the pre-calibration reconciliation). §13 changes the recommended sizing in
-§7.2 and narrows the C-vs-D claim in §7.3.**
+Decision at §11; **amendments of 2026-09-03 at §12 (the instrument was built),
+§13 (the pre-calibration reconciliation) and §14 (the final pre-calibration red
+team, which corrects two defects §13 introduced).**
 
 > **AMENDED 2026-09-03 — read §12 before citing §4.3, §5 or §6.**
 > The instrument described here as unbuilt has been built and measured against the
@@ -688,7 +688,7 @@ and split by arm, because the two arms execute different queries:
 | | definition | how it is obtained |
 |---|---|---|
 | **`q_C`** | P(the **C-arm** injected block's runtime-synthesised summary contains a predeclared reject alias \| the item passed the fixed-query screen) | **measured** — 1 query-writer + 1 C search per calibration item |
-| **`q_D`** | the same for the frozen fixed query | **1.0 by construction** on the production pool: the divergence screen admits on exactly that condition. Never estimated |
+| ~~**`q_D`**~~ | ~~the same for the frozen fixed query~~ | ~~**1.0 by construction** on the production pool~~ **SUPERSEDED §14.2** — the screen tests one execution, the artifact is not reproducible, and arm D re-runs its query at answering time, so the screened block is never the injected block. Replaced by **`r_D`**, the re-execution divergence rate, **measured** |
 | **`δ`** | P(displaced \| divergent block injected, closed correct) | **preregistered** at 0.30. It is the estimand; measuring it in calibration would size the run on a first look at its own effect |
 
 `lab/stage0b_power.py:Scenario.c_disp` is renamed `q_exposure`. **The fixed-query
@@ -800,3 +800,132 @@ exists, and both previously undefended sizing numbers have derivations. What
 remains before a production dispatch is unchanged: run the bank, freeze the
 grader, re-derive power, re-run the C-vs-D authorization, then author production
 items.
+
+---
+
+## 14. Amendments of 2026-09-03 (third pass) — the final pre-calibration red team
+
+**No calibration datum exists. No live call was made in this pass either.** An
+independent review of `120620c` found that two of §13's own corrections were
+wrong. Both were load-bearing. They are corrected here rather than quietly
+adjusted, on the same principle §12 and §13 followed.
+
+### 14.1 The grader bound double-counted dependent observations
+
+§13.4 wrote: *"one calibration item yields **two** closed/exposed pairs, (A,C) and
+(A,D)... exchangeable because the packet, block format and answerer agent are
+byte-identical between C and D"*, and applied a Clopper-Pearson bound at
+**n = 2 × items**.
+
+**Exchangeability is not independence, and the two are not independent.** Both
+pairs are built from the *same* closed-arm verdict on the *same* closed-arm
+answer. A single closed-arm grader defect produced **two** counted `g_one` events —
+one draw written down twice. A binomial interval at n=2m assumes 2m independent
+trials, so the bound came back **narrower than the evidence supports**. For an
+instrument-defect bound that error runs in the dangerous direction: too narrow a
+bound **under-sizes the production run**, which is the precise failure mode §7.1
+exists to prevent.
+
+It also bounded the wrong estimand. `g_one` is a property of the **A-vs-C** pair,
+because A-vs-C is the primary. Folding in (A,D) rests on an assumption about
+*model behaviour* — that C and D answers take the same form — which no
+packet-level symmetry establishes, since the two blocks differ by construction.
+
+**Corrected: the bound is computed on the (A,C) pair only, one observation per
+calibration item** — the same unit the power model's own generative assumption
+uses. The (A,D) pair is retained as a **diagnostic** (is an exposed-answer defect
+query-specific?) and as the only exercise arm D's answer form gets before a
+production run that grades arm D too; it enters no bound. An item-level **union**
+bound is reported alongside as a conservative companion.
+
+| holdout items | invalid claim (2×items) | valid bound (items) | n_prod claimed | n_prod actual |
+|---:|---:|---:|---:|---:|
+| 24 | 0.0605 | **0.1173** | 66 | **84** |
+| 36 | 0.0408 | **0.0798** | 60 | **72** |
+
+**The consequence is not cosmetic: at the batch-1 holdout of 24 items, a perfectly
+clean result bounds `g_one` at 0.117 — above the PASS threshold of 0.08. Batch 1
+as specified could not have passed even with a flawless holdout.** The holdout
+rises to **36 items**, the smallest clean holdout whose bound reaches the threshold
+at all, and batch 1 to 48 screen-passing items.
+
+### 14.2 `q_D = 1.0 by construction` was false, and this document already refuted it
+
+§13.2 asserted that the divergence screen pins arm D's exposure at 1 on the
+production pool. Two facts recorded in §12 defeat that:
+
+1. **§12.3 — the artifact is not reproducible.** Two dispatches of an identical
+   query return a different synthesised paragraph.
+2. **`lab/stage0b_harness.py:run_arm` re-executes arm D's fixed query at answering
+   time.** The screened block is never the injected block.
+
+So `q_D = 1` was true of an artifact the experiment never uses. Three designs were
+weighed before any outcome exists:
+
+| | | verdict |
+|---|---|---|
+| **A** | persist the screened block and inject it | **Rejected.** It makes the claim literally true at the price of a **stale** D block against a contemporaneous C block, breaking the one structural guarantee the C/D contrast rests on — `execute_search(query)` takes one parameter, so C and D have nothing else to differ in |
+| **B** | re-execute D's fixed query at answering time and **measure** the rate | **CHOSEN.** It is what the committed harness already does, needs no implementation change, and keeps C and D contemporaneous and symmetric |
+| **C** | freeze both C and D blocks before answer dispatch | **Rejected as unnecessary** — it buys ordering symmetry the design does not lack, at the cost of a C search on every screen failure |
+
+**The parameter is `r_D`** = P(a re-execution of the frozen fixed query on a
+screened item is again divergent). It is measured by a **second** fixed-query
+execution per screen-passing calibration item, distinct from the screen. The screen
+is a filter on item **propensity**, not a guaranteed dose. A production D trial
+whose re-executed block is non-divergent is **not a failure — it is the
+measurement**.
+
+`CvDScenario.from_exposure` now **requires** `r_D` and has no default. The default
+was removed rather than corrected to another number, because a default is exactly
+how an unmeasured value re-enters a power calculation. The §13.2 inference that "D
+must displace at least as often as C" is **withdrawn** with its premise; C-vs-D is
+two-sided for its original reason — neither direction is predicted.
+
+### 14.3 The p-rule tested a claim this design never made
+
+§13's PASS rule required the 95% one-sided **lower** bound on p to clear 0.90 — a
+*certification*. Operating characteristics:
+
+| holdout n | errors admitted | P(pass \| p=0.90) | P(pass \| p=0.95) | P(pass \| p=1.00) |
+|---:|---:|---:|---:|---:|
+| 36 | **0** | 0.023 | **0.158** | 1.000 |
+| 60 | 1 | 0.014 | 0.192 | 1.000 |
+| 84 | 3 | 0.026 | 0.390 | 1.000 |
+
+A recipe sitting **exactly on this design's own point of p=0.95** fails that gate
+five times in six at n=36. And P(pass | p=0.90) ≤ 0.05 by construction: a recipe
+precisely at the band edge is rejected by design.
+
+**§2.2 sets a band on the measured accuracy, not a certification that its edge is
+exceeded.** The certification is withdrawn. The **band** is checked on the point
+estimate as written; **sizing** uses the 95% lower bound, the conservative
+direction. Errors now cost production items rather than triggering a near-certain
+false stop.
+
+### 14.4 The negative-control count is provisional, and 30 was never a commitment
+
+§13 reported 30, derived against n_primary=50 — while the same document
+superseded n=50. The rule is a **function of the final primary n**, which does not
+exist until the bank has run: 50 → 30, 66 → 40, **72 → 42**, 90 → 54. **No control
+item is authored until production n is fixed.**
+
+### 14.5 Terminology, and who produces the ground truth
+
+**Stage 0B has no frozen preregistration** — this document says "DRAFT. Not
+frozen" and the contract validates as `draft`. Every Stage 0B threshold is a
+**pre-calibration commitment**. `Q_GAP_PREREGISTERED` is renamed
+`PRECALIBRATION_COMMITTED_Q_GAP`, with its lineage to the 2026-09-02
+displacement-scale 0.20 recorded rather than backdated.
+
+Ground truth is produced by a **two-tier** scheme (`lab/stage0b_adjudication.py`):
+a deterministic reference that does **not** import the grader and decides only what
+the key can decide, plus **human** adjudication on the classes where a positional
+rule is known to be unreliable. The manual prerequisite — roughly **29 of 144**
+answers in batch 1 — is stated before dispatch, not discovered during it.
+
+### 14.6 Decision for this pass
+
+**A — CALIBRATION READY.** The two defects that would have corrupted the sizing
+are corrected, the batch that could not have passed is resized to one that can,
+and the ground truth the grader is measured against now has a named producer and a
+stated cost.
