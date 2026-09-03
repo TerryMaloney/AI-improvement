@@ -4,8 +4,9 @@
 Derived from `docs/EXP004_STAGE0AM_INDEPENDENT_REVIEW_2026-09-02.md`.
 Power figures: `python -m lab.stage0b_power` →
 `runs/exp004_stage0b_design/power_simulation.json`.
-Decision at §11; **amendments of 2026-09-03 at §12, and they change the treatment's
-name and three of this document's factual claims.**
+Decision at §11; **amendments of 2026-09-03 at §12 (the instrument was built) and
+§13 (the pre-calibration reconciliation). §13 changes the recommended sizing in
+§7.2 and narrows the C-vs-D claim in §7.3.**
 
 > **AMENDED 2026-09-03 — read §12 before citing §4.3, §5 or §6.**
 > The instrument described here as unbuilt has been built and measured against the
@@ -85,10 +86,16 @@ anchoring pressure in the *stem* and never checked for divergence in the
 **No screening on production outcomes, ever.** The screen runs before any
 production solver sees any production item.
 
-1. **Calibration bank (never enters production).** ≥ 3× the production item
+1. **Calibration bank (never enters production).** ~~≥ 3× the production item
    count, authored to the same recipe. Its items are dispatched closed-book to
    establish the accuracy band and to validate the recipe and the grader's span
-   parser. Calibration items are **permanently barred** from production, so
+   parser.~~ **SUPERSEDED 2026-09-03, §13.3.** Both halves were wrong: the "≥ 3×"
+   multiplier had no derivation anywhere, and "dispatched closed-book" measures
+   `p` and nothing else — not `q_C`, not `q_D`, and not the grader's behaviour on
+   **exposed** answers, which is the one grader parameter §7.1 calls
+   design-breaking. The bank is now sized from the four decisions it resolves, at
+   six dispatches per screen-passing item (authoring protocol §3.1–3.2).
+   Calibration items are **permanently barred** from production, so
    nothing selected on a solver outcome can reach the primary sample.
 2. **Production pool (held out).** Authored to the recipe validated on the
    calibration bank. **No solver ever sees a production item before dispatch.**
@@ -363,8 +370,8 @@ Stage 0A-M realized **D=2**. Any design that does not expect D ≥ 6 is not a te
 | baseline 0.50 | 3.00 | 2.00 | 5.00 | 0.015 | — |
 | optional arm, uptake 0.15 | 0.85 | 0.00 | 0.85 | 0.000 | — |
 | optional arm, uptake 0.90 | 5.13 | 0.00 | 5.13 | 0.408 | 61 |
-| model query harmful (c_disp 0.70) | 9.31 | 0.00 | 9.31 | 0.929 | 33 |
-| fixed query repairs (c_disp 0.15) | 2.00 | 0.00 | 2.00 | 0.014 | — |
+| model query harmful (`c_disp` 0.70 — read `q_C`, §13.2) | 9.31 | 0.00 | 9.31 | 0.929 | 33 |
+| fixed query repairs (`c_disp` 0.15 — read `q_C`, §13.2) | 2.00 | 0.00 | 2.00 | 0.014 | — |
 | grader symmetric FN 20% | 4.56 | 0.00 | 4.56 | 0.302 | 68 |
 | grader asymmetric FN 8% | 6.76 | 1.29 | 8.06 | 0.356 | 87 |
 | **grader like Stage 0A-M's (60% / 8%)** | 3.34 | 1.29 | 4.64 | 0.041 | **unreachable ≤120** |
@@ -394,9 +401,9 @@ costs 14 items (54 → 68); an 8-point asymmetric rate costs 33 (54 → 87).
 | primary comparison | **A vs C**, paired by item |
 | primary family | **K = 1**, so α = 0.05 rather than the 0.025 a K=2 family forces |
 | secondary | **C vs D**, own family, own discordant counts, no primary alpha spent |
-| **n primary items** | **50** |
-| n negative-control items | 15 |
-| design point | p=0.95, u=1.0, c_disp=0.50, δ=0.30 |
+| **n primary items** | **50** — *superseded: re-derived from calibration at the measured grader bound, §13.4* |
+| n negative-control items | ~~15~~ **30**, derived in the authoring protocol §1.1 |
+| design point | p=0.95, u=1.0, ~~c_disp~~ **q_C**=0.50, δ=0.30 (§13.2) |
 | **E[D]** | **7.13** (clears the D ≥ 5 floor) |
 | **power** | **0.858** at α=0.05 |
 | minimum detectable δ at 80% | **0.30** |
@@ -651,5 +658,145 @@ reviewed instrument rather than from an instrument built in the same breath.
 **Next, in dependency order:** (1) build and correspondence-test the searcher and
 injection harness; (2) implement the divergence probe; (3) author and run the
 calibration bank; (4) freeze the grader against calibration-bank answers; (5)
-re-derive power from measured `p` and `c_disp` rather than assumed ones;
+re-derive power from measured `p` and ~~`c_disp`~~ **`q_C`** (renamed and split by
+arm, §13.2) rather than assumed ones;
 (6) only then author production items.
+
+---
+
+## 13. Amendments of 2026-09-03 (second pass) — the pre-calibration reconciliation
+
+**No calibration datum exists. No live call was made in this pass.** Everything
+below is a design and statistics change made *before* spending the calibration
+budget, which is the only time such changes are free of the data.
+
+### 13.1 Six statements in the authoring protocol described a runtime nobody had run
+
+They are enumerated in `docs/EXP004_STAGE0B_BATTERY_AUTHORING_PROTOCOL.md` §0 and
+superseded in place rather than deleted. The load-bearing three: "top-5 results"
+names an object that does not cross the boundary; whole-block reject matching
+would have admitted an item on a link-title date range; and "run the calibration
+bank closed-book" cannot measure three of the four things the bank exists for.
+
+### 13.2 `c_disp` is renamed and split by arm, because it named content that does not exist
+
+`c_disp` said *"P(retrieved content carries displacing information)"*. Measured,
+**no retrieved page content crosses the boundary at all**. The parameter is
+redefined on the representation that does — the runtime's synthesised summary —
+and split by arm, because the two arms execute different queries:
+
+| | definition | how it is obtained |
+|---|---|---|
+| **`q_C`** | P(the **C-arm** injected block's runtime-synthesised summary contains a predeclared reject alias \| the item passed the fixed-query screen) | **measured** — 1 query-writer + 1 C search per calibration item |
+| **`q_D`** | the same for the frozen fixed query | **1.0 by construction** on the production pool: the divergence screen admits on exactly that condition. Never estimated |
+| **`δ`** | P(displaced \| divergent block injected, closed correct) | **preregistered** at 0.30. It is the estimand; measuring it in calibration would size the run on a first look at its own effect |
+
+`lab/stage0b_power.py:Scenario.c_disp` is renamed `q_exposure`. **The fixed-query
+divergence rate may not substitute for the C-arm rate**, and the primary A-vs-C
+calculation reads `q_C`, which is why a query-writer dispatch and a C search are
+in the calibration structure at all.
+
+**A consequence the design had not written down.** With `q_D` pinned at 1 by
+selection and `q_C ≤ 1`, the model query can only be **less** exposing than the
+fixed query on the selected items. C-vs-D is nonetheless kept two-sided — a C
+query can return a *different and more potent* displacing claim, so the direction
+is not logically forced — but the asymmetry is now declared rather than
+discovered later.
+
+**And a preregistered number that was never expressed in its own units.**
+`DELTA_GAP_PREREGISTERED = 0.20` lives on the displacement scale; at δ=0.30 it
+implies an exposure-rate difference of **0.667** between the two queries, which is
+not a target anyone would have written down had it been stated in the units the
+calibration bank observes. It is restated on the exposure scale as
+`|q_C − q_D| ≥ 0.25`, implying a displacement gap of 0.075.
+
+### 13.3 The "≥ 3× production" calibration rule had no derivation, and was wrong in both directions
+
+It is asserted in §2.4 above, in the authoring protocol §1, in `docs/NEXT.md` and
+in the 2026-09-02 decision-log entry, and computed in none of them.
+
+- **Too small for what it had to measure.** §2.4 dispatches calibration items
+  *closed-book only*. At any multiple of production that measures `p` and nothing
+  else — no `q_C`, no `q_D`, no grader behaviour on **exposed** answers. A bank
+  three times the size of the run would still have left the sizing resting on
+  assumed values, which is precisely the Stage 0A-M failure the bank exists to
+  prevent.
+- **Too large under the realized structure.** 150 items at six dispatches each is
+  ~$35 — more than the production run it was protecting.
+
+**Replaced by** a bank sized from the four decisions it resolves, with a frozen
+sequential plan: **batch 1 = 48 authored → 36 screen-passing items, 228
+dispatches, $8.44**; batches 2 and 3 of 24 screen-passing items each if triggered;
+**cap 84 screen-passing items, 532 dispatches, $19.69** — the point at which
+calibration costs about what production costs. Stopping rules, PASS/CONTINUE/
+REVISE thresholds and the development/validation wall are in the authoring
+protocol §3.4–3.6 and implemented in `lab/stage0b_calibration.py`.
+
+### 13.4 The finding that changes the recommended n: calibration cannot certify the grader for n=50
+
+At n=50, α=0.05, p=0.95, q_C=0.50, δ=0.30, power holds at 0.80 only while
+**`g_one` ≤ 0.014**. Bounding an asymmetric grader defect below 0.014 with zero
+observations needs **213 clean closed/exposed pairs** — four times the production
+run. No affordable calibration bank certifies the instrument for n=50.
+
+The design therefore **sizes production at the bound it can actually reach**,
+with a deliberate asymmetry: `q_C` enters sizing at its **point estimate** (an
+unbiased measurement of the environment; its error moves power either way),
+`g_one` at its **95% upper bound** (an instrument defect, and §7.1 is the reason
+it is never assumed small). At the achievable bound of 0.08 the required n is
+**72**, not 50.
+
+This is §7.1's own conclusion arriving with a price attached: *prefer fixing the
+instrument over increasing n* — and where the instrument cannot be certified,
+pay for it in n rather than in an unstated assumption. **The §7.2 recommendation
+of n=50 is superseded**; the binding number is whatever the calibration bank
+yields, capped at 90 for PASS and 120 for viability.
+
+What makes the bound affordable at all: one calibration item yields **two**
+closed/exposed pairs, (A,C) and (A,D). Their exchangeability rests on the packet,
+block format and answerer agent being byte-identical between C and D, and is
+reported as two separate counts so it can be falsified rather than assumed.
+
+### 13.5 The direct query→answerer path: the claim is narrowed, not engineered away
+
+The runtime block echoes the query (§12.2 item 4), so C and D differ through at
+least three channels at once: the query text itself in the answerer's context,
+the synthesised paragraph, and the link list. **C-vs-D does not isolate "retrieved
+information caused the effect", and on this runtime it never could.**
+
+Three options were weighed before any outcome exists:
+
+| | | verdict |
+|---|---|---|
+| **A** | keep the echo, narrow the claim | **CHOSEN** |
+| **B** | strip the echo symmetrically from C and D before injection | **Rejected.** It would make the injected block differ from what the runtime exposes — the exact mistake the "verbatim" claim already cost this design once — and trade a declared artifact for an undeclared one: an answerer receiving a block whose first line the harness removed |
+| **C** | defer decomposition to a later experiment | **ADOPTED alongside A** |
+
+**No arm is added.** The smallest identifiable claim is preferred to a
+decomposition Stage 0B was not sized for. The estimand C-vs-D supports, in full:
+
+> the **total downstream effect of the query-construction procedure** under this
+> realized search runtime — bundling the echoed query text, the
+> runtime-synthesised answer and the link list, and attributing to none of them
+> separately.
+
+It is **not** an estimate of the effect of retrieved page content. Separating the
+three channels is a **named follow-on**. The wording is enforced in
+`lab/stage0b_cvd.py:authorize`'s `claim` field and pinned by test.
+
+### 13.6 What this pass did NOT do
+
+No calibration item was authored. No production item was authored. The grader was
+not frozen and not touched. No live dispatch was made, and the 14-check runtime
+correspondence gate was **not** re-run, because nothing in this pass changes the
+instrument it measured. The causal contract remains `draft`.
+
+### 13.7 Decision for this pass
+
+**A — CALIBRATION DESIGN READY TO RUN.** Every quantity that will decide the
+production size is now defined on the arm it must be measured from, every
+stopping rule is fixed and fingerprinted before the first calibration outcome
+exists, and both previously undefended sizing numbers have derivations. What
+remains before a production dispatch is unchanged: run the bank, freeze the
+grader, re-derive power, re-run the C-vs-D authorization, then author production
+items.

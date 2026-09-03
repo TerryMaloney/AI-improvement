@@ -6,10 +6,11 @@
 
 **Stage 0A-M is EXECUTED, COMPLETE and INDEPENDENTLY REVIEWED. Result: a null that
 could not have been anything else — at the realized discordant count D=2, the
-smallest attainable exact p is 1/4. Stage 0B's INSTRUMENT is now BUILT, MEASURED
-and CORRESPONDENCE-TESTED (2026-09-03): decision A, ready to author and run the
-calibration bank. No Stage 0B production dispatch has occurred, none is permitted,
-and no production item exists or has been authored.**
+smallest attainable exact p is 1/4. Stage 0B's INSTRUMENT is BUILT, MEASURED and
+CORRESPONDENCE-TESTED, and as of the second pass of 2026-09-03 its CALIBRATION
+PLAN is RECONCILED AND FROZEN: decision A, ready to run the calibration bank. No
+Stage 0B production dispatch has occurred, none is permitted, no calibration item
+has been dispatched, and no production item exists or has been authored.**
 
 - Stage 0A-M: 130/130 dispatches under freeze `a1f4efb`, all `claude-opus-5`,
   0 voids. Neither primary class rejected. Report:
@@ -29,7 +30,113 @@ and no production item exists or has been authored.**
   live correspondence gate 14/14 PASS with 0 UNOBSERVABLE, real sanitized runtime
   fixture. Treatment renamed on measurement to
   `runtime_exposed_search_result_block_exposure`.
-- Full suite: 1569 passing (was 1466).
+- Stage 0B calibration plan (2026-09-03, second pass): batch 1 = 48 authored → 36
+  screen-passing items, 228 dispatches, ~$8.44; cap 84 screen-passing items, 532
+  dispatches, ~$19.69. `lab/stage0b_calibration.py`;
+  `runs/exp004_stage0b_design/calibration_plan.json`. Stopping rules frozen and
+  fingerprinted before the first calibration outcome exists.
+- Full suite: 1618 passing (was 1569).
+
+## 2026-09-03 (second pass) — PRE-CALIBRATION DESIGN RECONCILIATION
+
+**Decision: A — CALIBRATION DESIGN READY TO RUN.** No calibration datum exists and
+**no live call was made in this pass.** Everything below is a design and statistics
+change made before spending the calibration budget, which is the only time such
+changes are free of the data.
+
+**Six statements in the authoring protocol described a runtime nobody had run.**
+Enumerated and superseded in place at
+`docs/EXP004_STAGE0B_BATTERY_AUTHORING_PROTOCOL.md` §0, not edited away. The
+load-bearing three: "top-5 results" names an object that does not cross the
+boundary; whole-block reject matching would have admitted an item on a link-title
+date range; and "run the calibration bank closed-book" cannot measure three of the
+four things the bank exists for.
+
+**`c_disp` is renamed and split by arm, because it named content that does not
+exist.** It said "P(retrieved content carries displacing information)"; no
+retrieved page content crosses the boundary. Now `q_C` = P(the **C-arm** block's
+runtime-synthesised summary carries a reject alias | screen-passing), **measured
+from the C arm** by a query-writer dispatch plus a C search — and `q_D`, which the
+divergence screen pins at **1.0 by construction** on the production pool and which
+is therefore never estimated. The fixed-query rate may not substitute for the
+C-arm rate. `Scenario.c_disp` → `Scenario.q_exposure`. `δ` stays a **preregistered**
+0.30: it is the estimand, and measuring it in calibration would size the run on a
+first look at its own effect.
+
+**The "≥3× production" calibration rule had no derivation, and was wrong in both
+directions.** Asserted in four documents, computed in none. Too *small* for what it
+had to measure (design draft §2.4 dispatches calibration items closed-book only,
+so no `q_C`, no `q_D`, no grader behaviour on exposed answers); too *large* under
+the realized six-dispatch structure (~$35 for 150 items, more than the run it
+protected). Replaced by a bank sized from the four decisions it resolves, with a
+frozen sequential plan and a cap where calibration costs about what production
+costs.
+
+**The finding that changes the recommended n.** At n=50 the design holds 80% power
+only while the *asymmetric* grader defect rate `g_one` ≤ **0.014**, and bounding
+that with zero observations needs **213 clean closed/exposed pairs** — four times
+the production run. **No affordable calibration bank certifies the grader for
+n=50.** So production is sized AT the bound calibration can actually reach: `q_C`
+at its point estimate, `g_one` at its 95% upper bound. At the achievable bound of
+0.08 the required n is **72**. The §7.2 recommendation of n=50 is superseded. This
+is §7.1's own conclusion — prefer fixing the instrument over increasing n — arriving
+with a price attached.
+
+**What makes that bound affordable:** one calibration item yields **two**
+closed/exposed pairs, (A,C) and (A,D), not one. Exchangeability rests on the
+packet, block format and answerer agent being byte-identical between C and D, and
+the two pair-wise defect counts are reported **separately** so the licence can be
+falsified rather than assumed.
+
+**Negative controls: 30, derived — not 15 and not 20.** Both prior numbers were in
+the repository at once. 15 was Stage 0A-M's realized `arithmetic_control` size
+carried into the power module; 20 was design draft §8's 15 reused + 5 fresh.
+Neither excludes a generic exposure tax of **0.10** — the entire minimum
+rejectable primary signal at n=50. The primary cannot reject below D=5, so a clean
+control's 95% upper bound must clear 5/50: n=29 is the exact minimum (0.098), and
+30 is taken so the composition stays 15 reused + 15 fresh. It is a **function of
+the primary n**, recomputed if power re-derivation moves it. Brittleness declared:
+one harm lifts the bound to 0.149, and the preregistered response is a **reporting
+rule**, not more items.
+
+**The direct query→answerer path: the claim is narrowed, not engineered away.** The
+runtime block echoes the query, so C and D differ through the query text, the
+synthesised answer and the link list at once. **Keep the echo** (stripping it would
+make the injected block differ from what the runtime exposes — the exact mistake
+the "verbatim" claim already cost this design), **no arm added**, and C-vs-D now
+estimates *the total downstream effect of the query-construction procedure under
+this realized search runtime*. It is **not** a claim about retrieved page content;
+decomposition is a named follow-on. Enforced in `authorize()`'s `claim` field.
+
+**The grader development/validation wall.** The trap — "the grader failed, so we
+edit it until these answers pass" — is closed by three rules: the hand-derived
+verdict is recorded **before** the grader runs (`hand_verdict_recorded_first`, a
+schema error if absent); repairs are developed on the **development** subset only
+and must be general semantic rules; the rate is bounded on the **holdout** only,
+and a repair informed by a holdout answer **burns** that holdout.
+
+**Stopping rules frozen and fingerprinted before the first calibration outcome.**
+PASS / CONTINUE / REVISE-RECIPE / REVISE-GRADER / REVISE-DESIGN are implemented in
+`lab.stage0b_calibration.decide`, added to `instrument_fingerprints.json`, and
+pinned by test — for the same reason the grader is fingerprinted: a stopping rule
+that can be edited once the data arrives is not a stopping rule.
+
+**Cost plan.** Measured Stage 0B unit costs replace the estimates: searcher
+$0.0640 (mean of six real dispatches), query-writer $0.0136, exposed answerer
+$0.0276 (was a $0.025 estimate). Batch 1 **228 dispatches / $8.44**; maximum
+**532 / $19.69**.
+
+**Contract: still VALID as `draft`,** 7 open fields. Four bindings added —
+`calibration_bank_sizing`, `grader_validation_holdout`, `negative_control_sizing`,
+`query_echo_direct_path` — and `item_selection_rule` moves from `[OPEN]` to bound
+with its fingerprint still open.
+
+**Tests: 1618 passing (was 1569).** 49 added, all offline. **Zero live calls.** The
+14-check runtime correspondence gate was NOT re-run: nothing in this pass changes
+the instrument it measured.
+
+**Unchanged:** every Stage 0A-M frozen artifact; the grader, which is still not
+frozen and was not touched.
 
 ## 2026-09-03 — STAGE 0B INSTRUMENT BUILT AND MEASURED; R1′ SCORING CORRECTED
 

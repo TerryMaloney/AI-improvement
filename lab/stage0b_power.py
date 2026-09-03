@@ -16,20 +16,27 @@ THE GENERATIVE MODEL
 --------------------
 Per item, with all probabilities per-item and independent across items:
 
-    p        P(closed-book answer is correct)                     -- baseline
-    u        P(the treated arm actually consumes retrieval)       -- UPTAKE
-    c_disp   P(retrieved content carries displacing information | consumed)
-             -- this is the QUERY-QUALITY channel: a badly constructed query
-             returns present-tense content for a past-anchored question
-    delta    P(the answer is displaced | displacing content consumed, closed correct)
-             -- the susceptibility the experiment is trying to measure
+    p          P(closed-book answer is correct)                   -- baseline
+    u          P(the treated arm actually consumes retrieval)     -- UPTAKE
+    q_exposure P(the injected block's RUNTIME-SYNTHESISED SUMMARY carries a
+               predeclared reject alias | exposed). RENAMED 2026-09-03 from
+               `c_disp`, which said "retrieved content carries displacing
+               information". Measured, no retrieved page content crosses the
+               boundary at all -- the block is a query echo, a titles+URLs link
+               array and a prose answer synthesised INSIDE the search runtime.
+               The parameter is ARM-SPECIFIC: q_C for the model-written query,
+               q_D for the fixed one, and q_D is 1.0 by construction on the
+               production pool because the divergence screen admits on it. See
+               lab/stage0b_calibration.py:PARAMETER_GLOSSARY.
+    delta      P(the answer is displaced | a divergent block injected, closed correct)
+               -- the susceptibility the experiment is trying to measure
     h        P(a wrong closed answer is repaired | anchored content consumed)
     g        P(the grader misreads a trial), applied symmetrically to both arms
 
 True paired cells, conditioning on the closed outcome:
 
-    P(treated correct | closed correct)   = 1 - u * c_disp * delta
-    P(treated correct | closed incorrect) = u * (1 - c_disp) * h
+    P(treated correct | closed correct)   = 1 - u * q_exposure * delta
+    P(treated correct | closed incorrect) = u * (1 - q_exposure) * h
 
 Grader noise is then convolved in independently per arm, because a grader defect
 that fires on both arms of an item still produces a CONCORDANT pair, whereas one
@@ -55,8 +62,13 @@ from math import comb
 # injected-context answerer.
 COST_CLOSED_DISPATCH = 1.0629 / 65          # $0.01635  [MEASURED]
 COST_DECLINED_RETRIEVAL = 0.8546 / 57       # $0.01499  [MEASURED]
-COST_SEARCHING_DISPATCH = 0.5951 / 8        # $0.07439  [MEASURED]
-COST_INJECTED_ANSWERER = 0.025              # [ESTIMATE] longer input, no tool turn
+COST_SEARCHING_DISPATCH = 0.5951 / 8        # $0.07439  [MEASURED, Stage 0A-M]
+# Superseded 2026-09-03 by MEASURED Stage 0B-path costs. The searcher figure is the
+# mean of the six real `stage0b-searcher` dispatches (2 runtime-gate + 4 divergence
+# probe); the injected answerer is no longer an extrapolation.
+COST_STAGE0B_SEARCH = 0.06400               # [MEASURED, n=6]
+COST_STAGE0B_QUERY_WRITER = 0.01359         # [MEASURED, n=1]
+COST_INJECTED_ANSWERER = 0.02755            # [MEASURED, n=1]; was 0.025 [ESTIMATE]
 
 
 @dataclass(frozen=True)
@@ -78,7 +90,7 @@ class Scenario:
     name: str
     p: float           # closed-book baseline accuracy
     u: float           # retrieval uptake
-    c_disp: float      # P(retrieved content is displacing | consumed)
+    q_exposure: float  # P(the injected summary carries a reject alias | exposed)
     delta: float       # displacement susceptibility
     h: float = 0.0     # repair probability
     g_both: float = 0.0  # P(grader false-negatives BOTH arms of an item)
@@ -87,8 +99,8 @@ class Scenario:
 
 def true_cells(s: Scenario) -> tuple[float, float, float, float]:
     """(t00, t01, t10, t11) before grader noise."""
-    harm = s.u * s.c_disp * s.delta
-    repair = s.u * (1 - s.c_disp) * s.h
+    harm = s.u * s.q_exposure * s.delta
+    repair = s.u * (1 - s.q_exposure) * s.h
     t11 = s.p * (1 - harm)
     t10 = s.p * harm
     t01 = (1 - s.p) * repair
@@ -186,43 +198,46 @@ def n_for_power(s: Scenario, target: float = 0.80, alpha: Fraction = Fraction(1,
 # ---------------------------------------------------------------------------
 # The preregistration-candidate scenario grid
 # ---------------------------------------------------------------------------
-# `c_disp` is the query-quality channel and is the parameter Stage 0B's arm
+# `q_exposure` is the query-quality channel and is the parameter Stage 0B's arm
 # structure is designed to move: a model-written query is assumed likelier to
 # return present-tense content for a past-anchored question than a fixed query
-# that pins the anchor date.
+# that pins the anchor date. On the production pool that assumption is partly
+# FORCED rather than free -- the divergence screen admits an item only if its
+# FIXED-query block is divergent, so q_D = 1.0 there and only q_C is estimated.
+# These scenario values are ASSUMED and are superseded by the calibration bank.
 
 SCENARIOS: tuple[Scenario, ...] = (
     # --- Stage 0A-M priced as a scenario, with its own measured pathologies ---
     # g_both/g_one are calibrated from the run: on the date class, 15 of 25 items
     # were false-negatived in both arms and 2 in exactly one.
-    Scenario("stage0am_as_run_clean_grader", p=1.00, u=0.12, c_disp=0.50, delta=0.30),
-    Scenario("stage0am_as_run_with_its_grader", p=1.00, u=0.12, c_disp=0.50, delta=0.30,
+    Scenario("stage0am_as_run_clean_grader", p=1.00, u=0.12, q_exposure=0.50, delta=0.30),
+    Scenario("stage0am_as_run_with_its_grader", p=1.00, u=0.12, q_exposure=0.50, delta=0.30,
              g_both=0.60, g_one=0.08),
     # --- baseline sweep, retrieval REQUIRED (u=1), model-written query --------
-    Scenario("baseline_0.95_required_retrieval", p=0.95, u=1.0, c_disp=0.50, delta=0.30),
-    Scenario("baseline_0.80_required_retrieval", p=0.80, u=1.0, c_disp=0.50, delta=0.30),
-    Scenario("baseline_0.65_required_retrieval", p=0.65, u=1.0, c_disp=0.50, delta=0.30, h=0.20),
-    Scenario("baseline_0.50_required_retrieval", p=0.50, u=1.0, c_disp=0.50, delta=0.30, h=0.20),
+    Scenario("baseline_0.95_required_retrieval", p=0.95, u=1.0, q_exposure=0.50, delta=0.30),
+    Scenario("baseline_0.80_required_retrieval", p=0.80, u=1.0, q_exposure=0.50, delta=0.30),
+    Scenario("baseline_0.65_required_retrieval", p=0.65, u=1.0, q_exposure=0.50, delta=0.30, h=0.20),
+    Scenario("baseline_0.50_required_retrieval", p=0.50, u=1.0, q_exposure=0.50, delta=0.30, h=0.20),
     # --- uptake, at a fixed good baseline ------------------------------------
-    Scenario("low_uptake_optional_arm", p=0.95, u=0.15, c_disp=0.50, delta=0.30),
-    Scenario("high_uptake_optional_arm", p=0.95, u=0.90, c_disp=0.50, delta=0.30),
+    Scenario("low_uptake_optional_arm", p=0.95, u=0.15, q_exposure=0.50, delta=0.30),
+    Scenario("high_uptake_optional_arm", p=0.95, u=0.90, q_exposure=0.50, delta=0.30),
     # --- the query-construction contrast -------------------------------------
-    Scenario("model_query_harmful", p=0.95, u=1.0, c_disp=0.70, delta=0.35),
-    Scenario("fixed_query_repairs", p=0.95, u=1.0, c_disp=0.15, delta=0.35),
+    Scenario("model_query_harmful", p=0.95, u=1.0, q_exposure=0.70, delta=0.35),
+    Scenario("fixed_query_repairs", p=0.95, u=1.0, q_exposure=0.15, delta=0.35),
     # --- instrument pathologies ----------------------------------------------
-    Scenario("grader_symmetric_fn_20pct", p=0.95, u=1.0, c_disp=0.50, delta=0.30, g_both=0.20),
-    Scenario("grader_asymmetric_fn_8pct", p=0.95, u=1.0, c_disp=0.50, delta=0.30, g_one=0.08),
-    Scenario("grader_stage0am_like", p=0.95, u=1.0, c_disp=0.50, delta=0.30,
+    Scenario("grader_symmetric_fn_20pct", p=0.95, u=1.0, q_exposure=0.50, delta=0.30, g_both=0.20),
+    Scenario("grader_asymmetric_fn_8pct", p=0.95, u=1.0, q_exposure=0.50, delta=0.30, g_one=0.08),
+    Scenario("grader_stage0am_like", p=0.95, u=1.0, q_exposure=0.50, delta=0.30,
              g_both=0.60, g_one=0.08),
-    Scenario("ceiling_no_effect", p=1.00, u=1.0, c_disp=0.50, delta=0.0),
-    Scenario("floor", p=0.20, u=1.0, c_disp=0.50, delta=0.30, h=0.20),
+    Scenario("ceiling_no_effect", p=1.00, u=1.0, q_exposure=0.50, delta=0.0),
+    Scenario("floor", p=0.20, u=1.0, q_exposure=0.50, delta=0.30, h=0.20),
 )
 
 ARM_COSTS = {
     "A_closed": COST_CLOSED_DISPATCH,
-    "C_required_model_query": COST_CLOSED_DISPATCH + COST_SEARCHING_DISPATCH
+    "C_required_model_query": COST_STAGE0B_QUERY_WRITER + COST_STAGE0B_SEARCH
                               + COST_INJECTED_ANSWERER,
-    "D_required_fixed_query": COST_SEARCHING_DISPATCH + COST_INJECTED_ANSWERER,
+    "D_required_fixed_query": COST_STAGE0B_SEARCH + COST_INJECTED_ANSWERER,
     "B_optional_retrieval_NOT_USED": COST_DECLINED_RETRIEVAL,
 }
 
@@ -241,7 +256,13 @@ def cost_for(n_primary_items: int, n_control_items: int, arms: tuple[str, ...]) 
 
 
 RECOMMENDED_N_PRIMARY = 50
-RECOMMENDED_N_CONTROL = 15
+# 15 was Stage 0A-M's REALIZED arithmetic_control size, carried here unchanged and
+# never derived; the authoring protocol independently said 20 (15 reused + 5 fresh,
+# design draft 8). Neither was computed from what the control must ESTABLISH.
+# Superseded 2026-09-03 by lab.stage0b_calibration.negative_control_n, which derives
+# it from the bound the control has to beat. At n_primary=50 that is 30.
+RECOMMENDED_N_CONTROL = 30
+SUPERSEDED_N_CONTROL_VALUES = {"power_module_carryover": 15, "authoring_protocol": 20}
 RECOMMENDED_ARMS = ("A_closed", "C_required_model_query", "D_required_fixed_query")
 
 
@@ -250,7 +271,7 @@ def recommended_design() -> dict:
     tests at alpha=0.05 rather than the 0.025 a K=2 family would force. The
     query-quality contrast (C vs D) is a preregistered SECONDARY in its own
     family and does not spend the primary's alpha."""
-    design = Scenario("design_point", p=0.95, u=1.0, c_disp=0.50, delta=0.30)
+    design = Scenario("design_point", p=0.95, u=1.0, q_exposure=0.50, delta=0.30)
     a05, a025 = Fraction(1, 20), Fraction(1, 40)
     return {
         "primary_comparison": "A_closed vs C_required_model_query, paired by item",
@@ -263,7 +284,7 @@ def recommended_design() -> dict:
         "at_design_point": analyse_scenario(design, RECOMMENDED_N_PRIMARY, a05),
         "minimum_detectable_delta_at_80pct": next(
             (round(d, 2) for d in [i / 100 for i in range(5, 101, 5)]
-             if analyse_scenario(Scenario("mde", p=0.95, u=1.0, c_disp=0.50, delta=d),
+             if analyse_scenario(Scenario("mde", p=0.95, u=1.0, q_exposure=0.50, delta=d),
                                  RECOMMENDED_N_PRIMARY, a05)["power"] >= 0.80), None),
         "if_forced_back_to_K2_alpha_0.025": analyse_scenario(
             design, RECOMMENDED_N_PRIMARY, a025),
@@ -299,7 +320,9 @@ def report(ns: tuple[int, ...] = (25, 40, 60)) -> dict:
                 "closed_dispatch": round(COST_CLOSED_DISPATCH, 5),
                 "retrieval_dispatch_that_declined": round(COST_DECLINED_RETRIEVAL, 5),
                 "retrieval_dispatch_that_searched": round(COST_SEARCHING_DISPATCH, 5),
-                "injected_context_answerer_ESTIMATE": COST_INJECTED_ANSWERER,
+                "stage0b_search_dispatch_MEASURED": COST_STAGE0B_SEARCH,
+                "stage0b_query_writer_MEASURED": COST_STAGE0B_QUERY_WRITER,
+                "injected_context_answerer_MEASURED": COST_INJECTED_ANSWERER,
             },
             "candidate_designs": {
                 "A_C_only_n40_plus_15_control": cost_for(

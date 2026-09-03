@@ -29,9 +29,14 @@
    "load_bearing_for": "the live correspondence gate"
   },
   "lab/stage0b_cvd.py": {
-   "sha16": "7e66581a4e01f928",
-   "bytes": 13531,
+   "sha16": "a386b502dc60b3e7",
+   "bytes": 17602,
    "load_bearing_for": "the C-vs-D pre-freeze discriminability requirement"
+  },
+  "lab/stage0b_calibration.py": {
+   "sha16": "6a27dad4ac7f84c5",
+   "bytes": 47075,
+   "load_bearing_for": "the calibration sizing derivations and the FROZEN PASS/CONTINUE/REVISE rules. It is fingerprinted for the same reason the grader is: a stopping rule that can be edited after the data arrives is not a stopping rule"
   },
   "lab/grading_v2.py": {
    "sha16": "4ee0268aa298b778",
@@ -60,5 +65,5 @@
   }
  },
  "missing": [],
- "combined_sha16": "1b479a9cf04d7395"
+ "combined_sha16": "eb65afbcd1f119ed"
 }

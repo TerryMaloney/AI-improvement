@@ -53,6 +53,48 @@ THE PRE-FREEZE RULE
 displacement probability between a model query and an anchor-preserving fixed
 query that would matter to anyone. It is set at 0.20 and is a design commitment,
 not an estimate.
+
+WHAT THIS COMPARISON ESTIMATES -- NARROWED 2026-09-03, AND THE NARROWING IS THE POINT
+------------------------------------------------------------------------------------
+The realized runtime block ECHOES THE QUERY in its header line (design draft
+12.2). So C and D differ in at least three ways at once: the query text itself
+reaches the answerer, the runtime-synthesised paragraph differs, and the link
+list differs. C-vs-D therefore does NOT isolate "retrieved information caused the
+effect", and it never could have on this runtime.
+
+Three options were weighed before any outcome exists:
+
+  (A) keep the echo and NARROW the claim;
+  (B) strip the echo symmetrically from C and D before injection;
+  (C) keep Stage 0B simple and defer the decomposition to a later experiment.
+
+**Chosen: (A), with (C)'s deferral.** (B) is rejected because stripping the header
+would make the injected block differ from what the runtime actually exposes, which
+is the exact mistake the "verbatim" claim already cost this design once; it would
+also hand the answerer a block whose first line has been removed by the harness, a
+new artifact traded for an old one. No arm is added: the smallest identifiable
+claim is preferred to a decomposition Stage 0B was not sized for.
+
+So the estimand C-vs-D supports is, in full:
+
+    the TOTAL DOWNSTREAM EFFECT OF THE QUERY-CONSTRUCTION PROCEDURE under this
+    realized search runtime -- bundling the echoed query text, the
+    runtime-synthesised answer and the link list, and attributing to none of them
+    separately.
+
+It is NOT an estimate of the effect of retrieved page content. Decomposing the
+three channels is a NAMED FOLLOW-ON, not a Stage 0B result.
+
+WHAT THE SELECTION RULE DOES TO delta_D
+---------------------------------------
+The divergence screen admits an item to production iff its FIXED-query block is
+divergent, so on the production pool `q_D = 1.0 BY CONSTRUCTION` while `q_C` is
+estimated. Under the common-susceptibility decomposition
+`delta_C = q_C * delta`, `delta_D = q_D * delta`, that means D is expected to
+displace AT LEAST as often as C. The test is nonetheless kept TWO-SIDED: a
+model-written query can return a different and more potent displacing claim, so
+the direction is not logically forced. The asymmetry is declared here rather than
+discovered in a later review.
 """
 from __future__ import annotations
 
@@ -98,9 +140,15 @@ class CvDScenario:
     """Displacement probabilities for the two exposed arms, on the SAME items.
 
     p        P(the closed-book answer is correct) -- measured on the calibration bank
-    delta_C  P(displaced | model-written query),  measured
-    delta_D  P(displaced | fixed anchor-preserving query), measured
+    delta_C  P(displaced | model-written query) = q_C * delta
+    delta_D  P(displaced | fixed anchor-preserving query) = q_D * delta, and q_D is
+             1.0 by construction on the production pool, so delta_D == delta
     g        symmetric per-arm grader error rate
+
+    delta_C and delta_D are DISPLACEMENT probabilities. Calibration measures the
+    EXPOSURE rates q_C and q_D; `delta` stays a preregistered minimum interesting
+    effect. Build these from a calibration result with `from_exposure`, so the
+    two scales cannot be silently mixed.
     """
     p: float
     delta_C: float
@@ -122,6 +170,27 @@ class CvDScenario:
             return q * (1 - self.g) + (1 - q) * self.g
         qc, qd = noisy(pc_wrong), noisy(pd_wrong)
         return qc * (1 - qd), qd * (1 - qc)
+
+
+    @classmethod
+    def from_exposure(cls, p: float, q_C: float, q_D: float = 1.0,
+                      delta: float = 0.30, g: float = 0.0) -> "CvDScenario":
+        """Build the scenario from MEASURED exposure rates and a preregistered delta.
+
+        `q_D` defaults to 1.0 because the divergence screen pins it there on the
+        production pool. Passing anything else means the items were not screened,
+        and the scenario is then not describing the run that will happen.
+        """
+        return cls(p=p, delta_C=q_C * delta, delta_D=q_D * delta, g=g)
+
+
+# The preregistered gap, restated on the scale it is measured on. On the
+# DISPLACEMENT scale the commitment is 0.20; at delta=0.30 that implies an
+# exposure-rate difference of 0.667 between the two queries, which is not a target
+# anyone would have written down had the number been expressed in the units the
+# calibration bank observes. lab.stage0b_calibration.Q_GAP_PREREGISTERED restates
+# it as |q_C - q_D| >= 0.25, implying a displacement gap of 0.075.
+DELTA_GAP_IMPLIED_EXPOSURE_GAP_AT_DELTA_030 = 0.20 / 0.30
 
 
 def analyse(s: CvDScenario, n: int, alpha: Fraction = ALPHA_SECONDARY) -> dict:
@@ -171,8 +240,11 @@ def authorize(s: CvDScenario, n: int, delta_gap: float = DELTA_GAP_PREREGISTERED
             f"smaller gap would be detecting a difference nobody preregistered as mattering")
     return {
         "verdict": "CLAIM_AUTHORIZED" if not reasons else "CLAIM_WITHDRAWN_BEFORE_RUN",
-        "claim": "query construction changes whether search exposure displaces an "
-                 "anchored answer",
+        "claim": "the query-construction procedure changes the TOTAL downstream effect "
+                 "of exposure to this search runtime's result block -- bundling the "
+                 "echoed query text, the runtime-synthesised answer and the link list, "
+                 "and attributing to none of them separately. NOT a claim about "
+                 "retrieved page content.",
         "reasons": reasons,
         "if_withdrawn": "Arm D is still run. Its interpretive job -- without it a null in "
                         "C cannot be told apart from 'the model's query happened to return "

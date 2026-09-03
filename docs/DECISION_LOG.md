@@ -872,3 +872,140 @@ caught it.
 **Unchanged:** every Stage 0A-M frozen artifact — raw outcomes, graded ledger,
 frozen grader `10adaf1dac94ea70`, official primary result, battery
 `1ec90754f1de2696`, schedule `321c3a2397958c30`.
+
+
+---
+
+## 2026-09-03 (second pass) — Pre-calibration design reconciliation
+
+**Decision: A — CALIBRATION DESIGN READY TO RUN.** No calibration datum exists and
+no live call was made. Every change below was made *before* spending the
+calibration budget, which is the only point at which such changes are free of the
+data they would otherwise be reacting to.
+
+**Decision: `c_disp` is renamed and split by arm, because it named content that
+does not cross the boundary.** It read "P(retrieved content carries displacing
+information)". Measured, no retrieved page content reaches the answerer at all —
+the block is a query echo, a titles-and-URLs link array, and a prose answer
+synthesised inside the search runtime. The parameter is redefined on the
+representation that does cross: **`q_C`** = P(the C-arm block's runtime-synthesised
+summary carries a predeclared reject alias | the item passed the fixed-query
+screen), **measured from the C arm** by a query-writer dispatch plus a C search;
+**`q_D`** is **1.0 by construction** on the production pool, because the divergence
+screen admits on exactly that condition, and is never estimated. **The fixed-query
+divergence rate may not substitute for the C-arm rate** — they are different
+queries producing different blocks, and substituting one for the other is the
+hypothesis assumed rather than measured. `Scenario.c_disp` → `Scenario.q_exposure`.
+`δ` remains a **preregistered** minimum interesting effect of 0.30: it is the
+estimand, and measuring it in calibration would size the run on a first look at its
+own effect.
+
+**Decision: the ">= 3× production" calibration rule is REPLACED, not reproduced.**
+It is asserted in the authoring protocol, the design draft §2.4, `docs/NEXT.md` and
+the 2026-09-02 entry above, and derived in none of them. It is wrong in **both**
+directions at once: too small for what it had to measure (§2.4 dispatches
+calibration items *closed-book only*, which measures `p` and nothing else — no
+`q_C`, no `q_D`, no grader behaviour on exposed answers), and too large under the
+realized six-dispatch structure (~$35 for 150 items, more than the production run
+it was protecting). Replaced by a bank sized from the four decisions it resolves,
+with a frozen sequential plan: **batch 1 = 48 authored → 36 screen-passing items,
+228 dispatches, $8.44**; batches 2–3 of 24 screen-passing items if triggered; **cap
+84 screen-passing items, 532 dispatches, $19.69** — the point at which calibration
+costs about what production costs.
+
+**Decision: the minimum per-item dispatch structure is six, and screened first.**
+One fixed-query search on **every authored item** (the screen, and the pass rate
+`s`); then on passers only — closed-book answerer (`p`), query-writer and C search
+(`q_C`), and two exposed answerers (the grader pairs). Every calibration estimand
+is conditional on screen-passing because every production item is, so an item the
+screen rejects is a different population, not a cheaper calibration item. **No
+exposed answerer is bought to estimate exposure divergence** — divergence is
+measured on the block, before any answerer exists.
+
+**Decision: production is sized AT the grader bound calibration can reach, because
+it cannot reach the one n=50 needs.** At n=50, α=0.05, p=0.95, q_C=0.50, δ=0.30,
+power holds at 0.80 only while the asymmetric grader defect rate `g_one` ≤ **0.014**.
+Bounding that with zero observations needs **213 clean closed/exposed pairs**, four
+times the production run. No affordable bank certifies the instrument for n=50. So
+sizing enters `q_C` at its **point estimate** (an unbiased measurement of the
+environment, whose error moves power either way) and `g_one` at its **95% upper
+bound** (an instrument defect, and §7.1 is the reason it is never assumed small).
+At the achievable bound of 0.08 the required n is **72**. **The n=50 recommendation
+is superseded.** What makes the bound affordable: one item yields **two** pairs,
+(A,C) and (A,D), exchangeable because the packet, block format and answerer agent
+are byte-identical between C and D — and the two counts are reported separately so
+the licence can be falsified.
+
+**Decision: negative controls are 30, derived — not 15 and not 20.** Both numbers
+sat in the repository at once and neither came from what the control establishes.
+15 was Stage 0A-M's *realized* `arithmetic_control` size carried into the power
+module; 20 was design draft §8's "15 reused + 5 fresh". The control's job, per the
+frozen code's own docstring, is an exact upper bound on the **generic exposure
+tax**, and in Stage 0B it is the *only* handle on it, because the divergence screen
+leaves no dosed-vs-undosed contrast inside the primary class. The primary cannot
+reject below D=5, which at n=50 is a harm rate of **0.10**; a clean control's 95%
+Clopper-Pearson upper bound must clear it. n=15 gives 0.181 and n=20 gives 0.139 —
+**neither excludes a tax the size of the entire minimum rejectable primary signal.**
+n=29 is the exact minimum (0.098); **30** is taken so the composition stays 15
+reused + 15 fresh. It is a **function of the primary n**, not a constant.
+Brittleness declared with its reporting rule fixed now: one harm lifts the bound to
+0.149, and the response is that the primary is reported with the generic exposure
+tax explicitly not excluded — not more items.
+
+**Decision: the query echo is KEPT and the C-vs-D claim is NARROWED.** The runtime
+block echoes the query, so C and D differ through the query text, the synthesised
+answer and the link list simultaneously; C-vs-D does not isolate "retrieved
+information caused the effect" and on this runtime never could. Stripping the echo
+symmetrically was **rejected**: it would make the injected block differ from what
+the runtime exposes — the exact mistake the "verbatim" claim already cost this
+design once — trading a declared artifact for an undeclared one. **No arm is
+added.** C-vs-D estimates *the total downstream effect of the query-construction
+procedure under this realized search runtime*, bundling all three channels and
+attributing to none. Decomposition is a **named follow-on**. Also declared: the
+screen pins `q_D` at 1, so under the common-δ decomposition D is expected to
+displace at least as often as C; the test stays two-sided because a C query can
+return a different and more potent claim.
+
+**Decision: the grader development/validation wall, and adjudication before
+grading.** The trap is "the grader failed, so we edit it until these answers pass".
+Three rules close it: the hand-derived verdict is recorded **before** the grader
+runs, and a row graded without `hand_verdict_recorded_first` or without a grader
+fingerprint is a **schema error**; repairs are developed on the **development**
+subset only and must be expressible as general semantic rules, re-run against the
+frozen 130-answer regression corpus with zero regressions; the rate is bounded on
+the **holdout** only, and a repair informed by a holdout answer **burns** it,
+requiring a fresh one. No production item may serve either purpose.
+
+**Decision: the stopping rules are frozen AND fingerprinted before the first
+calibration outcome.** PASS / CONTINUE / REVISE-RECIPE / REVISE-GRADER /
+REVISE-DESIGN are implemented in `lab.stage0b_calibration.decide`, added to
+`instrument_fingerprints.json` and pinned by test — for the same reason the grader
+is fingerprinted: a stopping rule that can be edited once the data arrives is not a
+stopping rule. The **evaluation order** is part of the rule: a recipe that fails
+cannot be rescued by a grader repair.
+
+**Decision: the calibration ledger schema is specified before anything runs.**
+`lab.stage0b_calibration.CalibrationRow`, with `REQUIRED_FOR_EACH_STATISTIC`
+mapping every statistic to the fields it is computed from. A statistic with no
+entry there may not be computed — the rule Stage 0A-M lacked when `analyse_run`
+built `retrieval_failure_rate` out of empty tuples and reported a plausible number
+with no lineage. `None` means UNOBSERVABLE and never zero.
+
+**Costs: measured values replace estimates.** Searcher $0.0640 (mean of the six
+real `stage0b-searcher` dispatches), query-writer $0.0136, exposed answerer $0.0276
+(was a $0.025 extrapolation).
+
+**Contract: VALID as `draft`,** 7 open fields. Four bindings added —
+`calibration_bank_sizing`, `grader_validation_holdout`, `negative_control_sizing`,
+`query_echo_direct_path` — and `item_selection_rule` moves from `[OPEN]` to bound
+with its fingerprint still open, because it cannot be fixed until the recipe it
+selects on has been validated.
+
+**Tests: 1618 passing (was 1569), all offline. Zero live calls this pass.** The
+14-check runtime correspondence gate was deliberately **not** re-run: nothing here
+changes the instrument it measured, and re-running a passing live gate to feel
+thorough is how quota gets spent on nothing.
+
+**Unchanged:** every Stage 0A-M frozen artifact; the candidate grader, still not
+frozen and not touched.
+

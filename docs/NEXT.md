@@ -1,4 +1,11 @@
-# Next action — author and run the CALIBRATION BANK. Do NOT author production items.
+# Next action — RUN the calibration bank to the frozen plan. Do NOT author production items.
+
+> **Updated 2026-09-03 (second pass).** The pre-calibration design reconciliation
+> is done. Every quantity that will decide the production size is now defined on
+> the arm it must be measured from, and every stopping rule is frozen and
+> fingerprinted **before** the first calibration outcome exists. Batch 1 is
+> **48 authored → 36 screen-passing items, 228 dispatches, ~$8.44.** The exact
+> next action is at the bottom of this file.
 
 Stage 0A-M is finished and independently reviewed. **Steps 1 and 2 of the chain
 below are DONE as of 2026-09-03**: the searcher/exposure harness is built and
@@ -34,19 +41,27 @@ spent discovering that. The bank is what validates the recipe.
    executed, 4/4 queries byte-faithful, 4/4 pre-recorded predictions matched, 3
    divergent. No solver, no answer, no outcome — asserted in the artifact.
 
-3. **← YOU ARE HERE. Author and run the calibration bank** (≥3× production size), per
-   `docs/EXP004_STAGE0B_BATTERY_AUTHORING_PROTOCOL.md`.
-   Closed-book, R=1, fresh context per trial. Establishes the realized
-   closed-book accuracy `p` against the target band **0.90–1.00**, and the
-   realized `c_disp`. **Calibration items are permanently barred from
-   production.**
+3. **← YOU ARE HERE. Run the calibration bank** to the frozen plan in
+   `docs/EXP004_STAGE0B_BATTERY_AUTHORING_PROTOCOL.md` §3.
+   ~~(≥3× production size) ... Closed-book ... establishes `p` and the realized
+   `c_disp`.~~ **SUPERSEDED 2026-09-03 (design draft §13.2–13.3):** the ≥3× rule
+   had no derivation and was wrong in both directions, and closed-book dispatches
+   cannot measure three of the four things the bank exists for.
+   **Batch 1: 48 authored → 36 screen-passing items, six dispatches each on
+   passers, 228 dispatches, ~$8.44.** Measures `p` (target band **0.90–1.00**),
+   **`q_C` on the C arm** (the renamed `c_disp`), `q_D` (1.0 by construction),
+   the screen pass rate `s`, and the grader's defect rate on fresh **closed and
+   exposed** answers. R=1, fresh context per trial. **Calibration items are
+   permanently barred from production**, and the 12/24 development/holdout split
+   is what keeps a grader repair from being validated on the answers that
+   motivated it.
 
 4. **Freeze the grader** (`lab/grading_v2.py`) only after the calibration bank
    has exercised its span parser on answers that are not Stage 0A-M's. It has so
    far been validated against 130 answers from a battery it was designed after,
    which is not independent evidence.
 
-5. **Re-derive power from the measured `p` and `c_disp`**, replacing the assumed
+5. **Re-derive power from the measured `p` and `q_C`**, replacing the assumed
    design point in `runs/exp004_stage0b_design/power_simulation.json`. If the
    measured values move the required n materially, the design changes before any
    production dispatch, not after.
@@ -62,6 +77,25 @@ spent discovering that. The bank is what validates the recipe.
    authoring protocol §5 — **including the freeze/grade/analyse driver, which
    must be committed before the first dispatch** — and re-run the causal-contract
    validator until the Stage 0B contract passes as `freeze_ready`.
+
+## The exact next action for the calibration-run session
+
+1. Author **48 calibration items** to the recipe in the authoring protocol §2,
+   `pool: calibration`, split 16 development / 32 holdout **before any dispatch**
+   (the split is on the authored list, not on which items pass the screen).
+2. Run **stage 1 only** — the fixed-query divergence screen, one search dispatch
+   per authored item, no answerer. Record `s`.
+3. Run **stage 2** on screen-passing items only: closed-book answerer,
+   query-writer, C search, C exposed answerer, D exposed answerer.
+4. **Adjudicate every answer by hand BEFORE running the grader**, and set
+   `hand_verdict_recorded_first`. `lab.stage0b_calibration.validate_row` refuses
+   a row graded without it.
+5. Compute `lab.stage0b_calibration.calibration_statistics`, then
+   `lab.stage0b_calibration.decide`. **Compute nothing else**, and change nothing
+   in `lab/stage0b_calibration.py`: a statistic invented after seeing the data is
+   a stopping rule invented after seeing the data.
+6. Do **not** freeze the grader, re-derive power, or author a production item in
+   the same session. Those are steps 4–6 and they start from a committed bank.
 
 ## Traps already closed — do not reopen
 
@@ -99,6 +133,26 @@ spent discovering that. The bank is what validates the recipe.
   there is `HURT_BOTH`. Corrected 2026-09-03 in
   `experiments/meta_r1r2/observation_2026-09-03_grader.md`. Prospective
   confirmations of R1′ remain n=1.
+- **Do not re-derive a calibration size from a multiplier.** "≥3× production" was
+  asserted in four documents and computed in none, and it was wrong in both
+  directions at once: too small to measure `q_C`, `q_D` or the grader on exposed
+  answers, and too large under the realized six-dispatch structure. The bank is
+  sized from the decisions it resolves (authoring protocol §3.1).
+- **Do not substitute the fixed-query divergence rate for the C-arm rate.** They
+  are different queries producing different blocks. The primary A-vs-C power
+  calculation reads `q_C`, which is why a query-writer dispatch and a C search are
+  in the per-item structure at all.
+- **Do not size production as though the grader bound were zero.** At n=50 the
+  design holds 80% power only while `g_one` ≤ 0.014, and bounding that needs 213
+  clean pairs — four times the run. Production is sized AT the achievable bound;
+  the recommended n=50 in design draft §7.2 is superseded.
+- **Do not claim C-vs-D isolates retrieved content.** The runtime block echoes the
+  query, so C and D differ through the query text, the synthesised answer and the
+  link list at once. The claim is narrowed to the total effect of the
+  query-construction procedure, and decomposition is a named follow-on.
+- **Do not use 15 or 20 negative controls.** Neither was derived; both leave a
+  generic exposure tax of 0.10 — the entire minimum rejectable primary signal —
+  unexcluded. The derived count is 30, and it is a function of the primary n.
 - **Do not treat the Stage 0A-M null as evidence of safety.** Its own harm bounds
   are ≤0.113 (availability) and ≤0.312 (restricted to the 8 trials that actually
   retrieved).

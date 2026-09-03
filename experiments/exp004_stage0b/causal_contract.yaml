@@ -43,6 +43,28 @@
 #     it FAILS. That is recorded rather than smoothed: C-vs-D at n=50 has power
 #     0.60 against the preregistered gap, not 0.80.
 #
+# WHAT CHANGED 2026-09-03 (SECOND PASS) -- THE PRE-CALIBRATION RECONCILIATION
+#   - `c_disp` is RENAMED and SPLIT BY ARM. It named "retrieved content carrying
+#     displacing information"; measured, no retrieved page content crosses the
+#     boundary at all. The parameters are now `q_C` (measured on the C arm, from a
+#     query-writer dispatch and a C search) and `q_D` (1.0 BY CONSTRUCTION on the
+#     production pool, because the divergence screen admits on exactly that
+#     condition). The fixed-query rate may NOT substitute for the C-arm rate, and
+#     the primary A-vs-C power calculation reads q_C;
+#   - `c_vs_d_inferential_requirement` has its CLAIM NARROWED. The runtime block
+#     echoes the query, so C and D differ through the query text, the synthesised
+#     answer and the link list at once. C-vs-D estimates the TOTAL downstream
+#     effect of the query-construction procedure and is not a claim about retrieved
+#     page content. The echo is KEPT (stripping it would make the injected block
+#     differ from what the runtime exposes) and no arm is added;
+#   - two new bindings: `calibration_bank_sizing` and `grader_validation_holdout`,
+#     both fingerprinted BEFORE the first calibration dispatch, because a stopping
+#     rule that can be edited once the data arrives is not a stopping rule;
+#   - `item_selection_rule` moves from [OPEN] to bound: the rule is written,
+#     implemented and tested. Its FINGERPRINT stays [OPEN] until the recipe it
+#     selects on has been validated by the bank;
+#   - the negative-control count is DERIVED (30) rather than asserted (15 or 20).
+#
 # STATUS REMAINS `draft`. The instrument passes; the calibration bank, the grader
 # freeze and the power re-derivation do not exist, so [OPEN] fields remain and the
 # validator must continue to refuse freeze_ready.
@@ -276,6 +298,20 @@ bindings:
     # 4/4 queries faithful, 4/4 predictions matched, 3 divergent. Canaries are
     # permanently barred from production.
 
+  - construct: query_echo_direct_path
+    claim: docs/EXP004_STAGE0B_DESIGN_DRAFT.md#13.5
+    implementation: lab/stage0b_search.py:parse_exposure_block
+    fingerprint: experiments/exp004_stage0b/instrument_fingerprints.json
+    correspondence_test: tests/test_stage0b_calibration.py::TestTheParametersNameWhatCrossesTheBoundary
+    # DECLARED, not assumed absent. The runtime block echoes the query in its header, so
+    # the query text itself reaches the answerer. C and D therefore differ through three
+    # channels at once: query text, synthesised answer, link list. Decided prospectively:
+    # KEEP the echo and NARROW the claim. Stripping it was rejected -- it would make the
+    # injected block differ from what the runtime exposes, which is the mistake the
+    # "verbatim" claim already cost this design once, and would trade a declared artifact
+    # for an undeclared one. No arm is added; decomposing the three channels is a NAMED
+    # FOLLOW-ON, not a Stage 0B result.
+
   - construct: c_vs_d_inferential_requirement
     claim: docs/EXP004_STAGE0B_DESIGN_DRAFT.md#7
     implementation: lab/stage0b_cvd.py
@@ -290,6 +326,14 @@ bindings:
     # MEASURED p and displacement rates; if it fails there, the claim is WITHDRAWN before
     # the run and C-vs-D is reported descriptively. Arm D is retained either way -- its
     # interpretive job does not require C-vs-D to reject.
+    # CLAIM NARROWED 2026-09-03: C-vs-D estimates the TOTAL downstream effect of the
+    # query-construction procedure under this realized runtime -- bundling the echoed
+    # query text, the synthesised answer and the link list -- and is NOT a claim about
+    # retrieved page content. Enforced in `authorize()`'s `claim` field and pinned by
+    # test. Also declared: the selection rule pins q_D at 1.0 on the production pool, so
+    # under the common-delta decomposition D is expected to displace at least as often
+    # as C. The test stays two-sided, because a C query can return a different and more
+    # potent displacing claim; the asymmetry is declared, not relied on.
 
   - construct: answer_first_packet_instruction
     claim: docs/EXP004_STAGE0B_DESIGN_DRAFT.md#3.4
@@ -317,9 +361,64 @@ bindings:
 
   - construct: item_selection_rule
     claim: docs/EXP004_STAGE0B_BATTERY_AUTHORING_PROTOCOL.md#4
-    implementation: "[OPEN]"
+    implementation: lab/stage0b_search.py:relevance_flags
     fingerprint: "[OPEN]"
-    correspondence_test: "[OPEN]"
+    correspondence_test: tests/test_stage0b_search_instrument.py::TestRelevanceFlags
+    # REWRITTEN 2026-09-03 to the realized representation. The clause used to read
+    # ">= 1 of the TOP-5 RESULTS containing a reject alias", which names an object that
+    # does not cross the boundary: there are no result texts, only titles/URLs plus a
+    # runtime-synthesised paragraph. The rule now requires the alias in that SYNTHESISED
+    # SUMMARY, where it is a claim; a match appearing only in the Links array is recorded
+    # as `reject_in_links_only` and does NOT admit the item. Measured cause: the reject
+    # alias "1852" matched inside the link title "Ada Lovelace (1815 - 1852)".
+    # The FINGERPRINT stays [OPEN] because it cannot be fixed until the calibration bank
+    # has validated the recipe the rule selects on.
+
+  - construct: calibration_bank_sizing
+    claim: docs/EXP004_STAGE0B_BATTERY_AUTHORING_PROTOCOL.md#3.1
+    implementation: lab/stage0b_calibration.py
+    fingerprint: experiments/exp004_stage0b/instrument_fingerprints.json
+    correspondence_test: tests/test_stage0b_calibration.py
+    # REPLACES the ">= 3x production" rule, which was asserted in four documents and
+    # derived in none, and was wrong in both directions: too small to measure q_C, q_D or
+    # the grader on EXPOSED answers (design draft 2.4 dispatched calibration items
+    # closed-book only), and too large under the realized six-dispatch structure.
+    # The bank is sized from the four decisions it resolves. The load-bearing finding:
+    # at n=50 the design holds 80% power only while g_one <= 0.014, and bounding an
+    # asymmetric grader defect there needs 213 clean pairs -- four times the production
+    # run. Calibration CANNOT certify the grader for n=50, so production is sized AT the
+    # achievable bound, with q_C entering at its point estimate and g_one at its 95%
+    # upper bound. PASS/CONTINUE/REVISE thresholds are frozen and FINGERPRINTED before
+    # the first calibration dispatch.
+
+  - construct: grader_validation_holdout
+    claim: docs/EXP004_STAGE0B_BATTERY_AUTHORING_PROTOCOL.md#3.6
+    implementation: lab/stage0b_calibration.py:CalibrationRow
+    fingerprint: experiments/exp004_stage0b/instrument_fingerprints.json
+    correspondence_test: tests/test_stage0b_calibration.py::TestTheLedgerSchemaCarriesLineageForEveryStatistic
+    # The trap: "the grader failed, so we edit it until these answers pass." Closed by
+    # three rules. (1) The hand-derived verdict is recorded BEFORE the grader runs, and
+    # the row asserts `hand_verdict_recorded_first`; a defect is then a disagreement
+    # between two things written down in a fixed order. (2) Repairs are developed on the
+    # DEVELOPMENT subset only and must be general semantic rules. (3) The rate is bounded
+    # on the HOLDOUT only; a repair informed by a holdout answer burns that holdout and a
+    # fresh one is required. No production item may serve either purpose.
+
+  - construct: negative_control_sizing
+    claim: docs/EXP004_STAGE0B_BATTERY_AUTHORING_PROTOCOL.md#1.1
+    implementation: lab/stage0b_calibration.py:negative_control_n
+    fingerprint: experiments/exp004_stage0b/instrument_fingerprints.json
+    correspondence_test: tests/test_stage0b_calibration.py::TestTheNegativeControlCountIsDerivedNotChosen
+    # Two undefended numbers sat in the repository at once: 15 (Stage 0A-M's realized
+    # arithmetic_control size, carried into the power module) and 20 (design draft 8's
+    # 15 reused + 5 fresh). Neither excludes a generic exposure tax of 0.10 -- the entire
+    # minimum rejectable primary signal at n=50. DERIVED: 29 is the exact minimum whose
+    # clean 95% upper bound clears that rate; 30 is taken so the composition stays 15
+    # reused + 15 fresh. It is a FUNCTION of the primary n, recomputed if power
+    # re-derivation moves it. Brittleness declared: one harm in the control lifts the
+    # bound above the threshold, and the preregistered response is a REPORTING rule --
+    # the primary is then reported with the generic exposure tax explicitly not excluded
+    # -- not more items.
 
   - construct: freeze_grade_analyse_driver
     claim: docs/EXP004_STAGE0AM_INDEPENDENT_REVIEW_2026-09-02.md#1.1
@@ -358,8 +457,12 @@ open_fields:
   - calibration bank -- authored, dispatched, and its closed-book accuracy band measured
   - grader freeze, which must wait until the calibration bank has exercised the span
     parser on answers that are not Stage 0A-M's
-  - power re-derived from measured p and c_disp rather than assumed values
+  - power re-derived from measured p and q_C rather than assumed values. The
+    recommended n=50 is SUPERSEDED, because sizing now enters g_one at its 95%
+    upper bound, which no affordable calibration bank can push below 0.014; the
+    binding n is whatever the bank yields (design draft 13.4)
   - C-vs-D authorization re-run on those measured values; it FAILS on the assumed ones
-  - item_selection_rule fingerprint, which cannot be fixed until the recipe is validated
+  - item_selection_rule FINGERPRINT (the rule itself is now written, implemented and
+    tested), which cannot be fixed until the recipe is validated
   - freeze_grade_analyse_driver for a three-dispatch trial
   - production items (NOT to be authored until the recipe is validated)

@@ -34,6 +34,10 @@ COMPONENTS: dict[str, str] = {
         "the live correspondence gate",
     "lab/stage0b_cvd.py":
         "the C-vs-D pre-freeze discriminability requirement",
+    "lab/stage0b_calibration.py":
+        "the calibration sizing derivations and the FROZEN PASS/CONTINUE/REVISE rules. "
+        "It is fingerprinted for the same reason the grader is: a stopping rule that can "
+        "be edited after the data arrives is not a stopping rule",
     "lab/grading_v2.py":
         "the candidate grader (NOT frozen: it must first meet answers that are not "
         "Stage 0A-M's)",

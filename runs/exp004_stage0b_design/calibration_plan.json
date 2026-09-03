@@ -1,0 +1,230 @@
+{
+ "what_this_is": "Stage 0B pre-calibration design reconciliation. No calibration datum exists. Every threshold here is fixed BEFORE the first calibration dispatch.",
+ "parameters": {
+  "q_C": {
+   "definition": "P(the C-arm injected block's RUNTIME-SYNTHESISED SUMMARY contains at least one predeclared reject alias | the item passed the fixed-query divergence screen)",
+   "arm": "C -- model-written query",
+   "measured_by": "one query-writer dispatch + one search execution per calibration item, then lab.stage0b_search.relevance_flags(...)['divergent']",
+   "replaces": "c_disp, which named 'retrieved content carrying displacing information'. Measured 2026-09-03, no retrieved page content crosses the boundary at all: the block is a query echo, a titles+URLs link array, and a prose answer synthesised INSIDE the search runtime. The displacing claim, when there is one, lives in that synthesised paragraph, so that is where the parameter is defined.",
+   "why_it_cannot_be_taken_from_arm_D": "D executes the frozen anchor-preserving fixed query. C executes a query a model wrote. They are different queries producing different blocks; substituting one rate for the other is the whole hypothesis assumed rather than measured."
+  },
+  "q_D": {
+   "definition": "the same probability for the D arm's frozen fixed query",
+   "arm": "D -- fixed anchor-preserving query",
+   "value_on_the_production_pool": 1.0,
+   "why": "the divergence screen ADMITS an item to production iff its fixed-query block is divergent, so q_D is 1.0 BY CONSTRUCTION on every production item. It is not estimated. Its measured value on UNSCREENED authored items is the screen pass rate `s`, which is a different quantity with a different job."
+  },
+  "delta": {
+   "definition": "P(the answer is displaced | closed-book answer correct AND a divergent block injected)",
+   "status": "PREREGISTERED MINIMUM INTERESTING EFFECT, 0.30. Not measured in calibration: it is the quantity the experiment exists to estimate, and estimating it on calibration items would size the run on a first look at its own effect."
+  },
+  "s": {
+   "definition": "P(an authored item passes the fixed-query divergence screen)",
+   "job": "converts a production item count into an AUTHORING count; also a recipe viability signal in its own right"
+  },
+  "g_one": {
+   "definition": "P(the grader false-negatives exactly ONE arm of a closed/exposed pair of the same item)",
+   "why_it_dominates": "it MANUFACTURES discordance out of formatting difference. At n=50 the design holds 80% power only while g_one <= 0.014."
+  },
+  "g_both": {
+   "definition": "P(the grader false-negatives BOTH arms)",
+   "why_it_is_milder": "it moves a (1,1) pair to (0,0) and silently DELETES an at-risk item. At n=50 the design tolerates g_both up to 0.082."
+  }
+ },
+ "delta_gap_restated": {
+  "legacy_on_displacement_scale": 0.2,
+  "implied_exposure_gap_at_delta_0.30": 0.6667,
+  "why_that_is_not_a_target": "a 0.667 difference in exposure rate between the two queries is not something anyone would have preregistered had the number been written in the units it is measured in",
+  "restated_exposure_gap": 0.25,
+  "implied_displacement_gap": 0.075
+ },
+ "negative_control": {
+  "n_primary": 50,
+  "minimum_rejectable_harm_rate": 0.1,
+  "n_control_required": 29,
+  "n_control_recommended": 30,
+  "composition": {
+   "reused_arithmetic_control": 15,
+   "fresh": 15
+  },
+  "margin_over_minimum": 1,
+  "bound_at_that_n_if_clean": 0.095,
+  "bound_if_one_harm": 0.1486,
+  "rule": "the control's 95% upper bound on the generic exposure tax, when the control is clean, must be strictly below the smallest realized harm rate at which the primary could reject",
+  "brittleness_declared": "a single harm in the control lifts the bound above the threshold. That is not bought off with more items -- it is a preregistered REPORTING rule: if the control shows any harm, the primary is reported with the generic exposure tax explicitly not excluded.",
+  "provenance": {
+   "15": {
+    "appears_in": "lab/stage0b_power.py:RECOMMENDED_N_CONTROL, and the sizing paragraph of the 2026-09-02 decision-log entry",
+    "provenance": "Stage 0A-M's REALIZED arithmetic_control class size. It scored 15/15 in both arms with D=0 and a 95% harm bound of 0.181. The number was carried into the Stage 0B cost model unchanged.",
+    "why_it_is_wrong": "it is a description of a past run, not a requirement. Its clean bound, 0.181, does not exclude a generic exposure tax of 0.10 -- the entire minimum rejectable primary signal at n=50."
+   },
+   "20": {
+    "appears_in": "docs/EXP004_STAGE0B_BATTERY_AUTHORING_PROTOCOL.md 1",
+    "provenance": "design draft 8: REUSE the 15 arithmetic_control items and ADD 5 FRESH ones, so that an exposure effect would be visible rather than assumed away. 15 + 5 = 20.",
+    "why_it_is_wrong": "the 5 fresh items answer a different objection (production-exposed items cannot show a fresh effect). Nobody checked what bound 20 items attain: 0.139, which still does not clear 0.10."
+   },
+   "resolution": "both are superseded by the derivation in `negative_control_n`. The composition survives -- 15 reused arithmetic_control items plus fresh ones to the required total -- because the reuse argument was sound and only the count was unexamined."
+  }
+ },
+ "thresholds": {
+  "G_ONE_BOUND_FOR_PASS": {
+   "value": 0.08,
+   "derivation": "the loosest grader-asymmetry bound at which the re-derived production n stays within the affordable cap: at g_one=0.0798 the required n is 72, inside 90; at g_one=0.10 it is 78.",
+   "pairs_needed_clean": 36,
+   "what_cannot_be_reached": {
+    "g_one_keeping_power_at_n50": 0.014,
+    "clean_pairs_that_would_need": 213,
+    "consequence": "calibration cannot certify the grader for n=50, so production is sized AT the achievable bound instead."
+   }
+  },
+  "N_PROD_AFFORDABLE_CAP": {
+   "value": 90,
+   "derivation": "90 primary + 54 control items at six dispatches each, which is the largest run the measured unit costs keep under ~$30."
+  },
+  "Q_C_MIN_VIABLE": {
+   "value": 0.15,
+   "derivation": "at q_C=0.15 the required n is 156 even with a perfect grader; at q_C=0.10 no n <= 400 reaches 80% power (235). Below 0.15 the C arm cannot be dosed at any affordable size."
+  },
+  "SCREEN_PASS_MIN_VIABLE": {
+   "value": 0.4,
+   "derivation": "at s=0.40, obtaining the screened items the run needs costs more in screen dispatches than the production run costs in total. Below that the recipe, not the budget, is the problem."
+  },
+  "P_TARGET_LOWER": {
+   "value": 0.9,
+   "derivation": "design draft 2.2, unchanged: below 0.90 repairs cancel harms in the one-sided paired test faster than n buys power back.",
+   "clean_items_to_certify": 29
+  }
+ },
+ "dispatch_structure": {
+  "stage_1_every_authored_item": [
+   {
+    "dispatch": "D fixed-query search",
+    "count": 1,
+    "buys": "the divergence screen, and the screen pass rate `s`",
+    "cost_usd": 0.064
+   }
+  ],
+  "stage_2_screen_passing_items_only": [
+   {
+    "dispatch": "closed-book answerer (arm-A packet)",
+    "count": 1,
+    "buys": "p, and the grader's behaviour on fresh CLOSED answers",
+    "cost_usd": 0.01635
+   },
+   {
+    "dispatch": "query-writer",
+    "count": 1,
+    "buys": "the C-arm query -- without it q_C does not exist",
+    "cost_usd": 0.01359
+   },
+   {
+    "dispatch": "C model-query search",
+    "count": 1,
+    "buys": "q_C, the parameter the A-vs-C power calculation needs from the CORRECT ARM",
+    "cost_usd": 0.064
+   },
+   {
+    "dispatch": "C exposed answerer",
+    "count": 1,
+    "buys": "one closed/exposed grader pair, (A,C)",
+    "cost_usd": 0.02755
+   },
+   {
+    "dispatch": "D exposed answerer",
+    "count": 1,
+    "buys": "the second closed/exposed grader pair, (A,D). This is the cheapest pair in the design: one dispatch instead of a whole extra item.",
+    "cost_usd": 0.02755
+   }
+  ],
+  "deliberately_absent": {
+   "an exposed answerer run only to estimate exposure divergence": "exposure divergence is measured on the BLOCK, before any answerer. The exposed answerers here are bought by the grader objective and by nothing else, which is why there are exactly two of them.",
+   "a delta estimate": "delta is the estimand. Measuring it on calibration items would size the run on a first look at its own effect.",
+   "repeat dispatches of one query": "the artifact is not reproducible by measurement (design draft 12.3); repeats would estimate runtime variance, which no sizing decision reads."
+  }
+ },
+ "plan": {
+  "batch_1": {
+   "authored_items": 48,
+   "screen_passing_items": 36,
+   "dispatches": 228,
+   "screen_cost_usd": 3.07,
+   "full_item_cost_usd": 5.37,
+   "total_cost_usd": 8.44,
+   "development_subset": 12,
+   "grader_validation_holdout": 24,
+   "grader_pairs_in_holdout": 48,
+   "g_one_bound_if_holdout_clean": 0.0605
+  },
+  "batch_2_and_3_each": {
+   "authored_items": 32,
+   "screen_passing_items": 24,
+   "dispatches": 152,
+   "screen_cost_usd": 2.05,
+   "full_item_cost_usd": 3.58,
+   "total_cost_usd": 5.62,
+   "development_subset": 8,
+   "grader_validation_holdout": 16
+  },
+  "maximum": {
+   "authored_items": 112,
+   "screen_passing_items": 84,
+   "dispatches": 532,
+   "screen_cost_usd": 7.17,
+   "full_item_cost_usd": 12.52,
+   "total_cost_usd": 19.69,
+   "cap_rule": "at the cap the calibration bank costs about what the production run costs. Spending more on calibration than on the experiment is not caution, it is a different experiment."
+  },
+  "why_not_the_old_multiplier": {
+   "old_rule": ">= 3x production size",
+   "old_rule_derivation": "NONE. Asserted in the authoring protocol 1, design draft 2.4, NEXT.md and the 2026-09-02 decision-log entry; computed in none of them.",
+   "it_is_wrong_in_both_directions": {
+    "too_small_for_what_it_had_to_measure": "design draft 2.4 dispatches calibration items CLOSED-BOOK ONLY. At any multiple of production that measures `p` and nothing else: no q_C (needs a query-writer and a C search), no q_D (needs the fixed search), and no grader behaviour on EXPOSED answers -- which is the one grader parameter the power model says is design-breaking. A bank three times the size of the run would still have left the sizing resting on assumed values.",
+    "too_large_under_the_realized_structure": {
+     "authored_items": 200,
+     "screen_passing_items": 150,
+     "dispatches": 950,
+     "screen_cost_usd": 12.8,
+     "full_item_cost_usd": 22.36,
+     "total_cost_usd": 35.16
+    },
+    "production_run_for_comparison": {
+     "items": 102,
+     "total_cost_usd": 21.73
+    }
+   },
+   "replaced_by": "the four decisions above, each with its own precision requirement and its own stopping rule"
+  }
+ },
+ "sizing_sensitivity": {
+  "n_prod at q_C, g_one=0": {
+   "0.15": 156,
+   "0.25": 93,
+   "0.35": 66,
+   "0.5": 46,
+   "0.7": 33,
+   "0.9": 25
+  },
+  "n_prod at g_one, q_C=0.50": {
+   "0.0": 46,
+   "0.014": 50,
+   "0.04": 59,
+   "0.0798": 72,
+   "0.1": 78
+  }
+ },
+ "decision_rules": {
+  "PASS": [
+   "p lower bound None has not cleared 0.9",
+   "grader asymmetry bound None has not reached 0.08",
+   "required production n None exceeds the affordable cap 90"
+  ],
+  "order": [
+   "REVISE_STAGE0B_DESIGN",
+   "REVISE_ITEM_RECIPE",
+   "REVISE_GRADER",
+   "PASS",
+   "CONTINUE"
+  ],
+  "max_calibration_screen_passing_items": 84
+ }
+}
