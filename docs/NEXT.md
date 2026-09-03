@@ -1,17 +1,21 @@
 # Next action — RUN the calibration bank to the frozen plan. Do NOT author production items.
 
-> **Updated 2026-09-03 (third pass — final pre-calibration red team).** An
-> independent review found that two of the second pass's own corrections were
-> wrong, and both were load-bearing: the grader bound pooled dependent
-> observations, and `q_D = 1.0 by construction` described an artifact the
-> experiment never injects. Both are corrected. **Batch 1 is now 64 authored → 48
-> screen-passing items, 400 dispatches, ~$14.32**, and it carries a **human
-> adjudication prerequisite of roughly 29 answers** that must be discharged before
-> the grader is run. The exact next action is at the bottom of this file.
+> **Updated 2026-09-03 (fourth pass — pre-dispatch infrastructure repair).** The
+> calibration-run attempt **stopped before authoring an item, dispatching once, or
+> spending a cent**, because the committed ledger could not carry the key its own
+> adjudication needs: a boolean or numeric row raised `KeyError` on
+> `reference_verdict`, and the same alias pair was simultaneously being matched
+> against search prose where `"no"` hits inside `"not"`. Both are repaired.
 >
-> The batch-1 specified at `120620c` **could not have passed even with a flawless
-> holdout** — under the valid sampling unit its 24-item holdout bounds the grader
-> asymmetry at 0.117 against a 0.08 threshold. That is why the numbers moved.
+> **The answer key and the exposure-screen specification are now two objects**
+> (`lab/stage0b_keys.py`), route-aware, separately validated and separately
+> fingerprinted. The **calibration runner exists** and is committed before the
+> first dispatch. **Route composition is precommitted**, which forces a 56-item
+> holdout and tightens the grader bound to 0.052.
+>
+> **Batch 1 is now 96 authored → 72 screen-passing, 528 dispatches, ~$21.48**,
+> with a human adjudication prerequisite of roughly **43 answers**. No item has
+> been authored and no key has been verified.
 
 Stage 0A-M is finished and independently reviewed. **Steps 1 and 2 of the chain
 below are DONE as of 2026-09-03**: the searcher/exposure harness is built and
@@ -87,26 +91,31 @@ spent discovering that. The bank is what validates the recipe.
 
 ## The exact next action for the calibration-run session
 
-0. **Confirm the human adjudication prerequisite first.** Roughly **29 of 144**
+0. **Confirm the human adjudication prerequisite first.** Roughly **43 of 216**
    batch-1 answers will escalate to Terry, and they must be adjudicated **before**
    the candidate grader is run on them. If that capacity is not available, do not
    dispatch the bank — skipping adjudication is not the alternative, because a
    defect rate measured against the grader's own rule is not a measurement.
-1. Author **64 calibration items** to the recipe in the authoring protocol §2,
-   `pool: calibration`, split **16 development / 48 holdout** **before any
-   dispatch** (the split is on the authored list, not on which items pass the
-   screen).
-2. Run **stage 1 only** — the fixed-query divergence screen, one search dispatch
-   per authored item, no answerer. Record `s`.
-3. Run **stage 2** on screen-passing items only, six dispatches: closed-book
-   answerer, query-writer, C search, **D production search** (a second, fresh
-   fixed-query execution — this is the block arm D's answerer receives), C exposed
-   answerer, D exposed answerer.
-4. **Adjudicate every answer BEFORE running the grader.** Run
-   `lab.stage0b_adjudication.reference_verdict` first; send every `ESCALATE` to
-   Terry; record `hand_adjudicator` and `hand_verdict_recorded_first`.
-   `lab.stage0b_calibration.validate_row` refuses a row graded without an
-   attributed adjudicator, and refuses one naming `grading_v2`.
+1. Author **96 calibration items** to the recipe in the authoring protocol §2,
+   with a **typed answer key (§2.2)**, a **separate typed screen spec (§2.3)** and
+   **verified key sources (§2.4)** per item. `pool: calibration`. The
+   development/holdout split and the **route quotas** (§3.4a: 0.50 / 0.25 / 0.25,
+   with a 14-item per-route floor in the holdout and boolean polarity balanced) are
+   fixed on the authored list **before any dispatch**.
+   Run `python -m lab.stage0b_calibration_runner --stage validate --bank <file>`
+   until it reports zero problems. It **refuses to dispatch against an invalid
+   bank**, and it will not repair one.
+2. `--stage screen` — the fixed-query divergence screen, one search dispatch per
+   authored item, no answerer. Record `s`.
+3. `--stage answer` — screen passers only, six dispatches: closed-book answerer,
+   query-writer, C search, **D production search** (a second, fresh fixed-query
+   execution — this is the block arm D's answerer receives), C exposed answerer, D
+   exposed answerer. The runner is resumable: a dropped session costs the dispatch
+   in flight and nothing else.
+4. `--stage export-queue` — deterministic reference adjudication, then the frozen
+   human queue with its fingerprint. Send every escalation to Terry; import with
+   `--stage import-verdicts --adjudicator Terry`. `authorize_grading()` is the only
+   door to grading and stays shut while any case is open.
 5. Compute `lab.stage0b_calibration.calibration_statistics`, then
    `lab.stage0b_calibration.decide`. **Compute nothing else**, and change nothing
    in `lab/stage0b_calibration.py` or `lab/stage0b_adjudication.py`: a statistic
@@ -174,6 +183,27 @@ spent discovering that. The bank is what validates the recipe.
   entire minimum rejectable primary signal — unexcluded. The rule is derived and
   the count is a **function of the final primary n** (50→30, 72→42, 90→54), which
   does not exist until the bank has run. No control item is authored until then.
+- **Do not let the answer key and the screen spec become one field again.** They
+  are two scientific objects. The key decides whether an ANSWER is correct; the
+  screen decides whether a SEARCH SUMMARY asserts the displacing claim. They
+  coincide only on `exact_entity`, and collapsing them cost this design a whole
+  run's worth of authoring before the pre-dispatch check caught it.
+- **Do not screen a boolean item on bare polarity.** `"no"` matches inside
+  `"not"`; `"yes"` never appears as a claim. Use premise-bearing propositions, and
+  keep the negation guard — without it the screen fires on correct denials.
+- **Do not screen a numeric item on a bare numeral.** It matches years, ranges and
+  citations. Use subject-term proximity with excluded contexts.
+- **Do not declare C1(c) a universal rule.** It governs strings matched against a
+  MODEL ANSWER. The Stage 0B numeric screen matches SEARCH PROSE through a
+  structured mechanism. S1 is the Stage 0B rule.
+- **Do not author an entity-only bank.** The only grader defect ever measured here
+  was on the boolean route (`a09`). An entity-only bank cannot detect a recurrence
+  while reporting a bound that looks complete.
+- **Do not let a key-verification query become a fixed experimental query.** That
+  optimises the treatment against the search index using observations made while
+  building the key.
+- **Do not repair an ambiguous key by picking the most reasonable answer.** It
+  fails authoring mechanically, with its reason recorded.
 - **Do not pool (A,C) with (A,D) into two grader observations.** They share the
   closed-arm verdict completely, so one closed-arm defect gets counted twice; the
   resulting bound is narrower than the evidence supports, and for an instrument

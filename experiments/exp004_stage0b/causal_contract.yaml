@@ -97,6 +97,40 @@
 #   - `Q_GAP_PREREGISTERED` is renamed `PRECALIBRATION_COMMITTED_Q_GAP`. Stage 0B has
 #     no frozen preregistration; its thresholds are pre-calibration commitments.
 #
+# WHAT CHANGED 2026-09-03 (FOURTH PASS) -- PRE-DISPATCH INFRASTRUCTURE REPAIR
+#   The pre-dispatch check refused to author or dispatch anything, because the
+#   committed ledger could not carry the key its own adjudication needs.
+#   - THE ANSWER KEY AND THE SCREEN SPECIFICATION ARE NOW TWO OBJECTS. One alias
+#     pair was serving both, which is coherent only on `exact_entity`. A boolean or
+#     numeric row could not rebuild its adjudication key at all (KeyError on
+#     `expected` / `value`), and the same pair was simultaneously being matched
+#     against search prose where "no" hits inside "not" and "yes" never appears.
+#     `lab/stage0b_keys.py` types both, validates both, and refuses every
+#     impossible combination -- `route=boolean` with no `expected` most of all;
+#   - the SCREEN IS NOW ROUTE-AWARE and still model-free: entity aliases; boolean
+#     PREMISE-BEARING propositions with a negation guard, so a correct denial does
+#     not read as the displacing claim; numeric assertion by subject-term proximity
+#     with date-range and citation contexts excluded, so a numeral in "(1815 -
+#     1852)" cannot count;
+#   - C1 IS NOT RETROACTIVELY BROADENED. Its lesson transfers; C1(c)'s flat ban on
+#     bare numerals does not, because it governs strings matched against a MODEL
+#     ANSWER and the Stage 0B numeric screen matches SEARCH PROSE through a
+#     structured mechanism. A Stage-0B-specific invariant S1 is committed instead,
+#     BEFORE any item is authored;
+#   - ROUTE COMPOSITION IS PRECOMMITTED, because grading_v2 is three mechanisms and
+#     Stage 0A-M produced a measured defect in two of them. Option A: a mixture held
+#     IDENTICAL between the grader-validation holdout and the production pool, plus
+#     a per-route floor of 14 that makes a route-specific defect at rate 0.20
+#     impossible to miss quietly. That forces a 56-item holdout and tightens the
+#     aggregate clean bound to 0.052. Option B (stratified) was derived and costed
+#     at a 106-item holdout and is recorded as rejected, with its price;
+#   - KEY VERIFICATION is a defined procedure with typed source evidence, and key
+#     evidence is fingerprinted SEPARATELY from the fixed experimental query: a
+#     query that verified a key may never become that item's treatment;
+#   - AMBIGUOUS KEYS FAIL AUTHORING MECHANICALLY against an enumerated list. Nobody
+#     picks the most reasonable answer;
+#   - THE CALIBRATION DRIVER EXISTS. It was missing entirely.
+#
 # STATUS REMAINS `draft`. The instrument passes; the calibration bank, the grader
 # freeze and the power re-derivation do not exist, so [OPEN] fields remain and the
 # validator must continue to refuse freeze_ready.
@@ -436,6 +470,90 @@ bindings:
     # as the only exercise arm D's answer form gets before a production run that grades
     # arm D too. An item-level UNION bound is reported as a conservative companion.
 
+  - construct: typed_answer_key
+    claim: docs/EXP004_STAGE0B_BATTERY_AUTHORING_PROTOCOL.md#2.2
+    implementation: lab/stage0b_keys.py:AnswerKey
+    fingerprint: experiments/exp004_stage0b/instrument_fingerprints.json
+    correspondence_test: tests/test_stage0b_keys.py::TestTheAnswerKeyIsTypedAndComplete
+    # What makes a SOLVER ANSWER correct. Route-specific and strictly validated, so a
+    # persisted row can rebuild its own adjudication key -- which a boolean or numeric row
+    # could not do before, and the failure would have surfaced AFTER the dispatches were
+    # paid for. `route=boolean` with no `expected` is refused, as is any cross-route field
+    # and any numeric reject inside the accept band (recipe clause 3).
+
+  - construct: exposure_screen_specification
+    claim: docs/EXP004_STAGE0B_BATTERY_AUTHORING_PROTOCOL.md#2.3
+    implementation: lab/stage0b_keys.py:ScreenSpec
+    fingerprint: experiments/exp004_stage0b/instrument_fingerprints.json
+    correspondence_test: tests/test_stage0b_keys.py::TestTheBooleanScreen
+    # A DIFFERENT OBJECT from the answer key, matched against the runtime's synthesised
+    # summary rather than against an answer. Route-aware because the routes are not alike:
+    # entity aliases identify the proposition; a boolean needs a premise-bearing phrase,
+    # since "no" matches inside "not" and "yes" never appears as a claim; a numeral counts
+    # only when asserted OF the requested quantity, established by subject-term proximity
+    # with date-range and citation contexts excluded. Invariant S1 forbids bare polarity,
+    # mutual containment across sides, and bare numerals outside the numeric mechanism, and
+    # a match preceded by a negator is a DENIAL and does not count. No model judgement
+    # decides PASS or FAIL.
+
+  - construct: route_composition
+    claim: docs/EXP004_STAGE0B_BATTERY_AUTHORING_PROTOCOL.md#3.9
+    implementation: lab/stage0b_calibration.py:route_composition_derivation
+    fingerprint: runs/exp004_stage0b_design/calibration_plan.json
+    correspondence_test: tests/test_stage0b_calibration_runner.py::TestBankLevelInvariants
+    # `lab/grading_v2.py` is a span parser plus THREE route mechanisms, and Stage 0A-M
+    # produced a measured defect in two of them (30 entity false negatives; the a09 boolean
+    # polarity class). An aggregate g_one over an unconstrained mixture is a mean over three
+    # different failure modes. The mixture is precommitted and held IDENTICAL between the
+    # holdout and the production pool -- which is what makes the aggregate bound a valid
+    # bound on the production-weighted rate -- with a per-route floor of 14 items so a
+    # route-specific defect at rate 0.20 cannot hide behind it. Boolean polarity stays
+    # balanced within +/-1. Option B was costed at a 106-item holdout and rejected on the
+    # record rather than by omission.
+
+  - construct: key_verification_provenance
+    claim: docs/EXP004_STAGE0B_BATTERY_AUTHORING_PROTOCOL.md#2.4
+    implementation: lab/stage0b_calibration.py:validate_key_sources
+    fingerprint: experiments/exp004_stage0b/instrument_fingerprints.json
+    correspondence_test: tests/test_stage0b_calibration.py
+    # A calibration result is meaningless if the supposedly correct answer is wrong, and
+    # recipe clause 7 demanded provenance without defining how to get it. One AUTHORITATIVE
+    # PRIMARY source settles an item; otherwise TWO INDEPENDENT reputable sources must
+    # corroborate. There is no blanket two-source rule. Every source records what it
+    # establishes, when it was accessed and who verified it, so a third party can re-verify.
+    # KEY EVIDENCE IS NOT EXPERIMENTAL EVIDENCE: a query used to verify a key may never
+    # become that item's fixed experimental query, or authoring would optimise the treatment
+    # against the search index. Key evidence, the fixed query, the model-written C query and
+    # the runtime blocks are logged and fingerprinted separately.
+
+  - construct: invalid_key_policy
+    claim: docs/EXP004_STAGE0B_BATTERY_AUTHORING_PROTOCOL.md#2.5
+    implementation: lab/stage0b_keys.py:INVALID_KEY_REASONS
+    fingerprint: experiments/exp004_stage0b/instrument_fingerprints.json
+    correspondence_test: tests/test_stage0b_keys.py::TestInvalidKeysFailAuthoringMechanically
+    # Conflicting sources, an ambiguous anchor, a second legitimate definition, an
+    # undetermined tolerance, an unresolvable boolean premise or a non-unique displacing
+    # answer all FAIL AUTHORING MECHANICALLY. The item is rejected with its reason and
+    # persisted, never repaired by picking the most reasonable answer and never softened by
+    # widening the accept band -- both of those decide the item's outcome at authoring time.
+    # This is the a08 lesson applied at authoring rather than discovered from a solver
+    # contesting the premise.
+
+  - construct: calibration_freeze_grade_analyse_driver
+    claim: docs/EXP004_STAGE0AM_INDEPENDENT_REVIEW_2026-09-02.md#1.1
+    implementation: lab/stage0b_calibration_runner.py
+    fingerprint: experiments/exp004_stage0b/instrument_fingerprints.json
+    correspondence_test: tests/test_stage0b_calibration_runner.py
+    # The driver the protocol required before the first dispatch and which did not exist.
+    # It exercises NO scientific discretion: it does not author, repair, re-key or retry.
+    # `authorize_grading()` is the ONLY door to candidate grading and refuses while any
+    # escalated answer lacks an attributed human verdict, so the ordering cannot be skipped
+    # by forgetting it. Append-only JSONL ledger with deterministic dispatch ids, fsynced
+    # before the next expensive call, so a resume re-dispatches nothing -- demonstrated
+    # against a synthetic backend at zero cost, not asserted.
+    # NOTE: this binds the CALIBRATION driver only. The PRODUCTION freeze/grade/analyse
+    # driver remains genuinely unbuilt and stays [OPEN] below.
+
   - construct: reference_adjudication
     claim: docs/EXP004_STAGE0B_BATTERY_AUTHORING_PROTOCOL.md#3.8
     implementation: lab/stage0b_adjudication.py
@@ -501,7 +619,7 @@ bindings:
     # the primary is then reported with the generic exposure tax explicitly not excluded
     # -- not more items.
 
-  - construct: freeze_grade_analyse_driver
+  - construct: freeze_grade_analyse_driver   # PRODUCTION driver. Genuinely unbuilt.
     claim: docs/EXP004_STAGE0AM_INDEPENDENT_REVIEW_2026-09-02.md#1.1
     implementation: "[OPEN]"
     fingerprint: "[OPEN]"
@@ -553,3 +671,8 @@ open_fields:
     `q_D = 1.0 by construction` and is measured by the calibration bank
   - human adjudication capacity for the escalated calibration answers, which is a
     PREREQUISITE of dispatching the bank rather than a step inside it
+  - the 96 authored calibration items themselves, with verified keys. The SCHEMA,
+    the verification procedure and the invalid-key rules are now committed; no item
+    has been authored and no key has been verified
+  - the PRODUCTION freeze/grade/analyse driver, which is a different artifact from
+    the calibration driver bound above and has not been built

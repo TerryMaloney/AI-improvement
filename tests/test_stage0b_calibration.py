@@ -162,7 +162,13 @@ class TestTheGraderBoundSamplingUnitIsTheItem:
         # have passed.
         assert cal.cp_upper(0, 24) > cal.G_ONE_BOUND_FOR_PASS
         assert cal.cp_upper(0, cal.BATCH1_HOLDOUT) <= cal.G_ONE_BOUND_FOR_PASS
-        assert cal.BATCH1_HOLDOUT == cal.n_clean_for_upper_bound(cal.G_ONE_BOUND_FOR_PASS)
+        # The aggregate bound needs 36. The holdout is larger because a SECOND
+        # constraint now binds: the per-route floor, with the smallest route at
+        # weight 0.25, forces 4 x 14 = 56. Both must hold; the floor is the tighter.
+        assert cal.n_clean_for_upper_bound(cal.G_ONE_BOUND_FOR_PASS) == 36
+        assert cal.BATCH1_HOLDOUT == round(
+            cal.MIN_HOLDOUT_ITEMS_PER_ROUTE / min(cal.PRODUCTION_ROUTE_MIX.values()))
+        assert cal.BATCH1_HOLDOUT > cal.n_clean_for_upper_bound(cal.G_ONE_BOUND_FOR_PASS)
 
     def test_the_statistics_declare_their_sampling_unit(self):
         st = cal.calibration_statistics([_scored("cal001", "grader_validation_holdout")])
@@ -289,10 +295,30 @@ class TestTheParametersNameWhatCrossesTheBoundary:
 
 
 # --------------------------------------------------------------------------- #
-def _row(item_id="cal001", subset="grader_validation_holdout", **kw):
+_SRC = [{"identifier": "https://example.invalid/reg", "title": "Register",
+         "establishes": "the anchored value", "accessed": "2026-09-03",
+         "tier": "authoritative_primary", "verifier": "test"}]
+
+
+def _row(item_id="cal001", subset="grader_validation_holdout", route="exact_entity", **kw):
+    """A row on the TYPED schema: the answer key and the screen spec are two
+    separate objects, and neither stands in for the other."""
+    keys = {"exact_entity": {"route": "exact_entity", "accept": ["Right"],
+                             "rejects": ["Wrong"]},
+            "boolean": {"route": "boolean", "expected": False},
+            "numeric": {"route": "numeric", "value": 9, "tolerance": 0,
+                        "reject_values": [8]}}
+    specs = {"exact_entity": {"route": "exact_entity", "displacing_aliases": ["Wrong"],
+                              "affirming_aliases": ["Right"]},
+             "boolean": {"route": "boolean",
+                         "displacing_propositions": ["the state was a member"],
+                         "affirming_propositions": ["the state was a partner"]},
+             "numeric": {"route": "numeric", "subject_terms": ["planet"],
+                         "displacing_value_forms": ["8", "eight"],
+                         "affirming_value_forms": ["9", "nine"]}}
     base = dict(item_id=item_id, pool="calibration", subset=subset, batch=1,
-                production_barred=True, stem="stem?", route="exact_entity",
-                accept_aliases=["Right"], reject_aliases=["Wrong"],
+                production_barred=True, stem="stem?", route=route,
+                answer_key=keys[route], screen_spec=specs[route], key_sources=_SRC,
                 key_provenance="docs/ANSWER_KEY_CORRECTION_PROCESS.md#x",
                 query_subject="subject", anchor_as_written="in 2015")
     base.update(kw)

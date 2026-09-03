@@ -34,6 +34,13 @@ COMPONENTS: dict[str, str] = {
         "the live correspondence gate",
     "lab/stage0b_cvd.py":
         "the C-vs-D pre-freeze discriminability requirement",
+    "lab/stage0b_keys.py":
+        "the ANSWER KEY and the EXPOSURE-SCREEN SPECIFICATION, and the S1 invariant that "
+        "keeps them from collapsing back into one representation",
+    "lab/stage0b_calibration_runner.py":
+        "the calibration freeze/grade/analyse driver: it executes the frozen plan, holds "
+        "the ordering that makes candidate grading impossible before human adjudication, "
+        "and is committed BEFORE the first dispatch",
     "lab/stage0b_adjudication.py":
         "the reference adjudicator that produces the ground truth the grader's defect "
         "rate is measured against. Fingerprinted because a ground truth that can be "

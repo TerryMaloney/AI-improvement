@@ -100,7 +100,21 @@ _ABSTAIN_MARKERS = (
     "unable to determine", "i'm not sure", "i am not sure", "cannot say",
 )
 _POLARITY = re.compile(r"(?<!\w)(yes|no|not|never)(?!\w)")
+_AFFIRMATIVE_TOKENS = frozenset({"yes"})
+_NEGATIVE_TOKENS = frozenset({"no", "not", "never"})
 _NUMBER = re.compile(r"-?\d+(?:\.\d+)?")
+
+# Word forms of small integers. A numeric answer that says "Nine planets" asserts
+# the value as plainly as "9 planets" does; refusing to read it would send a case
+# the key settles to a human, which spends the scarcest resource in the design on
+# nothing. The key still decides -- only the surface form is widened.
+_WORD_VALUES = {
+    "zero": 0, "one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6,
+    "seven": 7, "eight": 8, "nine": 9, "ten": 10, "eleven": 11, "twelve": 12,
+    "thirteen": 13, "fourteen": 14, "fifteen": 15, "sixteen": 16, "seventeen": 17,
+    "eighteen": 18, "nineteen": 19, "twenty": 20,
+}
+_WORD_NUMBER_RE = re.compile(r"(?<!\w)(" + "|".join(_WORD_VALUES) + r")(?!\w)")
 
 DETERMINATE = "DETERMINATE"
 ESCALATE = "ESCALATE"
@@ -174,10 +188,17 @@ def reference_boolean(answer: str, expected: bool) -> Adjudication:
     pre = _opening_flags(answer)
     if pre is not None and pre.reason == "CONTRASTIVE_NEGATION":
         # A boolean answer's polarity token IS a negation marker, so the generic
-        # check would escalate every "No." Fall through to the polarity rule and
-        # escalate only when the opening carries MORE than one polarity token.
+        # check would escalate every "No."
+        #
+        # The rule is DISAGREEMENT, not multiplicity. "No. Finland was not a
+        # member" carries two negative tokens that reinforce each other and the key
+        # settles it; escalating that would send most of a whole route to a human
+        # for nothing. "Yes, although it was not ratified" carries tokens that
+        # point opposite ways, and there a positional rule genuinely cannot say
+        # which one is the answer.
         head = normalise(answer)[:OPENING_CHARS]
-        if len(_POLARITY.findall(head)) > 1:
+        toks = {m.group(1) for m in _POLARITY.finditer(head)}
+        if toks & _AFFIRMATIVE_TOKENS and toks & _NEGATIVE_TOKENS:
             return Adjudication(ESCALATE, None, "CONTRASTIVE_NEGATION", head[:120])
     elif pre is not None:
         return pre
@@ -198,6 +219,7 @@ def reference_numeric(answer: str, value: float, tolerance: float,
         return pre
     head = normalise(answer)[:OPENING_CHARS]
     nums = [float(x) for x in _NUMBER.findall(head)]
+    nums += [float(_WORD_VALUES[m.group(1)]) for m in _WORD_NUMBER_RE.finditer(head)]
     hits = [n for n in nums if abs(n - value) <= tolerance]
     rejects = [n for n in nums
                if any(abs(n - rv) <= tolerance for rv in (reject_values or []))]

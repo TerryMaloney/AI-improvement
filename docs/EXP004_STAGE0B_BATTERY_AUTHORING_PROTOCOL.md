@@ -48,6 +48,27 @@ Two further items from the same review are corrected without being defects of
 fact: the p-rule tested a claim the design never made (§3.5a), and
 `Q_GAP_PREREGISTERED` claimed a preregistration Stage 0B does not have (§3.7).
 
+### 0.2 Fourth pass — the pre-dispatch check refused to author anything, and it was right
+
+The calibration-run attempt stopped before authoring an item, dispatching once or
+spending a cent, because the committed ledger **could not carry the key its own
+adjudication needs**.
+
+| # | as committed | why it blocks execution | corrected in |
+|---|---|---|---|
+| 9 | `CalibrationRow` carries one pair, `accept_aliases` / `reject_aliases` | `reference_verdict` needs `expected` for a boolean item and `value`/`tolerance`/`reject_values` for a numeric one. Neither existed, so those routes raised `KeyError` — **after** the dispatches were paid for | §2.2, `lab/stage0b_keys.py:AnswerKey` |
+| 10 | the same pair also decided whether the search summary carried the dose | the two jobs coincide only on `exact_entity`. On boolean, the accept alias `"no"` matches inside `"not"` and the reject alias `"yes"` never appears as a claim; on numeric, a bare numeral matches years, ranges and citations | §2.3, `lab/stage0b_keys.py:ScreenSpec` |
+| 11 | no calibration driver existed | protocol §5 requires it committed **before** the first dispatch, and the contract had it `[OPEN]` | §8, `lab/stage0b_calibration_runner.py` |
+| 12 | recipe clause 7 demanded key provenance without defining how to obtain it | a calibration result is meaningless if the supposedly correct answer is wrong, and both `p` and the grader defect rate are measured against these keys | §2.4 |
+| 13 | route composition was unconstrained | `grading_v2` is three mechanisms and Stage 0A-M produced a defect in two of them; an aggregate `g_one` over an arbitrary mixture is a mean over three failure modes | §3.9 |
+
+**The escape that was refused:** authoring an entity-only bank would have dodged
+9 and 10 at a stroke. It was rejected because the only grader defect this project
+has ever measured was on the **boolean** route — the `a09` polarity class that hid
+a 50% false-negative rate — so an entity-only bank cannot detect a recurrence of
+the one failure mode actually observed, while reporting a bound that looks
+complete.
+
 **A ninth assumption is *not* listed, because it survived measurement:** the
 probe is genuinely pre-treatment — it dispatches no answerer and produces no
 outcome, and the persisted artifact asserts both.
@@ -176,6 +197,102 @@ items expected `False`, which hid a 50% false-negative rate on the exposed half.
 > **Boolean items must be balanced within ±1 between `expected=True` and
 > `expected=False`**, so that a polarity-asymmetric grading defect is visible in
 > the class rather than concealed by the class's composition.
+
+### 2.2 The answer key is typed, and every route can rebuild its own
+
+`lab/stage0b_keys.py:AnswerKey`. What makes a **solver answer** correct.
+
+| route | key | validated |
+|---|---|---|
+| `exact_entity` | `accept`, `rejects` | both non-empty; no accept alias may contain a reject alias or vice versa, since no positional rule could then separate them |
+| `boolean` | `expected: bool` | present. `route="boolean"` with no `expected` is refused — it is the exact combination that made a boolean item unadjudicatable |
+| `numeric` | `value`, `tolerance`, `reject_values` | all present; every reject strictly outside the accept band (clause 3); an undetermined tolerance is an authoring failure, not a value to guess |
+
+Cross-route fields are refused in both directions. `key_for_route()` on a
+persisted row reconstructs exactly the dict `reference_verdict` consumes, so a row
+is self-sufficient — which is the property whose absence stopped the last run.
+
+### 2.3 The exposure-screen specification is a DIFFERENT object
+
+`lab/stage0b_keys.py:ScreenSpec`. What makes the runtime's **synthesised summary**
+count as carrying the dose. It is matched against prose written by a different
+process for a different purpose, so it is not the answer key and it is not stored
+in the same field.
+
+| route | mechanism |
+|---|---|
+| `exact_entity` | `displacing_aliases` / `affirming_aliases`. Entity names do identify the proposition when the entity *is* the answer |
+| `boolean` | `displacing_propositions` / `affirming_propositions` — phrases carrying subject **and** predicate. Bare polarity is refused outright |
+| `numeric` | `subject_terms` plus value surface forms. A numeral counts only when it sits within `proximity_chars` of a subject term, outside every excluded context |
+
+**Invariant S1**, committed before any item is authored:
+
+> A screen phrase must be capable of occurring **only** where the summary asserts
+> the proposition or value it stands for. (i) No bare polarity token. (ii) No
+> phrase that is a substring of a phrase on the opposite side, either direction.
+> (iii) A boolean phrase must carry a subject and a predicate. (iv) A numeral
+> counts only through the structured numeric mechanism, never as a bare substring.
+> (v) A match preceded within 24 characters by a negator is a **denial** and does
+> not count.
+
+S1(v) is why `"Finland was not a member of NATO"` does not read as the displacing
+claim. Without it the boolean screen fires on correct denials — which is C1(b)'s
+lesson (`"Poland and"` matching inside a correct denial) arriving on a new route.
+
+**C1 scope, stated rather than broadened.** Correction C1 governs the
+`accept_trap_markers` and `reject` fields of the exp001 key, matched against a
+**model answer**. C1(a) (bare topic word) and C1(b) (bare entity fragment)
+transfer unchanged. **C1(c)'s flat prohibition on bare numerals does not
+transfer**: it governs strings matched against an answer, where a numeral cannot
+discriminate, whereas the Stage 0B numeric screen matches a **search summary**
+through subject-proximity and context exclusion, which *can* show a numeral is
+asserted of the requested quantity. Declaring C1(c) universal would broaden a rule
+past the evidence that motivated it and would make the numeric route unscreenable
+rather than rigorous. S1 is the Stage 0B rule instead, and `tests/test_stage0b_keys.py`
+enforces it.
+
+### 2.4 Key verification, before any item is frozen
+
+A calibration result is meaningless if the supposedly correct answer is wrong —
+and both `p` **and** the grader defect rate are measured against these keys.
+
+**The source rule.** One **authoritative primary** source settles an item on its
+own: the body that defines or publishes the fact. Where none is available, **two
+independent reputable** sources must corroborate — independent meaning not
+republications of one another. There is no blanket two-source rule; demanding a
+second source where a definitive primary one exists buys nothing and invites
+padding the evidence list.
+
+**Recorded per source**, and validated mechanically: `identifier`, `title`,
+`establishes` (which proposition or value it settles), `accessed`, `tier`,
+`verifier`.
+
+> **Key-construction evidence is not experimental evidence.** A query used to
+> **verify a key** may never become that item's fixed experimental query. The
+> fixed query is derived from the stem alone by the frozen rule, checkable by a
+> third party. Letting a verification query that "worked well" become the
+> treatment would optimise the dose using observations made while building the
+> key — authoring the treatment against the search index. Key evidence, the fixed
+> query, the model-written C query and the runtime blocks are logged and
+> fingerprinted **separately**.
+
+Key evidence is quarantined from every solver, exactly as the Stage 0A-M key was.
+
+### 2.5 Ambiguous keys fail authoring mechanically
+
+Nobody picks the most reasonable answer. An item hitting any of these is
+**rejected and persisted with its reason**, so the rejection rate is auditable and
+the same defective item is not re-authored:
+
+`CONFLICTING_SOURCES` · `ANCHOR_AMBIGUOUS` · `DEFINITION_AMBIGUOUS` ·
+`TOLERANCE_UNDETERMINED` · `PREMISE_NOT_RESOLVABLE` ·
+`DISPLACING_ANSWER_NOT_UNIQUE` · `SEPARATION_VIOLATED` ·
+`ANSWER_NOT_ANSWER_FIRST_COMPATIBLE`
+
+It is never repaired by widening the accept band or adding an alias — both decide
+the item's outcome at authoring time. This is clause 4's uncontested-premise
+requirement applied **at authoring** rather than discovered from a solver
+contesting it, which is the `a08` lesson.
 
 ---
 
@@ -357,15 +474,23 @@ only on the statistics enumerated in §3.1; and no production outcome exists.
 
 | | authored | screen-passing | dev | holdout | dispatches | cost |
 |---|---:|---:|---:|---:|---:|---:|
-| **batch 1** | 64 | 48 | 12 | **36** | 400 | **$14.32** |
-| batch 2, 3 (each, only if triggered) | 22 | 16 | 4 | 12 | 118 | $4.80 |
-| **maximum** | 108 | **80** | — | — | 588 | **$23.96** |
+| **batch 1** | 96 | 72 | 16 | **56** | 528 | **$21.48** |
+| one further batch (only if triggered) | 32 | 24 | 6 | 18 | 176 | $7.16 |
+| **maximum** | 128 | **96** | — | — | 704 | **$28.64** |
 
-**Resized in the second red team.** Batch 1 was 48 authored → 36 screen-passing
-with a 24-item holdout, at $8.44. With the item as the valid sampling unit that
-holdout could not have reached the PASS threshold however clean it came back
-(§3.3), so the holdout is 36 and the batch is 48 screen-passing items. The extra
-per-item dispatch for `r_D` (§3.1a) is the rest of the cost increase.
+**Resized again by the route-composition repair (§3.9).** The binding constraint
+is no longer the aggregate bound — that needs 36 — but the **per-route floor**:
+with the smallest route at weight 0.25, a 14-item floor forces a 56-item holdout.
+That is a cost increase and also a tightening: the aggregate clean bound falls
+from 0.0798 to **0.0521**, which *lowers* the re-derived production n from 72 to
+**63**.
+
+**A change that is reported rather than absorbed:** at the cap, calibration now
+costs about **$28.64** against a production run of about **$24.3**, so the earlier
+"calibration ≤ production" heuristic **no longer holds**. What broke it is a
+validity requirement, not a budget preference. Only **one** further batch fits
+under the cap, so a second CONTINUE reaches it — and reaching the cap without PASS
+is a REVISE_STAGE0B_DESIGN result anyway.
 
 **The development/holdout split is made on the AUTHORED list, before any
 dispatch** — 16 development / 48 holdout in batch 1 — so that which items land in
@@ -377,6 +502,45 @@ actually holds.
 The cap is where the calibration bank costs about what the production run costs
 (at n_primary 72 plus 42 controls, 684 dispatches and ~$24). Spending more on
 calibration than on the experiment is not caution; it is a different experiment.
+
+### 3.4a Route composition, because the grader is three mechanisms
+
+`lab/grading_v2.py` is a span parser plus **three** route mechanisms — entity
+ordering, boolean first-polarity, numeric tolerance — and Stage 0A-M produced a
+measured defect in **two** of them: 30 entity false negatives, and the `a09`
+boolean polarity class. An aggregate `g_one` over an unconstrained route mixture
+is a mean over three different failure modes, and it transfers to production only
+if the production mixture is the same mixture.
+
+**Chosen: Option A — a precommitted mixture, held identical between the
+grader-validation holdout and the production pool, plus a per-route floor.**
+
+| | |
+|---|---|
+| production mixture | `exact_entity` 0.50, `boolean` 0.25, `numeric` 0.25 |
+| holdout mixture | **identical**, which is what makes the aggregate bound transfer |
+| per-route floor | **14** items = ⌈log(0.05)/log(0.80)⌉ — a 95% chance of surfacing at least one instance of a route-specific defect occurring at rate 0.20 |
+| holdout forced | **56** = 14 / 0.25, allocated 28 / 14 / 14 |
+| aggregate clean bound | **0.0521**, valid for the production-weighted rate |
+| per-route bounds | 0.101 / 0.193 / 0.193 — **descriptive, not relied on** |
+| boolean polarity | balanced within ±1 in every subset (§2.1) |
+
+**Why the aggregate bound is legitimate here.** With the mixtures matched, the
+holdout defect count is Binomial(N, `g_one_weighted`) and the exact bound bounds
+the production-weighted rate. It would **not** transfer under a different mixture,
+which is why the mixture is precommitted and checked at bank level rather than
+left to whatever gets authored.
+
+**What stops a broken route hiding behind the aggregate** is not the weighting: it
+is that PASS requires **zero** defects on the holdout, and every route carries at
+least 14 items. A route failing at rate 0.20 has a 95% chance of tripping
+REVISE_GRADER.
+
+**Option B — route-stratified bounding — was derived and costed, not waved away.**
+A weighted bound of 0.08 with `n_r ∝ √w_r` needs 44/31/31 = **106 holdout items**
+against Option A's 56. It buys per-route bounds the PASS rule does not consume,
+since PASS already demands zero defects. Rejected on the record, with its price,
+so the choice can be re-argued rather than assumed.
 
 ### 3.5 PASS / CONTINUE / REVISE — fixed now, not after the data
 
@@ -613,6 +777,9 @@ the design makes no exchangeability claim it cannot support.
 | **freeze/grade/analyse driver** | file SHA-256:16 — **committed before the first dispatch**, not during the run (Stage 0A-M's driver was first committed with 33 outcomes already on disk) |
 | **calibration decision rules** `lab/stage0b_calibration.py` | file SHA-256:16, in `instrument_fingerprints.json` — **committed before the first CALIBRATION dispatch**, for the same reason the grader is fingerprinted: a stopping rule that can be edited once the data arrives is not a stopping rule |
 | calibration ledger (§7) | file SHA-256:16, written as the bank runs |
+| **calibration runner** `lab/stage0b_calibration_runner.py` | file SHA-256:16 — **committed before the first CALIBRATION dispatch** (§8). The PRODUCTION freeze/grade/analyse driver is a different artifact and is still unbuilt |
+| answer keys + screen specs `lab/stage0b_keys.py` | file SHA-256:16. Two objects, fingerprinted together because S1 binds them jointly |
+| key-construction evidence, per item | recorded and fingerprinted **separately from** the fixed-query table, so a verification query can never become a treatment (§2.4) |
 
 ---
 
@@ -634,6 +801,10 @@ precaution in the abstract:
 | the negative-control count derived from the bound it must beat (§1.1) | two different unjustified numbers, 15 and 20, sat in the repository at once, and neither excluded a generic exposure tax the size of the entire primary signal |
 | decision rules frozen and fingerprinted before the bank runs (§3.5) | there is no Stage 0A-M failure for this one. It is the failure this pass exists to prevent: a later session inventing thresholds after seeing calibration outcomes |
 | adjudicate before grading (§3.6) | the same |
+| the answer key and the screen spec kept apart (§2.2–2.3) | one alias pair served both jobs, so a boolean item could not be adjudicated from its own row and a numeric screen matched years and citations. Found by the pre-dispatch check, before an item existed |
+| key verification defined before authoring (§2.4) | clause 7 demanded provenance and named no procedure; both `p` and the grader defect rate are measured against these keys |
+| route composition precommitted (§3.4a) | the grader is three mechanisms with two measured defects; an aggregate bound over an arbitrary mixture is a mean over three failure modes |
+| the calibration driver committed before dispatch (§8) | it did not exist, and the protocol had required it since the Stage 0A-M review |
 
 ---
 
@@ -651,7 +822,7 @@ of empty tuples and reported a plausible number with no lineage.
 | group | fields |
 |---|---|
 | identity and the wall | `item_id`, `pool` (always `calibration`), `subset` (`development` \| `grader_validation_holdout`), `batch`, `production_barred` (always `True`, asserted **per row**) |
-| the item | `stem`, `route`, `accept_aliases`, `rejects`, `key_provenance`, `query_subject`, `anchor_as_written` |
+| the item | `stem`, `route`, **`answer_key`** (typed, §2.2), **`screen_spec`** (typed, §2.3 — a *different* object), **`key_sources`** (§2.4), `key_provenance`, `query_subject`, `anchor_as_written` |
 | stage 1 — the screen | `fixed_query`, `d_raw_artifact_sha`, `d_injected_block`, `d_injected_block_sha`, `d_relevance`, **`d_divergent`**, `d_reject_in_links_only`, `d_query_faithful`, `screen_passed` |
 | stage 2 — the C arm | `model_written_query`, `c_raw_artifact_sha`, `c_injected_block`, `c_injected_block_sha`, `c_relevance`, **`c_divergent`** (`q_C`'s numerator), `c_reject_in_links_only`, `c_query_faithful` |
 | stage 2 — arm D's **production** search (§3.1a) | `d_production_raw_artifact_sha`, `d_production_injected_block`, `d_production_injected_block_sha`, `d_production_relevance`, **`d_production_divergent`** (`r_D`'s numerator), `d_production_query_faithful`, `screen_block_differs_from_production_block`. **This is the block arm D's answerer receives.** The screen's block is kept above for provenance and is never injected |
@@ -666,10 +837,84 @@ of empty tuples and reported a plausible number with no lineage.
 `lab/stage0b_harness.py:DispatchRow`. It never means zero and it never means
 `False`.
 
-**Seven schema errors that are refused rather than warned about:** a row whose
+**`answer_key_typed()`, `screen_spec_typed()` and `key_for_route()`** rebuild both
+objects from the row alone, so a persisted row is self-sufficient for adjudication
+on every route. `FIELD_SEPARATION` records which statistic may read which, and
+neither may stand in for the other.
+
+**Bank-level invariants** no single row can carry, checked by `validate_bank`:
+route composition against the precommitted mixture, the per-route holdout floor,
+and boolean polarity balance.
+
+**Schema errors that are refused rather than warned about:** an answer key that
+cannot produce a reference-verdict key; a key or screen spec whose route disagrees
+with the row; a screen spec violating S1; missing or non-independent key sources;
+and, as before, a row whose
 `pool` is not `calibration`; a row with `production_barred` false; a row graded
 without `hand_verdict_recorded_first`; a row graded without a `grader_fingerprint`;
 a row graded without a recorded `hand_adjudicator`; a row whose `hand_adjudicator`
 names `grading_v2` (the candidate grader may never produce its own ground truth);
 and a row with `screen_passed` true whose `d_divergent` is not true, or with a
 production D block on an item that did not pass the screen.
+
+---
+
+## 8. The calibration runner
+
+`lab/stage0b_calibration_runner.py`; tests
+`tests/test_stage0b_calibration_runner.py`. Committed **before the first
+dispatch**, which is what §5 requires and what did not exist.
+
+**It exercises no scientific discretion.** It does not author an item, repair one,
+choose a key, re-key after a screen, or retry a stochastic search to obtain a
+better result. Where a committed rule does not cover a case it records a failure
+and stops. An improvising driver is an unlogged experimenter.
+
+### 8.1 Lifecycle
+
+| stage | what it does |
+|---|---|
+| `--stage validate` | loads the authored bank and checks every row and every bank-level invariant. **Refuses to dispatch against an invalid bank** rather than repairing it |
+| `--stage screen` | one fixed-query execution per authored item, no answerer. The raw artifact is persisted **before** any flag is derived from it |
+| `--stage answer` | on screen passers only, six dispatches in a fixed order: closed A · query-writer · C search · **D production search** · C answer · D answer |
+| `--stage adjudicate` / `export-queue` | deterministic reference adjudication, then the frozen human queue |
+| `--stage import-verdicts` | validated import of Terry's C/I/A, with attribution |
+| `--stage status` | ledger counts, screen pass state, queue fingerprint, and the grading-authorization verdict |
+| `--dry-run` | swaps in the synthetic backend; makes **no paid call** |
+
+### 8.2 The ordering it makes impossible to skip
+
+```
+authored bank → screen → answers → reference adjudication
+              → human queue → HUMAN VERDICTS → candidate grading
+```
+
+`authorize_grading()` is the **only** door to the last step and refuses while any
+escalated answer lacks an attributed human verdict. That is a lock, not a
+convention: the grader cannot be run early by forgetting a step, and a partial
+verdict import leaves it shut.
+
+### 8.3 Resumability, because this is hundreds of paid dispatches
+
+- **Append-only JSONL ledger**, flushed and `fsync`ed before the next expensive
+  call. A torn final line does not lose the rest.
+- **Deterministic, content-free dispatch ids** (`item|stage|slot`), so a resume
+  can tell "already done" from "not started" without interpreting results.
+- **A resume re-dispatches nothing** — demonstrated against the synthetic backend,
+  not asserted: a second pass over a populated ledger makes zero backend calls.
+- **No automatic retry anywhere.** Retrying is forbidden wherever it would
+  condition the sample on a realized outcome, and the runner does not get to
+  decide which case it is looking at.
+- A dropped session, a killed container or an exhausted quota costs the dispatch
+  in flight and nothing else.
+
+### 8.4 The human queue
+
+Exported with a fingerprint before Terry sees it. Each case carries the item, the
+route, the arm, the stem, the key material that route needs, the exact model
+answer, the escalation reason, and blank verdict and adjudicator fields.
+
+It carries **no** candidate-grader output, no suggested verdict, no statement of
+which way a case cuts for the hypothesis. `build_queue` **raises** if any
+forbidden token appears anywhere in the serialised artifact — a queue that leaks
+the grader is not blind, and that is enforced rather than intended.

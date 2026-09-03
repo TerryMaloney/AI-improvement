@@ -5,8 +5,9 @@ Derived from `docs/EXP004_STAGE0AM_INDEPENDENT_REVIEW_2026-09-02.md`.
 Power figures: `python -m lab.stage0b_power` →
 `runs/exp004_stage0b_design/power_simulation.json`.
 Decision at §11; **amendments of 2026-09-03 at §12 (the instrument was built),
-§13 (the pre-calibration reconciliation) and §14 (the final pre-calibration red
-team, which corrects two defects §13 introduced).**
+§13 (the pre-calibration reconciliation), §14 (the red team that corrected two
+defects §13 introduced) and §15 (the pre-dispatch infrastructure repair, which
+changes the recommended n again and the route composition).**
 
 > **AMENDED 2026-09-03 — read §12 before citing §4.3, §5 or §6.**
 > The instrument described here as unbuilt has been built and measured against the
@@ -929,3 +930,76 @@ answers in batch 1 — is stated before dispatch, not discovered during it.
 are corrected, the batch that could not have passed is resized to one that can,
 and the ground truth the grader is measured against now has a named producer and a
 stated cost.
+
+---
+
+## 15. Amendments of 2026-09-03 (fourth pass) — the pre-dispatch infrastructure repair
+
+**No item authored, no key verified, no live call made.** The calibration-run
+attempt stopped before spending anything, because the committed ledger could not
+carry the key its own adjudication needs.
+
+### 15.1 One field was doing two scientific jobs
+
+`CalibrationRow` held a single `accept_aliases`/`reject_aliases` pair. It was
+asked to (A) decide whether a **solver answer** is correct and (B) decide whether
+the runtime's **synthesised summary** asserts the displacing claim. Those coincide
+only on `exact_entity`.
+
+- **(A) failed outright on two routes.** `reference_verdict` needs `expected` for
+  a boolean item and `value`/`tolerance`/`reject_values` for a numeric one. Neither
+  field existed, so both routes raised `KeyError` — after the dispatches would have
+  been paid for.
+- **(B) was incoherent on the same two routes.** The accept alias `"no"` matches
+  inside `"not"`; the reject alias `"yes"` never appears as a claim; a bare numeral
+  matches years, ranges and citations.
+
+**Repaired as two typed objects** in `lab/stage0b_keys.py`, separately validated
+and separately fingerprinted, with `key_for_route()` making a persisted row
+self-sufficient on every route. The screen is route-aware — premise-bearing
+propositions with a negation guard for boolean, subject-proximity with excluded
+contexts for numeric — and invariant **S1** forbids the collapse recurring. No
+model judgement decides a screen result.
+
+**C1 is not broadened to cover it.** C1(a) and C1(b) transfer; **C1(c)'s ban on
+bare numerals does not**, because it governs strings matched against a model
+answer while this mechanism matches search prose structurally. S1 is the Stage 0B
+rule.
+
+### 15.2 Route composition changes the sizing again
+
+`lab/grading_v2.py` is three route mechanisms and Stage 0A-M produced a defect in
+two of them, so an aggregate `g_one` over an arbitrary mixture is a mean over
+three failure modes. The mixture is now precommitted at **0.50 / 0.25 / 0.25** and
+held **identical** between holdout and production — the condition under which an
+aggregate bound transfers — with a **per-route floor of 14 items**.
+
+That forces a **56-item holdout**, which is a cost increase *and* a tightening: the
+aggregate clean bound falls from 0.0798 to **0.0521**, so the re-derived production
+n falls from 72 to **63**. §14.1's 36-item holdout is superseded.
+
+Option B (route-stratified bounding) was derived and costed at a **106-item
+holdout** and rejected on the record, because PASS already requires zero defects
+and the floor already prevents a route hiding.
+
+### 15.3 What else did not exist
+
+The **calibration driver** (§8 of the authoring protocol), the **key-verification
+procedure** for recipe clause 7, and the **invalid-key rules**. All three are now
+committed before the first dispatch. The driver holds the ordering that makes
+candidate grading impossible before human adjudication, and its resume behaviour is
+demonstrated against a synthetic runtime at zero cost rather than asserted.
+
+### 15.4 Cost
+
+Batch 1: **528 dispatches, ~$21.48** (was 400 / $14.32). Human cases **~43** (was
+~29). At the cap, calibration costs ~$28.64 against a production run of ~$24.3, so
+the "calibration ≤ production" heuristic no longer holds — reported, because a
+validity requirement broke it.
+
+### 15.5 Decision for this pass
+
+**A — INFRASTRUCTURE COMPLETE, BANK AUTHORING MAY BEGIN.** The schema, the screen
+semantics, the route quotas, the key-verification procedure, the invalid-key rules
+and the driver are committed. The 96 authored items and their verified keys are
+not, and that is the next step.

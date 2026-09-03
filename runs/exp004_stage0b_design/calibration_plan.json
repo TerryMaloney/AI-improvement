@@ -182,37 +182,77 @@
  },
  "plan": {
   "batch_1": {
-   "authored_items": 64,
-   "screen_passing_items": 48,
-   "dispatches": 352,
-   "screen_cost_usd": 4.1,
-   "full_item_cost_usd": 10.23,
-   "total_cost_usd": 14.32,
-   "development_subset": 12,
-   "grader_validation_holdout": 36,
-   "grader_observations_in_holdout": 36,
+   "authored_items": 96,
+   "screen_passing_items": 72,
+   "dispatches": 528,
+   "screen_cost_usd": 6.14,
+   "full_item_cost_usd": 15.34,
+   "total_cost_usd": 21.48,
+   "development_subset": 16,
+   "grader_validation_holdout": 56,
+   "grader_observations_in_holdout": 56,
    "unit": "item -- one (A,C) pair per item, NOT two pooled pairs",
-   "g_one_bound_if_holdout_clean": 0.0798,
-   "what_the_invalid_pooling_would_have_claimed": 0.0408
+   "g_one_bound_if_holdout_clean": 0.0521,
+   "what_the_invalid_pooling_would_have_claimed": 0.0264
   },
-  "batch_2_and_3_each": {
-   "authored_items": 22,
-   "screen_passing_items": 16,
-   "dispatches": 118,
-   "screen_cost_usd": 1.41,
-   "full_item_cost_usd": 3.41,
-   "total_cost_usd": 4.82,
-   "development_subset": 4,
-   "grader_validation_holdout": 12
+  "further_batches": {
+   "authored_items": 32,
+   "screen_passing_items": 24,
+   "dispatches": 176,
+   "screen_cost_usd": 2.05,
+   "full_item_cost_usd": 5.11,
+   "total_cost_usd": 7.16,
+   "development_subset": 6,
+   "grader_validation_holdout": 18,
+   "how_many_fit_under_the_cap": 1,
+   "note": "one only. The per-route holdout floor made batch 1 large enough that the cap leaves room for a single further batch; a second CONTINUE therefore reaches the cap, which is a REVISE_STAGE0B_DESIGN result."
   },
   "maximum": {
-   "authored_items": 108,
-   "screen_passing_items": 80,
-   "dispatches": 588,
-   "screen_cost_usd": 6.91,
-   "full_item_cost_usd": 17.04,
-   "total_cost_usd": 23.96,
-   "cap_rule": "at the cap the calibration bank costs about what the production run costs. Spending more on calibration than on the experiment is not caution, it is a different experiment."
+   "authored_items": 128,
+   "screen_passing_items": 96,
+   "dispatches": 704,
+   "screen_cost_usd": 8.19,
+   "full_item_cost_usd": 20.45,
+   "total_cost_usd": 28.64,
+   "cap_rule": "REVISED, and the revision is reported rather than absorbed: at the cap calibration now costs about $30.7 against a production run of about $24.3, so the old 'calibration <= production' heuristic no longer holds. What broke it is the per-route holdout floor, which is a validity requirement and not a budget preference. Reaching the cap without PASS is a REVISE_STAGE0B_DESIGN result anyway."
+  },
+  "route_composition": {
+   "chosen": "OPTION A -- precommitted mixture, held identical between the grader-validation holdout and the production pool, plus a per-route minimum and descriptive per-route bounds",
+   "production_mix": {
+    "exact_entity": 0.5,
+    "boolean": 0.25,
+    "numeric": 0.25
+   },
+   "why_a_mixture_at_all": "lab/grading_v2.py is three route mechanisms, and Stage 0A-M produced a measured defect in two of them. An aggregate bound over an unconstrained mixture is a mean over three different failure modes.",
+   "per_route_floor": {
+    "value": 14,
+    "derivation": "ceil(log(1-0.95) / log(1-0.2)) -- the smallest sample giving a 95% chance of surfacing at least one instance of a route-specific defect occurring at rate 0.2"
+   },
+   "holdout_size_forced": 56,
+   "holdout_allocation": {
+    "exact_entity": 28,
+    "boolean": 14,
+    "numeric": 14
+   },
+   "aggregate_clean_bound": 0.0521,
+   "aggregate_bound_is_valid_because": "the holdout mixture equals the production mixture, so the aggregate defect count is Binomial(N, g_one_weighted) and the exact bound bounds the production-weighted rate. It would NOT transfer under a different mixture.",
+   "per_route_descriptive_bounds": {
+    "exact_entity": 0.1015,
+    "boolean": 0.1926,
+    "numeric": 0.1926
+   },
+   "n_prod_at_the_aggregate_bound": 63,
+   "option_B_rejected": {
+    "design": "route-stratified bounding, weighted bound <= 0.08, n_r proportional to sqrt(w_r)",
+    "allocation": {
+     "exact_entity": 44,
+     "boolean": 31,
+     "numeric": 31
+    },
+    "holdout_total": 106,
+    "weighted_bound": 0.079,
+    "why_rejected": "it costs a holdout of 106 against Option A's 56, and it buys per-route bounds the PASS rule does not consume -- PASS already requires ZERO defects, so a broken route trips REVISE_GRADER under either design provided it carries enough items to be seen, which the floor guarantees. Recorded with its price so the choice can be re-argued."
+   }
   },
   "why_not_the_old_multiplier": {
    "old_rule": ">= 3x production size",
@@ -290,7 +330,7 @@
    "PASS",
    "CONTINUE"
   ],
-  "max_calibration_screen_passing_items": 80,
+  "max_calibration_screen_passing_items": 96,
   "preregistration_status": "Stage 0B is NOT preregistered. Every threshold in this module is a PRE-CALIBRATION COMMITMENT: fixed and fingerprinted before the first calibration outcome exists. They become preregistration at design freeze, which has not happened and cannot happen until the bank has run."
  },
  "adjudication": {
@@ -313,13 +353,13 @@
    "MULTIPLE_NUMERIC_CANDIDATES": "more than one in-tolerance-or-reject numeric value appears, so which one is the answer is a reading question, not an arithmetic one."
   },
   "manual_burden_forecast": {
-   "items": 48,
-   "answers": 144,
+   "items": 72,
+   "answers": 216,
    "forecast_escalation_rate": 0.2,
-   "forecast_human_adjudications": 29,
+   "forecast_human_adjudications": 43,
    "note": "A FORECAST, not a parameter. It sizes no sample and enters no bound. The realized escalation rate is itself a recipe-quality signal: PREMISE_CONTEST and NO_KEY_MATCH are recipe defects (protocol 2 clauses 4 and 7), not grader defects."
   },
-  "MANUAL_PREREQUISITE": "Roughly 29 answers from a 48-item bank will need human adjudication, and they must be adjudicated BEFORE the candidate grader is run on them. This is a prerequisite of the calibration run, not a step discovered halfway through it. If that burden is unacceptable, the bank is not dispatched -- the alternative is not to skip adjudication, because a grader defect rate measured against the grader's own rule is not a measurement."
+  "MANUAL_PREREQUISITE": "Roughly 43 answers from a 72-item bank will need human adjudication, and they must be adjudicated BEFORE the candidate grader is run on them. This is a prerequisite of the calibration run, not a step discovered halfway through it. If that burden is unacceptable, the bank is not dispatched -- the alternative is not to skip adjudication, because a grader defect rate measured against the grader's own rule is not a measurement."
  },
  "parameter_lineage": {
   "PRECALIBRATION_COMMITTED_Q_GAP": {

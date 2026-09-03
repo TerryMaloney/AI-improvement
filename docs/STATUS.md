@@ -7,9 +7,10 @@
 **Stage 0A-M is EXECUTED, COMPLETE and INDEPENDENTLY REVIEWED. Result: a null that
 could not have been anything else — at the realized discordant count D=2, the
 smallest attainable exact p is 1/4. Stage 0B's INSTRUMENT is BUILT, MEASURED and
-CORRESPONDENCE-TESTED, and as of the THIRD pass of 2026-09-03 its CALIBRATION
-PLAN has survived a final red team that found and fixed two load-bearing defects in
-the second pass's own corrections: decision A, ready to run the calibration bank. No
+CORRESPONDENCE-TESTED, and as of the FOURTH pass of 2026-09-03 its CALIBRATION
+INFRASTRUCTURE is repaired: the pre-dispatch check refused to author or dispatch
+anything because the ledger could not carry its own adjudication key, and that is
+now fixed along with four other blockers. Decision A, bank authoring may begin. No
 Stage 0B production dispatch has occurred, none is permitted, no calibration item
 has been dispatched, and no production item exists or has been authored.**
 
@@ -31,14 +32,100 @@ has been dispatched, and no production item exists or has been authored.**
   live correspondence gate 14/14 PASS with 0 UNOBSERVABLE, real sanitized runtime
   fixture. Treatment renamed on measurement to
   `runtime_exposed_search_result_block_exposure`.
-- Stage 0B calibration plan (2026-09-03, third pass): batch 1 = **64 authored → 48
-  screen-passing items, 400 dispatches, ~$14.32**; cap 80 screen-passing items, 588
-  dispatches, ~$23.96. `lab/stage0b_calibration.py`, `lab/stage0b_adjudication.py`;
+- Stage 0B calibration plan (2026-09-03, fourth pass): batch 1 = **96 authored → 72
+  screen-passing items, 528 dispatches, ~$21.48**; cap 96 screen-passing items, 704
+  dispatches, ~$28.64. `lab/stage0b_calibration.py`, `lab/stage0b_keys.py`,
+  `lab/stage0b_adjudication.py`, `lab/stage0b_calibration_runner.py`;
   `runs/exp004_stage0b_design/calibration_plan.json`. Stopping rules frozen and
   fingerprinted before the first calibration outcome exists.
-- **Human adjudication prerequisite: ~29 of 144 batch-1 answers**, to be discharged
+- **Human adjudication prerequisite: ~43 of 216 batch-1 answers**, to be discharged
   BEFORE the candidate grader is run on them.
-- Full suite: 1656 passing (was 1618).
+- **No calibration item has been authored and no key has been verified.**
+- Full suite: 1727 passing (was 1656).
+
+## 2026-09-03 (fourth pass) — PRE-DISPATCH INFRASTRUCTURE REPAIR
+
+**Decision: A — INFRASTRUCTURE COMPLETE, BANK AUTHORING MAY BEGIN.** Zero live
+calls. The calibration-run attempt **stopped before authoring an item, dispatching
+once, or spending a cent**, and it was right to.
+
+**The blocking defect: the ledger could not carry its own adjudication key.**
+`CalibrationRow` held one alias pair. `reference_verdict` needs `expected` for a
+boolean item and `value`/`tolerance`/`reject_values` for a numeric one. Neither
+existed, so those two routes raised `KeyError` — **after** the dispatches would
+have been paid for.
+
+**The deeper defect: one field was doing two scientific jobs.** The same pair also
+decided whether the search summary carried the dose. Those coincide only on
+`exact_entity`. On boolean the accept alias `"no"` matches inside `"not"` and the
+reject alias `"yes"` never appears as a claim; on numeric a bare numeral matches
+years, ranges and citations.
+
+**Repaired: two typed objects** (`lab/stage0b_keys.py`). **A** the answer key —
+route-specific, strictly validated, `route="boolean"` with no `expected` refused
+outright, numeric separation invariant enforced. **B** the exposure-screen
+specification — entity aliases; boolean **premise-bearing propositions** with a
+negation guard so a correct denial does not read as the displacing claim; numeric
+assertion by **subject-term proximity** with date-range and citation contexts
+excluded. Invariant **S1** binds both and is committed before any item exists. No
+model judgement decides a screen result.
+
+**C1 is not retroactively broadened.** Its lesson transfers; **C1(c)'s flat ban on
+bare numerals does not**, because it governs strings matched against a MODEL
+ANSWER while the Stage 0B numeric screen matches SEARCH PROSE through a structured
+mechanism. Declaring it universal would broaden a rule past its evidence and make
+the numeric route unscreenable rather than rigorous.
+
+**Route composition is precommitted, because the grader is three mechanisms with
+two measured defects.** Option A: mixture 0.50 / 0.25 / 0.25 held **identical**
+between holdout and production — which is what makes an aggregate bound transfer —
+plus a **per-route floor of 14** items, giving a 95% chance of surfacing a
+route-specific defect at rate 0.20. That forces a **56-item holdout** and tightens
+the aggregate clean bound from 0.0798 to **0.0521**, *lowering* the re-derived
+production n from 72 to **63**. Option B (stratified) was derived and costed at a
+**106-item holdout** and is recorded as rejected with its price.
+
+**Key verification is now a procedure, not a requirement with no method.** One
+authoritative primary source settles an item; otherwise two independent reputable
+sources must corroborate — no blanket two-source rule. Every source records what it
+establishes, when it was accessed and who verified it. **Key evidence is not
+experimental evidence**: a query used to verify a key may never become that item's
+fixed experimental query, or authoring would optimise the treatment against the
+search index. Ambiguous keys **fail authoring mechanically** against an enumerated
+list; nobody picks the most reasonable answer.
+
+**The calibration driver exists.** It was missing entirely, while the protocol had
+required it since the Stage 0A-M review. It exercises no scientific discretion,
+uses an append-only fsynced ledger with deterministic dispatch ids, and
+**re-dispatches nothing on resume** — demonstrated against a synthetic backend, not
+asserted. `authorize_grading()` is the only door to candidate grading and refuses
+while any escalated answer lacks an attributed human verdict.
+
+**The whole pipeline was run end to end at zero cost** — authored bank → screen →
+answers → reference adjudication → queue export → verdict import → authorization
+gate — against synthetic fixtures the runner cannot distinguish from the live
+instrument.
+
+**Two adjudicator rules were corrected pre-dispatch**, both of which would have
+inflated Terry's burden without buying validity: boolean escalation now triggers on
+polarity **disagreement** rather than multiplicity (so "No. X was not a member" is
+decided, while "Yes, although it was not ratified" escalates), and numeric
+adjudication reads word forms ("Nine planets").
+
+**Costs.** Batch 1 rises from 400 dispatches / $14.32 to **528 / $21.48**; human
+cases from ~29 to **~43**. At the cap, calibration now costs about $28.64 against a
+production run of ~$24.3, so the old "calibration ≤ production" heuristic no longer
+holds — reported rather than absorbed, because a validity requirement broke it.
+
+**Contract: VALID as `draft`,** 31 bindings (was 25), 10 open fields. Six added,
+including `calibration_freeze_grade_analyse_driver` — the **production** driver
+stays genuinely `[OPEN]`.
+
+**Tests: 1727 passing (was 1656).** 71 added, all offline. **Zero live calls.**
+
+**LIVE REVALIDATION: NOT REQUIRED.** No packet, agent, searcher or parser semantics
+changed. The screen mechanism changed, but it reads the same persisted block region
+the 14-check gate measured, and no calibration or production datum exists.
 
 ## 2026-09-03 (third pass) — FINAL PRE-CALIBRATION RED TEAM
 

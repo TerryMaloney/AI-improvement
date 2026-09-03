@@ -1110,3 +1110,127 @@ and the arm-D re-execution is what the committed harness already did.
 **Unchanged:** every Stage 0A-M frozen artifact; the candidate grader, still not
 frozen and not touched.
 
+
+---
+
+## 2026-09-03 (fourth pass) — Pre-dispatch infrastructure repair
+
+**Decision: A — INFRASTRUCTURE COMPLETE, BANK AUTHORING MAY BEGIN.** Zero live
+calls. The calibration-run attempt stopped before authoring an item, dispatching
+once or spending a cent, and the stop was correct: five things had to exist before
+a single paid dispatch, and two of them were load-bearing defects rather than
+missing work.
+
+**Decision: the answer key and the exposure-screen specification are two objects,
+and the schema now says so.** `CalibrationRow` carried one alias pair.
+`reference_verdict` needs `expected` for a boolean item and
+`value`/`tolerance`/`reject_values` for a numeric one, so those routes raised
+`KeyError` — a defect that would have surfaced **after** ~350 dispatches were paid
+for. The same pair was simultaneously matched against search prose, where the
+accept alias `"no"` hits inside `"not"` and the reject alias `"yes"` never appears
+as a claim. The two jobs coincide only on `exact_entity`. `lab/stage0b_keys.py`
+types both, validates both, refuses every impossible combination, and
+`key_for_route()` makes a persisted row self-sufficient on all three routes.
+
+**Decision: the screen is route-aware, and still entirely model-free.** Entity
+aliases identify the proposition when the entity is the answer. A boolean screen
+uses **premise-bearing propositions** with a negation guard, because without it the
+screen fires on a correct denial — C1(b)'s lesson arriving on a new route. A
+numeric screen counts a numeral only when it is asserted **of the requested
+quantity**, established by subject-term proximity with date-range and citation
+contexts excluded, because a bare numeral matches years, ranges and citations.
+Invariant **S1** binds both objects and is committed before any item is authored.
+
+**Decision: C1 is not retroactively broadened.** C1 governs the
+`accept_trap_markers` and `reject` fields of the exp001 key, matched against a
+MODEL ANSWER. C1(a) and C1(b) transfer unchanged. **C1(c)'s flat prohibition on
+bare numerals does not transfer**: the Stage 0B numeric screen matches a SEARCH
+SUMMARY through a structured mechanism capable of showing that a numeral is
+asserted of the requested quantity. Declaring C1(c) universal would broaden a rule
+past the evidence that motivated it and would make the numeric route unscreenable
+rather than rigorous. S1 is the Stage 0B rule, enforced by test.
+
+**Decision: route composition is precommitted — Option A.** `grading_v2` is a span
+parser plus three route mechanisms, and Stage 0A-M produced a measured defect in
+two of them (30 entity false negatives; the `a09` boolean polarity class). An
+aggregate `g_one` over an unconstrained mixture is a mean over three different
+failure modes. The mixture — 0.50 entity / 0.25 boolean / 0.25 numeric — is held
+**identical** between the grader-validation holdout and the production pool, which
+is exactly what makes the aggregate bound a valid bound on the production-weighted
+rate. A **per-route floor of 14 items** (⌈log 0.05 / log 0.80⌉) gives a 95% chance
+of surfacing a route-specific defect at rate 0.20, so a broken route cannot hide
+behind the aggregate — and PASS already requires **zero** defects, so it trips
+REVISE_GRADER when it does. The floor forces a **56-item holdout**, which also
+tightens the aggregate clean bound from 0.0798 to **0.0521** and *lowers* the
+re-derived production n from 72 to **63**. **Option B**, route-stratified bounding
+at a weighted 0.08, was derived and costed at a **106-item holdout** and is
+recorded as rejected with its price, so the choice can be re-argued rather than
+assumed. Boolean polarity stays balanced within ±1.
+
+**Decision: entity-only was refused.** It would have dodged both schema defects at
+a stroke. The only grader defect this project has ever measured was on the
+**boolean** route, so an entity-only bank cannot detect a recurrence of the one
+failure mode actually observed, while reporting a bound that looks complete.
+
+**Decision: key verification is a defined procedure.** Recipe clause 7 demanded
+provenance and named no method, while both `p` and the grader defect rate are
+measured against these keys. **One authoritative primary source settles an item**;
+otherwise **two independent reputable sources** must corroborate, independence
+meaning not republications of one another. There is deliberately **no blanket
+two-source rule** — demanding a second source where a definitive primary one exists
+buys nothing and invites padding the evidence list. Every source records what it
+establishes, when it was accessed and who verified it.
+
+**Decision: key evidence is not experimental evidence.** A query used to verify a
+key may never become that item's fixed experimental query. The fixed query stays
+derived from the stem alone by the frozen rule. Letting a verification query that
+"worked well" become the treatment would optimise the dose using observations made
+while building the key — authoring the treatment against the search index. Key
+evidence, the fixed query, the model-written C query and the runtime blocks are
+logged and fingerprinted separately.
+
+**Decision: ambiguous keys fail authoring mechanically.** Conflicting sources, an
+ambiguous anchor, a second legitimate definition, an undetermined tolerance, an
+unresolvable boolean premise, a non-unique displacing answer: each is an enumerated
+rejection reason, recorded and persisted. Never repaired by picking the most
+reasonable answer, and never softened by widening the accept band — both decide the
+item's outcome at authoring time. This is the `a08` lesson applied at authoring
+rather than discovered from a solver contesting the premise.
+
+**Decision: the calibration driver exists and is committed before the first
+dispatch.** `lab/stage0b_calibration_runner.py`. It exercises no scientific
+discretion — no authoring, no repair, no re-keying, no retry. Append-only JSONL
+ledger, fsynced before the next expensive call, with deterministic content-free
+dispatch ids, so a resume re-dispatches nothing; that is **demonstrated** against a
+synthetic backend rather than asserted. `authorize_grading()` is the only door to
+candidate grading and refuses while any escalated answer lacks an attributed human
+verdict, so the ordering cannot be skipped by forgetting it. This binds the
+**calibration** driver; the **production** freeze/grade/analyse driver is a
+different artifact and stays `[OPEN]`.
+
+**Decision: two adjudicator rules corrected pre-dispatch.** Boolean escalation now
+triggers on polarity **disagreement** rather than multiplicity — "No. X was not a
+member" carries two reinforcing negatives the key settles, while "Yes, although it
+was not ratified" genuinely needs a human — and numeric adjudication reads word
+forms. Both reduce Terry's burden by deciding cases the key already settles; neither
+weakens validation, because the key still decides and only the surface form widened.
+
+**Costs, reported rather than absorbed.** Batch 1 rises from 400 dispatches /
+$14.32 to **528 / $21.48**; human cases from ~29 to **~43**. At the cap calibration
+now costs about **$28.64** against a production run of ~$24.3, so the earlier
+"calibration ≤ production" heuristic **no longer holds**, and only one further
+batch fits. What broke it is the per-route coverage requirement, which is a
+validity constraint and not a budget preference.
+
+**Contract: VALID as `draft`,** 31 bindings (was 25), 10 open fields. Added
+`typed_answer_key`, `exposure_screen_specification`, `route_composition`,
+`key_verification_provenance`, `invalid_key_policy` and
+`calibration_freeze_grade_analyse_driver`.
+
+**No calibration item has been authored and no key has been verified.** The schema,
+the verification procedure, the invalid-key rules, the route quotas and the driver
+are committed; the bank is not.
+
+**Unchanged:** every Stage 0A-M frozen artifact; the candidate grader, still not
+frozen and not touched.
+

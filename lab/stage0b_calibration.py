@@ -111,6 +111,8 @@ from fractions import Fraction
 
 from lab.stage0am import _cp_upper           # the frozen exact Clopper-Pearson limit
 from lab.stage0b_adjudication import adjudication_plan
+from lab.stage0b_keys import (C1_SCOPE, INVALID_KEY_POLICY, INVALID_KEY_REASONS,
+                              ROUTES, S1, AnswerKey, ScreenSpec, screen_summary)
 from lab.stage0b_power import Scenario, analyse_scenario
 
 # --------------------------------------------------------------------------- #
@@ -207,6 +209,37 @@ Q_C_SENSITIVITY_AT_PERFECT_GRADER = {
     0.85: 27, 0.90: 25, 0.95: 24, 1.00: 23,
 }
 
+# ---------------------------------------------------------------------------
+# ROUTE COMPOSITION -- load-bearing, because the grader is three mechanisms
+# ---------------------------------------------------------------------------
+# `lab/grading_v2.py` is not one rule. It is a span parser plus THREE route
+# mechanisms -- entity ordering, boolean first-polarity, numeric tolerance -- and
+# Stage 0A-M produced a measured defect in TWO of them (30 entity false negatives;
+# the a09 boolean polarity class). An aggregate `g_one` over an unconstrained
+# route mixture is a mean over three different failure modes, and it transfers to
+# production only if the production mixture is the same mixture.
+#
+# CHOSEN: OPTION A -- a precommitted mixture, held IDENTICAL between the
+# grader-validation holdout and the production pool, plus a per-route MINIMUM that
+# makes a broken route impossible to miss quietly, plus per-route bounds reported
+# descriptively.
+#
+# Why A and not B (route-stratified bounding): PASS already requires ZERO defects
+# on the holdout, not merely an aggregate bound. So a route with a high defect
+# rate trips REVISE_GRADER whatever the weighting -- PROVIDED it carries enough
+# items to be seen, which is exactly what the per-route minimum buys. With the
+# mixtures matched, the aggregate defect count is Binomial(N, g_one_weighted) and
+# the exact bound is a valid bound on the production-weighted rate. Option B was
+# derived and costed: a weighted bound of 0.08 needs a 106-item holdout against
+# Option A's 56, and it buys per-route bounds the PASS rule does not consume.
+# The choice is recorded with B's price so it can be re-argued, not so it can be
+# assumed.
+PRODUCTION_ROUTE_MIX = {"exact_entity": 0.50, "boolean": 0.25, "numeric": 0.25}
+ROUTE_DEFECT_RATE_TO_SURFACE = 0.20   # a route-specific defect this large must not hide
+ROUTE_SURFACE_CONFIDENCE = 0.95
+MIN_HOLDOUT_ITEMS_PER_ROUTE = 14      # ceil(log(0.05)/log(0.80)); derived below
+BOOLEAN_POLARITY_TOLERANCE = 1        # protocol 2.1: expected True/False within +/-1
+
 MIN_ITEMS_FOR_SIZING = 20            # below this a "required production n" is an
                                      # artefact of the confidence bound, not a size
 MAX_RECIPE_ESCALATION_RATE = 0.15    # share of answers escalated for PREMISE_CONTEST or
@@ -219,18 +252,24 @@ MAX_RECIPE_ESCALATION_RATE = 0.15    # share of answers escalated for PREMISE_CO
 # 0.1173 -- above the PASS threshold of 0.08. Batch 1 could not have passed with a
 # flawless holdout. 36 is the smallest clean holdout that reaches the threshold at
 # all, so it is the smallest batch 1 that can terminate the sequence.
-BATCH1_AUTHORED = 64
-BATCH1_TARGET_SCREENED = 48          # 12 development + 36 grader-validation holdout
-BATCH1_DEV = 12
-BATCH1_HOLDOUT = 36
-BATCHN_AUTHORED = 22
-BATCHN_TARGET_SCREENED = 16          # 4 development + 12 holdout
-MAX_CALIBRATION_SCREENED = 80        # safety cap: at this size calibration costs
-                                     # about what the production run costs
-# The authored:screened ratio assumes the canary screen pass rate. It sizes the
-# AUTHORING effort only; if the realized rate differs, more items are authored to
-# the same recipe -- which is not outcome selection, because the screen dispatches
-# no answerer.
+# RESIZED AGAIN 2026-09-03 (infrastructure repair). The binding constraint is no
+# longer the aggregate bound but the PER-ROUTE MINIMUM: with the smallest route at
+# weight 0.25, a 14-item floor forces a holdout of 56. That also tightens the
+# aggregate clean bound from 0.0798 to 0.0521, which lowers the re-derived
+# production n rather than raising it.
+BATCH1_AUTHORED = 96
+BATCH1_TARGET_SCREENED = 72          # 16 development + 56 grader-validation holdout
+BATCH1_DEV = 16
+BATCH1_HOLDOUT = 56
+BATCHN_AUTHORED = 32
+BATCHN_TARGET_SCREENED = 24          # 6 development + 18 holdout, same mixture
+MAX_CALIBRATION_SCREENED = 96        # safety cap. NOTE, and it is a real change: at
+                                     # the cap calibration costs about $28.6 against a
+                                     # production run of about $24.3, so the old
+                                     # "calibration <= production" heuristic no longer
+                                     # holds at the cap. The per-route coverage
+                                     # requirement is what broke it, and reaching the
+                                     # cap is a REVISE_STAGE0B_DESIGN result anyway.
 ASSUMED_SCREEN_PASS_RATE = 0.75
 
 # MEASURED per-dispatch costs on the Stage 0B path (2026-09-03), from
@@ -688,12 +727,71 @@ def cost_plan(n_authored: int, n_screened: int) -> dict:
     }
 
 
+def route_composition_derivation() -> dict:
+    """Why the mixture and the per-route floor are what they are."""
+    import math
+    floor = math.ceil(math.log(1 - ROUTE_SURFACE_CONFIDENCE)
+                      / math.log(1 - ROUTE_DEFECT_RATE_TO_SURFACE))
+    n = math.ceil(floor / min(PRODUCTION_ROUTE_MIX.values()))
+    alloc = {r: round(n * w) for r, w in PRODUCTION_ROUTE_MIX.items()}
+    # Option B, costed rather than dismissed.
+    c, b, n_r = 1.0, 1.0, {}
+    while b > G_ONE_BOUND_FOR_PASS:
+        n_r = {r: max(2, math.ceil(c * math.sqrt(w)))
+               for r, w in PRODUCTION_ROUTE_MIX.items()}
+        b = sum(PRODUCTION_ROUTE_MIX[r] * cp_upper(0, v) for r, v in n_r.items())
+        c += 1
+    return {
+        "chosen": "OPTION A -- precommitted mixture, held identical between the "
+                  "grader-validation holdout and the production pool, plus a per-route "
+                  "minimum and descriptive per-route bounds",
+        "production_mix": PRODUCTION_ROUTE_MIX,
+        "why_a_mixture_at_all": "lab/grading_v2.py is three route mechanisms, and Stage "
+                                "0A-M produced a measured defect in two of them. An "
+                                "aggregate bound over an unconstrained mixture is a mean "
+                                "over three different failure modes.",
+        "per_route_floor": {
+            "value": floor,
+            "derivation": f"ceil(log(1-{ROUTE_SURFACE_CONFIDENCE}) / "
+                          f"log(1-{ROUTE_DEFECT_RATE_TO_SURFACE})) -- the smallest sample "
+                          f"giving a {ROUTE_SURFACE_CONFIDENCE:.0%} chance of surfacing at "
+                          f"least one instance of a route-specific defect occurring at "
+                          f"rate {ROUTE_DEFECT_RATE_TO_SURFACE}",
+        },
+        "holdout_size_forced": n,
+        "holdout_allocation": alloc,
+        "aggregate_clean_bound": round(cp_upper(0, n), 4),
+        "aggregate_bound_is_valid_because":
+            "the holdout mixture equals the production mixture, so the aggregate defect "
+            "count is Binomial(N, g_one_weighted) and the exact bound bounds the "
+            "production-weighted rate. It would NOT transfer under a different mixture.",
+        "per_route_descriptive_bounds": {r: round(cp_upper(0, v), 4)
+                                         for r, v in alloc.items()},
+        "n_prod_at_the_aggregate_bound": required_production_n(0.95, 0.50, cp_upper(0, n)),
+        "option_B_rejected": {
+            "design": "route-stratified bounding, weighted bound <= "
+                      f"{G_ONE_BOUND_FOR_PASS}, n_r proportional to sqrt(w_r)",
+            "allocation": n_r, "holdout_total": sum(n_r.values()),
+            "weighted_bound": round(b, 4),
+            "why_rejected": "it costs a holdout of "
+                            f"{sum(n_r.values())} against Option A's {n}, and it buys "
+                            "per-route bounds the PASS rule does not consume -- PASS "
+                            "already requires ZERO defects, so a broken route trips "
+                            "REVISE_GRADER under either design provided it carries enough "
+                            "items to be seen, which the floor guarantees. Recorded with "
+                            "its price so the choice can be re-argued.",
+        },
+    }
+
+
 def calibration_plan() -> dict:
     """The frozen sequential plan. Batch sizes and the cap are fixed here, before
     any calibration datum exists, which is the only thing that makes a sequential
     scheme legitimate."""
     b1 = cost_plan(BATCH1_AUTHORED, BATCH1_TARGET_SCREENED)
-    maxa = BATCH1_AUTHORED + 2 * BATCHN_AUTHORED
+    # Only ONE further batch fits under the cap: 72 + 24 = 96 screen-passing items.
+    n_extra_batches = (MAX_CALIBRATION_SCREENED - BATCH1_TARGET_SCREENED) // BATCHN_TARGET_SCREENED
+    maxa = BATCH1_AUTHORED + n_extra_batches * BATCHN_AUTHORED
     mx = cost_plan(maxa, MAX_CALIBRATION_SCREENED)
     return {
         "batch_1": {**b1, "development_subset": BATCH1_DEV,
@@ -703,12 +801,22 @@ def calibration_plan() -> dict:
                     "g_one_bound_if_holdout_clean": round(cp_upper(0, BATCH1_HOLDOUT), 4),
                     "what_the_invalid_pooling_would_have_claimed":
                         round(cp_upper(0, 2 * BATCH1_HOLDOUT), 4)},
-        "batch_2_and_3_each": {**cost_plan(BATCHN_AUTHORED, BATCHN_TARGET_SCREENED),
-                               "development_subset": 4, "grader_validation_holdout": 12},
-        "maximum": {**mx, "cap_rule": "at the cap the calibration bank costs about what "
-                                      "the production run costs. Spending more on "
-                                      "calibration than on the experiment is not caution, "
-                                      "it is a different experiment."},
+        "further_batches": {**cost_plan(BATCHN_AUTHORED, BATCHN_TARGET_SCREENED),
+                            "development_subset": 6, "grader_validation_holdout": 18,
+                            "how_many_fit_under_the_cap": n_extra_batches,
+                            "note": "one only. The per-route holdout floor made batch 1 "
+                                    "large enough that the cap leaves room for a single "
+                                    "further batch; a second CONTINUE therefore reaches "
+                                    "the cap, which is a REVISE_STAGE0B_DESIGN result."},
+        "maximum": {**mx, "cap_rule": "REVISED, and the revision is reported rather than "
+                                      "absorbed: at the cap calibration now costs about "
+                                      "$30.7 against a production run of about $24.3, so "
+                                      "the old 'calibration <= production' heuristic no "
+                                      "longer holds. What broke it is the per-route "
+                                      "holdout floor, which is a validity requirement and "
+                                      "not a budget preference. Reaching the cap without "
+                                      "PASS is a REVISE_STAGE0B_DESIGN result anyway."},
+        "route_composition": route_composition_derivation(),
         "why_not_the_old_multiplier": {
             "old_rule": ">= 3x production size",
             "old_rule_derivation": "NONE. Asserted in the authoring protocol 1, design "
@@ -758,11 +866,16 @@ class CalibrationRow:
     batch: int
     production_barred: bool                    # always True, asserted per row
 
-    # the item
+    # the item. THE ANSWER KEY AND THE SCREEN SPEC ARE TWO OBJECTS: separately
+    # persisted, separately validated, separately fingerprinted. Stored as plain
+    # dicts so a row round-trips through JSON, and rebuilt into their types by
+    # `answer_key_typed()` / `screen_spec_typed()`. `FIELD_SEPARATION` says which
+    # statistic may read which, and neither may stand in for the other.
     stem: str
     route: str                                 # exact_entity | numeric | boolean
-    accept_aliases: list[str]
-    reject_aliases: list[str]
+    answer_key: dict                           # lab.stage0b_keys.AnswerKey.to_json()
+    screen_spec: dict                          # lab.stage0b_keys.ScreenSpec.to_json()
+    key_sources: list[dict]                    # KEY-CONSTRUCTION evidence only
     key_provenance: str
     query_subject: str
     anchor_as_written: str
@@ -840,6 +953,23 @@ class CalibrationRow:
     failure: str | None = None
     failure_stage: str | None = None
 
+    def answer_key_typed(self) -> AnswerKey:
+        """Rebuild the answer key from this row alone. The whole point of the type."""
+        return AnswerKey.from_json(self.answer_key)
+
+    def screen_spec_typed(self) -> ScreenSpec:
+        """Rebuild the screen specification from this row alone."""
+        return ScreenSpec.from_json(self.screen_spec)
+
+    def key_for_route(self) -> dict:
+        """The dict `lab.stage0b_adjudication.reference_verdict` consumes.
+
+        A boolean or numeric row could not produce this at all before the
+        infrastructure repair: it raised KeyError, after the dispatches had been
+        paid for. This method is what makes the row self-sufficient.
+        """
+        return self.answer_key_typed().for_reference_verdict()
+
     def to_json(self) -> dict:
         return asdict(self)
 
@@ -847,20 +977,86 @@ class CalibrationRow:
 REQUIRED_FOR_EACH_STATISTIC = {
     # statistic -> the CalibrationRow fields it is computed from. Nothing may feed
     # the power model without an entry here.
-    "s":       ["screen_passed"],
-    "p":       ["screen_passed", "grader_verdict_closed"],
-    "q_C":     ["screen_passed", "c_divergent"],
-    "r_D":     ["screen_passed", "d_production_divergent"],
-    "g_one":   ["subset", "hand_verdict_closed", "hand_verdict_c", "hand_verdict_d",
-                "grader_verdict_closed", "grader_verdict_c", "grader_verdict_d"],
-    "g_both":  ["subset", "hand_verdict_closed", "hand_verdict_c", "hand_verdict_d",
-                "grader_verdict_closed", "grader_verdict_c", "grader_verdict_d"],
+    "s":       ["screen_passed", "route"],
+    "p":       ["screen_passed", "grader_verdict_closed", "answer_key"],
+    "q_C":     ["screen_passed", "c_divergent", "screen_spec"],
+    "r_D":     ["screen_passed", "d_production_divergent", "screen_spec"],
+    "g_one":   ["subset", "route", "hand_verdict_closed", "hand_verdict_c",
+                "grader_verdict_closed", "grader_verdict_c", "answer_key"],
+    "g_both":  ["subset", "route", "hand_verdict_closed", "hand_verdict_c",
+                "grader_verdict_closed", "grader_verdict_c", "answer_key"],
+    "g_one_by_route":   ["subset", "route", "hand_verdict_closed", "hand_verdict_c",
+                         "grader_verdict_closed", "grader_verdict_c"],
+    "route_composition": ["subset", "route", "answer_key"],
+    "boolean_polarity_balance": ["route", "answer_key"],
+    "manual_escalation": ["escalated_to_human", "adjudication_route_closed",
+                          "adjudication_route_c", "adjudication_route_d"],
     "query_fidelity": ["c_query_faithful", "d_query_faithful",
                        "d_production_query_faithful"],
     "adjudication_independence": ["hand_verdict_recorded_first", "hand_adjudicator",
                                   "adjudication_route_closed", "adjudication_route_c",
                                   "adjudication_route_d", "escalated_to_human"],
 }
+
+# The separation this whole module exists to hold. A statistic may read the field
+# on the left and NEVER the field on the right for the same purpose.
+FIELD_SEPARATION = {
+    "answer_key": "decides whether a SOLVER ANSWER is correct. Never matched against a "
+                  "search block.",
+    "screen_spec": "decides whether a SEARCH SUMMARY asserts the displacing claim. Never "
+                   "used to grade or adjudicate an answer.",
+    "key_sources": "KEY-CONSTRUCTION evidence. Never an experimental retrieval artifact, "
+                   "never handed to a solver, and never the source of the fixed query.",
+}
+
+
+REQUIRED_SOURCE_FIELDS = ("identifier", "title", "establishes", "accessed", "tier",
+                          "verifier")
+SOURCE_TIERS = ("authoritative_primary", "reputable_corroborating")
+
+KEY_VERIFICATION_RULE = (
+    "One AUTHORITATIVE PRIMARY source settles an item on its own -- the body that "
+    "defines or publishes the fact (a government register, the standards body, the "
+    "organisation's own record). Where no primary source is available, TWO INDEPENDENT "
+    "reputable sources must corroborate the same value; independent means not "
+    "republications of one another. There is no blanket two-source rule, because "
+    "demanding a second source where a definitive primary one exists buys nothing and "
+    "invites padding the evidence list."
+)
+
+KEY_EVIDENCE_IS_NOT_EXPERIMENTAL_EVIDENCE = (
+    "A query used to VERIFY A KEY may never become that item's fixed experimental query. "
+    "The fixed query is derived from the stem alone by the frozen rule "
+    "(lab/stage0b_harness.py:fixed_query), and the derivation is checkable by a third "
+    "party from the stem. Letting a key-verification query that 'worked well' become the "
+    "treatment would optimise the dose using observations made while building the key -- "
+    "authoring the treatment against the search index. Key evidence, the fixed query, the "
+    "model-written C query and the runtime exposure blocks are logged and fingerprinted "
+    "SEPARATELY for exactly this reason."
+)
+
+
+def validate_key_sources(sources: list[dict]) -> list[str]:
+    """Provenance sufficient for a third party to re-verify, per KEY_VERIFICATION_RULE."""
+    p: list[str] = []
+    if not sources:
+        return ["no key sources recorded: recipe clause 7 requires provenance before "
+                "any dispatch"]
+    for i, s in enumerate(sources):
+        for f in REQUIRED_SOURCE_FIELDS:
+            if not s.get(f):
+                p.append(f"source[{i}] missing {f!r}")
+        if s.get("tier") and s["tier"] not in SOURCE_TIERS:
+            p.append(f"source[{i}] tier {s['tier']!r} not in {SOURCE_TIERS}")
+    primary = [s for s in sources if s.get("tier") == "authoritative_primary"]
+    corroborating = [s for s in sources if s.get("tier") == "reputable_corroborating"]
+    if not primary and len(corroborating) < 2:
+        p.append("no authoritative primary source and fewer than two independent "
+                 "corroborating sources (KEY_VERIFICATION_RULE)")
+    ids = [s.get("identifier") for s in sources if s.get("identifier")]
+    if len(set(ids)) != len(ids):
+        p.append("duplicate source identifiers: republications are not independent")
+    return p
 
 
 def validate_row(row: CalibrationRow) -> list[str]:
@@ -872,10 +1068,44 @@ def validate_row(row: CalibrationRow) -> list[str]:
         p.append(f"{row.item_id}: production_barred must be True for every calibration item")
     if row.subset not in ("development", "grader_validation_holdout"):
         p.append(f"{row.item_id}: subset must be development or grader_validation_holdout")
-    if row.route not in ("exact_entity", "numeric", "boolean"):
+    if row.route not in ROUTES:
         p.append(f"{row.item_id}: unknown route {row.route!r}")
+
+    # --- A. the answer key -------------------------------------------------
+    try:
+        key = row.answer_key_typed()
+    except Exception as exc:
+        p.append(f"{row.item_id}: answer key does not load: {exc}")
+        key = None
+    if key is not None:
+        if key.route != row.route:
+            p.append(f"{row.item_id}: answer key route {key.route!r} != row route "
+                     f"{row.route!r}")
+        p += [f"{row.item_id}: answer key: {m}" for m in key.validate()]
+        try:
+            key.for_reference_verdict()
+        except Exception as exc:
+            p.append(f"{row.item_id}: answer key cannot produce a reference-verdict key: "
+                     f"{exc}. This is the defect the typed key exists to prevent.")
+
+    # --- B. the screen specification, a DIFFERENT object --------------------
+    try:
+        spec = row.screen_spec_typed()
+    except Exception as exc:
+        p.append(f"{row.item_id}: screen spec does not load: {exc}")
+        spec = None
+    if spec is not None:
+        if spec.route != row.route:
+            p.append(f"{row.item_id}: screen spec route {spec.route!r} != row route "
+                     f"{row.route!r}")
+        p += [f"{row.item_id}: screen spec: {m}" for m in spec.validate()]
+
+    # --- key provenance ----------------------------------------------------
     if not row.key_provenance:
         p.append(f"{row.item_id}: key provenance is required before any dispatch")
+    p += [f"{row.item_id}: key source: {m}" for m in validate_key_sources(row.key_sources)]
+
+    # --- stage invariants ---------------------------------------------------
     if row.screen_passed and row.d_divergent is not True:
         p.append(f"{row.item_id}: screen_passed with d_divergent={row.d_divergent!r}")
     graded = any(v is not None for v in (row.grader_verdict_closed, row.grader_verdict_c,
@@ -895,6 +1125,39 @@ def validate_row(row: CalibrationRow) -> list[str]:
     if row.d_production_divergent is not None and not row.screen_passed:
         p.append(f"{row.item_id}: a production D block on an item that did not pass the "
                  f"screen -- r_D is defined only on screen-passing items")
+    return p
+
+
+def validate_bank(rows: list[CalibrationRow]) -> list[str]:
+    """Bank-level invariants no single row can carry: route composition, the
+    per-route holdout floor, and boolean polarity balance."""
+    p: list[str] = []
+    ids = [r.item_id for r in rows]
+    if len(set(ids)) != len(ids):
+        p.append("duplicate item_id in bank")
+    hold = [r for r in rows if r.subset == "grader_validation_holdout"]
+    by_route = {r: sum(1 for x in hold if x.route == r) for r in ROUTES}
+    for route, n in by_route.items():
+        if n < MIN_HOLDOUT_ITEMS_PER_ROUTE:
+            p.append(f"holdout carries {n} {route} items, below the per-route floor of "
+                     f"{MIN_HOLDOUT_ITEMS_PER_ROUTE}. Below it a route-specific defect at "
+                     f"rate {ROUTE_DEFECT_RATE_TO_SURFACE} can hide behind the aggregate "
+                     f"bound, which is how the a09 boolean class stayed hidden")
+    if hold:
+        for route, w in PRODUCTION_ROUTE_MIX.items():
+            realized = by_route[route] / len(hold)
+            if abs(realized - w) > 0.05:
+                p.append(f"holdout route share for {route} is {realized:.3f}, off the "
+                         f"precommitted production mix {w}. The aggregate grader bound "
+                         f"transfers to production only if the mixtures match")
+    for subset in ("development", "grader_validation_holdout"):
+        bools = [r for r in rows if r.subset == subset and r.route == "boolean"]
+        if bools:
+            exp = [bool(r.answer_key.get("expected")) for r in bools]
+            if abs(sum(exp) - (len(exp) - sum(exp))) > BOOLEAN_POLARITY_TOLERANCE:
+                p.append(f"{subset}: boolean polarity {sum(exp)} True / "
+                         f"{len(exp) - sum(exp)} False exceeds +/-"
+                         f"{BOOLEAN_POLARITY_TOLERANCE} (protocol 2.1)")
     return p
 
 
@@ -1048,6 +1311,26 @@ def calibration_statistics(rows: list[CalibrationRow]) -> dict:
                         "quantity than the power model reads, so it can only raise the "
                         "required n. Reported, never substituted for the headline.",
             },
+            "by_route": {
+                r: {"n": sum(1 for x in adjudicated if x.route == r),
+                    "k_g_one": sum(1 for x, a in zip(adjudicated, ac)
+                                   if x.route == r and a[0]),
+                    "upper_95": round(cp_upper(
+                        sum(1 for x, a in zip(adjudicated, ac) if x.route == r and a[0]),
+                        sum(1 for x in adjudicated if x.route == r)), 4)
+                    if sum(1 for x in adjudicated if x.route == r) else None,
+                    "meets_floor": sum(1 for x in adjudicated if x.route == r)
+                    >= MIN_HOLDOUT_ITEMS_PER_ROUTE}
+                for r in ROUTES},
+            "route_bounds_are_descriptive": "the PASS rule reads the AGGREGATE bound, "
+                                            "which is valid for the production-weighted "
+                                            "rate because the holdout mixture is held "
+                                            "equal to the production mixture. The "
+                                            "per-route bounds are individually weak and "
+                                            "are reported, not relied on; what stops a "
+                                            "broken route hiding is that PASS requires "
+                                            "ZERO defects and every route carries at "
+                                            f"least {MIN_HOLDOUT_ITEMS_PER_ROUTE} items.",
             "arm_D_diagnostic": {
                 "k_g_one_on_AD_pairs": sum(1 for x in ad if x[0]),
                 "k_g_both_on_AD_pairs": sum(1 for x in ad if x[1]),
@@ -1056,6 +1339,11 @@ def calibration_statistics(rows: list[CalibrationRow]) -> dict:
                         "also the only exercise arm D's answer form gets before "
                         "production, which grades arm D too.",
             },
+        },
+        "route_composition": {
+            "holdout": {r: sum(1 for x in holdout if x.route == r) for r in ROUTES},
+            "precommitted_production_mix": PRODUCTION_ROUTE_MIX,
+            "per_route_floor": MIN_HOLDOUT_ITEMS_PER_ROUTE,
         },
         "n_prod_required": n_prod,
         "n_prod_required_if_grader_were_perfect": (

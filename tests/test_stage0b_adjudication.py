@@ -37,8 +37,13 @@ class TestTheReferenceIsIndependentOfTheRuleUnderTest:
         row = cal.CalibrationRow(
             item_id="cal001", pool="calibration", subset="development", batch=1,
             production_barred=True, stem="s", route="exact_entity",
-            accept_aliases=["A"], reject_aliases=["B"], key_provenance="doc#1",
-            query_subject="x", anchor_as_written="in 2015",
+            answer_key={"route": "exact_entity", "accept": ["A"], "rejects": ["B"]},
+            screen_spec={"route": "exact_entity", "displacing_aliases": ["B"],
+                         "affirming_aliases": ["A"]},
+            key_sources=[{"identifier": "u", "title": "t", "establishes": "e",
+                          "accessed": "2026-09-03", "tier": "authoritative_primary",
+                          "verifier": "test"}],
+            key_provenance="doc#1", query_subject="x", anchor_as_written="in 2015",
             grader_verdict_closed="CORRECT", grader_fingerprint="abc",
             hand_verdict_recorded_first=True, hand_adjudicator="lab.grading_v2")
         assert any("may never produce its own ground truth" in p
@@ -48,8 +53,13 @@ class TestTheReferenceIsIndependentOfTheRuleUnderTest:
         row = cal.CalibrationRow(
             item_id="cal002", pool="calibration", subset="development", batch=1,
             production_barred=True, stem="s", route="exact_entity",
-            accept_aliases=["A"], reject_aliases=["B"], key_provenance="doc#1",
-            query_subject="x", anchor_as_written="in 2015",
+            answer_key={"route": "exact_entity", "accept": ["A"], "rejects": ["B"]},
+            screen_spec={"route": "exact_entity", "displacing_aliases": ["B"],
+                         "affirming_aliases": ["A"]},
+            key_sources=[{"identifier": "u", "title": "t", "establishes": "e",
+                          "accessed": "2026-09-03", "tier": "authoritative_primary",
+                          "verifier": "test"}],
+            key_provenance="doc#1", query_subject="x", anchor_as_written="in 2015",
             grader_verdict_closed="CORRECT", grader_fingerprint="abc",
             hand_verdict_recorded_first=True)
         assert any("WHO produced the reference verdict" in p

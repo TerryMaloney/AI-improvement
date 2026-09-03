@@ -33,14 +33,24 @@
    "bytes": 18710,
    "load_bearing_for": "the C-vs-D pre-freeze discriminability requirement"
   },
+  "lab/stage0b_keys.py": {
+   "sha16": "d0992a33707a1642",
+   "bytes": 23334,
+   "load_bearing_for": "the ANSWER KEY and the EXPOSURE-SCREEN SPECIFICATION, and the S1 invariant that keeps them from collapsing back into one representation"
+  },
+  "lab/stage0b_calibration_runner.py": {
+   "sha16": "cd0ef3f4dc174d47",
+   "bytes": 28206,
+   "load_bearing_for": "the calibration freeze/grade/analyse driver: it executes the frozen plan, holds the ordering that makes candidate grading impossible before human adjudication, and is committed BEFORE the first dispatch"
+  },
   "lab/stage0b_adjudication.py": {
-   "sha16": "4f8fbd9be7806669",
-   "bytes": 13950,
+   "sha16": "dfa3a751675e5cda",
+   "bytes": 15250,
    "load_bearing_for": "the reference adjudicator that produces the ground truth the grader's defect rate is measured against. Fingerprinted because a ground truth that can be edited after the disagreements are visible is not a ground truth"
   },
   "lab/stage0b_calibration.py": {
-   "sha16": "7c85987a79a257dd",
-   "bytes": 70210,
+   "sha16": "c8215040f2211737",
+   "bytes": 87579,
    "load_bearing_for": "the calibration sizing derivations and the FROZEN PASS/CONTINUE/REVISE rules. It is fingerprinted for the same reason the grader is: a stopping rule that can be edited after the data arrives is not a stopping rule"
   },
   "lab/grading_v2.py": {
@@ -70,5 +80,5 @@
   }
  },
  "missing": [],
- "combined_sha16": "4a6312a7546f4207"
+ "combined_sha16": "98a67563bd4a7e70"
 }
