@@ -11,7 +11,7 @@ from dataclasses import dataclass
 import json
 
 from lab.exp005_epi import (
-    DerivedRule, EpistemicWorkspace, Evidence, NaiveRAG,
+    DerivedRule, EpistemicWorkspace, Evidence, MatchedRAG, NaiveRAG,
     ObjectivePolicy, RecentContext,
 )
 
@@ -137,6 +137,15 @@ def run_naive_rag(s: Scenario) -> dict[str, bool | None]:
     return {p: rag.query(p) for p in s.expected_epistemic}
 
 
+def run_matched_rag(s: Scenario) -> dict[str, bool | None]:
+    rag = MatchedRAG()
+    for r in s.rules:
+        rag.add_rule(r)
+    for e in s.evidence:
+        rag.ingest(e)
+    return {p: rag.query(p) for p in s.expected_epistemic}
+
+
 def run_recent(s: Scenario, window: int = 8) -> dict[str, bool | None]:
     m = RecentContext(window=window)
     for r in s.rules:
@@ -162,23 +171,25 @@ def score(pred: dict[str, bool | None], expected: dict[str, bool | None]) -> dic
 
 def benchmark() -> dict:
     results = {}
-    totals = {"workspace": [0, 0], "naive_rag": [0, 0], "recent_context": [0, 0]}
+    totals = {"workspace": [0, 0], "matched_rag": [0, 0], "naive_rag": [0, 0], "recent_context": [0, 0]}
     for factory in SCENARIOS:
         s = factory()
         ws, wp = run_workspace(s)
+        mp = run_matched_rag(s)
         np = run_naive_rag(s)
         rp = run_recent(s)
         row = {
             "description": s.description,
             "expected": s.expected_epistemic,
             "workspace": {"predictions": wp, **score(wp, s.expected_epistemic)},
+            "matched_rag": {"predictions": mp, **score(mp, s.expected_epistemic)},
             "naive_rag": {"predictions": np, **score(np, s.expected_epistemic)},
             "recent_context": {"predictions": rp, **score(rp, s.expected_epistemic)},
             "workspace_revision_count": len(ws.revisions),
             "workspace_fingerprint": ws.fingerprint(),
         }
         results[s.name] = row
-        for name, pred in (("workspace", wp), ("naive_rag", np), ("recent_context", rp)):
+        for name, pred in (("workspace", wp), ("matched_rag", mp), ("naive_rag", np), ("recent_context", rp)):
             sc = score(pred, s.expected_epistemic)
             totals[name][0] += sc["correct"]
             totals[name][1] += sc["n"]
@@ -191,7 +202,9 @@ def benchmark() -> dict:
         "license": (
             "Construct-validation only. These deterministic scenarios demonstrate that the "
             "implemented mechanisms behave as specified; they are not evidence that an LLM "
-            "system is more accurate in the real world."
+            "system is more accurate in the real world. The matched-RAG control receives the "
+            "same reliability, lineage and supersession metadata and therefore blocks a weak "
+            "claim that metadata access alone is an epistemic-workspace capability gain."
         ),
     }
 
