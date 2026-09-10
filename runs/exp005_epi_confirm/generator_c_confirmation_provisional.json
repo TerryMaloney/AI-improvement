@@ -1,0 +1,121 @@
+{
+  "status": "PROVISIONAL_PENDING_EXACT_COMMITTED_RUNNER_EXECUTION",
+  "decision_under_frozen_plan": "AMBER",
+  "plan": "experiments/exp005_epi/generator_c_confirmation_plan.json",
+  "plan_commit_preceded_outcomes": "9f678a545da5b8a785e10a93057c3a4bd8f9c9af",
+  "generator_commit_preceded_outcomes": "06ddde7489e989c43a5a47e91ac19f7d16f0053a",
+  "controller_commit_preceded_outcomes": "c6789acd3fa630c3aa9e36264d3411c3260bc077",
+  "root_seed": 2500000,
+  "n_worlds": 1000,
+  "max_budget": 4,
+  "execution_provenance": {
+    "method": "independent local semantic reimplementation of the frozen generator/controller because the analysis container could not resolve github.com for a checkout",
+    "exact_committed_runner_executed": false,
+    "equivalence_checks": [
+      "5 frozen-seed worlds: optimized reimplementation belief states matched slow workspace construction and CRV affected-utility fractions for every verifier offer",
+      "3 frozen-seed worlds: complete per-policy run outputs matched a slow implementation of the committed semantics for crv_net, udu_net, structural_net, uncertainty_own_net, and legacy_debt"
+    ],
+    "promotion_rule": "Do not promote this artifact from provisional until the exact committed lab.exp005_epi_crv.benchmark_c runner reproduces the frozen-plan outcome."
+  },
+  "summary": {
+    "crv_net": {
+      "mean_weighted_epistemic_gain": 0.04595565535811465,
+      "mean_unweighted_epistemic_gain": 0.04308653846153846,
+      "mean_total_cost": 0.04382138,
+      "mean_weighted_net_gain": 0.0021342753581146466,
+      "net_harm_rate": 0.455,
+      "epistemic_harm_rate": 0.157,
+      "mean_actions": 3.178,
+      "early_stop_rate": 0.484
+    },
+    "udu_net": {
+      "mean_weighted_epistemic_gain": 0.05111508944423815,
+      "mean_unweighted_epistemic_gain": 0.04875961538461539,
+      "mean_total_cost": 0.07070887000000001,
+      "mean_weighted_net_gain": -0.019593780555761855,
+      "net_harm_rate": 0.647,
+      "epistemic_harm_rate": 0.133,
+      "mean_actions": 3.957,
+      "early_stop_rate": 0.035
+    },
+    "structural_net": {
+      "mean_weighted_epistemic_gain": 0.03369569869123075,
+      "mean_unweighted_epistemic_gain": 0.030326923076923078,
+      "mean_total_cost": 0.11064113,
+      "mean_weighted_net_gain": -0.07694543130876925,
+      "net_harm_rate": 0.931,
+      "epistemic_harm_rate": 0.167,
+      "mean_actions": 4.0,
+      "early_stop_rate": 0.0
+    },
+    "uncertainty_own_net": {
+      "mean_weighted_epistemic_gain": 0.007360638062254294,
+      "mean_unweighted_epistemic_gain": 0.006346153846153846,
+      "mean_total_cost": 0.00701168,
+      "mean_weighted_net_gain": 0.0003489580622542937,
+      "net_harm_rate": 0.37,
+      "epistemic_harm_rate": 0.092,
+      "mean_actions": 0.958,
+      "early_stop_rate": 0.985
+    },
+    "legacy_debt": {
+      "mean_weighted_epistemic_gain": 0.02592140648055313,
+      "mean_unweighted_epistemic_gain": 0.024432692307692308,
+      "mean_total_cost": 0.04352509,
+      "mean_weighted_net_gain": -0.017603683519446873,
+      "net_harm_rate": 0.645,
+      "epistemic_harm_rate": 0.234,
+      "mean_actions": 4.0,
+      "early_stop_rate": 0.0
+    }
+  },
+  "paired_crv_minus_udu": {
+    "weighted_net_gain": {
+      "mean_difference": 0.021728055913876502,
+      "normal_approx_95_ci": [0.019382991470734103, 0.0240731203570189],
+      "wins": 753,
+      "ties": 38,
+      "losses": 209
+    },
+    "weighted_epistemic_gain": {
+      "mean_difference": -0.005159434086123499,
+      "normal_approx_95_ci": [-0.007390596581508696, -0.0029282715907383012]
+    },
+    "unweighted_epistemic_gain": {
+      "mean_difference": -0.005673076923076923,
+      "normal_approx_95_ci": [-0.007924239402911981, -0.0034219144432418654]
+    }
+  },
+  "distribution_audit": {
+    "crv_weighted_net_gain": {
+      "median": 0.005710899359698689,
+      "q05": -0.09222561528790187,
+      "q10": -0.06480638373251552,
+      "q90": 0.06425070105456218,
+      "q95": 0.08002245123297796,
+      "min": -0.25196004427604735,
+      "max": 0.1725538327200252,
+      "mean_conditional_harm": -0.042274388633767576
+    },
+    "udu_weighted_net_gain": {
+      "median": -0.018065835751731263,
+      "q05": -0.1102447723031504,
+      "q10": -0.08178488147994621,
+      "q90": 0.04242409072394178,
+      "q95": 0.05966613749384355,
+      "min": -0.18510986459440548,
+      "max": 0.1373190164793273,
+      "mean_conditional_harm": -0.04748956831049365
+    }
+  },
+  "frozen_threshold_check": {
+    "primary_mean_difference_ge_0.005": true,
+    "primary_ci_lower_gt_0": true,
+    "weighted_epistemic_difference_ge_0": false,
+    "unweighted_epistemic_difference_ge_minus_0.005": false,
+    "crv_net_harm_rate_le_0.10": false,
+    "crv_net_harm_rate_le_udu_plus_0.02": true,
+    "no_op_realization_rate_ge_0.05": true
+  },
+  "interpretation": "CRV-net is materially more cost-efficient than UDU-net on this provisional run, largely because it declines or truncates verification more often. It does not improve epistemic accuracy relative to UDU and its per-world net-harm rate is far above the frozen safety threshold. The correct frozen-plan decision is AMBER, not PASS. The result supports continued development of consequence-aware acquisition but does not support a safe or epistemically superior controller claim."
+}
