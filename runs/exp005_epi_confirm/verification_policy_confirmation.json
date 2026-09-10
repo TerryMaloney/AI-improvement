@@ -1,0 +1,21 @@
+{
+  "decision": "PASS",
+  "plan_commit_preceded_outcomes": "0bba8c45fbee3238fcd5325a3dd84550be1db933",
+  "plan": "experiments/exp005_epi/verification_confirmation_plan.json",
+  "root_seed": 900000,
+  "n_worlds": 500,
+  "budget": 3,
+  "primary_mean_difference_debt_minus_random": 0.07193649625372311,
+  "primary_required": 0.03,
+  "secondary_mean_difference_debt_minus_uncertainty": 0.026461372656777803,
+  "secondary_required": 0.01,
+  "debt_harm_rate": 0.002,
+  "debt_harm_rate_max": 0.01,
+  "summary": {
+    "debt": {"mean_gain": 0.14390608817856432, "worlds_improved": 498, "worlds_harmed": 1, "harm_rate": 0.002},
+    "uncertainty": {"mean_gain": 0.11744471552178651, "worlds_improved": 498, "worlds_harmed": 1, "harm_rate": 0.002},
+    "dependency": {"mean_gain": 0.11735868328323505, "worlds_improved": 469, "worlds_harmed": 1, "harm_rate": 0.002},
+    "random": {"mean_gain": 0.07196959192484119, "worlds_improved": 458, "worlds_harmed": 4, "harm_rate": 0.008}
+  },
+  "license": "Held-out support only on unseen seeds from the same synthetic generator. This does not license an LLM, cross-generator, real-world, source-lineage-inference, or source-reliability claim. The generator and heuristic share research lineage."
+}
