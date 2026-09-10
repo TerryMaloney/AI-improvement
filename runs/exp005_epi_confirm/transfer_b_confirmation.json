@@ -1,0 +1,22 @@
+{
+  "decision": "PASS",
+  "plan_commit_preceded_outcomes": "8352395a93f22b458ec46f57136e3c49b17c5597",
+  "plan": "experiments/exp005_epi/transfer_b_confirmation_plan.json",
+  "generator": "lab.exp005_epi_worlds_b.generate_transfer_world",
+  "root_seed": 1500000,
+  "n_worlds": 500,
+  "budget": 3,
+  "primary_mean_difference_debt_minus_random": 0.0463856808079871,
+  "primary_required": 0.02,
+  "secondary_mean_difference_debt_minus_uncertainty": 0.02865675709621512,
+  "secondary_required": 0.0,
+  "debt_harm_rate": 0.002,
+  "debt_harm_rate_max": 0.02,
+  "summary": {
+    "debt": {"mean_gain": 0.13235027994842055, "worlds_improved": 494, "worlds_harmed": 1, "harm_rate": 0.002},
+    "uncertainty": {"mean_gain": 0.10369352285220543, "worlds_improved": 500, "worlds_harmed": 0, "harm_rate": 0.0},
+    "dependency": {"mean_gain": 0.1303998488080026, "worlds_improved": 487, "worlds_harmed": 1, "harm_rate": 0.002},
+    "random": {"mean_gain": 0.08596459914043345, "worlds_improved": 490, "worlds_harmed": 1, "harm_rate": 0.002}
+  },
+  "license": "Cross-generator synthetic support only. Generator B was committed before controller outcomes and changes topology/evidence processes. This does not license natural-language extraction, inferred source lineage/reliability, LLM, real-tool, or real-world benefit."
+}
