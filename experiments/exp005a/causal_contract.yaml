@@ -1,0 +1,106 @@
+# EXP005A causal contract — procedure discovery / inference-time capability lift.
+# DESIGN ONLY. No EXP005A model outcome exists.
+experiment: exp005a
+status: draft
+nodes:
+  - treatment
+  - model
+  - served_model
+  - system_instructions
+  - item
+  - evaluator
+  - selection
+  - outcome
+  - missingness
+  - cost_effort
+  - shared_latent
+required_edges:
+  - [treatment, outcome]
+  - [model, outcome]
+  - [item, outcome]
+  - [cost_effort, outcome]
+assumed_absent_edges:
+  - edge: [treatment, evaluator]
+    check:
+      type: deterministic_route
+      artifact: "[OPEN]"
+      test: "[OPEN]"
+      note: Final-answer extraction/grading must be identical across A0/B3/C3/D3.
+  - edge: [treatment, item]
+    check:
+      type: fingerprint
+      artifact: "[OPEN]"
+      test: "[OPEN]"
+      note: Every arm receives the same frozen item instance; development items are barred.
+  - edge: [selection, outcome]
+    check:
+      type: proof_or_rule
+      artifact: docs/EXP005_PROCEDURE_DISCOVERY_2026-09-09.md#8
+      note: Procedure promotion rules are committed before EXP005A outcomes and cannot select tasks.
+  - edge: [served_model, treatment]
+    check:
+      type: recorded_value
+      artifact: "[OPEN]"
+      note: Served model identity must be recorded per dispatch; model drift cannot be arm-correlated silently.
+  - edge: [system_instructions, treatment]
+    check:
+      type: byte_identity
+      artifact: "[OPEN]"
+      test: "[OPEN]"
+      note: Shared system instructions must be byte-identical except the explicitly fingerprinted role/procedure packet.
+  - edge: [missingness, treatment]
+    check:
+      type: proof_or_rule
+      artifact: "[OPEN]"
+      note: Failure/retry semantics must be fixed before dispatch so one arm cannot be selectively retried.
+  - edge: [shared_latent, outcome]
+    check:
+      type: design
+      artifact: docs/EXP005_PROCEDURE_DISCOVERY_2026-09-09.md#5.5
+      note: Fresh contexts are required for independent samples/verifier calls; C3 intentionally keeps one context lineage and that dependence is the treatment.
+bindings:
+  - construct: A0_single_direct
+    claim: docs/EXP005_PROCEDURE_DISCOVERY_2026-09-09.md#5.5
+    implementation: "[OPEN]"
+    fingerprint: "[OPEN]"
+    correspondence_test: "[OPEN]"
+  - construct: B3_resample_majority
+    claim: docs/EXP005_PROCEDURE_DISCOVERY_2026-09-09.md#5.5
+    implementation: "[OPEN]"
+    fingerprint: "[OPEN]"
+    correspondence_test: "[OPEN]"
+  - construct: C3_self_refine
+    claim: docs/EXP005_PROCEDURE_DISCOVERY_2026-09-09.md#5.5
+    implementation: "[OPEN]"
+    fingerprint: "[OPEN]"
+    correspondence_test: "[OPEN]"
+  - construct: D3_independent_verifier_repair
+    claim: docs/EXP005_PROCEDURE_DISCOVERY_2026-09-09.md#5.5
+    implementation: "[OPEN]"
+    fingerprint: "[OPEN]"
+    correspondence_test: "[OPEN]"
+  - construct: deterministic_task_generators
+    claim: docs/EXP005_PROCEDURE_DISCOVERY_2026-09-09.md#5.3
+    implementation: "[OPEN]"
+    fingerprint: "[OPEN]"
+    correspondence_test: "[OPEN]"
+  - construct: capability_lift_curve
+    claim: docs/EXP005_PROCEDURE_DISCOVERY_2026-09-09.md#4
+    implementation: "[OPEN]"
+    fingerprint: "[OPEN]"
+    correspondence_test: "[OPEN]"
+  - construct: budget_telemetry
+    claim: docs/EXP005_PROCEDURE_DISCOVERY_2026-09-09.md#6
+    implementation: "[OPEN]"
+    fingerprint: "[OPEN]"
+    correspondence_test: "[OPEN]"
+open_fields:
+  - task-generator implementations and deterministic-key tests
+  - final-answer parser and identical grading route
+  - A0/B3/C3/D3 dispatch driver
+  - role-prompt fingerprints
+  - served-model/runtime correspondence gate
+  - missingness and retry semantics
+  - token/cost telemetry lineage
+  - discovery-bank freeze record
+  - model-inference execution surface
