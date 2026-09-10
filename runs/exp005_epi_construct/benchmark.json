@@ -1,0 +1,67 @@
+{
+  "aggregate": {
+    "naive_rag": {
+      "accuracy": 0.875,
+      "correct": 7,
+      "n": 8
+    },
+    "recent_context": {
+      "accuracy": 0.375,
+      "correct": 3,
+      "n": 8
+    },
+    "workspace": {
+      "accuracy": 1.0,
+      "correct": 8,
+      "n": 8
+    }
+  },
+  "license": "Construct-validation only. These deterministic scenarios demonstrate that the implemented mechanisms behave as specified; they are not evidence that an LLM system is more accurate in the real world.",
+  "scenarios": {
+    "copied_consensus": {
+      "description": "Five apparent sources copy one origin; one stronger independent source contradicts them.",
+      "expected": {"X": false},
+      "naive_rag": {"accuracy": 0.0, "correct": 0, "n": 1, "predictions": {"X": true}, "resolved_correct": 0, "resolved_n": 1},
+      "recent_context": {"accuracy": 0.0, "correct": 0, "n": 1, "predictions": {"X": true}, "resolved_correct": 0, "resolved_n": 1},
+      "workspace": {"accuracy": 1.0, "correct": 1, "n": 1, "predictions": {"X": false}, "resolved_correct": 1, "resolved_n": 1},
+      "workspace_fingerprint": "55f733119158976a",
+      "workspace_revision_count": 2
+    },
+    "delayed_false_premise": {
+      "description": "A credible false premise is corrected much later; dependent beliefs must repair.",
+      "expected": {"A": true, "X": false, "Y": false, "Z": false},
+      "naive_rag": {"accuracy": 1.0, "correct": 4, "n": 4, "predictions": {"A": true, "X": false, "Y": false, "Z": false}, "resolved_correct": 4, "resolved_n": 4},
+      "recent_context": {"accuracy": 0.0, "correct": 0, "n": 4, "predictions": {"A": null, "X": null, "Y": null, "Z": null}, "resolved_correct": 0, "resolved_n": 4},
+      "workspace": {"accuracy": 1.0, "correct": 4, "n": 4, "predictions": {"A": true, "X": false, "Y": false, "Z": false}, "resolved_correct": 4, "resolved_n": 4},
+      "workspace_fingerprint": "952b2f5a24a6ccbd",
+      "workspace_revision_count": 37
+    },
+    "false_correction_resistance": {
+      "description": "Weak newer evidence should not automatically overwrite strong established evidence.",
+      "expected": {"X": true},
+      "naive_rag": {"accuracy": 1.0, "correct": 1, "n": 1, "predictions": {"X": true}, "resolved_correct": 1, "resolved_n": 1},
+      "recent_context": {"accuracy": 1.0, "correct": 1, "n": 1, "predictions": {"X": true}, "resolved_correct": 1, "resolved_n": 1},
+      "workspace": {"accuracy": 1.0, "correct": 1, "n": 1, "predictions": {"X": true}, "resolved_correct": 1, "resolved_n": 1},
+      "workspace_fingerprint": "b9597f6dd8093060",
+      "workspace_revision_count": 2
+    },
+    "genuine_temporal_change": {
+      "description": "A later authoritative record explicitly supersedes an old state.",
+      "expected": {"X": false},
+      "naive_rag": {"accuracy": 1.0, "correct": 1, "n": 1, "predictions": {"X": false}, "resolved_correct": 1, "resolved_n": 1},
+      "recent_context": {"accuracy": 1.0, "correct": 1, "n": 1, "predictions": {"X": false}, "resolved_correct": 1, "resolved_n": 1},
+      "workspace": {"accuracy": 1.0, "correct": 1, "n": 1, "predictions": {"X": false}, "resolved_correct": 1, "resolved_n": 1},
+      "workspace_fingerprint": "02cb790d713abfcd",
+      "workspace_revision_count": 2
+    },
+    "unresolved_conflict": {
+      "description": "Balanced independent evidence should remain disputed instead of being forced to a side.",
+      "expected": {"X": null},
+      "naive_rag": {"accuracy": 1.0, "correct": 1, "n": 1, "predictions": {"X": null}, "resolved_correct": 0, "resolved_n": 0},
+      "recent_context": {"accuracy": 1.0, "correct": 1, "n": 1, "predictions": {"X": null}, "resolved_correct": 0, "resolved_n": 0},
+      "workspace": {"accuracy": 1.0, "correct": 1, "n": 1, "predictions": {"X": null}, "resolved_correct": 0, "resolved_n": 0},
+      "workspace_fingerprint": "251ec3b38accac3d",
+      "workspace_revision_count": 2
+    }
+  }
+}
