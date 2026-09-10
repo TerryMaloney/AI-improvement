@@ -196,3 +196,90 @@ def extraction_packet() -> str:
 
 def packet_fingerprint() -> str:
     return hashlib.sha256(extraction_packet().encode()).hexdigest()[:16]
+
+
+MODEL_OUTPUT_KEYS = frozenset({
+    "proposition",
+    "asserted_value",
+    "evidence_span",
+    "span_start",
+    "span_end",
+    "extractor_confidence",
+})
+
+
+def parse_model_extraction(document: EvidenceDocument, output: str | dict,
+                           *, ontology: set[str] | frozenset[str] | None = None) -> ExtractedClaim | None:
+    """Parse the only writable surface exposed to a future model extractor.
+
+    Trusted metadata is copied from ``document`` rather than accepted from model
+    output.  Extra keys are rejected so a model cannot smuggle objective,
+    permission, source, lineage, timestamp, evidence-id or tool-control fields
+    through the extraction channel.
+
+    An explicit abstention is exactly confidence=0 with an empty provenance span;
+    it returns ``None`` and never enters the evidence ledger.
+    """
+    if isinstance(output, str):
+        try:
+            payload = json.loads(output)
+        except json.JSONDecodeError as exc:
+            raise ValueError("model extraction is not valid JSON") from exc
+    elif isinstance(output, dict):
+        payload = dict(output)
+    else:
+        raise TypeError("model extraction must be JSON text or dict")
+
+    if not isinstance(payload, dict):
+        raise ValueError("model extraction JSON must be an object")
+    keys = frozenset(payload)
+    if keys != MODEL_OUTPUT_KEYS:
+        extra = sorted(keys - MODEL_OUTPUT_KEYS)
+        missing = sorted(MODEL_OUTPUT_KEYS - keys)
+        raise ValueError(f"model extraction schema mismatch: extra={extra}, missing={missing}")
+
+    proposition = payload["proposition"]
+    asserted = payload["asserted_value"]
+    span = payload["evidence_span"]
+    start = payload["span_start"]
+    end = payload["span_end"]
+    confidence = payload["extractor_confidence"]
+
+    if not isinstance(proposition, str):
+        raise ValueError("proposition must be a string")
+    if type(asserted) is not bool:
+        raise ValueError("asserted_value must be boolean")
+    if not isinstance(span, str):
+        raise ValueError("evidence_span must be a string")
+    if type(start) is not int or type(end) is not int:
+        raise ValueError("span_start/span_end must be integers")
+    if isinstance(confidence, bool) or not isinstance(confidence, (int, float)):
+        raise ValueError("extractor_confidence must be numeric")
+    confidence = float(confidence)
+    if not 0.0 <= confidence <= 1.0:
+        raise ValueError("extractor_confidence outside [0,1]")
+
+    if confidence == 0.0 and span == "":
+        return None
+
+    if ontology is not None and proposition not in ontology:
+        raise ValueError("proposition is outside the frozen ontology")
+
+    claim = ExtractedClaim(
+        document_id=document.document_id,
+        evidence_id=document.evidence_id,
+        proposition=proposition,
+        asserted_value=asserted,
+        source_id=document.source_id,
+        observed_at=document.observed_at,
+        evidence_span=span,
+        span_start=start,
+        span_end=end,
+        supersedes=document.supersedes,
+        extractor="model",
+        extractor_confidence=confidence,
+    )
+    errors = validate_extraction(document, claim)
+    if errors:
+        raise ValueError("invalid model extraction: " + "; ".join(errors))
+    return claim
