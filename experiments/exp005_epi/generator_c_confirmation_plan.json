@@ -1,0 +1,73 @@
+{
+  "status": "FROZEN_BEFORE_GENERATOR_C_CONTROLLER_OUTCOMES",
+  "generator_commit_precedes_outcomes": "06ddde7489e989c43a5a47e91ac19f7d16f0053a",
+  "controller_commit_precedes_outcomes": "c6789acd3fa630c3aa9e36264d3411c3260bc077",
+  "invariant_tests_commit_precedes_outcomes": "7b372531ecfc1e6a770ef5258e4b64df29cebf17",
+  "generator": "lab.exp005_epi_worlds_c.generate_adversarial_world",
+  "runner": "lab.exp005_epi_crv.benchmark_c",
+  "root_seed": 2500000,
+  "n_worlds": 1000,
+  "max_budget": 4,
+  "policies": [
+    "crv_net",
+    "udu_net",
+    "structural_net",
+    "uncertainty_own_net",
+    "legacy_debt"
+  ],
+  "controller_blinding": {
+    "visible": [
+      "workspace beliefs and reported evidence metadata",
+      "reported_impacts",
+      "verifier tool_id",
+      "verifier proposition",
+      "verifier reported_accuracy",
+      "verifier cost"
+    ],
+    "hidden": [
+      "base_truth",
+      "derived truth",
+      "evaluation_impacts",
+      "actual source accuracy",
+      "actual lineage",
+      "actual verifier accuracy",
+      "future verifier outcome"
+    ]
+  },
+  "primary_estimand": "mean paired per-world weighted_net_gain(crv_net) - weighted_net_gain(udu_net)",
+  "primary_reason": "UDU-net is the strongest simple post-hoc explanation from A/B, and differs from CRV-net mainly by counting every structural descendant rather than only beliefs whose current resolved state can change under opposite tool reports.",
+  "cost_semantics": "Verification cost is denominated in the same normalized decision-loss utility units used by weighted_net_gain. weighted_net_gain = weighted_epistemic_gain - total_verification_cost.",
+  "candidate_formula": "CRV-net(action) = uncertainty(P) * counterfactual_affected_reported_utility_fraction(P, tool) * max(0, 2*reported_tool_accuracy-1) - tool_cost. Choose the maximum positive action; if none is positive, choose NO VERIFICATION.",
+  "matched_simple_formula": "UDU-net(action) = uncertainty(P) * structural_reported_utility_fraction(P) * max(0, 2*reported_tool_accuracy-1) - tool_cost. Choose the maximum positive action; if none is positive, choose NO VERIFICATION.",
+  "thresholds": {
+    "primary_minimum_mean_difference": 0.005,
+    "primary_normal_approx_95_ci_lower_must_exceed": 0.0,
+    "weighted_epistemic_gain_difference_minimum": 0.0,
+    "unweighted_epistemic_gain_difference_noninferiority_margin": -0.005,
+    "crv_net_harm_rate_absolute_max": 0.10,
+    "crv_net_harm_rate_margin_over_udu_max": 0.02,
+    "no_op_realization_rate_for_no_op_subclaim": 0.05
+  },
+  "decision": {
+    "PASS": "primary mean difference >= 0.005 AND primary 95% CI lower bound > 0 AND CRV-minus-UDU weighted epistemic gain >= 0 AND CRV-minus-UDU unweighted epistemic gain >= -0.005 AND CRV net harm rate <= 0.10 AND <= UDU net harm rate + 0.02",
+    "AMBER": "CRV mean weighted net gain > UDU but one or more PASS thresholds miss",
+    "FAIL_KILL_CRV_V1": "CRV mean weighted net gain <= UDU mean weighted net gain",
+    "NO_OP_SUBCLAIM_WITHHELD": "If CRV early-stop/no-verification realization rate is < 0.05, do not claim the no-op mechanism was meaningfully exercised even if the primary test passes"
+  },
+  "secondary_interpretation": {
+    "legacy_debt": "Reference only because the frozen old debt policy had no acquisition-cost/no-op semantics; it is not the primary fairness comparator.",
+    "structural_net": "Tests whether uncertainty is needed once structural utility and tool economics are available.",
+    "uncertainty_own_net": "Tests whether downstream structure adds value beyond local uncertainty and local decision importance."
+  },
+  "license_if_passed": "Prospective support only on a synthetic adversarial generator designed in the same research program. A pass would support counterfactual revision consequence as a useful scheduling signal under noisy reported metadata and fallible verification. It would not establish real-world source reliability, inferred lineage, natural-language extraction, real-tool benefit, LLM capability gain, or novelty beyond related Value-of-Information/active-diagnosis ideas.",
+  "do_not": [
+    "change Generator C after inspecting controller outcomes",
+    "change CRV-net or UDU-net formulas after inspecting outcomes",
+    "change seed range, n_worlds, budget, cost semantics or PASS thresholds after inspecting outcomes",
+    "use hidden simulation fields in any controller",
+    "tune verifier costs or accuracies after seeing which policy wins",
+    "call a PASS evidence that persistent storage itself is the mechanism",
+    "call a PASS a real-world, LLM, web-search, source-lineage-inference or calibrated-source-trust result",
+    "rescue CRV v1 with post-hoc weights if UDU wins; record the failure and redesign prospectively"
+  ]
+}
