@@ -1,0 +1,29 @@
+{
+  "status": "FROZEN_BEFORE_GENERATOR_B_CONTROLLER_OUTCOMES",
+  "generator_commit_precedes_outcomes": "4bb0c8a262c06e564ac671caadd2e56724761c14",
+  "generator": "lab.exp005_epi_worlds_b.generate_transfer_world",
+  "evaluation_runner": "lab.exp005_epi_worlds.run_policy",
+  "root_seed": 1500000,
+  "n_worlds": 500,
+  "budget": 3,
+  "policies": ["debt", "uncertainty", "dependency", "random"],
+  "primary_estimand": "mean paired per-world gain(debt) - gain(random)",
+  "secondary_estimand": "mean paired per-world gain(debt) - gain(uncertainty)",
+  "thresholds": {
+    "primary_minimum_mean_difference": 0.02,
+    "secondary_minimum_mean_difference": 0.0,
+    "debt_world_harm_rate_max": 0.02
+  },
+  "decision": {
+    "PASS": "primary difference >= 0.02 AND secondary difference >= 0.0 AND debt harm rate <= 0.02",
+    "AMBER": "mean debt gain > mean random gain but one or more PASS thresholds miss",
+    "FAIL": "mean debt gain <= mean random gain"
+  },
+  "license_if_passed": "Cross-generator synthetic support only. Does not license natural-language extraction, inferred source lineage/reliability, LLM, real-tool, or real-world benefit.",
+  "do_not": [
+    "change Generator B after controller outcomes",
+    "change epistemic_debt or component policies before this result is recorded",
+    "change loss, budget or seed range after seeing outcomes",
+    "call a pass real-world or LLM evidence"
+  ]
+}
