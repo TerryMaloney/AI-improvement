@@ -487,6 +487,61 @@ class NaiveRAG:
         return None
 
 
+class MatchedRAG:
+    """Stronger flat/on-demand comparator with the SAME evidence metadata.
+
+    It receives source reliability, lineage and supersession just like the
+    workspace, and re-evaluates a proposition when asked.  It intentionally has
+    no persistent belief state, revision history, epistemic-debt queue, or
+    objective boundary.  If this matches the workspace on final QA, the
+    workspace has not earned an accuracy claim merely by beating NaiveRAG.
+    """
+    SUPPORT_THRESHOLD = 0.80
+    REJECT_THRESHOLD = 0.20
+
+    def __init__(self):
+        self.evidence: list[Evidence] = []
+        self.rules: dict[str, DerivedRule] = {}
+
+    def ingest(self, evidence: Evidence) -> None:
+        self.evidence.append(evidence)
+
+    def add_rule(self, rule: DerivedRule) -> None:
+        self.rules[rule.output] = rule
+
+    def _base(self, proposition: str) -> bool | None:
+        superseded = {sid for e in self.evidence for sid in e.supersedes}
+        rows = [e for e in self.evidence
+                if e.proposition == proposition and e.evidence_id not in superseded]
+        reps = EpistemicWorkspace._lineage_representatives(rows)
+        if not reps:
+            return None
+        score = sum((_logit_weight(e.reliability) if e.asserted_value else
+                     -_logit_weight(e.reliability)) for e in reps)
+        p = _logistic(score)
+        if p >= self.SUPPORT_THRESHOLD:
+            return True
+        if p <= self.REJECT_THRESHOLD:
+            return False
+        return None
+
+    def query(self, proposition: str, _stack: set[str] | None = None) -> bool | None:
+        if proposition not in self.rules:
+            return self._base(proposition)
+        stack = set() if _stack is None else _stack
+        if proposition in stack:
+            return None
+        stack.add(proposition)
+        rule = self.rules[proposition]
+        vals = [(self.query(p, stack), expected) for p, expected in rule.premises]
+        stack.remove(proposition)
+        if any(v is not None and v != expected for v, expected in vals):
+            return False
+        if all(v is not None and v == expected for v, expected in vals):
+            return True
+        return None
+
+
 class RecentContext:
     """Comparator with only the most recent K evidence items."""
     def __init__(self, window: int = 8):
