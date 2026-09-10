@@ -100,11 +100,20 @@ bindings:
     implementation: lab/exp005_epi_benchmark.py:benchmark
     fingerprint: runs/exp005_epi_construct/benchmark.json
     correspondence_test: tests/test_exp005_epi.py::test_benchmark_license_and_expected_comparison
+  - construct: synthetic_longitudinal_world_generator
+    claim: docs/EXP005_EPISTEMIC_WORKSPACE_2026-09-09.md#12
+    implementation: lab/exp005_epi_worlds.py:generate_world
+    fingerprint: experiments/exp005_epi/verification_confirmation_plan.json
+    correspondence_test: tests/test_exp005_epi_worlds.py::test_world_generation_is_reproducible
+  - construct: active_verification_controller
+    claim: docs/EXP005_EPISTEMIC_WORKSPACE_2026-09-09.md#7
+    implementation: lab/exp005_epi_worlds.py:choose_debt
+    fingerprint: runs/exp005_epi_confirm/verification_policy_confirmation.json
+    correspondence_test: tests/test_exp005_epi_worlds.py::test_debt_beats_random_on_fixed_development_worlds
 open_fields:
-  - code fingerprints/freeze record before EPI-1A production
-  - randomized EPI-1A world generator
-  - longitudinal primary estimand and power/sensitivity analysis
-  - metadata-matched baseline specification for EPI-1A
+  - file/code fingerprint freeze record before any LLM-backed EPI production
+  - cross-generator confirmation of active-verification signal
+  - longitudinal cost model against a metadata-matched RAG that can recompute on demand
   - claim-extraction packet and correspondence gate for EPI-1B
   - model-inference execution surface
   - live tool/retrieval bindings for later phases
