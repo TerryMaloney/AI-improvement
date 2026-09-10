@@ -1,0 +1,28 @@
+{
+  "status": "FROZEN_BEFORE_CONFIRMATION_OUTCOMES",
+  "created_after_development_artifact": "runs/exp005_epi_construct/verification_policy_development.json",
+  "generator": "lab.exp005_epi_worlds.generate_world",
+  "root_seed": 900000,
+  "n_worlds": 500,
+  "budget": 3,
+  "policies": ["debt", "uncertainty", "dependency", "random"],
+  "primary_estimand": "mean paired per-world gain(debt) - gain(random)",
+  "secondary_estimand": "mean paired per-world gain(debt) - gain(uncertainty)",
+  "development_informed_thresholds": {
+    "primary_minimum_mean_difference": 0.03,
+    "secondary_minimum_mean_difference": 0.01,
+    "debt_world_harm_rate_max": 0.01
+  },
+  "decision": {
+    "PASS": "primary difference >= 0.03 AND secondary difference >= 0.01 AND debt harm rate <= 0.01",
+    "AMBER": "debt > random but either minimum difference is missed, or debt harm rate > 0.01",
+    "FAIL": "mean debt gain <= mean random gain"
+  },
+  "license_if_passed": "Held-out support only on unseen seeds from the same synthetic generator. Does not license an LLM, cross-generator, real-world, source-lineage-inference, or source-reliability claim.",
+  "do_not": [
+    "change epistemic_debt before running this confirmation",
+    "change generator parameters or loss after seeing confirmation outcomes",
+    "substitute oracle policy into the primary comparison",
+    "call a pass real-world evidence"
+  ]
+}
