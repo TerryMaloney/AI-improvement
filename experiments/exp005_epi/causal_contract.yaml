@@ -1,0 +1,112 @@
+# EXP005-EPI causal contract — persistent epistemic workspace.
+# CONSTRUCT / DESIGN STAGE. No LLM outcome exists.
+experiment: exp005_epi
+status: draft
+nodes:
+  - treatment
+  - model
+  - served_model
+  - system_instructions
+  - tool_definitions
+  - tool_use
+  - environment
+  - item
+  - evaluator
+  - selection
+  - outcome
+  - missingness
+  - cost_effort
+  - shared_latent
+required_edges:
+  - [item, outcome]
+  - [treatment, outcome]
+  - [cost_effort, outcome]
+assumed_absent_edges:
+  - edge: [treatment, evaluator]
+    check:
+      type: deterministic_route
+      artifact: tests/test_exp005_epi.py
+      test: tests/test_exp005_epi.py::test_benchmark_license_and_expected_comparison
+      note: EPI-0 uses exact synthetic state, not an LLM judge.
+  - edge: [treatment, item]
+    check:
+      type: deterministic_route
+      artifact: lab/exp005_epi_benchmark.py
+      test: tests/test_exp005_epi.py::test_benchmark_license_and_expected_comparison
+      note: All comparators receive the same declared Scenario evidence/rules.
+  - edge: [selection, outcome]
+    check:
+      type: proof_or_rule
+      artifact: docs/EXP005_EPISTEMIC_WORKSPACE_2026-09-09.md#12
+      note: EPI-0 contains no outcome-conditioned item selection; future randomized worlds must be frozen before comparison.
+  - edge: [system_instructions, treatment]
+    check:
+      type: design
+      artifact: docs/EXP005_EPISTEMIC_WORKSPACE_2026-09-09.md#12
+      note: No model/system instructions exist in EPI-0. Future EPI-1B must bind them before dispatch.
+  - edge: [tool_definitions, treatment]
+    check:
+      type: design
+      artifact: docs/EXP005_EPISTEMIC_WORKSPACE_2026-09-09.md#12
+      note: No live tools exist in EPI-0. Future tool exposure must be symmetric or explicit treatment.
+  - edge: [missingness, treatment]
+    check:
+      type: design
+      artifact: docs/EXP005_EPISTEMIC_WORKSPACE_2026-09-09.md#12
+      note: Deterministic construct execution has no stochastic missing model calls.
+bindings:
+  - construct: immutable_evidence_log
+    claim: docs/EXP005_EPISTEMIC_WORKSPACE_2026-09-09.md#3.1
+    implementation: lab/exp005_epi.py:Evidence
+    fingerprint: "[OPEN]"
+    correspondence_test: tests/test_exp005_epi.py::test_evidence_is_append_only_and_id_collision_fails
+  - construct: mutable_belief_state
+    claim: docs/EXP005_EPISTEMIC_WORKSPACE_2026-09-09.md#3.2
+    implementation: lab/exp005_epi.py:Belief
+    fingerprint: "[OPEN]"
+    correspondence_test: tests/test_exp005_epi.py::test_balanced_conflict_remains_unresolved
+  - construct: dependency_truth_maintenance
+    claim: docs/EXP005_EPISTEMIC_WORKSPACE_2026-09-09.md#6
+    implementation: lab/exp005_epi.py:EpistemicWorkspace.recompute
+    fingerprint: "[OPEN]"
+    correspondence_test: tests/test_exp005_epi.py::test_delayed_correction_propagates_to_dependents
+  - construct: source_lineage_deduplication
+    claim: docs/EXP005_EPISTEMIC_WORKSPACE_2026-09-09.md#4
+    implementation: lab/exp005_epi.py:EpistemicWorkspace._lineage_representatives
+    fingerprint: "[OPEN]"
+    correspondence_test: tests/test_exp005_epi.py::test_copied_sources_count_once_by_lineage
+  - construct: objective_permission_boundary
+    claim: docs/EXP005_EPISTEMIC_WORKSPACE_2026-09-09.md#3.4
+    implementation: lab/exp005_epi.py:ObjectivePolicy
+    fingerprint: "[OPEN]"
+    correspondence_test: tests/test_exp005_epi.py::test_objective_is_not_writable_through_evidence_metadata
+  - construct: persistent_store
+    claim: docs/EXP005_EPISTEMIC_WORKSPACE_2026-09-09.md#8
+    implementation: lab/exp005_epi_store.py:EpistemicStore
+    fingerprint: "[OPEN]"
+    correspondence_test: tests/test_exp005_epi.py::test_sqlite_roundtrip_preserves_fingerprint
+  - construct: epistemic_debt
+    claim: docs/EXP005_EPISTEMIC_WORKSPACE_2026-09-09.md#7
+    implementation: lab/exp005_epi.py:EpistemicWorkspace.epistemic_debt
+    fingerprint: "[OPEN]"
+    correspondence_test: tests/test_exp005_epi.py::test_epistemic_debt_prioritizes_load_bearing_uncertainty
+  - construct: matched_rag_control
+    claim: docs/EXP005_EPISTEMIC_WORKSPACE_2026-09-09.md#9
+    implementation: lab/exp005_epi.py:MatchedRAG
+    fingerprint: "[OPEN]"
+    correspondence_test: tests/test_exp005_epi.py::test_matched_rag_is_not_fooled_by_copied_consensus
+  - construct: deterministic_construct_benchmark
+    claim: docs/EXP005_EPISTEMIC_WORKSPACE_2026-09-09.md#10
+    implementation: lab/exp005_epi_benchmark.py:benchmark
+    fingerprint: runs/exp005_epi_construct/benchmark.json
+    correspondence_test: tests/test_exp005_epi.py::test_benchmark_license_and_expected_comparison
+open_fields:
+  - code fingerprints/freeze record before EPI-1A production
+  - randomized EPI-1A world generator
+  - longitudinal primary estimand and power/sensitivity analysis
+  - metadata-matched baseline specification for EPI-1A
+  - claim-extraction packet and correspondence gate for EPI-1B
+  - model-inference execution surface
+  - live tool/retrieval bindings for later phases
+  - source-lineage inference experiment
+  - source-reliability calibration experiment
