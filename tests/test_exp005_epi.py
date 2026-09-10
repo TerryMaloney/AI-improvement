@@ -3,7 +3,7 @@ from pathlib import Path
 import pytest
 
 from lab.exp005_epi import (
-    BeliefStatus, DerivedRule, EpistemicWorkspace, Evidence, ObjectivePolicy, NaiveRAG
+    BeliefStatus, DerivedRule, EpistemicWorkspace, Evidence, ObjectivePolicy, MatchedRAG, NaiveRAG
 )
 from lab.exp005_epi_benchmark import (
     benchmark, copied_consensus, delayed_false_premise, false_correction_resistance,
@@ -32,6 +32,14 @@ def test_copied_sources_count_once_by_lineage():
     b = ws.belief("X")
     assert b.independent_support_lineages == 1
     assert b.independent_reject_lineages == 1
+
+
+def test_matched_rag_is_not_fooled_by_copied_consensus():
+    s = copied_consensus()
+    r = MatchedRAG()
+    for e in s.evidence:
+        r.ingest(e)
+    assert r.query("X") is False
 
 
 def test_naive_rag_is_fooled_by_copied_consensus():
@@ -132,5 +140,6 @@ def test_benchmark_license_and_expected_comparison():
     b = benchmark()
     assert "Construct-validation only" in b["license"]
     assert b["aggregate"]["workspace"]["accuracy"] >= b["aggregate"]["naive_rag"]["accuracy"]
+    assert b["aggregate"]["matched_rag"]["accuracy"] == b["aggregate"]["workspace"]["accuracy"]
     assert b["scenarios"]["copied_consensus"]["workspace"]["predictions"]["X"] is False
     assert b["scenarios"]["copied_consensus"]["naive_rag"]["predictions"]["X"] is True
