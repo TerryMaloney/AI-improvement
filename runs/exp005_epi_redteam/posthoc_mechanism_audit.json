@@ -1,0 +1,166 @@
+{
+  "branch_head_audited": "e0876333dfacafe8558201d07bda8aa589494c0b",
+  "frozen_results_unchanged": true,
+  "imperfect_verifier_stress_generator_B": {
+    "accuracy_0_70_reported_0_70": {
+      "debt": {
+        "harm_rate": 0.148,
+        "mean_gain": 0.042802578761228754
+      },
+      "unc_total_utility": {
+        "harm_rate": 0.108,
+        "mean_gain": 0.04891851717149175
+      }
+    },
+    "accuracy_0_80_reported_0_80": {
+      "debt": {
+        "harm_rate": 0.08,
+        "mean_gain": 0.07086120727656595
+      },
+      "unc_total_utility": {
+        "harm_rate": 0.064,
+        "mean_gain": 0.08438404352759646
+      }
+    },
+    "accuracy_0_90_reported_0_90": {
+      "debt": {
+        "harm_rate": 0.048,
+        "mean_gain": 0.09786343678178662
+      },
+      "unc_total_utility": {
+        "harm_rate": 0.036,
+        "mean_gain": 0.11643257253507636
+      }
+    },
+    "accuracy_0_90_reported_0_995": {
+      "debt": {
+        "harm_rate": 0.064,
+        "mean_gain": 0.1080526806267483
+      },
+      "unc_total_utility": {
+        "harm_rate": 0.04,
+        "mean_gain": 0.13028750477231385
+      }
+    },
+    "budget": 3,
+    "n_worlds": 500,
+    "note": "Post-hoc. Original confirmation used an oracle-correct verification result reported at reliability .995."
+  },
+  "independent_reproduction": {
+    "generator_A": {
+      "debt": 0.14390608817856432,
+      "dependency": 0.11735868328323505,
+      "random": 0.07196959192484119,
+      "uncertainty": 0.11744471552178651
+    },
+    "generator_B": {
+      "debt": 0.13235027994842055,
+      "dependency": 0.1303998488080026,
+      "random": 0.08596459914043346,
+      "uncertainty": 0.10369352285220543
+    },
+    "note": "Local reimplementation reproduced the committed frozen policy means, including the exact Generator B figures."
+  },
+  "interpretation": {
+    "does_not_survive_as_mechanism_claim": [
+      "The full multiplicative epistemic-debt formula is not established as necessary or best.",
+      "On Generator B, debt is effectively tied with the simpler dependency policy.",
+      "A simpler uncertainty-times-total-downstream-utility policy is better on both already-visible confirmation sets, but this is post-hoc.",
+      "Staleness and lineage-fragility factors show no positive contribution in these post-hoc ablations.",
+      "The original low harm rate depends strongly on a near-perfect verification oracle.",
+      "Impact-weighted performance partially reflects giving the controller the same utility weights used by the evaluator."
+    ],
+    "survives": [
+      "Under the original synthetic assumptions, active verification targeted by structured state beats random and uncertainty-only under the frozen comparisons.",
+      "The result is reproducible from committed code/data."
+    ]
+  },
+  "license": "This artifact may narrow or falsify mechanism stories. It cannot confirm any newly proposed policy because all comparisons were designed after A/B outcomes were visible.",
+  "scope": "Mechanism red-team of already-visible A/B confirmation worlds. No replacement policy is confirmed.",
+  "status": "POSTHOC_DIAGNOSTIC_ONLY",
+  "stronger_posthoc_baselines_impact_weighted_loss": {
+    "generator_A": {
+      "debt": 0.14390608817856432,
+      "debt_no_impact": 0.14131422415753103,
+      "debt_no_staleness": 0.14378568263519795,
+      "uncertainty_x_load": 0.145521104582112,
+      "uncertainty_x_total_downstream_utility": 0.14893135373845784
+    },
+    "generator_B": {
+      "debt": 0.13235027994842055,
+      "debt_no_impact": 0.12322881222827523,
+      "debt_no_staleness": 0.13317041351904582,
+      "uncertainty_x_load": 0.12952356438250984,
+      "uncertainty_x_total_downstream_utility": 0.15362655066245115
+    },
+    "paired_debt_minus_dependency": {
+      "generator_A": {
+        "losses": 83,
+        "mean_difference": 0.026547404895329262,
+        "n": 500,
+        "normal_approx_95_ci": [
+          0.02183501109663738,
+          0.031259798694021144
+        ],
+        "ties": 79,
+        "wins": 338
+      },
+      "generator_B": {
+        "losses": 200,
+        "mean_difference": 0.0019504311404179508,
+        "n": 500,
+        "normal_approx_95_ci": [
+          -0.0023184410492312407,
+          0.006219303330067142
+        ],
+        "ties": 63,
+        "wins": 237
+      }
+    },
+    "paired_uncertainty_total_utility_minus_debt": {
+      "generator_A": {
+        "losses": 146,
+        "mean_difference": 0.005025265559893514,
+        "n": 500,
+        "normal_approx_95_ci": [
+          0.0013116695681083899,
+          0.008738861551678637
+        ],
+        "ties": 167,
+        "wins": 187
+      },
+      "generator_B": {
+        "losses": 94,
+        "mean_difference": 0.02127627071403061,
+        "n": 500,
+        "normal_approx_95_ci": [
+          0.01784201043278962,
+          0.0247105309952716
+        ],
+        "ties": 85,
+        "wins": 321
+      }
+    }
+  },
+  "unweighted_loss_stress": {
+    "generator_A": {
+      "debt": 0.1354,
+      "debt_no_impact": 0.14173333333333332,
+      "dependency": 0.11649999999999999,
+      "load_only": 0.11636666666666666,
+      "random": 0.0717,
+      "unc_load": 0.1455,
+      "uncertainty": 0.1174
+    },
+    "generator_B": {
+      "debt": 0.13857142857142857,
+      "debt_no_impact": 0.15134285714285714,
+      "dependency": 0.16802857142857144,
+      "load_only": 0.1687142857142857,
+      "random": 0.08208571428571429,
+      "unc_load": 0.16165714285714286,
+      "uncertainty": 0.09911428571428571
+    },
+    "note": "Post-hoc metric stress. Policies still see the same graph; the primary evaluator no longer uses world.impacts."
+  }
+}
