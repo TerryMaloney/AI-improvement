@@ -1,155 +1,350 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Cherry Sweeper</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rye&family=Nunito:wght@600;800&display=swap">
 <style>
+/* Layout: one slot-machine cabinet, centred; marquee → reels → stats → board → controls. Single deliberate dark look. */
+:root{
+  --felt:#1a0d18; --cab:#45182d; --cab2:#64253d; --brass:#d4a45c; --cream:#fff0ce;
+  --tile:#9c4660; --tile2:#7c3049; --open:#f8e7c9; --ink:#392e44; --glow:#ffd77a; --red:#d8394c;
+  --display:"Rye",Georgia,serif; --body:"Nunito","Trebuchet MS",system-ui,sans-serif;
+  color-scheme:dark;
+}
 *{box-sizing:border-box}
-body{margin:0;min-height:100vh;display:grid;place-items:center;background:radial-gradient(ellipse at top,#57203c,#210f23 62%,#150d19);color:#fff0ce;font-family:"Trebuchet MS",system-ui,sans-serif}
-main{width:min(100%,420px);padding:14px}
-.machine{background:#45182d;border:2px solid #c79a58;border-radius:24px;padding:15px;box-shadow:inset 0 0 0 4px #64253d,0 14px 38px #10081288}
-header{text-align:center;background:linear-gradient(145deg,#97394b,#70203c);border:1px solid #e0ac69;border-radius:13px;padding:10px 4px 12px}
-.lights{height:6px;margin:0 10px 8px;background:radial-gradient(circle,#ffe3a0 2px,transparent 3px) center/16px 6px repeat-x}
-.reels{display:inline-flex;gap:2px;background:#352128;border:2px solid #b8874d;border-radius:7px;overflow:hidden}
-.reels span{display:grid;place-items:center;width:40px;height:30px;background:linear-gradient(#ddc399,#fff2cd 40%,#e9d1a6);font:italic 900 26px Georgia;color:#b73142}
-h1{font:italic 900 clamp(36px,10vw,50px)/1 Georgia,serif;letter-spacing:-2px;margin:6px 0 0;color:#fff0bb;text-shadow:0 3px #692239}
-.stats{display:flex;justify-content:space-between;padding:12px 2px 8px;font-size:13px;color:#eed3b4}
-.stats b{color:#fff1c7;font-variant-numeric:tabular-nums}
-#board{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:4px;padding:6px;background:#271223;border:1px solid #a57652;border-radius:10px}
-button{font:inherit;cursor:pointer;touch-action:manipulation}
-.tile{aspect-ratio:1;min-width:0;border:1px solid #cf8a96;border-bottom:3px solid #68283e;border-radius:6px;background:linear-gradient(155deg,#ac5268,#89394f);color:#eeb4a6;font:700 clamp(19px,6vw,27px)/1 Georgia,serif;padding:0;text-shadow:0 1px #6a3344}
-.tile.open,.tile.show{border:1px solid #bb9e7e;background:#f8e7c9;color:#392e44;text-shadow:none}
+html,body{min-height:100%}
+body{margin:0;background:radial-gradient(ellipse at top,#57203c,#210f23 62%,var(--felt));background-color:var(--felt);color:var(--cream);font-family:var(--body);display:grid;place-items:start center;padding-block:14px 24px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+main{width:min(100%,460px);display:grid;gap:12px}
+.machine{background:var(--cab);border:2px solid var(--brass);border-radius:24px;padding:14px;box-shadow:inset 0 0 0 4px var(--cab2),0 14px 38px #100812aa;display:grid;gap:10px}
+header{text-align:center;background:linear-gradient(145deg,#97394b,#70203c);border:1px solid #e0ac69;border-radius:13px;padding:10px 4px 12px;position:relative;overflow:hidden}
+.lights{height:8px;margin:0 10px 8px;display:flex;justify-content:space-between}
+.lights i{width:6px;height:6px;border-radius:50%;background:#7a4a30;transition:background .15s}
+.lights i.on{background:var(--glow);box-shadow:0 0 6px var(--glow)}
+.reels{display:inline-flex;gap:3px;background:#352128;border:2px solid #b8874d;border-radius:7px;overflow:hidden}
+.reels span{display:grid;place-items:center;width:44px;height:34px;background:linear-gradient(#ddc399,#fff2cd 40%,#e9d1a6);font:900 24px var(--display);color:#b73142}
+.reels span.spin{animation:spin .09s linear infinite}
+@keyframes spin{0%{transform:translateY(-40%);opacity:.5}100%{transform:translateY(40%);opacity:.5}}
+h1{font:400 clamp(30px,9vw,44px)/1 var(--display);margin:8px 0 0;color:#fff0bb;text-shadow:0 3px #692239;letter-spacing:.5px;text-wrap:balance}
+.modes{display:flex;gap:6px}
+.modes button{flex:1;border:1px solid #bc9064;border-radius:999px;padding:6px 4px;background:#3a1828;color:#f0d5b4;font-weight:800;font-size:13px}
+.modes button[aria-pressed=true]{background:var(--brass);color:#3a1828}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;font-size:12px;color:#eed3b4;text-align:center}
+.stats div{background:#2b1222;border:1px solid #6d3a46;border-radius:8px;padding:5px 2px}
+.stats b{display:block;font-size:18px;color:#fff1c7;font-variant-numeric:tabular-nums;font-family:ui-monospace,Menlo,monospace}
+#board{display:grid;grid-template-columns:repeat(var(--n,6),minmax(0,1fr));gap:var(--gap,4px);padding:6px;background:#271223;border:1px solid #a57652;border-radius:10px;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+button{font:inherit;cursor:pointer;touch-action:manipulation;color:inherit}
+.tile{aspect-ratio:1;min-width:0;max-width:100%;border:1px solid #cf8a96;border-bottom:3px solid #5c2236;border-radius:6px;background:linear-gradient(155deg,var(--tile),var(--tile2));color:#eeb4a6;font:800 var(--fs,26px)/1 var(--body);padding:0;text-shadow:0 1px #6a3344;transition:transform .08s}
+.tile:active{transform:scale(.94)}
+.tile.open,.tile.show{border:1px solid #bb9e7e;background:var(--open);color:var(--ink);text-shadow:none;animation:pop .18s ease-out}
+@keyframes pop{from{transform:scale(.7)}to{transform:scale(1)}}
 .tile.empty{background:#e7d4b6}
 .tile[data-count="1"]{color:#21657d}.tile[data-count="2"]{color:#397044}.tile[data-count="3"]{color:#ac3548}
-.tile.hit{background:#ffb2a0}
-.tile.marked{background:#854159;color:#ffe0a2}
-button:focus-visible{outline:3px solid white;outline-offset:1px;z-index:1}
-.controls{display:flex;gap:8px;margin-top:10px}
-.controls button{flex:1;border:1px solid #bc9064;border-radius:8px;padding:9px 3px;background:#55283c;color:#ffeaca;font-weight:700;font-size:14px}
-.controls button[aria-pressed=true]{background:#ffe1a2;color:#4a2435}
-#status{text-align:center;font-weight:700;font-size:15px;min-height:20px;margin:12px 0 2px;color:#ffe19b}
-.help{margin:11px 4px 0;color:#f1d9cb;font-size:14px;line-height:1.45;text-align:center}
-@media(hover:hover){.tile.cover:hover{filter:brightness(1.17)}.controls button:hover{filter:brightness(1.12)}}
+.tile[data-count="4"]{color:#4a2c8a}.tile[data-count="5"]{color:#8a3a12}.tile[data-count="6"]{color:#16706e}.tile[data-count="7"],.tile[data-count="8"]{color:#222}
+.tile.hit{background:#ff9a86;animation:shake .4s}
+@keyframes shake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.tile.marked{background:#5e2a40;color:var(--glow)}
+.tile.wrong{background:#c9b3a0;color:#7a2c38;text-decoration:line-through}
+button:focus-visible{outline:3px solid #fff;outline-offset:1px;position:relative;z-index:1}
+.controls{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.controls button,.audio button{border:1px solid #bc9064;border-radius:8px;padding:10px 3px;background:#55283c;color:#ffeaca;font-weight:800;font-size:14px}
+.controls button[aria-pressed=true],.audio button[aria-pressed=true]{background:#ffe1a2;color:#4a2435}
+.controls button:disabled{opacity:.5}
+.audio{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.audio button{padding:7px 3px;font-size:13px;background:#3a1828}
+#status{text-align:center;font-weight:800;font-size:15px;min-height:20px;margin:2px 0 0;color:var(--glow)}
+.help{margin:0 4px;color:#e9cdbf;font-size:13.5px;line-height:1.5;text-align:center}
+.help b{color:var(--cream)}
+.burst{position:fixed;top:-40px;font-size:28px;pointer-events:none;animation:fall linear forwards;z-index:5}
+@keyframes fall{to{transform:translateY(110vh) rotate(540deg)}}
+.flash header{animation:flash .5s 3}
+@keyframes flash{50%{box-shadow:0 0 30px var(--glow) inset}}
+@media(hover:hover){.tile.cover:hover{filter:brightness(1.17)}.controls button:hover,.audio button:hover,.modes button:hover{filter:brightness(1.12)}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
-</head>
-<body>
+
 <main>
 <section class="machine" aria-label="Cherry Sweeper game">
 <header>
-<div class="lights"></div>
-<div class="reels" aria-hidden="true"><span>🍒</span><span>7</span><span>🍒</span></div>
-<h1>Cherry Sweeper</h1>
+  <div class="lights" id="lights"></div>
+  <div class="reels" aria-hidden="true"><span>🍒</span><span>7</span><span>🍒</span></div>
+  <h1>Cherry Sweeper</h1>
 </header>
-<div class="stats"><span>💀 <b>6</b> skulls</span><span>Safe tiles <b id="score">0 / 30</b></span></div>
-<div id="board" role="group" aria-label="Game board"></div>
-<div class="controls">
-<button id="flag" aria-pressed="false">⚑ Flag mode</button>
-<button id="reset">↻ New round</button>
+<div class="modes" role="group" aria-label="Difficulty">
+  <button id="m0" data-mode="0">Penny</button>
+  <button id="m1" data-mode="1">Quarter</button>
+  <button id="m2" data-mode="2">High Roller</button>
 </div>
+<div class="stats">
+  <div>Skulls left<b id="left">6</b></div>
+  <div>Time<b id="time">0</b></div>
+  <div>Best<b id="best">—</b></div>
+</div>
+<div id="board" role="group" aria-label="Game board"></div>
 <p id="status" role="status"></p>
+<div class="controls">
+  <button id="flag" aria-pressed="false">⚑ Flag mode</button>
+  <button id="reset">🎰 Pull lever</button>
+</div>
+<div class="audio">
+  <button id="music" aria-pressed="false">♫ Music off</button>
+  <button id="sfx" aria-pressed="true">🔊 Sounds on</button>
+</div>
 </section>
-<p class="help">Tap a tile to reveal it. Each number counts skulls touching that tile, including diagonally. Use <b>Flag mode</b> to mark suspected skulls. Reveal all 30 safe tiles to hit the jackpot.</p>
+<p class="help">Tap to reveal. Numbers count touching skulls, diagonals included. <b>Long-press</b>, right-click or use <b>Flag mode</b> to mark a skull. Tap a number whose skulls are all flagged to open the rest around it. Clear every safe tile to hit the jackpot.</p>
 </main>
-<script>
-const size = 6, skullCount = 6, total = size * size;
-const board = document.getElementById('board');
-const flag = document.getElementById('flag');
-const statusLine = document.getElementById('status');
-const faces = [...document.querySelectorAll('.reels span')];
-let tiles, started, ended, flagMode, cleared, hit;
 
-function neighbors(i) {
-  const row = Math.floor(i / size), col = i % size, result = [];
-  for (let r = Math.max(0,row-1); r <= Math.min(size-1,row+1); r++) {
-    for (let c = Math.max(0,col-1); c <= Math.min(size-1,col+1); c++) {
-      if (r*size+c !== i) result.push(r*size+c);
-    }
+<script>
+const MODES = [
+  {name:'Penny', size:6, skulls:5, fs:'clamp(18px,6vw,26px)', gap:'4px'},
+  {name:'Quarter', size:8, skulls:10, fs:'clamp(15px,4.6vw,21px)', gap:'3px'},
+  {name:'High Roller', size:10, skulls:18, fs:'clamp(12px,3.6vw,17px)', gap:'2px'},
+];
+const $ = id => document.getElementById(id);
+const board = $('board'), flag = $('flag'), statusLine = $('status');
+const faces = [...document.querySelectorAll('.reels span')];
+const store = {
+  get(k){ try{ return localStorage.getItem(k); }catch{ return null; } },
+  set(k,v){ try{ localStorage.setItem(k,v); }catch{} }
+};
+let mode = Math.min(2, Math.max(0, +(store.get('cs-mode')||0)));
+let size, skullCount, total, tiles, started, ended, flagMode, cleared, hit, flags, t0, timer, elapsed;
+
+/* ---------- Audio ---------- */
+let ac, master, sfxOn = store.get('cs-sfx') !== '0', musicOn = false, musicTimer, step = 0, nextT = 0;
+function audio(){
+  if (!ac) {
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return null;
+    ac = new AC(); master = ac.createGain(); master.gain.value = .5; master.connect(ac.destination);
   }
-  return result;
+  if (ac.state === 'suspended') ac.resume();
+  return ac;
 }
-function deal(first) {
+function tone(freq, dur, {type='square', vol=.12, at=0, slide=0, dest}={}){
+  const a = audio(); if (!a) return;
+  const t = (at || a.currentTime);
+  const o = a.createOscillator(), g = a.createGain();
+  o.type = type; o.frequency.setValueAtTime(freq, t);
+  if (slide) o.frequency.exponentialRampToValueAtTime(Math.max(30,freq*slide), t+dur);
+  g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(.0001, t+dur);
+  o.connect(g); g.connect(dest || master); o.start(t); o.stop(t+dur+.02);
+}
+const sfx = {
+  reveal(n){ if(!sfxOn) return; tone(520+Math.min(n,20)*30, .07, {type:'triangle', vol:.15}); },
+  cascade(n){ if(!sfxOn) return; const a=audio(); if(!a) return;
+    for(let i=0;i<Math.min(n,8);i++) tone(600+i*90, .06, {type:'triangle', vol:.08, at:a.currentTime+i*.03}); },
+  flag(on){ if(!sfxOn) return; tone(on?880:440, .08, {type:'square', vol:.07, slide:on?1.5:.6}); },
+  bust(){ if(!sfxOn) return; const a=audio(); if(!a) return;
+    tone(220,.6,{type:'sawtooth',vol:.16,slide:.25});
+    [330,277,233,196].forEach((f,i)=>tone(f,.22,{type:'square',vol:.08,at:a.currentTime+.35+i*.18})); },
+  jackpot(){ if(!sfxOn) return; const a=audio(); if(!a) return;
+    [523,659,784,1047,784,1047,1319].forEach((f,i)=>tone(f,.16,{type:'square',vol:.09,at:a.currentTime+i*.09}));
+    for(let i=0;i<14;i++) tone(1800+Math.random()*1200,.05,{type:'triangle',vol:.05,at:a.currentTime+.7+i*.05}); },
+  lever(){ if(!sfxOn) return; const a=audio(); if(!a) return;
+    for(let i=0;i<10;i++) tone(300+i*40,.03,{type:'square',vol:.04,at:a.currentTime+i*.04});
+    tone(1200,.12,{type:'triangle',vol:.1,at:a.currentTime+.45}); }
+};
+/* Lounge loop: 16 steps, ~112 bpm, bass + chime melody over Am – F – C – E */
+const BPM = 112, STEP = 60/BPM/2;
+const bass = [110,0,165,0, 87.3,0,131,0, 131,0,196,0, 82.4,0,123,0];
+const mel  = [440,0,523,659, 0,523,0,440, 392,0,523,0, 494,415,0,330];
+let musicBus;
+function scheduleMusic(){
+  const a = ac; if (!a) return;
+  while (nextT < a.currentTime + .15) {
+    const i = step % 16, bar = Math.floor(step/16) % 2;
+    if (bass[i]) tone(bass[i], STEP*1.6, {type:'triangle', vol:.22, at:nextT, dest:musicBus});
+    const m = mel[i] * (bar ? 1 : 1);
+    if (m && (bar || i%4 !== 3)) tone(m*(bar && i>11 ? 1.5 : 1), STEP*.9, {type:'sine', vol:.07, at:nextT, dest:musicBus});
+    if (i % 2 === 0) tone(6000, .02, {type:'square', vol: i%4 ? .008 : .015, at:nextT, dest:musicBus});
+    nextT += STEP; step++;
+  }
+}
+function setMusic(on){
+  musicOn = on;
+  $('music').setAttribute('aria-pressed', String(on));
+  $('music').textContent = on ? '♫ Music on' : '♫ Music off';
+  clearInterval(musicTimer);
+  if (on) {
+    const a = audio(); if (!a) return;
+    if (!musicBus){ musicBus = a.createGain(); musicBus.gain.value = .7; musicBus.connect(master); }
+    nextT = a.currentTime + .05; musicTimer = setInterval(scheduleMusic, 40);
+  }
+  store.set('cs-music', on ? '1' : '0');
+}
+$('music').onclick = () => setMusic(!musicOn);
+function paintSfx(){ $('sfx').setAttribute('aria-pressed', String(sfxOn)); $('sfx').textContent = sfxOn ? '🔊 Sounds on' : '🔇 Sounds off'; }
+$('sfx').onclick = () => { sfxOn = !sfxOn; store.set('cs-sfx', sfxOn?'1':'0'); paintSfx(); if (sfxOn) sfx.flag(true); };
+paintSfx();
+
+/* ---------- Marquee lights ---------- */
+const lights = $('lights');
+for (let i=0;i<16;i++) lights.append(document.createElement('i'));
+let lightTick = 0, lightMode = 'chase';
+setInterval(() => {
+  lightTick++;
+  [...lights.children].forEach((l,i) => l.classList.toggle('on',
+    lightMode === 'chase' ? (i + lightTick) % 4 === 0 :
+    lightMode === 'all' ? lightTick % 2 === 0 : false));
+}, 160);
+
+/* ---------- Game ---------- */
+function neighbors(i){
+  const row = Math.floor(i/size), col = i%size, out = [];
+  for (let r=Math.max(0,row-1); r<=Math.min(size-1,row+1); r++)
+    for (let c=Math.max(0,col-1); c<=Math.min(size-1,col+1); c++)
+      if (r*size+c !== i) out.push(r*size+c);
+  return out;
+}
+function deal(first){
   const safe = new Set([first, ...neighbors(first)]);
-  const pool = tiles.map((_,i) => i).filter(i => !safe.has(i));
-  for (let n = 0; n < skullCount; n++) {
-    const j = Math.floor(Math.random()*pool.length);
-    tiles[pool.splice(j,1)[0]].skull = true;
-  }
-  tiles.forEach((t,i) => t.count = neighbors(i).filter(j => tiles[j].skull).length);
-  started = true;
+  const pool = tiles.map((_,i)=>i).filter(i=>!safe.has(i));
+  for (let n=0;n<skullCount;n++) tiles[pool.splice(Math.floor(Math.random()*pool.length),1)[0]].skull = true;
+  tiles.forEach((t,i) => t.count = neighbors(i).filter(j=>tiles[j].skull).length);
+  started = true; t0 = performance.now();
+  timer = setInterval(() => { elapsed = (performance.now()-t0)/1000; $('time').textContent = Math.floor(elapsed); }, 250);
 }
-function paint() {
+function bestKey(){ return 'cs-best-' + mode; }
+function paintBest(){ const b = store.get(bestKey()); $('best').textContent = b ? (+b).toFixed(1) : '—'; }
+function paint(){
   tiles.forEach((t,i) => {
     const btn = board.children[i];
-    let symbol = '✦', style = 'cover', label = 'covered';
-    if (ended && t.skull) {
-      symbol = '💀'; style = i === hit ? 'show hit' : 'show'; label = 'skull';
+    let symbol = '', style = 'cover', label = 'covered';
+    if (ended && t.skull && !(ended === 'win')) {
+      if (t.mark) { symbol='⚑'; style='marked'; label='flagged skull'; }
+      else { symbol='💀'; style = i===hit ? 'show hit' : 'show'; label='skull'; }
+    } else if (ended === 'win' && t.skull) {
+      symbol='🍒'; style='marked'; label='skull';
     } else if (t.open) {
-      symbol = t.count ? String(t.count) : '🍒';
+      symbol = t.count ? String(t.count) : '';
       style = t.count ? 'open' : 'open empty';
       label = t.count + ' adjacent skulls';
     } else if (t.mark) {
-      symbol = '⚑'; style = 'marked'; label = 'flagged';
+      if (ended === 'bust') { symbol='✕'; style='wrong'; label='wrong flag'; }
+      else { symbol='⚑'; style='marked'; label='flagged'; }
     }
-    btn.className = 'tile ' + style;
+    const cls = 'tile ' + style;
+    if (btn.className !== cls) btn.className = cls;
     btn.dataset.count = t.open ? t.count : '';
-    btn.textContent = symbol;
+    if (btn.textContent !== symbol) btn.textContent = symbol;
     btn.setAttribute('aria-label', `Row ${1+Math.floor(i/size)}, column ${1+i%size}, ${label}`);
   });
-  document.getElementById('score').textContent = `${cleared} / ${total-skullCount}`;
+  $('left').textContent = skullCount - flags;
   flag.setAttribute('aria-pressed', String(flagMode));
-  flag.disabled = ended;
+  flag.disabled = !!ended;
 }
-function activate(i, marking) {
+function toggleFlag(i){
   if (ended || tiles[i].open) return;
-  if (marking) {
-    tiles[i].mark = !tiles[i].mark;
-    paint(); return;
+  tiles[i].mark = !tiles[i].mark; flags += tiles[i].mark ? 1 : -1;
+  sfx.flag(tiles[i].mark); if (navigator.vibrate) try{ navigator.vibrate(15); }catch{}
+  paint();
+}
+function openFrom(list){
+  let n = 0, boom = -1;
+  const pending = [...list];
+  while (pending.length) {
+    const j = pending.pop(), t = tiles[j];
+    if (t.open || t.mark) continue;
+    if (t.skull) { boom = j; break; }
+    t.open = true; cleared++; n++;
+    if (t.count === 0) pending.push(...neighbors(j));
   }
-  if (tiles[i].mark) return;
+  return {n, boom};
+}
+function reveal(i){
+  if (ended) return;
+  const t = tiles[i];
+  if (t.mark) return;
   if (!started) deal(i);
-  if (tiles[i].skull) {
-    ended = true; hit = i;
-    faces.forEach(f => f.textContent = '💀');
-    statusLine.textContent = 'Bust! Tap New round to play again.';
+  let res;
+  if (t.open) {                       // chord
+    if (!t.count) return;
+    const nb = neighbors(i), f = nb.filter(j=>tiles[j].mark).length;
+    if (f !== t.count) return;
+    res = openFrom(nb.filter(j=>!tiles[j].open && !tiles[j].mark));
   } else {
-    const pending = [i];
-    while (pending.length) {
-      const j = pending.pop(), t = tiles[j];
-      if (t.open || t.mark || t.skull) continue;
-      t.open = true; cleared++;
-      if (t.count === 0) pending.push(...neighbors(j));
-    }
-    ended = cleared === total-skullCount;
-    if (ended) {
-      faces.forEach(f => f.textContent = '7');
-      statusLine.textContent = 'Jackpot! You cleared the board. 🍒';
-    } else {
-      statusLine.textContent = `${total-skullCount-cleared} safe tiles left.`;
+    res = openFrom([i]);
+  }
+  if (res.boom >= 0) return bust(res.boom);
+  if (!res.n) return;
+  res.n > 3 ? sfx.cascade(res.n) : sfx.reveal(cleared);
+  if (cleared === total - skullCount) return win();
+  statusLine.textContent = `${total-skullCount-cleared} safe tiles left.`;
+  paint();
+}
+function stopClock(){ clearInterval(timer); if (started) { elapsed = (performance.now()-t0)/1000; $('time').textContent = elapsed.toFixed(1); } }
+function bust(i){
+  ended = 'bust'; hit = i; stopClock();
+  faces.forEach(f => f.textContent = '💀');
+  statusLine.textContent = 'Bust! Pull the lever to play again.';
+  lightMode = 'off'; sfx.bust(); if (navigator.vibrate) try{ navigator.vibrate([60,40,120]); }catch{}
+  paint();
+}
+function win(){
+  ended = 'win'; stopClock(); flags = skullCount;
+  faces.forEach(f => f.textContent = '7');
+  const prev = +store.get(bestKey()) || Infinity, record = elapsed < prev;
+  if (record) store.set(bestKey(), elapsed.toFixed(1));
+  paintBest();
+  statusLine.textContent = record ? `Jackpot! New best: ${elapsed.toFixed(1)}s 🍒` : `Jackpot! ${elapsed.toFixed(1)}s 🍒`;
+  lightMode = 'all'; sfx.jackpot();
+  document.querySelector('.machine').classList.add('flash');
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    for (let k=0;k<28;k++) {
+      const s = document.createElement('div');
+      s.className = 'burst'; s.textContent = ['🍒','🪙','7','⭐'][k%4];
+      s.style.left = Math.random()*100 + 'vw';
+      s.style.animationDuration = (1.6 + Math.random()*1.6) + 's';
+      s.style.animationDelay = Math.random()*.6 + 's';
+      document.body.append(s); setTimeout(() => s.remove(), 4200);
     }
   }
   paint();
 }
-function newRound() {
+function buildBoard(){
+  const m = MODES[mode]; size = m.size; skullCount = m.skulls; total = size*size;
+  board.style.setProperty('--n', size); board.style.setProperty('--fs', m.fs); board.style.setProperty('--gap', m.gap);
+  board.replaceChildren();
+  for (let i=0;i<total;i++){
+    const btn = document.createElement('button');
+    let lp, lpFired = false;
+    btn.addEventListener('pointerdown', e => {
+      if (e.pointerType === 'mouse') return;
+      lpFired = false;
+      lp = setTimeout(() => { lpFired = true; toggleFlag(i); }, 380);
+    });
+    const cancel = () => clearTimeout(lp);
+    btn.addEventListener('pointerup', cancel); btn.addEventListener('pointerleave', cancel); btn.addEventListener('pointercancel', cancel);
+    btn.addEventListener('click', () => {
+      if (lpFired) { lpFired = false; return; }
+      flagMode && !tiles[i].open ? toggleFlag(i) : reveal(i);
+    });
+    btn.addEventListener('contextmenu', e => { e.preventDefault(); if (!lpFired) toggleFlag(i); });
+    board.append(btn);
+  }
+  document.querySelectorAll('.modes button').forEach(b => b.setAttribute('aria-pressed', String(+b.dataset.mode === mode)));
+}
+function newRound(spin){
+  clearInterval(timer);
   tiles = Array.from({length:total}, () => ({open:false,mark:false,skull:false,count:0}));
-  started = ended = flagMode = false; cleared = 0; hit = -1;
-  ['🍒','7','🍒'].forEach((s,i) => faces[i].textContent = s);
-  statusLine.textContent = 'Pick any tile. Your first tap is safe.';
+  started = ended = flagMode = false; cleared = 0; hit = -1; flags = 0; elapsed = 0;
+  $('time').textContent = '0'; paintBest();
+  document.querySelector('.machine').classList.remove('flash');
+  lightMode = 'chase';
+  statusLine.textContent = 'Pick any tile. Your first tap is always safe.';
+  if (spin) {
+    sfx.lever();
+    faces.forEach((f,k) => { f.classList.add('spin'); setTimeout(() => { f.classList.remove('spin'); f.textContent = ['🍒','7','🍒'][k]; }, 250 + k*120); });
+  } else ['🍒','7','🍒'].forEach((s,k) => faces[k].textContent = s);
   paint();
 }
-for (let i = 0; i < total; i++) {
-  const btn = document.createElement('button');
-  btn.onclick = () => activate(i,flagMode);
-  btn.oncontextmenu = e => { e.preventDefault(); activate(i,true); };
-  board.append(btn);
-}
+document.querySelectorAll('.modes button').forEach(b => b.onclick = () => {
+  mode = +b.dataset.mode; store.set('cs-mode', mode); buildBoard(); newRound(true);
+});
 flag.onclick = () => {
   flagMode = !flagMode;
-  statusLine.textContent = flagMode ? 'Tap a tile to place or remove a flag.' : 'Tap an unflagged tile to reveal it.';
+  statusLine.textContent = flagMode ? 'Flag mode: tap tiles to mark skulls.' : 'Reveal mode: tap tiles to open them.';
   paint();
 };
-document.getElementById('reset').onclick = newRound;
-newRound();
+$('reset').onclick = () => newRound(true);
+document.addEventListener('keydown', e => { if (e.key === 'f' || e.key === 'F') flag.click(); if (e.key === 'n' || e.key === 'N') newRound(true); });
+buildBoard(); newRound(false);
 </script>
-</body>
-</html>
